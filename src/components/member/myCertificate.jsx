@@ -19,7 +19,7 @@ const MyCertificate = ({ nickname }) => {
   const fetchCertificates = async (page, nickname) => {
     try {
       const res = await fetch(
-        `/certificates?nickname=${nickname}&page=${page}&size=10`
+          `/certificates?nickname=${nickname}&page=${page}&size=10`
       );
       const data = await res.json();
       setCertificates(data);
@@ -61,32 +61,32 @@ const MyCertificate = ({ nickname }) => {
   };
 
   return (
-    <div className={styles.container}>
-      <button
-        className={styles["add-button"]}
-        onClick={() => setIsModalOpen(true)}
-      >
-        + 추가
-      </button>
-      {certificates.map((certificate) => (
-        <CertificateCard
-          key={certificate.certificateNumber}
-          certificate={certificate}
-          onDelete={handleDelete}
+      <div className={styles.container}>
+        <button
+            className={styles["add-button"]}
+            onClick={() => setIsModalOpen(true)}
+        >
+          + 추가
+        </button>
+        {certificates.map((certificate) => (
+            <CertificateCard
+                key={certificate.certificateNumber}
+                certificate={certificate}
+                onDelete={handleDelete}
+            />
+        ))}
+        <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
         />
-      ))}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
-      {isModalOpen && (
-        <CertificateAddModal
-          onSave={handleSave}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-    </div>
+        {isModalOpen && (
+            <CertificateAddModal
+                onSave={handleSave}
+                onClose={() => setIsModalOpen(false)}
+            />
+        )}
+      </div>
   );
 };
 

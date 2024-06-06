@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import MyCertificate from "../../components/member/myCertificate";
 import styles from "../../styles/myPage.module.css";
 
-const MyPage = () => {
+ const MyPage = () => {
   const [nickname, setNickname] = useState("");
 
   useEffect(() => {
