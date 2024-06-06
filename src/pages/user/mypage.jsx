@@ -13,7 +13,7 @@ import styles from "../../styles/myPage.module.css";
       setNickname(decodedToken.sub); // 토큰에서 닉네임 추출
     }
   }, []);
-
+// 헤헿
   return (
     <div className={styles.container}>
       <h1>My Page</h1>
