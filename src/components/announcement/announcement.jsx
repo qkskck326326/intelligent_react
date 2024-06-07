@@ -23,7 +23,7 @@ export default function Announcement(props){
 
     function loadMoreData(){
 
-        fetch('/announcementExample.json')
+        fetch('/jsonsample/announcementExample.json')
         .then(response => {
             if(!response.ok){
                 throw new Error('An error occured!')
