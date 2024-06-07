@@ -1,11 +1,11 @@
 import React from 'react';
-import ItBoardList from "../../components/itNewsBoard/itNewsboardList"
+//import BoardList from "../../components/itNews/boardList";
 
 const Index = () => {
     return (
         <div>
-            <h1>itNewsBoard page이건우</h1>
-            <ItBoardList/>
+            <h1>itNewsBoard</h1>
+
         </div>
     );
 };
