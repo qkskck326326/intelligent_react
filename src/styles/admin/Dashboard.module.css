@@ -1,0 +1,55 @@
+/* Dashboard.module.css */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.main {
+    flex: 1;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background-color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.logout {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout:hover {
+    background-color: #0056b3;
+}
+
+.content {
+    padding: 20px;
+}
+
+.title {
+    margin-bottom: 20px;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 20px;
+    flex: 1;
+    text-align: center;
+}
