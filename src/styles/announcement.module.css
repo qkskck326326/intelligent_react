@@ -11,136 +11,117 @@
     font-weight: normal;
     font-style: normal;
 }
-body {
-    font-family: 'ELAND_Choice_M', sans-serif;
-}
-:root{
-    --main-color:#00D084;
-    --sub-color1:#7BDCB5;
-    --sub-color2:#D1F4E6;
-    --border-color:#E2E2E2;
-    --font-xxxl: 4rem;
-    --font-xxl: 3rem;
-    --font-xl: 2rem;
-    --font-lg: 1.75rem;
-    --font-md: 1.5rem;
-    --font-sm: 1.25rem;
-    --font-xs: 1rem;
-    --font-xxs: 0.75rem;
-}
-*{
-    padding: 0;
-    margin: 0;
-}
-/* div{
-    border: 1px solid black;
-} */
-#announce-container{
+
+.announceContainer{
     width: 50vw;
-    user-select: none; 
+    user-select: none;
 }
-#announce-header{
+.announceHeader{
+    padding-left: 40px;
     padding-block: 7vh;
-    font-size: var(--font-xxxl);
+    font-size: 4rem;
     font-weight: 900;
     letter-spacing: 1vw;
 }
-#announce-mid{
+.announceMid{
     padding-block: 0vh;
     display: flex;
     justify-content: space-between;
 }
-#search-category{
+.searchCategory{
     display: flex;
     list-style: none;
 }
-.search-category-item{
+.searchCategoryItem{
     position: relative;
     overflow: hidden;
     padding: 0px 1rem;
-    font-size: var(--font-sm);
+    font-size: 1.25rem;
     cursor: pointer;
-    transition: background-color 0.1s linear 
+    transition: background-color 0.1s linear
 }
-.search-category-item.selected,
-.search-category-item:hover{
+.searchCategoryItem.selected,
+.searchCategoryItem:hover{
     font-weight: 700;
 }
-#search-icon{
-    width: var(--font-md)
+.searchIcon{
+    width: 1.5rem;
 }
-#search-bar{
+.searchBar{
     display: flex;
     align-items: center;
     gap: 1vw;
 }
-#search-textarea{
+.searchTextarea{
     all: unset;
     width: 10rem;
-    font-size: var(--font-xs);
+    font-size: 1rem;
     border-bottom: 1px solid white;
 }
-#search-textarea:focus{
+.searchTextarea:focus{
     border-bottom: 1px solid #E2E2E2;
 }
-.announce-item{
+.announceItem{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: var(--font-sm);
+    font-size: 1rem;
     gap: 2rem;
 }
-.announce-category,
-.announce-date{
-    font-size: var(--font-xs);
+.announceCategory,
+.announceDate{
+    font-size: 1rem;
 }
-.announce-title{
+.announceTitle{
     flex-grow: 1;
     position: relative;
     overflow: hidden;
 }
-#announce-bottom{
+#announceBottom{
     display: flex;
     justify-content: space-between;
 }
-#load-more,
-#write-announce,
-.announce-title,
-#search-icon{
+.loadMore,
+.writeAnnounce,
+.announceTitle,
+.searchIcon{
     cursor: pointer;
 }
-.announce-title.important{
+.announceTitle.important{
     font-weight: 700;
 }
-#search-icon{
+.searchIcon{
     transition: 0.1s linear;
 }
-#search-icon:hover{
+.searchIcon:hover{
     transform: scale(110%);
 }
-#announce{
+.announce{
     margin-top: 1rem;
 }
-.announce-item{
+.announceItem{
     padding: 2.5vh;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #E2E2E2;
 }
-#announce-bottom{
+.announceBottom{
+    padding-left: 40px;
     margin: 1rem;
-    font-size: var(--font-sm);
+    font-size: 1.25rem;
+    display:flex;
+    justify-content: space-between;
 }
-#load-more,
-#write-announce{
+.loadMore,
+.writeAnnounce{
     position: relative;
     overflow: hidden;
 }
-#load-more:hover,
-#write-announce:hover{
+.loadMore:hover,
+.writeAnnounce:hover{
     font-weight: 700;
 }
-.announce-title::before,
-.search-category-item::before,
-#load-more::before{
+.announceTitle::before,
+.searchCategoryItem::before,
+.loadMore::before{
     content: '';
     position: absolute;
     top: 0;
@@ -152,35 +133,35 @@ body {
     transition: left 1s;
 }
 
-.announce-title:hover::before,
-.search-category-item:hover::before,
-#load-more:hover::before{
+.announceTitle:hover::before,
+.searchCategoryItem:hover::before,
+.loadMore:hover::before{
     left: 100%;
 }
 
 @Media screen and (60rem >= width){
-    #announce-header{
-        font-size: var(--font-lg);
+    .announceHeader{
+        font-size: 1.75rem;
         padding-block: 3vh;
     }
-    #search-category{
+    .searchCategory{
         flex-direction: column;
     }
-    .search-category-item{
-        font-size: var(--font-xs);
+    .searchCategoryItem{
+        font-size: 1rem;
     }
-    #search-textarea{
+    .searchTextarea{
         width: 20vw;
     }
-    .announce-item{
+    .announceItem{
         flex-direction: column;
         justify-content: space-between;
         align-items: flex-start;
-        font-size: var(--font-xs);
+        font-size: 1rem;
         gap: 0.2rem;
     }
-    .announce-category,
-    .announce-date{
-        font-size: var(--font-xxs);
+    .announceCategory,
+    .announceDate{
+        font-size: 0.75rem;
     }
 }

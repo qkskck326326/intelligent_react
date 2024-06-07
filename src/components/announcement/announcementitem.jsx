@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/announcement.module.css';
+import styles from '../../styles/announcement.module.css';
 import clsx from 'clsx'
 
 export default function AnnouncementItem(props){
@@ -16,15 +16,15 @@ export default function AnnouncementItem(props){
     // console.log(checkImportance)
 
     const classes = clsx({
-        'announce-title': true,
-        'important': checkImportance()
-    })
-    
-return(                 
-    <li className="announce-item">
-        <div className="announce-category">{category}</div>
-        <div className={classes}>{(important === 1) ? `[중요]` : '' } {title}</div>
-        <div className="announce-date">{new Date(createdAt).toLocaleDateString()}</div> 
-    </li>
-);
+        [styles.announceTitle]: true,
+        [styles.important]: checkImportance(),
+    });
+
+    return (
+        <li className={styles.announceItem}>
+            <div className={styles.announceCategory}>{category}</div>
+            <div className={classes}>{(important === 1) ? '[중요] ' : ''}{title}</div>
+            <div className={styles.announceDate}>{new Date(createdAt).toLocaleDateString()}</div>
+        </li>
+    );
 }
