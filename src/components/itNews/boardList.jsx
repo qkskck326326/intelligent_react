@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {axiosClient} from "../../axiosApi/axiosClient";
+import React, { useState, useEffect } from "react";
+import { axiosClient } from "../../axiosApi/axiosClient";
 
 const BoardList = () => {
     const [data, setData] = useState([]);
@@ -9,7 +9,9 @@ const BoardList = () => {
     useEffect(() => {
         axiosClient.get('/itNewsBoard')
             .then(response => {
-                setData(response.data);
+                const responseData = response.data;
+                const dataArray = Array.isArray(responseData) ? responseData : [responseData];
+                setData(dataArray);
                 setLoading(false);
             })
             .catch(err => {
@@ -24,15 +26,30 @@ const BoardList = () => {
     return (
         <div className="container">
             <h1>Board List</h1>
-            {data.map((item) => (
-                <div key={item.boardId} className="card mb-2">
-                    <div className="card-body">
-                        <h5 className="card-title">{item.title}</h5>
-                        <p className="card-text">{item.originalContext}</p>
-                        <a href={item.siteUrl} className="btn btn-primary">Visit Site</a>
-                    </div>
-                </div>
-            ))}
+            <table className="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Original Context</th>
+                    <th scope="col">Link</th>
+                </tr>
+                </thead>
+                <tbody>
+                {data.map((item, index) => (
+                    <tr key={item.boardId}>
+                        <th scope="row">{index + 1}</th>
+                        <td>{item.title}</td>
+                        <td>{item.originalContext}</td>
+                        <td>
+                            <a href={item.siteUrl} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                Visit Site
+                            </a>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
         </div>
     );
 }
