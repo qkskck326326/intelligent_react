@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from "react";
-import CertificateCard from "./certificateCard ";
-import Pagination from "../common/pagination";
-import CertificateAddModal from "./certificateAddModal";
+import CertificateCard from "./CertificateCard";
+import Pagination from "../common/Pagination";
+import CertificateAddModal from "./CertificateAddModal";
 import styles from "../../styles/myCertificate.module.css";
+import { axiosClient } from "../../axiosApi/axiosClient";
 
 const MyCertificate = ({ nickname }) => {
   const [certificates, setCertificates] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchCertificates = async (page, nickname) => {
+    setLoading(true);
     try {
-      const res = await fetch(
-          `/certificates?nickname=${nickname}&page=${page}&size=10`
-      );
-      const data = await res.json();
+      const res = await axiosClient.get(`/certificates?nickname=${nickname}&page=${page}&size=10`);
+      const data = res.data;
       setCertificates(data.content);
       setTotalPages(data.totalPages);
     } catch (error) {
-      console.error("Error fetching certificates", error);
+      setError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -31,14 +35,8 @@ const MyCertificate = ({ nickname }) => {
 
   const handleSave = async (newCertificate) => {
     try {
-      const res = await fetch(`/certificates`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCertificate),
-      });
-      if (res.ok) {
+      const res = await axiosClient.post('/certificates', newCertificate);
+      if (res.status === 200 || res.status === 201) {
         fetchCertificates(currentPage, nickname);
         setIsModalOpen(false);
       } else {
@@ -51,14 +49,15 @@ const MyCertificate = ({ nickname }) => {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`/certificates/${id}`, {
-        method: "DELETE",
-      });
+      await axiosClient.delete(`/certificates/${id}`);
       fetchCertificates(currentPage, nickname);
     } catch (error) {
       console.error("Error deleting certificate", error);
     }
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
       <div className={styles.container}>
