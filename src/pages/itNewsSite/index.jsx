@@ -5,8 +5,7 @@ import Link from "next/link";
 const Index = () => {
     return (
         <div>
-            <h1>itNewsBoard</h1>
-            <Link href={'/itNewsSite'}/>
+            <h1>itNewsSite</h1>
             <BoardList/>
         </div>
     );
