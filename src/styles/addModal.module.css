@@ -1,0 +1,109 @@
+/* styles/addModal.module.css */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    padding: 20px;
+    text-align: center;
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modalHeader {
+    margin-bottom: 20px;
+}
+
+.inputField {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: calc(50% - 10px);
+}
+
+.inputGroup {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.pdfPreview {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.pdfPlaceholder {
+    width: 100%;
+    height: 200px;
+    border: 1px dashed #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.pdfIframe {
+    width: 100%;
+    height: 200px;
+    border: none;
+}
+
+.fileInput {
+    display: block;
+    margin: 10px 0;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.saveButton {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 48%;
+}
+
+.cancelButton {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 48%;
+}
+
+.saveButton:hover {
+    background-color: #218838;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+}
