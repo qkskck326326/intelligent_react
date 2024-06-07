@@ -1,0 +1,139 @@
+{
+    "announcements": [
+      {
+        "announcementId": 1,
+        "title": "첫번째 공지사항",
+        "content": "This is the first announcement content.",
+        "createdAt": "2023-01-01T10:00:00Z",
+        "creator": "John Doe",
+        "category": 0,
+        "importance": 1
+      },
+      {
+        "announcementId": 2,
+        "title": "공지사항 2",
+        "content": "This is the second announcement content.",
+        "createdAt": "2023-01-02T11:00:00Z",
+        "creator": "Jane Smith",
+        "category": 1,
+        "importance": 0
+      },
+      {
+        "announcementId": 3,
+        "title": "공지사항 3",
+        "content": "This is the third announcement content.",
+        "createdAt": "2023-01-03T12:00:00Z",
+        "creator": "Alice Johnson",
+        "category": 2,
+        "importance": 1
+      },
+      {
+        "announcementId": 4,
+        "title": "공지사항 4",
+        "content": "This is the fourth announcement content.",
+        "createdAt": "2023-01-04T13:00:00Z",
+        "creator": "Bob Brown",
+        "category": 0,
+        "importance": 0
+      },
+      {
+        "announcementId": 5,
+        "title": "공지사항 5",
+        "content": "This is the fifth announcement content.",
+        "createdAt": "2023-01-05T14:00:00Z",
+        "creator": "Charlie Davis",
+        "category": 1,
+        "importance": 1
+      },
+      {
+        "announcementId": 6,
+        "title": "공지사항 6",
+        "content": "This is the sixth announcement content.",
+        "createdAt": "2023-01-06T15:00:00Z",
+        "creator": "Danielle White",
+        "category": 2,
+        "importance": 0
+      },
+      {
+        "announcementId": 7,
+        "title": "공지사항 7",
+        "content": "This is the seventh announcement content.",
+        "createdAt": "2023-01-07T16:00:00Z",
+        "creator": "Edward Green",
+        "category": 0,
+        "importance": 1
+      },
+      {
+        "announcementId": 8,
+        "title": "공지사항 8",
+        "content": "This is the eighth announcement content.",
+        "createdAt": "2023-01-08T17:00:00Z",
+        "creator": "Fiona Black",
+        "category": 1,
+        "importance": 0
+      },
+      {
+        "announcementId": 9,
+        "title": "공지사항 9",
+        "content": "This is the ninth announcement content.",
+        "createdAt": "2023-01-09T18:00:00Z",
+        "creator": "George King",
+        "category": 2,
+        "importance": 1
+      },
+      {
+        "announcementId": 10,
+        "title": "공지사항 10",
+        "content": "This is the tenth announcement content.",
+        "createdAt": "2023-01-10T19:00:00Z",
+        "creator": "Hannah Scott",
+        "category": 0,
+        "importance": 0
+      },
+      {
+        "announcementId": 11,
+        "title": "공지사항 11",
+        "content": "This is the eleventh announcement content.",
+        "createdAt": "2023-01-11T20:00:00Z",
+        "creator": "Ian Wright",
+        "category": 1,
+        "importance": 1
+      },
+      {
+        "announcementId": 12,
+        "title": "공지사항 12",
+        "content": "This is the twelfth announcement content.",
+        "createdAt": "2023-01-12T21:00:00Z",
+        "creator": "Jessica Young",
+        "category": 2,
+        "importance": 0
+      },
+      {
+        "announcementId": 13,
+        "title": "공지사항 13",
+        "content": "This is the thirteenth announcement content.",
+        "createdAt": "2023-01-13T22:00:00Z",
+        "creator": "Kevin Walker",
+        "category": 0,
+        "importance": 1
+      },
+      {
+        "announcementId": 14,
+        "title": "공지사항 14",
+        "content": "This is the fourteenth announcement content.",
+        "createdAt": "2023-01-14T23:00:00Z",
+        "creator": "Laura Hill",
+        "category": 1,
+        "importance": 0
+      },
+      {
+        "announcementId": 15,
+        "title": "공지사항 15",
+        "content": "This is the fifteenth announcement content.",
+        "createdAt": "2023-01-15T00:00:00Z",
+        "creator": "Michael Adams",
+        "category": 2,
+        "importance": 1
+      }
+    ]
+  }
