@@ -25,7 +25,7 @@ const CertificateAddModal = ({ onSave, onClose }) => {
       pdfFile: file ? URL.createObjectURL(file) : "",
     });
   };
-//ㅎㅎ
+//ㅎ
   const handleSave = () => {
     onSave(form);  // 부모에게 props로 받은 onSave를 이용하여 저장함.
   };
