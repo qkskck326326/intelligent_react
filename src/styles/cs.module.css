@@ -1,0 +1,61 @@
+.csContainer{
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.sideBarContainer{
+    margin: 0;
+    width: 20rem;
+    height: 100vh;
+    font-size:2rem;
+    font-weight: 700;
+    position: sticky;
+    background-color: white;
+    top: 0;
+    border-right: 1px solid #E2E2E2;
+}
+
+.sideBarItem{
+    width:auto;
+    all:unset;
+    display: block;
+    position: relative;
+    font-weight: 400;
+    padding-block: 2rem;
+    padding-left: 1rem;
+    font-size: 1.5rem;
+    cursor:pointer;
+    overflow: hidden;
+}
+
+.sideBarItem:hover,
+.selected{
+    font-weight: 700;
+}
+
+.sideBarItem::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 120%;
+    height: 100%;
+    background-color: rgba(209, 244, 230, 0.5);
+    z-index: -1;
+    transition: left 1s;
+}
+
+.sideBarItem:hover::before{
+    left: 0;
+}
+
+@Media screen and (80rem >= width){
+    .sideBarContainer{
+        width: 10rem;
+        font-size: 1.5rem;
+    }
+    .sideBarItem{
+        font-size: 1.25rem;
+    }
+}
