@@ -18,13 +18,17 @@
 }
 .announceHeader{
     padding-left: 40px;
-    padding-block: 7vh;
+    padding-block: 0.1rem;
     font-size: 4rem;
     font-weight: 900;
-    letter-spacing: 1vw;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+    border-bottom: 1px solid #E2E2E2;
 }
 .announceMid{
-    padding-block: 0vh;
+    padding-block: 0.1rem;
     display: flex;
     justify-content: space-between;
 }
@@ -112,12 +116,18 @@
 }
 .loadMore,
 .writeAnnounce{
+    all: unset;
+    cursor:pointer;
     position: relative;
     overflow: hidden;
 }
 .loadMore:hover,
 .writeAnnounce:hover{
     font-weight: 700;
+}
+
+.writeAnnounce.disabled{
+    display:none;
 }
 .announceTitle::before,
 .searchCategoryItem::before,
@@ -136,13 +146,12 @@
 .announceTitle:hover::before,
 .searchCategoryItem:hover::before,
 .loadMore:hover::before{
-    left: 100%;
+    left: 0;
 }
 
-@Media screen and (60rem >= width){
+@Media screen and (80rem >= width){
     .announceHeader{
         font-size: 1.75rem;
-        padding-block: 3vh;
     }
     .searchCategory{
         flex-direction: column;
