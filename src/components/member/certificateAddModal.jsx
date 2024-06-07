@@ -9,7 +9,7 @@ const CertificateAddModal = ({ onSave, onClose }) => {
     issuePlace: "",
     certificateNumber: ""
   });
-
+//ㅎ
   const handleChange = (e) => { //입력필드의 값이 변경될때 호출됨.
     const { name, value } = e.target;
     setForm({
