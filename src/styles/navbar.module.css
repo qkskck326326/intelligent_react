@@ -4,31 +4,36 @@
     background-color: #343a40; /* 기본 배경색을 Bootstrap 기본 색상과 일치시킴 */
     padding: 10px 20px;
     box-sizing: border-box;  /* 패딩과 보더를 포함한 박스 크기 조정 */
-}
-
-.navbar-brand img {
-    width: 10vh;  /* 로고 이미지 크기 조정 */
-}
-
-.nav-link {
-    color: #ffffff !important; /* 링크 텍스트 색상 */
-    margin-right: 15px; /* 링크 사이 간격 조정 */
-    text-transform: uppercase; /* 텍스트 대문자로 변환 */
-}
-
-.nav-link:hover {
-    color: #ddd !important; /* 마우스 오버 시 링크 텍스트 색상 */
-}
-
-.navbar-nav {
-    align-items: center; /* 네비게이션 링크 수직 중앙 정렬 */
-}
-
-.navbar-collapse {
     display: flex;
     justify-content: space-between; /* 좌우 끝에 요소를 배치 */
+    align-items: center; /* 요소들을 수직으로 중앙 정렬 */
 }
 
-.right-nav {
-    margin-left: auto; /* 오른쪽 정렬을 위한 마진 조정 */
+.navbar ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar li {
+    margin-right: 20px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.navbar li:hover {
+    color: #ddd;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }

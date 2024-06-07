@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {Container, ThemeProvider} from 'react-bootstrap';
-import NavigationBar from "../components/common/navigationBar";
+import HeaderBar from "../components/common/HeaderBar";
 import '../styles/style.css';
 import React from "react";
 
@@ -18,7 +18,7 @@ const App = ({ Component, pageProps }) => {
             <link rel='icon' href='/public/images/favicon.ico'/>
             <title>IntelligentClass</title>
           </Head>
-          <NavigationBar/>
+          <HeaderBar/>
           <Container>
             <Component {...pageProps} />
           </Container>

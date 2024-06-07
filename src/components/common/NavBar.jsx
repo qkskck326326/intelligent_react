@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import styles from '../../styles/NavBar.module.css'; // CSS 모듈을 import
+import styles from '../../styles/navBar.module.css'; // CSS 모듈을 import
 
 const NavBar = () => {
     return (

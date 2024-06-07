@@ -5,7 +5,7 @@ import { authStore } from '../../stores/authStore';
 import { logout } from '../../axiosApi/MemberAxios';
 import styles from '../../styles/header.module.css'; // CSS 모듈을 import
 
-const NavigationBar = observer(() => {
+const HeaderBar = observer(() => {
     const loggedIn = authStore.loggedIn; // 로그인 상태값
 
     useEffect(() => {
@@ -54,4 +54,4 @@ const NavigationBar = observer(() => {
     );
 });
 
-export default NavigationBar;
+export default HeaderBar;
