@@ -1,0 +1,108 @@
+/* UserManagement.module.css */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.logout {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout:hover {
+    background-color: #0056b3;
+}
+
+.content {
+    margin-left: 50px;
+    margin-top: 50px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    margin-bottom: 20px;
+}
+
+.filterSection {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.filterRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.filterRow label {
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.filterSelect,
+.filterInput {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.filterButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.filterButton:hover {
+    background-color: #0056b3;
+}
+
+.tableSection {
+    overflow-x: auto;
+    border: 1px solid #000; /* Add black border around the table section */
+    border-radius: 10px;
+}
+
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.userTable th,
+.userTable td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: left;
+}
+
+.userTable th {
+    background-color: #f8f9fa;
+}
+
+.userTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.userTable {
+    border: 1px solid #000; /* Add black border around the table */
+}
