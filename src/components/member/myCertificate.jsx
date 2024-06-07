@@ -10,24 +10,24 @@ const MyCertificate = ({ nickname }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (nickname) {
-      fetchCertificates(currentPage, nickname);
-    }
-  }, [currentPage, nickname]);
-
   const fetchCertificates = async (page, nickname) => {
     try {
       const res = await fetch(
           `/certificates?nickname=${nickname}&page=${page}&size=10`
       );
       const data = await res.json();
-      setCertificates(data);
-      setTotalPages(Math.ceil(data.length / 10));
+      setCertificates(data.content);
+      setTotalPages(data.totalPages);
     } catch (error) {
       console.error("Error fetching certificates", error);
     }
   };
+
+  useEffect(() => {
+    if (nickname) {
+      fetchCertificates(currentPage, nickname);
+    }
+  }, [currentPage, nickname]);
 
   const handleSave = async (newCertificate) => {
     try {
@@ -39,7 +39,7 @@ const MyCertificate = ({ nickname }) => {
         body: JSON.stringify(newCertificate),
       });
       if (res.ok) {
-        fetchCertificates(currentPage, nickname); // 추가 후 자격증 목록을 다시 가져옵니다.
+        fetchCertificates(currentPage, nickname);
         setIsModalOpen(false);
       } else {
         console.error("Failed to add certificate");
@@ -54,7 +54,7 @@ const MyCertificate = ({ nickname }) => {
       await fetch(`/certificates/${id}`, {
         method: "DELETE",
       });
-      fetchCertificates(currentPage, nickname); // 삭제 후 현재 페이지의 데이터를 다시 가져옵니다.
+      fetchCertificates(currentPage, nickname);
     } catch (error) {
       console.error("Error deleting certificate", error);
     }
@@ -62,12 +62,15 @@ const MyCertificate = ({ nickname }) => {
 
   return (
       <div className={styles.container}>
-        <button
-            className={styles["add-button"]}
-            onClick={() => setIsModalOpen(true)}
-        >
-          + 추가
-        </button>
+        <div className={styles.header}>
+          <span className={styles.title}>자격증</span>
+          <button
+              className={styles["add-button"]}
+              onClick={() => setIsModalOpen(true)}
+          >
+            + 추가
+          </button>
+        </div>
         {certificates.map((certificate) => (
             <CertificateCard
                 key={certificate.certificateNumber}
