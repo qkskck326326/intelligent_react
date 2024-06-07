@@ -26,7 +26,7 @@ const HeaderBar = observer(() => {
                 <img src="/images/logo.png" alt="Logo" />
             </Navbar.Brand>
             <Nav className={styles['navbar-nav']}>
-                <Nav.Link href="/admin" className={styles['nav-link']}>어드민</Nav.Link>
+                <Nav.Link href="/admin/dashboard" className={styles['nav-link']}>어드민</Nav.Link>
                 <Nav.Link href="/lecturePackage" className={styles['nav-link']}>강의패키지</Nav.Link>
                 <Nav.Link href="/lecture" className={styles['nav-link']}>강의</Nav.Link>
                 <Nav.Link href="/itNewsBoard" className={styles['nav-link']}>itNewsBoard</Nav.Link>
@@ -35,6 +35,7 @@ const HeaderBar = observer(() => {
                 <Nav.Link href="/payment" className={styles['nav-link']}>결제</Nav.Link>
                 <Nav.Link href="/chatting" className={styles['nav-link']}>채팅</Nav.Link>
                 <Nav.Link href="/post" className={styles['nav-link']}>공유게시판</Nav.Link>
+                <Nav.Link href="/cs" className={styles['nav-link']}>고객센터</Nav.Link>
             </Nav>
             <Nav className={styles['right-nav']}>
                 {loggedIn ? (
