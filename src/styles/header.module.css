@@ -1,0 +1,43 @@
+/* NavBar.module.css */
+.navbar {
+    width: 100%;  /* 전체 화면 너비에 맞춤 */
+    background-color: #3eed15; /* 기본 배경색 */
+    padding: 10px 20px;
+    box-sizing: border-box;  /* 패딩과 보더를 포함한 박스 크기 조정 */
+    display: flex;  /* Flexbox 사용 */
+    align-items: center;  /* 수직 정렬 */
+    justify-content: space-between;  /* 양쪽 끝으로 정렬 */
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;  /* 로고와 메뉴 사이 간격 */
+}
+
+.navbar-brand img {
+    width: 10vh;  /* 로고 이미지 크기 조정 */
+}
+
+.navbar-nav {
+    display: flex;  /* Flexbox 사용 */
+    align-items: center; /* 네비게이션 링크 수직 중앙 정렬 */
+    margin-left: 20px; /* 로고와 메뉴 사이 간격 조정 */
+}
+
+.nav-link {
+    color: #000000 !important; /* 링크 텍스트 색상 */
+    margin-right: 15px; /* 링크 사이 간격 조정 */
+    text-transform: uppercase; /* 텍스트 대문자로 변환 */
+    text-decoration: none !important
+}
+
+.nav-link:hover {
+    color: #ffffff !important; /* 마우스 오버 시 링크 텍스트 색상 */
+}
+
+.right-nav {
+    display: flex;  /* Flexbox 사용 */
+    align-items: center; /* 네비게이션 링크 수직 중앙 정렬 */
+    margin-left: auto; /* 오른쪽 정렬을 위한 마진 조정 */
+}
