@@ -1,11 +1,17 @@
-//index.jsx
-import { Container } from 'react-bootstrap';
+import React from 'react';
+import NavBar from "../components/common/NavBar";
+import CourseList from "../components/common/CourseList";
 
-const index = () => {
+const HomePage = () => {
     return (
-        <Container fluid>
-        </Container>
+        <div>
+            <main>
+                <img src='/images/banner.png' alt="Banner" style={{width: '100%', height:'auto'}}/>
+                <NavBar/>
+                <CourseList/>
+            </main>
+        </div>
     );
-};
+}
 
-export default index;
+export default HomePage;
