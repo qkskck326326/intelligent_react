@@ -34,7 +34,7 @@ const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>{initialData ? 'Edit DTO Data' : 'Insert DTO Data'}</Modal.Title>
+                <Modal.Title>{initialData ? '사이트 수정' : '새로운 사이트 등록'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
