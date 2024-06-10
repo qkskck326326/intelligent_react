@@ -5,6 +5,8 @@ import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BoardList = () => {
+    const [page, setPage] = useState(0)
+    const [size, setSize] = useState(10)
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,8 +14,8 @@ const BoardList = () => {
     const [currentData, setCurrentData] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    useEffect(() => {
-        axiosClient.get('/itNewsSite')
+    const fetchData = () => {
+        axiosClient.get('/itNewsSite', {params: {page: page, size: size}})
             .then(response => {
                 const responseData = response.data;
                 const dataArray = Array.isArray(responseData) ? responseData : [responseData];
@@ -24,12 +26,27 @@ const BoardList = () => {
                 setError(err);
                 setLoading(false);
             });
+    };
+
+    useEffect(() => {
+        fetchData();
     }, []);
 
     const handleSave = (newData) => {
         axiosClient.post('/itNewsSite', newData)
-            .then(response => {
-                setData([...data, response.data]);
+            .then(() => {
+                fetchData(); // 데이터 추가 후 목록을 다시 불러옴
+                handleClose();
+            })
+            .catch(err => {
+                setError(err);
+            });
+    };
+
+    const handleDelete = (siteUrl) => {
+        axiosClient.delete('/itNewsSite', siteUrl)
+            .then(() => {
+                fetchData(); // 데이터 삭제 후 목록을 다시 불러옴
             })
             .catch(err => {
                 setError(err);
@@ -89,7 +106,7 @@ const BoardList = () => {
                         <td>{item.contextElement}</td>
                         <td>
                             <button onClick={() => handleEdit(item)}>수정</button> &nbsp;
-                            <button>삭제</button>
+                            <button onClick={() => handleDelete(item.siteUrl)}>삭제</button>
                         </td>
                     </tr>
                 ))}
