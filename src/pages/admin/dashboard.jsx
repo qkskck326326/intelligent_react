@@ -7,9 +7,6 @@ const Dashboard = () => {
         <div className={styles.container}>
             <Sidebar />
             <div className={styles.main}>
-                <div className={styles.header}>
-                    <button className={styles.logout}>로그아웃</button>
-                </div>
                 <div className={styles.content}>
                     <h1 className={styles.title}>대시보드</h1>
                     <div className={styles.cards}>
