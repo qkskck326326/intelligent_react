@@ -37,6 +37,7 @@ class AuthStore {
     getNickname() {
         return this.nickname;
     }
+
 }
 
 const authStore = new AuthStore();
