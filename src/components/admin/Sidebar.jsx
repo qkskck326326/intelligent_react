@@ -8,7 +8,11 @@ const Sidebar = () => {
             <ul className={styles.nav}>
                 <li className={styles.navHeader}>ADMIN</li>
                 <li><Link href="/">사이트 바로가기</Link></li>
-                <li><Link href="/admin/site-management">사이트관리</Link></li>
+                <br/>
+                <br/>
+                <br/>
+                <li aria-readonly></li>
+                <li className={styles.navHeader}>사이트관리</li>
                 <li><Link href="/admin/dashboard">대시보드</Link></li>
                 <li><Link href="/admin/user-management">사용자 관리</Link></li>
                 <li><Link href="/admin/content-management">컨텐츠 관리</Link></li>

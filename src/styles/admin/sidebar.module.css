@@ -16,6 +16,7 @@
 }
 
 .navHeader {
+    font-size: 30px;
     font-weight: bold;
     margin-bottom: 10px;
 }
@@ -30,6 +31,8 @@
     background-color: #495057;
     cursor: pointer;
 }
+
+
 
 .nav a {
     text-decoration: none;
