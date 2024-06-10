@@ -5,28 +5,21 @@ import Link from "next/link";
 import { authStore } from "../../stores/authStore";
 
 export default function Announcement(props) {
-
     const [announcements, setAnnouncements] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [category, setCategory] = useState(null);
-
+    const [keyword, setKeyword] = useState('');
 
     useEffect(() => {
-        resetAndFetchAnnouncements();
-    }, [category]);
-
-
-    const resetAndFetchAnnouncements = async () => {
-        setAnnouncements([]);
-        setPage(1);
-        setHasMore(true);
-        if (category === null) {
-            fetchAnnouncements(1);
+        if (category !== null) {
+            fetchCategorizedAnnouncements(page, category);
+        } else if (keyword !== '') {
+            searchAnnouncements(page, keyword);
         } else {
-            fetchCategorizedAnnouncements(1, category);
+            fetchAnnouncements(page);
         }
-    };
+    }, [category, keyword]);
 
     const fetchAnnouncements = async (page) => {
         try {
@@ -43,6 +36,8 @@ export default function Announcement(props) {
 
             if (data.length > 0) {
                 setAnnouncements(prevAnnouncements => [...prevAnnouncements, ...data]);
+                setPage(page + 1);
+
                 if (data.length < 10) {
                     setHasMore(false);
                 }
@@ -66,8 +61,39 @@ export default function Announcement(props) {
                 throw new Error('An error occurred!');
             }
             const data = await response.json();
+
             if (data.length > 0) {
                 setAnnouncements(prevAnnouncements => [...prevAnnouncements, ...data]);
+                setPage(page + 1);
+
+                if (data.length < 10) {
+                    setHasMore(false);
+                }
+            } else {
+                setHasMore(false);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const searchAnnouncements = async (page, keyword) => {
+        try {
+            const response = await fetch(`http://localhost:8080/announcement/search?page=${page}&keyword=${keyword}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error('An error occurred!');
+            }
+            const data = await response.json();
+
+            if (data.length > 0) {
+                setAnnouncements(prevAnnouncements => [...prevAnnouncements, ...data]);
+                setPage(page + 1);
+
                 if (data.length < 10) {
                     setHasMore(false);
                 }
@@ -81,24 +107,32 @@ export default function Announcement(props) {
 
     const loadMoreData = () => {
         if (hasMore) {
-            const nextPage = page + 1;
-            if (category === null) {
-                fetchAnnouncements(nextPage);
+            if (category !== null) {
+                fetchCategorizedAnnouncements(page, category);
+            } else if (keyword !== '') {
+                searchAnnouncements(page, keyword);
             } else {
-                fetchCategorizedAnnouncements(nextPage, category);
+                fetchAnnouncements(page);
             }
-            setPage(nextPage);
         }
     };
 
     const handleCategoryChange = (newCategory) => {
+        setAnnouncements([]);
+        setPage(1);
+        setHasMore(true);
         setCategory(newCategory);
+        setKeyword('');
     };
 
-    function handleSubmit(event){
+    const handleSearch = (event) => {
         event.preventDefault();
-
-    }
+        setAnnouncements([]);
+        setPage(1);
+        setHasMore(true);
+        setCategory(null);
+        searchAnnouncements(1, keyword);
+    };
 
     return (
         <div className={styles.announceContainer}>
@@ -108,22 +142,17 @@ export default function Announcement(props) {
             <div className={styles.announceMid}>
                 <ul className={styles.searchCategory}>
                     <li className={`${styles.searchCategoryItem} ${category === null ? styles.selected : ''}`} onClick={() => handleCategoryChange(null)}>전체</li>
-                    <li className={`${styles.searchCategoryItem} ${category === 0 ? styles.selected : ''}`} onClick={() => handleCategoryChange(0)}>서비스</li>
-                    <li className={`${styles.searchCategoryItem} ${category === 1 ? styles.selected : ''}`} onClick={() => handleCategoryChange(1)}>업데이트</li>
-                    <li className={`${styles.searchCategoryItem} ${category === 2 ? styles.selected : ''}`} onClick={() => handleCategoryChange(2)}>이벤트</li>
+                    <li className={styles.searchCategoryItem} onClick={() => handleCategoryChange(0)}>서비스</li>
+                    <li className={styles.searchCategoryItem} onClick={() => handleCategoryChange(1)}>업데이트</li>
+                    <li className={styles.searchCategoryItem} onClick={() => handleCategoryChange(2)}>이벤트</li>
                 </ul>
-                <form onSubmit={handleSubmit} className={styles.searchBar}>
+                <form className={styles.searchBar} onSubmit={handleSearch}>
                     <input type="text" name="searchTextarea" id="search-textarea" className={styles.searchTextarea}
-                           placeholder="검색어 입력"/>
-                    <button type="submit" className={styles.searchButton}>
-                        <svg className={styles.searchIcon} viewBox="0 0 512 512">
-                            <path
-                                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
-                        </svg>
-                    </button>
+                           placeholder="검색어 입력" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                    <button type="submit">검색</button>
                 </form>
             </div>
-            <div>
+            <div className={styles.announceMain}>
                 <ul className={styles.announce}>
                     {announcements.length > 0
                         ? announcements.map(announcement => (
@@ -132,7 +161,7 @@ export default function Announcement(props) {
                                 details={announcement}
                             />
                         ))
-                        : <div style={{ fontSize: '1.25rem' }}>아직 공지사항이 없어요
+                        : <div style={{ fontSize: '1.25rem' }}>아직 공지사항이 없어요 한번 만들어 보시는 건 어떨까요?
                         </div>
                     }
                 </ul>
