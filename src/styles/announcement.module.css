@@ -12,6 +12,56 @@
     font-style: normal;
 }
 
+.spinner {
+    animation: rotator 1.4s linear infinite;
+}
+
+@keyframes rotator {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(270deg);
+    }
+}
+.path {
+    stroke-dasharray: 187;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+}
+
+@keyframes colors {
+    0% {
+        stroke: #4285F4;
+    }
+    25% {
+        stroke: #DE3E35;
+    }
+    50% {
+        stroke: #F7C223;
+    }
+    75% {
+        stroke: #1B9A59;
+    }
+    100% {
+        stroke: #4285F4;
+    }
+}
+@keyframes dash {
+    0% {
+        stroke-dashoffset: 187;
+    }
+    50% {
+        stroke-dashoffset: 46.75;
+        transform: rotate(135deg);
+    }
+    100% {
+        stroke-dashoffset: 187;
+        transform: rotate(450deg);
+    }
+}
+
 .announceContainer{
     width: 50vw;
     user-select: none;
@@ -75,6 +125,7 @@
 .announceCategory,
 .announceDate{
     font-size: 1rem;
+    flex-basis: 4rem;
 }
 .announceTitle{
     flex-grow: 1;
@@ -93,6 +144,9 @@
 }
 .announceTitle.important{
     font-weight: 700;
+}
+.searchButton{
+    all:unset;
 }
 .searchIcon{
     transition: 0.1s linear;
@@ -172,5 +226,6 @@
     .announceCategory,
     .announceDate{
         font-size: 0.75rem;
+        flex-basis: 0;
     }
 }
