@@ -1,7 +1,10 @@
-
+import LectureList from "../../components/lecture/lectureList"
 const Index = () => {
     return (
-        <h1>lecture page</h1>
+        <div>
+            
+            <LectureList />
+        </div>
     );
 };
 
