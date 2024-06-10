@@ -63,7 +63,7 @@ instance.interceptors.response.use(
         const originalRequest = error.config;
 
         // 401 오류가 발생하고, 재시도 한 적이 없다면
-        if(error.response.status === 401 && !originalRequest._retry) {
+        if(error.response.status === 401 && !originalRequest._retry) { // 액세스, 리프레쉬 둘다 죽었을경우 처리
             originalRequest._retry = true;  //재시도로 변경
             // 토큰을 갱신하고 재시도
             const newAccessToke = await refreshToken();
