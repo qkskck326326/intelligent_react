@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
+const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
     const [formData, setFormData] = useState({
         siteUrl: '',
         latestBoardUrl: '',
@@ -117,4 +117,4 @@ const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
     );
 };
 
-export default SiteInsertModal;
+export default SiteSaveModal;
