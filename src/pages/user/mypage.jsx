@@ -18,7 +18,7 @@ import styles from "../../styles/myPage.module.css";
     <div className={styles.title}>
       <h1>My Page</h1>
       {/*{nickname && <MyCertificate nickname={nickname} />}*/}
-        <MyCertificate nickname={'johndoe'} />
+        <MyCertificate />
     </div>
   );
 };

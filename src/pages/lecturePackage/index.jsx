@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import styles from "../../styles/mypage.module.css";
+import LecturePackage from "../../components/member/lecturePackage";
 
 const Index = () => {
     return (
@@ -11,6 +12,9 @@ const Index = () => {
                 마이페이지
                 <Link href="/user/mypage">this page!</Link>
             </h1>
+            <div>
+                <LecturePackage/>
+            </div>
         </div>
     );
 };
