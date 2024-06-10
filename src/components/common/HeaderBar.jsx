@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Nav } from 'react-bootstrap';
 import { observer } from 'mobx-react';
-import { authStore } from "../../stores/authStore";
+import authStore from "../../stores/authStore";
 import { axiosClient } from '../../axiosApi/axiosClient';
 import { handleAxiosError } from '../../axiosApi/errorAxiosHandler';
 import styles from '../../styles/header.module.css'; // CSS 모듈을 import
 
 const HeaderBar = observer(() => {
-    const isLoggedIn = authStore.isLoggedIn;
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        authStore.checkIsLoggedIn()
+        setIsClient(true);
+        if (typeof window !== "undefined") {
+            authStore.checkIsLoggedIn();
+        }
     }, []);
 
     const handleLogout = async (e) => {
@@ -26,6 +29,10 @@ const HeaderBar = observer(() => {
             handleAxiosError(error);
         }
     };
+
+    if (!isClient) {
+        return null; // 클라이언트가 아닐 때는 아무것도 렌더링하지 않음
+    }
 
     return (
         <Navbar collapseOnSelect expand="lg" className={styles.navbar}>
@@ -45,7 +52,7 @@ const HeaderBar = observer(() => {
                 <Nav.Link href="/cs" className={styles['nav-link']}>고객센터</Nav.Link>
             </Nav>
             <Nav className={styles['right-nav']}>
-                {isLoggedIn ? (
+                {authStore.isLoggedIn ? (
                     <>
                         <Nav.Link onClick={handleLogout} className={styles['nav-link']}>로그아웃</Nav.Link>
                         <Nav.Link href="/user/mypage" className={styles['nav-link']}>마이페이지</Nav.Link>
