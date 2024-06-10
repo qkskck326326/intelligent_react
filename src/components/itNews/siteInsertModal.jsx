@@ -15,6 +15,15 @@ const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
     useEffect(() => {
         if (initialData) {
             setFormData(initialData);
+        }else{
+            setFormData({
+                siteUrl: '',
+                latestBoardUrl: '',
+                siteName: '',
+                videoElement: '',
+                titleElement: '',
+                contextElement: ''
+            });
         }
     }, [initialData]);
 
