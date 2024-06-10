@@ -1,0 +1,114 @@
+.announceWriteContainer{
+    width: 50vw;
+    user-select: none;
+}
+.announceWriteHeader{
+    padding-left: 2rem;
+    padding-block: 0.1rem;
+    font-size: 4rem;
+    font-weight: 900;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+    border-bottom: 1px solid #E2E2E2;
+}
+.announceWriteMid{
+    display: flex;
+    padding-block: 0.2rem;
+    flex-direction: column;
+    padding-left: 2rem;
+    border-bottom: 1px solid #E2E2E2;
+}
+.announceWriteTitle{
+    all:unset;
+    margin-block: 2rem;
+    flex-grow: 1;
+    font-size: 2rem;
+}
+.announceWriteTitle:focus{
+    border-bottom: 1px solid #E2E2E2;
+}
+.announceWriteCategory{
+    all: unset;
+    display: block;
+    margin-block: 0.5rem;
+}
+.announceWriteBottom{
+    display: flex;
+    justify-content: space-between;
+}
+.announceWriteMain{
+    display: flex;
+}
+.announceWriteContent{
+    all:unset;
+    margin: 1rem 2rem;
+    font-size: 1.25rem;
+    flex-grow: 1;
+    overflow-wrap: break-word;
+    resize: none;
+    min-height: 28rem;
+    line-height: 2rem;
+}
+.announceWriteContent::-webkit-scrollbar {
+    width: 10px;
+}
+
+.announceWriteContent::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.announceWriteContent::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.announceWriteContent::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.announceWriteBottom{
+    padding-left: 2rem;
+    display: flex;
+    align-items: center;
+}
+.announceConfirm{
+    all:unset;
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.announceConfirm::before{
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: rgba(209, 244, 230, 0.9);
+    transition: left 1s;
+}
+.announceConfirm:hover::before{
+    left: 0
+}
+
+
+@Media screen and (80rem >= width){
+    .announceWriteHeader{
+        font-size: 1.75rem;
+    }
+    .announceWriteTitle{
+        font-size: 1.5rem;
+    }
+    .announceWriteContent{
+        font-size: 1rem;
+        min-height: 30rem;
+    }
+    .announceWriteBottom{
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+    }
+}
