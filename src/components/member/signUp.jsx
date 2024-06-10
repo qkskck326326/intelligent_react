@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { signUp } from "../../axiosApi/MemberAxios";
 import { useRouter } from 'next/router';
 import { handleAxiosError } from "../../axiosApi/errorAxiosHandler";
+import { axiosClient } from "../../axiosApi/axiosClient";
 
 const SignUpForm = () => {
     const router = useRouter();
@@ -12,6 +12,7 @@ const SignUpForm = () => {
         confirmPassword: '',
         phone: '',
         nickname: '',
+        userType: 0, // 기본값을 학생으로 설정
     });
 
     const handleInputChange = (e) => {
@@ -24,7 +25,7 @@ const SignUpForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { userEmail, userName, userPwd, confirmPassword, phone, nickname } = formData;
+        const { userEmail, userName, userPwd, confirmPassword, phone, nickname, userType } = formData;
         if (userPwd !== confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
@@ -36,16 +37,16 @@ const SignUpForm = () => {
             phone,
             nickname,
             provider: "intelliclass",
-            registerTime: new Date().toISOString(),
+            registerTime: "",
             profileImageUrl: "",
-            userType: 0,
+            userType,
             reportCount: 0,
             loginOk: 'Y',
             faceLoginYn: 'N',
             snsAccessToken: "",
         };
         try {
-            await signUp(signUpData);
+            await axiosClient.post('/users/user', signUpData);
             router.push("/user/login");
         } catch (error) {
             handleAxiosError(error);
@@ -78,6 +79,14 @@ const SignUpForm = () => {
                 <div className="form-group">
                     <label htmlFor="nickname">닉네임:</label>
                     <input type="text" id="nickname" name="nickname" value={formData.nickname} onChange={handleInputChange} required />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="userType">사용자 유형:</label>
+                    <select id="userType" name="userType" value={formData.userType} onChange={handleInputChange} required>
+                        <option value={0}>학생</option>
+                        <option value={1}>강사</option>
+                        <option value={2}>관리자</option>
+                    </select>
                 </div>
                 <div className="button-container">
                     <button type="submit">회원가입</button>

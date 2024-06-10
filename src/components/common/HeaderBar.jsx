@@ -1,23 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav } from 'react-bootstrap';
 import { observer } from 'mobx-react';
-import { authStore } from '../../stores/authStore';
-import { logout } from '../../axiosApi/MemberAxios';
+import { authStore } from "../../stores/authStore";
+import { axiosClient } from '../../axiosApi/axiosClient';
+import { handleAxiosError } from '../../axiosApi/errorAxiosHandler';
 import styles from '../../styles/header.module.css'; // CSS 모듈을 import
 
 const HeaderBar = observer(() => {
-    const loggedIn = authStore.loggedIn; // 로그인 상태값
+    const isLoggedIn = authStore.isLoggedIn;
 
     useEffect(() => {
-        authStore.checkLoggedIn();
+        authStore.checkIsLoggedIn()
     }, []);
 
-    // 로그아웃 핸들러
-    const handleLogout = () => {
-        logout().then(res => {
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axiosClient.post('/logout'); // 로그아웃 엔드포인트로 요청
+            console.log('로그아웃 성공:', response.data);
             localStorage.clear();
-            authStore.setLoggedIn(false);
-        });
+            authStore.setIsLoggedIn(false);
+            window.location.href = 'http://localhost:3000'; // 로그아웃 성공 시 이동
+        } catch (error) {
+            console.error('로그아웃 실패:', error);
+            handleAxiosError(error);
+        }
     };
 
     return (
@@ -38,16 +45,15 @@ const HeaderBar = observer(() => {
                 <Nav.Link href="/cs" className={styles['nav-link']}>고객센터</Nav.Link>
             </Nav>
             <Nav className={styles['right-nav']}>
-                {loggedIn ? (
+                {isLoggedIn ? (
                     <>
                         <Nav.Link onClick={handleLogout} className={styles['nav-link']}>로그아웃</Nav.Link>
-                        <Nav.Link href="/" className={styles['nav-link']}>내 정보</Nav.Link>
+                        <Nav.Link href="/user/mypage" className={styles['nav-link']}>마이페이지</Nav.Link>
                     </>
                 ) : (
                     <>
-                        <Nav.Link href="/" className={styles['nav-link']}>로그인</Nav.Link>
-                        <Nav.Link href="/" className={styles['nav-link']}>회원가입</Nav.Link>
-                        <Nav.Link href="/user/mypage" className={styles['nav-link']}>마이페이지</Nav.Link>
+                        <Nav.Link href="/user/login" className={styles['nav-link']}>로그인</Nav.Link>
+                        <Nav.Link href="/user/enroll" className={styles['nav-link']}>회원가입</Nav.Link>
                     </>
                 )}
             </Nav>
