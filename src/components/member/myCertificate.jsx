@@ -3,13 +3,19 @@ import Pagination from "../common/Pagination";
 import CertificateAddModal from "./CertificateAddModal";
 import styles from "../../styles/myCertificate.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
+import {authStore} from "../../stores/authStore";
+import {observer} from "mobx-react";
 
-const MyCertificate = ({ nickname }) => {
+const MyCertificate = observer(() => {
   const [certificates, setCertificates] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+
+
+
 
   const ITEMS_PER_PAGE = 10;  // 페이지당 보이는 데이터 개수
 
@@ -34,10 +40,10 @@ const MyCertificate = ({ nickname }) => {
   };
 
   useEffect(() => {
-    if (nickname) {
-      fetchCertificates(nickname);
-    }
-  }, [nickname]);
+
+      fetchCertificates(authStore.getNickname());
+
+  }, []);
 
   // 전체 페이지 수 계산
   const totalPages = Math.ceil(certificates.length / ITEMS_PER_PAGE);
@@ -144,6 +150,6 @@ const MyCertificate = ({ nickname }) => {
         )}
       </div>
   );
-};
+});
 
 export default MyCertificate;

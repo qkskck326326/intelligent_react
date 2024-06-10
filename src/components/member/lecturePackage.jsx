@@ -49,12 +49,13 @@ const LecturePackage = ({ nickname }) => {
             <div className={styles.grid}>
                 {displayedLectures.map((lecture) => (
                     <div key={lecture.LECTURE_PACKAGE_ID} className={styles.card}>
-                        <div className={styles.thumbnail}>썸네일</div>
+                        <div className={styles.thumbnail}>
+                            <img src={lecture.THUMBNAIL} alt={lecture.TITLE} />
+                        </div>
                         <h3>{lecture.TITLE}</h3>
-                        <p>{lecture.CLASS_GOAL}</p>
                         <div className={styles.rating}>
                             {'별점 '}
-                            {Array(Math.floor(Math.random() * 5) + 1)
+                            {Array(lecture.RATING)
                                 .fill('⭐')
                                 .join('')}
                         </div>

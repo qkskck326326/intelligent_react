@@ -29,6 +29,12 @@
     margin-bottom: 15px;
 }
 
+.rating {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #ff9800;
+}
+
 .pagination {
     display: flex;
     justify-content: center;
