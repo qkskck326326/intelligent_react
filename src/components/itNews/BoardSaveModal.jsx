@@ -6,6 +6,7 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
     const [formData, setFormData] = useState({
         boardId: '',
         siteUrl: '',
+
         title: '',
         videoTextlizedContext: '',
         originalContext: '',
@@ -19,6 +20,7 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
             setFormData({
                 boardId: '',
                 siteUrl: '',
+                boardUrl: '',
                 title: '',
                 videoTextlizedContext: '',
                 originalContext: '',
@@ -68,6 +70,17 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                             maxLength="300"
                             required
                         />
+                        <Form.Group>
+                            <Form.Label>원글 URL</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="latestBoardUrl"
+                                value={formData.boardUrl}
+                                onChange={handleChange}
+                                maxLength="300"
+                                required
+                            />
+                        </Form.Group>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>제목</Form.Label>
