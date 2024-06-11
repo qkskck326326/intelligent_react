@@ -1,7 +1,7 @@
 // import React, { useEffect, useState } from "react";
 // import jwtDecode from "jwt-decode";
 import MyCertificate from "../../components/user/myCertificate";
-import styles from "../../styles/myPage.module.css";
+import styles from "../../styles/user/mypage/mypage.module.css";
 
  const MyPage = () => {
   // const [nickname, setNickname] = useState("");

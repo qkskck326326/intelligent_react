@@ -1,0 +1,66 @@
+/* sortAndSearchBar.module.css */
+.sortAndSearchBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 20px;
+}
+
+.dropdown {
+    border: 3px solid #54df90;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.dropdown:hover {
+    /*box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);*/
+}
+
+.searchBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid #5ae89b;
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 100%;
+    max-width: 600px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.searchBar:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
+    margin-right: 10px;
+    color: #00c853;
+    display: flex;
+    align-items: center;
+}
+
+.icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.searchInput {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    padding: 5px;
+}
+
+.searchInput::placeholder {
+    color: #999;
+}
+
