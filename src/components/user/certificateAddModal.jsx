@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "../../styles/addModal.module.css";
+import styles from "../../styles/user/mypage/addModal.module.css";
 
 const CertificateAddModal = ({ onSave, onClose }) => {
   const [form, setForm] = useState({
