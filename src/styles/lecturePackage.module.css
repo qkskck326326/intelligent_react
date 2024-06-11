@@ -1,57 +1,53 @@
+/* lecturePackage.module.css */
 .container {
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr); /* 4개의 항목을 각 행에 표시합니다 */
+    gap: 16px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 16px;
 }
 
 .card {
-    background: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.thumbnail {
-    background: #eaeaea;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 15px;
+.thumbnail img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 16px;
+}
+
+.title {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    text-align: center;
 }
 
 .rating {
-    margin-top: 10px;
-    font-size: 1rem;
-    color: #ff9800;
-}
-
-.pagination {
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 20px;
-}
-
-.pageButton {
-    background: #0070f3;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 0 5px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.pageButton:disabled {
-    background: #ddd;
-    cursor: not-allowed;
+    font-size: 1rem;
+    margin-top: 8px;
 }
