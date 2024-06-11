@@ -94,7 +94,7 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                         />
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>영상 텍스트화</Form.Label>
+                        <Form.Label>영상 텍스트화 내용</Form.Label>
                         <Form.Control
                             type="text"
                             name="videoElement"
