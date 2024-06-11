@@ -1,6 +1,6 @@
 // import React, { useEffect, useState } from "react";
 // import jwtDecode from "jwt-decode";
-import MyCertificate from "../../components/member/myCertificate";
+import MyCertificate from "../../components/user/myCertificate";
 import styles from "../../styles/myPage.module.css";
 
  const MyPage = () => {
