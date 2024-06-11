@@ -39,7 +39,15 @@ const BoardDetail = ({ boardId }) => {
             <div className="originalContext">
                 {post.originalContext}
             </div>
-            {/*post.videoTextlizedContext*/}
+            <br/>
+            <div className="videoTextlizedContext">
+                <p>영상 내용 :</p>
+                {post.videoTextlizedContext ? (
+                    <div>{post.videoTextlizedContext}</div>
+                ) : (
+                    <p>없음</p>
+                )}
+            </div>
             {/*<div className="comments-section">*/}
             {/*    <h2>댓글</h2>*/}
             {/*    {comments.length > 0 ? (*/}
