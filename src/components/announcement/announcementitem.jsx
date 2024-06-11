@@ -4,7 +4,6 @@ import clsx from 'clsx'
 import {authStore} from "../../stores/authStore";
 import { useRouter } from 'next/router';
 import announcementAxios from '../../axiosApi/announcementAxios'
-import Announcedetail from "./announcedetail.jsx";
 
 export default function AnnouncementItem(props){
 
@@ -52,7 +51,7 @@ export default function AnnouncementItem(props){
     return (
         <li className={styles.announceItem}>
             <div className={styles.announceCategory}>{categoryMap[category]}</div>
-            <div className={classes} onClick={handlePageMove} >{(important === 1) ? '[중요] ' : ''}{title}</div>
+            <div className={classes} onClick={handlePageMove} >{title}</div>
             <div className={styles.announceDate}>{new Date(createdAt).toLocaleDateString('ko-KR')}</div>
         </li>
     );

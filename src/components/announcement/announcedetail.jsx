@@ -1,17 +1,24 @@
 import styles from '../../styles/eachannouncement.module.css'
 import {useRouter} from "next/router";
 import AnnouncementAxios from '../../axiosApi/announcementAxios.js'
-import {useEffect, useState} from "react";
+import {observer} from "mobx-react";
+import React from 'react';
+import authStore from "../../stores/authStore";
 
-export default function Announcedetail(){
+const Announcedetail = observer(() => {
 
     const router = useRouter();
     const {announcementId, title, createdAt, category, importance, content, ...rest} = router.query
-    const [prevId, setPrevId] = useState(0)
-
     const axios = new AnnouncementAxios();
 
-    console.log(createdAt)
+    const convertNewlinesToBreaks = (text) => {
+        return text.split('\n').map((item, index) => (
+            <React.Fragment key={index}>
+                {item}
+                <br />
+            </React.Fragment>
+        ));
+    };
 
     const categoryMap = {
         0: '서비스',
@@ -54,21 +61,23 @@ export default function Announcedetail(){
                 {new Date(createdAt).toLocaleDateString('ko-KR')}
             </div>
             <div className={styles.eachAnnounceContent}>
-                {content}
+                {convertNewlinesToBreaks(content)}
             </div>
             <div className={styles.eachAnnounceBottom}>
                 <div className={styles.backToList} onClick={() => window.location.href = '/cs'}>
                     ← 목록으로
                 </div>
             </div>
-            <div className={styles.announceAdmin}>
+            { authStore.checkIsAdmin() ? <div className={styles.announceAdmin}>
                 <button className={styles.announceControl} onClick={() => handleDelete(announcementId)}>
                     삭제
                 </button>
                 <button className={styles.announceControl} onClick={handleEdit}>
                     수정
                 </button>
-            </div>
+            </div> : <div></div> }
         </div>
     );
-}
+});
+
+export default Announcedetail;
