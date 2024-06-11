@@ -2,8 +2,8 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    font-family: "Noto Sans KR", sans-serif; /* Montserrat 글꼴 사용 */
-    font-weight: bold; /* 볼드체 설정 */
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: bold;
     font-size: 18px;
 }
 
@@ -79,17 +79,4 @@
 .list .read {
     flex-basis: 25%;
     text-align: center;
-}
-
-.summary {
-    position: relative;
-    bottom: 0;
-    right: 0;
-    margin-right: 50px; /* 오른쪽 여백 설정 */
-    margin-bottom: 20px; /* 아래쪽 여백 설정 */
-    font-size: 16px; /* 글꼴 크기 설정 */
-    color: #000; /* 글꼴 색상 설정 */
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
 }

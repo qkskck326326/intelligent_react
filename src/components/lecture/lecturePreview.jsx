@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient"; // axiosClient를 가져옴
-import styles from '../../styles/lecture/lectureList.module.css';
+import styles from '../../styles/lecture/lecturePreview.module.css';
 
-const LectureList = () => {
+const LecturePreview = () => {
     const [lectures, setLectures] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -26,8 +26,6 @@ const LectureList = () => {
         fetchData();
     }, []);
 
-    const totalLectures = lectures.length;
-    const completedLectures = lectures.filter(lecture => lecture.lectureRead === 'Y').length;
     
 
     if (loading) return <p>Loading...</p>;
@@ -49,17 +47,13 @@ const LectureList = () => {
                         <tr className={styles.list} key={lecture.lectureId}>
                             <th className={styles.num} scope="row">{index + 1}</th>
                             <td className={styles.title}>{lecture.lectureName}</td>
-                            {/* <td className={styles.title}><a href={lecture.link}>{lecture.lectureName}</a></td> */}
-                            <td className={styles.read}>{lecture.lectureRead}</td>     
+                            <td className={styles.read}>{lecture.lectureRead}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div className={styles.summary}>
-                <tr>{completedLectures} / {totalLectures}</tr>
-            </div>
         </div>
     );
 }
 
-export default LectureList;
+export default LecturePreview;
