@@ -1,4 +1,4 @@
-import LoginForm from "../../components/member/loginForm";
+import LoginForm from "../../components/user/loginForm";
 
 const Index = () => {
     return (

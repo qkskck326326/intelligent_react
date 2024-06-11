@@ -1,7 +1,7 @@
 // import React, { useEffect, useState } from "react";
 // import jwtDecode from "jwt-decode";
 
-import SignUpForm from "../../components/member/signUp";
+import SignUpForm from "../../components/user/signUp";
 import styles from "../../styles/myPage.module.css";
 
 const Enroll = () => {
