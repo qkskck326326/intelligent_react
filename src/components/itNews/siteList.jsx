@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { axiosClient } from '../../axiosApi/axiosClient';
-import SiteInsertModal from "./siteInsertModal";
-import { Button } from 'react-bootstrap';
+import SiteSaveModal from "./siteSaveModal";
+import { Button, Pagination } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BoardList = () => {
-    const [page, setPage] = useState(0)
-    const [size, setSize] = useState(10)
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [size, setSize] = useState(10);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -32,25 +33,18 @@ const BoardList = () => {
         fetchData();
     }, []);
 
-    const handleSave = (newData) => {
-        axiosClient.post('/itNewsSite', newData)
-            .then(() => {
-                fetchData(); // 데이터 추가 후 목록을 다시 불러옴
-                handleClose();
-            })
-            .catch(err => {
-                setError(err);
-            });
-    };
-
-    const handleDelete = (siteUrl) => {
-        axiosClient.delete('/itNewsSite', siteUrl)
+    const handleDelete = (itNewsSiteDto) => {
+        axiosClient.delete('/itNewsSite', {data:itNewsSiteDto})
             .then(() => {
                 fetchData(); // 데이터 삭제 후 목록을 다시 불러옴
             })
             .catch(err => {
                 setError(err);
             });
+    };
+
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
     };
 
     const handleShow = () => {
@@ -63,6 +57,17 @@ const BoardList = () => {
         setCurrentData(item);
         setIsEditing(true);
         setShowModal(true);
+    };
+
+    const handleSave = (newData) => {
+        axiosClient.post('/itNewsSite', newData)
+            .then(() => {
+                fetchData(); // 데이터 추가 후 목록을 다시 불러옴
+                handleClose();
+            })
+            .catch(err => {
+                setError(err);
+            });
     };
 
     const handleClose = () => {
@@ -80,7 +85,7 @@ const BoardList = () => {
             <Button variant="primary" onClick={handleShow} className="mb-3">
                 작성하기
             </Button>
-            <SiteInsertModal show={showModal} handleClose={handleClose} handleSave={handleSave} initialData={currentData}/>
+            <SiteSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave} initialData={currentData}/>
             <table className="table">
                 <thead>
                 <tr>
@@ -106,12 +111,23 @@ const BoardList = () => {
                         <td>{item.contextElement}</td>
                         <td>
                             <button onClick={() => handleEdit(item)}>수정</button> &nbsp;
-                            <button onClick={() => handleDelete(item.siteUrl)}>삭제</button>
+                            <button onClick={() => handleDelete(item)}>삭제</button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+            <Pagination style={{justifyContent: 'center'}}>
+                <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
+                <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+                {[...Array(Math.max(totalPages, 1))].map((_, i) => (
+                    <Pagination.Item key={i} active={i === page} onClick={() => handlePageChange(i)}>
+                        {i + 1}
+                    </Pagination.Item>
+                ))}
+                <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+                <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
+            </Pagination>
         </div>
     );
 }
