@@ -2,12 +2,15 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    font-family: "Noto Sans KR", sans-serif; /* Montserrat 글꼴 사용 */
+    font-weight: bold; /* 볼드체 설정 */
+    font-size: 18px;
 }
 
-.packagetitle{
+.packagetitle {
     padding: 10px 20px;
     box-sizing: border-box;
-    position: absolute;
+    position: relative;
     left: 50px;
     width: 100%;
     max-width: 1000px;
@@ -21,10 +24,10 @@
     justify-content: center;
 }
 
-.subtitle{
+.subtitle {
     box-sizing: border-box;
-    position: absolute;
-    top: 250px;
+    position: relative;
+    top: 10px;
     width: 100%;
     max-width: 1000px;
     left: 50px;
@@ -36,9 +39,10 @@
     display: flex;
     align-items: center;   
 }
+
 .subtitle .num {
     flex-basis: 15%;
-  }
+}
   
 .subtitle .title {
     flex-basis: 60%;
@@ -47,4 +51,38 @@
 .subtitle .read {
     flex-basis: 25%;
 }
-  
+
+.list {
+    box-sizing: border-box;
+    position: relative; /* 상대 위치 설정 */
+    width: 100%;
+    max-width: 1000px;
+    margin-left: 50px; /* 왼쪽 여백 설정 */
+    height: 50px;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    border-color: #19CA83;
+    display: flex;
+    align-items: center;
+    top: 10px;
+}
+
+.list .num {
+    flex-basis: 15%;
+}
+
+.list .title {
+    flex-basis: 60%;
+    margin-left: 25px;
+}
+
+.list .read {
+    flex-basis: 25%;
+    text-align: center;
+}
+
+.verticalLine {
+    border-left: 2px solid #000; /* 선의 두께와 색상 */
+    height: 100px; /* 선의 높이 */
+    margin: 0 20px; /* 두 컴포넌트 사이의 여백 */
+  }

@@ -26,9 +26,7 @@ const LectureList = () => {
         fetchData();
     }, []);
 
-    const getProgressLabel = (lectureRead) => {
-        return lectureRead === 'Y' ? 'Y' : 'N';
-    };
+    
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -44,14 +42,18 @@ const LectureList = () => {
                         <th className={styles.read} scope="col">나의 진행도</th>
                     </tr>
                 </thead>
-                <tbody className={styles.list}>
+                <tbody>
                     {lectures.map((lecture, index) => (
-                        <tr key={lecture.lectureId}>
-                            <th scope="row">{index + 1}</th>
-                            <td className="lessonTitle">{lecture.lectureName}</td>
-                            <td>{getProgressLabel(lecture.lectureRead)}</td>
+                        <tr className={styles.list} key={lecture.lectureId}>
+                            <th className={styles.num} scope="row">{index + 1}</th>
+                            <td className={styles.title}>{lecture.lectureName}</td>
+                            {/* <td className={styles.title}><a href={lecture.link}>{lecture.lectureName}</a></td> */}
+                            <td className={styles.read}>{lecture.lectureRead}</td>
                         </tr>
                     ))}
+                    <tr>
+                        <td colSpan="3" className={styles.verticalLine}></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
