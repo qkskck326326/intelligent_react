@@ -12,17 +12,19 @@ export default function AnnouncementWrite(props){
     const [importance, setImportance] = useState(0)
     const axios = new AnnouncementAxios();
     const [announcementId, setAnnouncementId] = useState(0)
+    const [createdAt, setCreatedAt] = useState(null)
 
     useEffect(() => {
 
         if(router.isReady){
-            const {givenCategory, givenId, givenContent, givenTitle } = router.query
+            const {givenCategory, givenId, givenContent, givenTitle, givenCreatedAt } = router.query
 
             setAnnouncementId(givenId);
             setCategory(givenCategory);
             setTitle(givenTitle);
             setContent(givenContent);
-            console.log(announcementId)
+            setCreatedAt(givenCreatedAt);
+
         }
 
         console.log(announcementId)
@@ -73,7 +75,7 @@ export default function AnnouncementWrite(props){
             announcementId,
             title,
             content,
-            createdAt: new Date(),
+            createdAt,
             creator: '관리자',
             category,
             importance

@@ -146,7 +146,7 @@ export default function Announcement(props) {
     };
 
     function handleClick(id){
-
+        console.log('triggered')
         const axios = new AnnouncementAxios();
         axios.get('/announcement/id', `?announcementId=${id}`)
             .then(data => {

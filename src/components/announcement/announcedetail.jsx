@@ -28,6 +28,7 @@ export default function Announcedetail(props){
                 givenId: announcementId,
                 givenTitle: title,
                 givenContent: content,
+                givenCreatedAt: createdAt
             }
         });
 
