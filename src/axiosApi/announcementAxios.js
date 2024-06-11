@@ -72,7 +72,7 @@ export default class AnnouncementAxios {
             if (!response.ok) {
                 throw new Error(`status: ${response.status}`);
             }
-            return await response.json();
+
         } catch (error) {
             console.error('DELETE ERROR:', error);
             throw error;
