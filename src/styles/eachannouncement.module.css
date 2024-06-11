@@ -4,7 +4,7 @@
 }
 .eachAnnounceTop{
     padding-left: 2rem;
-    padding-block: 0.1rem;
+    padding-block: 0.1rem 0.5rem;
     font-size: 1.75rem;
     font-weight: 900;
     position: sticky;
@@ -19,7 +19,7 @@
 }
 .eachAnnounceDate{
     padding-left: 2rem;
-    padding-block: 0.25rem;
+    padding-block: 1rem;
     font-size: 1rem;
 }
 .eachAnnounceContent{

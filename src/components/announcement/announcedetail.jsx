@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react'
 import styles from '../../styles/eachannouncement.module.css'
 import {useRouter} from "next/router";
+import AnnouncementAxios from '../../axiosApi/announcementAxios.js'
+import {useEffect, useState} from "react";
 
-export default function Announcedetail(props){
-
-    console.log(props)
-
-    const [receivedData, setReceivedData] = useState(null);
+export default function Announcedetail(){
 
     const router = useRouter();
     const {announcementId, title, createdAt, category, importance, content, ...rest} = router.query
+    const [prevId, setPrevId] = useState(0)
+
+    const axios = new AnnouncementAxios();
 
     console.log(createdAt)
 
@@ -18,6 +18,13 @@ export default function Announcedetail(props){
         1: '업데이트',
         2: '이벤트'
     };
+
+    function handleDelete(id){
+        axios.delete('/announcement',{
+            announcementId
+        })
+        window.location.href = '/cs'
+    }
 
     function handleEdit(){
         router.push({
@@ -50,18 +57,12 @@ export default function Announcedetail(props){
                 {content}
             </div>
             <div className={styles.eachAnnounceBottom}>
-                <div className={styles.announceBefore}>
-                    이전 공지사항
-                </div>
-                <div className={styles.announceAfter}>
-                    다음 공지사항
-                </div>
                 <div className={styles.backToList} onClick={() => window.location.href = '/cs'}>
-                    목록으로
+                    ← 목록으로
                 </div>
             </div>
             <div className={styles.announceAdmin}>
-                <button className={styles.announceControl}>
+                <button className={styles.announceControl} onClick={() => handleDelete(announcementId)}>
                     삭제
                 </button>
                 <button className={styles.announceControl} onClick={handleEdit}>

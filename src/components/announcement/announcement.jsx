@@ -3,7 +3,6 @@ import styles from '../../styles/announcement.module.css';
 import AnnouncementItem from './announcementitem.jsx';
 import Link from "next/link";
 import { authStore } from "../../stores/authStore";
-import Announcedetail from "./announcedetail.jsx";
 import AnnouncementAxios from '../../axiosApi/announcementAxios'
 
 export default function Announcement(props) {
@@ -199,7 +198,7 @@ export default function Announcement(props) {
                         :
                         <div></div>
                     }
-                    {/* 관리자 기능 복구될 때 복구 {authStore.isAdmin ? */}
+                    {/*{authStore.checkIsAdmin() ?*/}
                     <Link className={styles.writeAnnounce} href='cs/write'>글작성</Link>
                     {/*: <div></div>}*/}
                 </div>

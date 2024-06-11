@@ -15,8 +15,9 @@ export default function AnnouncementWrite(props){
     const [createdAt, setCreatedAt] = useState(null)
 
     useEffect(() => {
-
-        if(router.isReady){
+        //받아온 쿼리가 있다면 그 값으로 필드 채워둠 아닐 경우 무시
+        if(Object.keys(router.query).length !== 0){
+            console.log('여기가 실행되었습니다.')
             const {givenCategory, givenId, givenContent, givenTitle, givenCreatedAt } = router.query
 
             setAnnouncementId(givenId);
@@ -26,8 +27,6 @@ export default function AnnouncementWrite(props){
             setCreatedAt(givenCreatedAt);
 
         }
-
-        console.log(announcementId)
 
     }, [])
 
@@ -144,7 +143,7 @@ export default function AnnouncementWrite(props){
                         중요
                     </label>
                     <button type='submit' className={styles.announceConfirm}>
-                        게시
+                        {Object.keys(router.query).length !== 0 ? '수정' : '게시'}
                     </button>
                 </div>
             </form>
