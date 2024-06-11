@@ -11,9 +11,9 @@ const KakaoLogin = () => {
 
     return (
         <div className="button-container">
-            <button onClick={handleLogin} style={{ border: 'none', background: 'none', padding: '0' }}>
+            <button onClick={handleLogin} style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer' }}>
                 <img
-                    src="../../../public/images/kakao_sync_login/complete/ko/kakao_login_large_narrow.png"
+                    src="/images/kakao_sync_login/complete/ko/kakao_login_medium_narrow.png"
                     alt="카카오 로그인"
                     style={{ display: 'block', width: '100%' }}
                 />
