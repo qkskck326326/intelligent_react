@@ -3,9 +3,11 @@ import { useRouter } from "next/router";
 import { handleAxiosError } from '../../axiosApi/errorAxiosHandler';
 import { axiosClient } from '../../axiosApi/axiosClient';
 import authStore from "../../stores/authStore";
+import {observer} from "mobx-react";
 import Link from 'next/link';
+import KakaoLogin from "./KakaoLogin";
 
-const LoginForm = () => {
+const LoginForm = observer(() => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     userEmail: '',
@@ -33,11 +35,14 @@ const LoginForm = () => {
         window.localStorage.setItem("token", pureToken);
         window.localStorage.setItem("isAdmin", response.data.isAdmin);
         window.localStorage.setItem("nickname", response.data.nickname);
-        window.localStorage.setItem("refresh", response.data.refresh)
+        window.localStorage.setItem("userEmail", formData.userEmail);
+        window.localStorage.setItem("provider", formData.provider);
 
         authStore.setIsLoggedIn(true);
         authStore.setIsAdmin(response.data.isAdmin);
         authStore.setNickname(response.data.nickname);
+        authStore.setUserEmail(formData.userEmail);
+        authStore.setProvider(formData.provider);
       }
       window.location.href = 'http://localhost:3000'; // 로그인 성공 시 이동
     } catch (error) {
@@ -79,8 +84,9 @@ const LoginForm = () => {
       <div className="signup-link">
         <p>아직 회원이 아니신가요? <Link href="/user/enroll">회원가입</Link></p>
       </div>
+      <KakaoLogin/>
     </div>
   );
-};
+});
 
 export default LoginForm;
