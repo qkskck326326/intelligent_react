@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import styles from "../../styles/mypage.module.css";
-import LecturePackage from "../../components/user/lecturePackage";
+import LecturePackage from "../../components/lecturePackage/lecturePackage";
 
 const Index = () => {
     return (
