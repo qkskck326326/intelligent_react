@@ -1,12 +1,35 @@
 import React, {useState, useEffect} from 'react'
 import styles from '../../styles/announcementwrite.module.css'
+import {useRouter} from "next/router";
+import AnnouncementAxios from "../../axiosApi/announcementAxios";
 
 export default function AnnouncementWrite(props){
 
+    const router = useRouter();
     const [title, setTitle] = useState('')
     const [category, setCategory] = useState(9)
     const [content, setContent] = useState('')
     const [importance, setImportance] = useState(0)
+    const axios = new AnnouncementAxios();
+    const [announcementId, setAnnouncementId] = useState(0)
+    const [createdAt, setCreatedAt] = useState(null)
+
+    useEffect(() => {
+
+        if(router.isReady){
+            const {givenCategory, givenId, givenContent, givenTitle, givenCreatedAt } = router.query
+
+            setAnnouncementId(givenId);
+            setCategory(givenCategory);
+            setTitle(givenTitle);
+            setContent(givenContent);
+            setCreatedAt(givenCreatedAt);
+
+        }
+
+        console.log(announcementId)
+
+    }, [])
 
 
     function toggleImportance(){
@@ -30,50 +53,72 @@ export default function AnnouncementWrite(props){
         setContent(event.target.value);
     }
 
+    function postSubmit(){
+
+        axios.post('/announcement',
+            {
+                    title,
+                    content,
+                    createdAt: new Date(),
+                    creator: '관리자',
+                    category,
+                    importance
+        }).then(data => {
+            console.log(data)
+            window.location.href = '/cs'
+        })
+    }
+
+    function putSubmit(){
+
+        axios.put('/announcement', {
+            announcementId,
+            title,
+            content,
+            createdAt,
+            creator: '관리자',
+            category,
+            importance
+        }).then(data => {
+                console.log(data)
+                window.location.href = '/cs'
+            })
+    }
+
     function handleAnnouncementSubmit(event){
 
         event.preventDefault();
 
         if(title.trim() === ''){
-            window.alert(`제목을 입력해주세요`)
-            console.log(importance)
-            return false;
+            console.log('제목에러 실행')
+            window.alert('제목을 입력해주세요')
+            return;
         }
         if(Number(category) === 9) {
+            console.log('카테고리에러 실행')
             window.alert(`카테고리를 설정해주세요`)
-            console.log(importance)
-            return false;
+            return;
         }
         if(content.trim() === ''){
+            console.log('내용에러 실행')
             window.alert(`내용을 입력해주세요`)
-            console.log(importance)
-            return false;
+            return;
         }
 
-        fetch(`http://localhost:8080/announcement`,{
-            method: 'POST',
-            headers: {
-                'Content-Type':'application/json;charset=utf-8'
-            },
-            body: JSON.stringify({
-                title,
-                content,
-                createdAt: new Date(),
-                creator: '관리자',
-                category,
-                importance
-            })
-        }).then(response => {
-            console.log(response)
-            if(!response.ok){
-                throw new Error('error')
-            }
-            return response.json()
-        }).then(data => {
-            window.location.href = '/cs'
-        })
+        if(announcementId){
+            console.log(announcementId)
+            console.log('풋요청')
+            putSubmit()
+        }else{
+            console.log(announcementId)
+            console.log('포스트요청')
+            postSubmit()
+        }
+
 
     }
+
+
 
     return(
         <div className={styles.announceWriteContainer}>
@@ -82,8 +127,8 @@ export default function AnnouncementWrite(props){
                     <p>공지사항 작성</p>
                 </div>
                 <div className={styles.announceWriteMid}>
-                    <input type="text" name="announceWriteTitle" id="announceWriteTitle" className={styles.announceWriteTitle} placeholder="제 목" onChange={handelTitle} />
-                        <select name="announceWriteCategory" id="announceWriteCategory" className={styles.announceWriteCategory} onChange={handleCategory}>
+                    <input type="text" name="announceWriteTitle" id="announceWriteTitle" className={styles.announceWriteTitle} value={title} placeholder="제 목" onChange={handelTitle} />
+                        <select name="announceWriteCategory" id="announceWriteCategory" value={category} className={styles.announceWriteCategory} onChange={handleCategory}>
                             <option value='9'>카테고리 설정</option>
                             <option value="0">서비스</option>
                             <option value="1">업데이트</option>
@@ -91,7 +136,7 @@ export default function AnnouncementWrite(props){
                         </select>
                 </div>
                 <div className={styles.announceWriteMain}>
-                    <textarea name="" placeholder="내 용 작 성 란" className={styles.announceWriteContent} onChange={handleContent}></textarea>
+                    <textarea name="" placeholder="내 용 작 성 란" className={styles.announceWriteContent} value={content} onChange={handleContent}></textarea>
                 </div>
                 <div className={styles.announceWriteBottom}>
                     <label>
