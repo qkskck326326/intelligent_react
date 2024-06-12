@@ -1,0 +1,43 @@
+.chaticonContainer {
+    position: fixed;
+    bottom: 3%;
+    right: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    box-shadow: 0 0.2rem 0.3rem rgba(0,0,0,0.3);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.chaticon{
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.chaticonContainer:hover{
+    transform: scale(95%);
+}
+
+.chaticonNotification{
+    position: absolute;
+    top: -1rem;
+    right: -1rem;
+    height: 1.25rem;
+    padding: 0.25rem;
+    min-width: 1.25rem;
+    line-height: 1.25rem;
+    background-color: red;
+    color: white;
+    border-radius: 1rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,0.5);
+    font-size: 12pt;
+    white-space: nowrap;
+}

@@ -1,13 +1,13 @@
 import React from 'react';
-import styles from '../../styles/announcement.module.css';
+import styles from '../../styles/cs/announcement.module.css';
 import clsx from 'clsx'
 import {authStore} from "../../stores/authStore";
 import { useRouter } from 'next/router';
-import announcementAxios from '../../axiosApi/announcementAxios'
+import Axios from '../../axiosApi/Axios'
 
 export default function AnnouncementItem(props){
 
-    const axios = new announcementAxios();
+    const axios = new Axios();
 
     const{announcementId, title, createdAt, category, importance, content, ...rest} = props.details
     const router = useRouter();

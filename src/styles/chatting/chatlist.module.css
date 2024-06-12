@@ -1,0 +1,24 @@
+.chatlistTop{
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #E2E2E2;
+}
+.topButtons{
+    all:unset;
+    display: flex;
+    align-items: center;
+    padding-inline: 0.5rem;
+}
+
+.topButtons svg{
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+.plusButtonClicked{
+    transform: rotate(45deg);
+    transition: transform 1s;
+}
+
