@@ -1,0 +1,41 @@
+/* Index.module.css */
+.container {
+    display: flex;
+  }
+  
+  .mainContent {
+    margin-left: 220px; /* Adjust this value based on the width of your sidebar */
+    padding: 20px;
+    flex-grow: 1;
+  }
+  
+  .searchContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .postListContainer {
+    width: 100%; /* Adjust the width to make it full width */
+  }
+  
+  .postItem {
+    margin-bottom: 20px;
+  }
+  
+  .postList {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Ensure the list takes the full width */
+  }
+  
+  .postItem {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
