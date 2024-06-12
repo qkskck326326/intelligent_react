@@ -6,7 +6,7 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
     const [formData, setFormData] = useState({
         boardId: '',
         siteUrl: '',
-
+        boardUrl: '',
         title: '',
         videoTextlizedContext: '',
         originalContext: '',
@@ -53,7 +53,7 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                         <Form.Label>글번호</Form.Label>
                         <Form.Control
                             type="text"
-                            name="siteUrl"
+                            name="boardId"
                             value={formData.boardId}
                             onChange={handleChange}
                             maxLength="300"
@@ -64,29 +64,29 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                         <Form.Label>사이트 URL</Form.Label>
                         <Form.Control
                             type="text"
-                            name="latestBoardUrl"
+                            name="siteUrl"
                             value={formData.siteUrl}
                             onChange={handleChange}
                             maxLength="300"
                             required
                         />
-                        <Form.Group>
-                            <Form.Label>원글 URL</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="latestBoardUrl"
-                                value={formData.boardUrl}
-                                onChange={handleChange}
-                                maxLength="300"
-                                required
-                            />
-                        </Form.Group>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>원글 URL</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="boardUrl"
+                            value={formData.boardUrl}
+                            onChange={handleChange}
+                            maxLength="300"
+                            required
+                        />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>제목</Form.Label>
                         <Form.Control
                             type="text"
-                            name="siteName"
+                            name="title"
                             value={formData.title}
                             onChange={handleChange}
                             maxLength="100"
@@ -97,7 +97,7 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                         <Form.Label>영상 텍스트화 내용</Form.Label>
                         <Form.Control
                             type="text"
-                            name="videoElement"
+                            name="videoTextlizedContext"
                             value={formData.videoTextlizedContext}
                             onChange={handleChange}
                             maxLength="500"
@@ -107,7 +107,7 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                         <Form.Label>내용</Form.Label>
                         <Form.Control
                             type="text"
-                            name="titleElement"
+                            name="originalContext"
                             value={formData.originalContext}
                             onChange={handleChange}
                             maxLength="300"
@@ -118,13 +118,12 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                         <Form.Label>등록일자</Form.Label>
                         <Form.Control
                             type="text"
-                            name="contextElement"
+                            name="registDate"
                             value={formData.registDate}
                             onChange={handleChange}
                             maxLength="300"
                             required
                         />
-                        <br/>
                     </Form.Group>
                     <Button variant="primary" type="submit">
                         저장

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Pagination} from "react-bootstrap";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import BoardSaveModal from "./BoardSaveModal";
-import Link from "next/link";
+import { useRouter } from 'next/router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BoardList = () => {
@@ -15,6 +15,7 @@ const BoardList = () => {
     const [showModal, setShowModal] = useState(false);
     const [currentData, setCurrentData] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const router = useRouter();
 
     const fetchData = () => {
         axiosClient.get('/itNewsBoard', {params: {page: page, size: size}})
@@ -28,6 +29,14 @@ const BoardList = () => {
                 setError(err);
                 setLoading(false);
             });
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     };
 
     useEffect(() => {
@@ -91,22 +100,28 @@ const BoardList = () => {
                     <th scope="col">Title</th>
                     <th scope="col">Link</th>
                     <th scope="col">수정 / 삭제</th>
+                    <th scope="col">등록일</th>
                 </tr>
                 </thead>
                 <tbody>
                 {data.map((item, index) => (
                     <tr key={item.boardId}>
                         <th scope="row">{index + 1}</th>
-                        <td><Link href={`/itNewsBoard/${item.boardId}`}>{item.title}</Link></td>
+                        <td onClick={() => router.push(`/itNewsBoard/${item.boardId}`)}>{item.title}</td>
                         <td>
                             <a href={item.siteUrl} className="btn btn-primary" target="_blank"
                                rel="noopener noreferrer">
-                                Visit Site
+                                원글이동
                             </a>
                         </td>
-                        <button onClick={() => handleEdit(item)}>수정</button>
-                        &nbsp;
-                        <button onClick={() => handleDelete(item)}>삭제</button>
+                        <td>
+                            <button onClick={() => handleEdit(item)}>수정</button>
+                            &nbsp;
+                            <button onClick={() => handleDelete(item)}>삭제</button>
+                        </td>
+                        <td>
+                            {formatDate(item.registDate)}
+                        </td>
                     </tr>
                 ))}
                 </tbody>
