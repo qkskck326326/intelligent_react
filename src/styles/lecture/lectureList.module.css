@@ -1,8 +1,8 @@
 .tableContainer {
-    width: 120%; /* 전체 너비의 70%로 설정 */
+    width: 100%;
     display: flex;
     flex-direction: column;
-    font-family: "Noto Sans KR", sans-serif; /* 글꼴 설정 */
+    font-family: "Noto Sans KR", sans-serif; /* Montserrat 글꼴 사용 */
     font-weight: bold; /* 볼드체 설정 */
     font-size: 18px;
 }
@@ -11,9 +11,9 @@
     padding: 10px 20px;
     box-sizing: border-box;
     position: relative;
-    left: 0;
+    left: 50px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     height: 110px;
     background: #D4FFEE;
     border-width: 3px 0px;
@@ -29,7 +29,8 @@
     position: relative;
     top: 10px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
+    left: 50px;
     height: 50px;
     background: #D4FFEE;
     border-width: 3px 0px;
@@ -55,7 +56,8 @@
     box-sizing: border-box;
     position: relative; /* 상대 위치 설정 */
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
+    margin-left: 50px; /* 왼쪽 여백 설정 */
     height: 50px;
     border-width: 0px 0px 1px 0px;
     border-style: solid;
@@ -80,10 +82,12 @@
 }
 
 .summary {
+    position: relative;
+    bottom: 0;
+    right: 0;
     margin-right: 50px; /* 오른쪽 여백 설정 */
     margin-bottom: 20px; /* 아래쪽 여백 설정 */
     font-size: 16px; /* 글꼴 크기 설정 */
-    max-width: 1200px;
     color: #000; /* 글꼴 색상 설정 */
     display: flex;
     justify-content: flex-end;

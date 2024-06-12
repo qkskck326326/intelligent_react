@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient"; // axiosClient를 가져옴
-import styles from '../../styles/lecture/lecturePreview.module.css';
+import styles from '../../styles/lecture/lectureRating.module.css';
 
-const LecturePreview = () => {
+const LectureRating = () => {
     const [lectures, setLectures] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -56,4 +56,4 @@ const LecturePreview = () => {
     );
 }
 
-export default LecturePreview;
+export default LectureRating;
