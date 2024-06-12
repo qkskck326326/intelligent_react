@@ -1,6 +1,6 @@
-import styles from '../../styles/eachannouncement.module.css'
+import styles from '../../styles/cs/eachannouncement.module.css'
 import {useRouter} from "next/router";
-import AnnouncementAxios from '../../axiosApi/announcementAxios.js'
+import Axios from '../../axiosApi/Axios.js'
 import {observer} from "mobx-react";
 import React from 'react';
 import authStore from "../../stores/authStore";
@@ -9,7 +9,7 @@ const Announcedetail = observer(() => {
 
     const router = useRouter();
     const {announcementId, title, createdAt, category, importance, content, ...rest} = router.query
-    const axios = new AnnouncementAxios();
+    const axios = new Axios();
 
     const convertNewlinesToBreaks = (text) => {
         return text.split('\n').map((item, index) => (

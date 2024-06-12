@@ -1,4 +1,4 @@
-export default class AnnouncementAxios {
+export default class Axios {
 
     constructor() {
         this.baseURL = 'http://localhost:8080';
