@@ -1,0 +1,73 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.form {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.left, .center, .right {
+    flex: 1;
+    padding: 10px;
+}
+
+.field {
+    margin-bottom: 20px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.field p {
+    margin: 0;
+    padding: 8px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.field button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #0070f3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.categories, .techStack {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.category, .techStack img {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.category {
+    padding: 5px 10px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+}
+
+.thumbnail {
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

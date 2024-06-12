@@ -1,19 +1,12 @@
-import React from "react";
-import Link from "next/link";
-import styles from "../../styles/user/mypage/mypage.module.css";
+import React from 'react';
 import LecturePackageList from "../../components/lecturePackage/lecturePackageList";
-
+import Link from "next/link";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Index = () => {
     return (
-        <div className={styles.container}>
-            <h1>lecturePakage page</h1>
-
-
-
-            <div>
-                <LecturePackageList/>
-            </div>
+        <div>
+            <LecturePackageList />
         </div>
     );
 };

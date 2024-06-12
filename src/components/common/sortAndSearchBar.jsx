@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/common/sortAndSearchBar.module.css";
 
-const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCriteria, searchCriteria, setSearchCriteria }) => {
+const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCriteria, searchCriteria, setSearchCriteria, onSearch }) => {
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -12,6 +12,12 @@ const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCrit
 
     const handleSearchCriteriaChange = (e) => {
         setSearchCriteria(e.target.value);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            onSearch();
+        }
     };
 
     return (
@@ -26,12 +32,12 @@ const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCrit
                 <option className={styles.dropdownDetail} value="instructor">강사</option>
             </select>
             <div className={styles.searchBar}>
-                <div className={styles.icon}>
+                <div className={styles.icon} onClick={onSearch}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="black"
+                        stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -44,9 +50,10 @@ const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCrit
                 <input
                     type="text"
                     className={styles.searchInput}
-                    placeholder="수강하고 싶은 강의를 검색해 주세요."
+                    placeholder="수강하고 싶은 패키지를 검색해 주세요."
                     value={searchTerm}
                     onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
                 />
             </div>
         </div>

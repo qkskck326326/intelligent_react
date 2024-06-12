@@ -14,7 +14,7 @@
     border-radius: 3px;
     padding: 5px 10px;
     background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
 }
 
@@ -32,12 +32,12 @@
     width: 100%;
     max-width: 600px;
     background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
 }
 
 .searchBar:hover {
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    /*box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);*/
 }
 
 .icon {
@@ -45,6 +45,17 @@
     color: #00c853;
     display: flex;
     align-items: center;
+    cursor: pointer; /* Add cursor pointer */
+    transition: color 0.3s ease, transform 0.3s ease; /* Add transition for smooth effects */
+}
+
+.icon:hover {
+    color: #007BFF; /* Change color on hover */
+}
+
+.icon:active {
+    color: #0056b3; /* Change color on active */
+    transform: scale(0.95); /* Add slight scale effect on active */
 }
 
 .icon svg {
@@ -63,4 +74,3 @@
 .searchInput::placeholder {
     color: #999;
 }
-

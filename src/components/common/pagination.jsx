@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/user/mypage/myCertificate.module.css";
+import styles from "../../styles/common/pagination.module.css";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => (
   <div className={styles.pagination}>
