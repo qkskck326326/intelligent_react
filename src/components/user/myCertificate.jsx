@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../common/Pagination";
 import CertificateAddModal from "./CertificateAddModal";
-import styles from "../../styles/myCertificate.module.css";
+import styles from "../../styles/user/mypage/myCertificate.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
-import {authStore} from "../../stores/authStore";
+import authStore from "../../stores/authStore";
 import {observer} from "mobx-react";
 
 const MyCertificate = observer(() => {
@@ -41,7 +41,7 @@ const MyCertificate = observer(() => {
 
   useEffect(() => {
 
-      fetchCertificates(authStore.getNickname());
+    fetchCertificates(authStore.getNickname());
 
   }, []);
 

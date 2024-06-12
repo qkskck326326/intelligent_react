@@ -125,7 +125,7 @@
 .announceCategory,
 .announceDate{
     font-size: 1rem;
-    flex-basis: 4rem;
+    flex-basis: 6rem;
 }
 .announceTitle{
     flex-grow: 1;

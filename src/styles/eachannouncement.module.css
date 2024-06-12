@@ -4,7 +4,7 @@
 }
 .eachAnnounceTop{
     padding-left: 2rem;
-    padding-block: 0.1rem;
+    padding-block: 0.1rem 0.5rem;
     font-size: 1.75rem;
     font-weight: 900;
     position: sticky;
@@ -13,10 +13,13 @@
     z-index: 1;
     border-bottom: 1px solid #E2E2E2;
 }
-.eachAnnounceDate,
 .eachCategory{
+    font-size: 1rem;
+    margin-block: 0.25rem;
+}
+.eachAnnounceDate{
     padding-left: 2rem;
-    padding-block: 0.25rem;
+    padding-block: 1rem;
     font-size: 1rem;
 }
 .eachAnnounceContent{
@@ -28,6 +31,9 @@
     flex-direction: column;
     gap: 0.5rem;
     padding-left: 2rem;
+}
+.eachAnnounceBottom > *{
+    cursor: pointer;
 }
 .announceAdmin{
     margin-top: 1rem;

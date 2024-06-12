@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Pagination} from "react-bootstrap";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import BoardSaveModal from "./BoardSaveModal";
-import SiteSaveModal from "./siteSaveModal";
+import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BoardList = () => {
@@ -97,7 +97,7 @@ const BoardList = () => {
                 {data.map((item, index) => (
                     <tr key={item.boardId}>
                         <th scope="row">{index + 1}</th>
-                        <td>{item.title}</td>
+                        <td><Link href={`/itNewsBoard/${item.boardId}`}>{item.title}</Link></td>
                         <td>
                             <a href={item.siteUrl} className="btn btn-primary" target="_blank"
                                rel="noopener noreferrer">

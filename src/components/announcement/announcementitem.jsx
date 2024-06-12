@@ -2,21 +2,39 @@ import React from 'react';
 import styles from '../../styles/announcement.module.css';
 import clsx from 'clsx'
 import {authStore} from "../../stores/authStore";
+import { useRouter } from 'next/router';
+import announcementAxios from '../../axiosApi/announcementAxios'
 
 export default function AnnouncementItem(props){
 
-    const{title, createdAt, category, importance} = props.details
+    const axios = new announcementAxios();
 
+    const{announcementId, title, createdAt, category, importance, content, ...rest} = props.details
+    const router = useRouter();
     const categoryMap = {
         0: '서비스',
         1: '업데이트',
         2: '이벤트'
     };
 
-    function handlePageMove(event){
-        console.log(props.details)
-        console.log(authStore.checkIsAdmin())
-        console.log(authStore.checkIsLoggedIn())
+
+    function handlePageMove(event) {
+        console.log(announcementId)
+        axios.get(`/announcement/id`, `?announcementId=${announcementId}`)
+            .then(data =>  console.log(data))
+
+        router.push({
+            pathname: '/cs/announcedetail',
+            query: {
+                announcementId,
+                title,
+                createdAt,
+                category,
+                importance,
+                content,
+                ...rest
+            }
+        });
     }
 
     const important = Number(importance)
@@ -27,14 +45,14 @@ export default function AnnouncementItem(props){
 
     const classes = clsx({
         [styles.announceTitle]: true,
-        [styles.important]: checkImportance(),
+        [styles.important]: checkImportance()
     });
 
     return (
         <li className={styles.announceItem}>
             <div className={styles.announceCategory}>{categoryMap[category]}</div>
-            <div className={classes} onClick={handlePageMove}>{(important === 1) ? '[중요] ' : ''}{title}</div>
-            <div className={styles.announceDate}>{new Date(createdAt).toLocaleDateString()}</div>
+            <div className={classes} onClick={handlePageMove} >{title}</div>
+            <div className={styles.announceDate}>{new Date(createdAt).toLocaleDateString('ko-KR')}</div>
         </li>
     );
 }
