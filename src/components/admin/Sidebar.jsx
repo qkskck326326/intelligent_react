@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styles from '../../styles/admin/Sidebar.module.css';
 
+
 const Sidebar = () => {
     return (
         <div className={styles.sidebar}>
@@ -18,6 +19,8 @@ const Sidebar = () => {
                 <li><Link href="/admin/content-management">컨텐츠 관리</Link></li>
                 <li><Link href="/admin/board-management">게시판 관리</Link></li>
                 <li><Link href="/admin/qna-management">QnA관리</Link></li>
+                <li><Link href="/admin/testAI">AI코드채점</Link></li>
+
             </ul>
         </div>
     );
