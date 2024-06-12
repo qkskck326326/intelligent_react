@@ -136,10 +136,3 @@
 /*  border-radius: 5px;*/
 /*}*/
 
-/*pagination*/
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-
-}
