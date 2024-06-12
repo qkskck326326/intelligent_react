@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
+import Link from 'next/link';
 import { axiosClient } from "../../axiosApi/axiosClient"; // axiosClient를 가져옴
 import styles from '../../styles/lecture/lectureList.module.css';
 
-const LectureList = () => {
+const LectureList = ({ onSelectLecture }) => {
     const [lectures, setLectures] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchData = () => {
-
         axiosClient.get("/lecture/list")
             .then(response => {
                 const responseData = response.data;
@@ -26,17 +26,13 @@ const LectureList = () => {
         fetchData();
     }, []);
 
-    const totalLectures = lectures.length;
-    const completedLectures = lectures.filter(lecture => lecture.lectureRead === 'Y').length;
-    
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
     return (
         <div className={styles.tableContainer}>
             <h1 className={styles.packagetitle}>강의 목록</h1>
-            <table className="table">
+            <table className={styles.table}>
                 <thead>
                     <tr className={styles.subtitle}>
                         <th className={styles.num} scope="col">번호</th>
@@ -46,20 +42,24 @@ const LectureList = () => {
                 </thead>
                 <tbody>
                     {lectures.map((lecture, index) => (
-                        <tr className={styles.list} key={lecture.lectureId}>
+                        <tr
+                            className={styles.list}
+                            key={lecture.lectureId}
+                            onClick={() => onSelectLecture(lecture.lectureId)}
+                        >
                             <th className={styles.num} scope="row">{index + 1}</th>
-                            <td className={styles.title}>{lecture.lectureName}</td>
-                            {/* <td className={styles.title}><a href={lecture.link}>{lecture.lectureName}</a></td> */}
-                            <td className={styles.read}>{lecture.lectureRead}</td>     
+                            <td className={styles.title}>
+                            <Link href={`/lecture/detail?lectureId=${lecture.lectureId}`} legacyBehavior>
+                                    <a>{lecture.lectureName}</a>
+                                </Link>
+                            </td>
+                            <td className={styles.read}>{lecture.lectureRead}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div className={styles.summary}>
-                <tr>{completedLectures} / {totalLectures}</tr>
-            </div>
         </div>
     );
-}
+};
 
 export default LectureList;

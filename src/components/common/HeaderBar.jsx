@@ -42,7 +42,7 @@ const HeaderBar = observer(() => {
             <Nav className={styles['navbar-nav']}>
                 <Nav.Link href="/admin/dashboard" className={styles['nav-link']}>어드민</Nav.Link>
                 <Nav.Link href="/lecturePackage" className={styles['nav-link']}>강의패키지</Nav.Link>
-                <Nav.Link href="/lecture" className={styles['nav-link']}>강의</Nav.Link>
+                <Nav.Link href="/lecture/list" className={styles['nav-link']}>강의</Nav.Link>
                 <Nav.Link href="/itNewsBoard" className={styles['nav-link']}>itNewsBoard</Nav.Link>
                 <Nav.Link href="/user" className={styles['nav-link']}>유저</Nav.Link>
                 <Nav.Link href="/user/login" className={styles['nav-link']}>로그인페이지</Nav.Link>
