@@ -1,8 +1,8 @@
 .tableContainer {
-    width: 100%;
+    width: 120%; /* 전체 너비의 70%로 설정 */
     display: flex;
     flex-direction: column;
-    font-family: "Noto Sans KR", sans-serif; /* Montserrat 글꼴 사용 */
+    font-family: "Noto Sans KR", sans-serif; /* 글꼴 설정 */
     font-weight: bold; /* 볼드체 설정 */
     font-size: 18px;
 }
@@ -11,9 +11,9 @@
     padding: 10px 20px;
     box-sizing: border-box;
     position: relative;
-    left: 50px;
+    left: 0;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1200px;
     height: 110px;
     background: #D4FFEE;
     border-width: 3px 0px;
@@ -29,8 +29,7 @@
     position: relative;
     top: 10px;
     width: 100%;
-    max-width: 1000px;
-    left: 50px;
+    max-width: 1200px;
     height: 50px;
     background: #D4FFEE;
     border-width: 3px 0px;
@@ -56,8 +55,7 @@
     box-sizing: border-box;
     position: relative; /* 상대 위치 설정 */
     width: 100%;
-    max-width: 1000px;
-    margin-left: 50px; /* 왼쪽 여백 설정 */
+    max-width: 1200px;
     height: 50px;
     border-width: 0px 0px 1px 0px;
     border-style: solid;
@@ -81,8 +79,13 @@
     text-align: center;
 }
 
-.verticalLine {
-    border-left: 2px solid #000; /* 선의 두께와 색상 */
-    height: 100px; /* 선의 높이 */
-    margin: 0 20px; /* 두 컴포넌트 사이의 여백 */
-  }
+.summary {
+    margin-right: 50px; /* 오른쪽 여백 설정 */
+    margin-bottom: 20px; /* 아래쪽 여백 설정 */
+    font-size: 16px; /* 글꼴 크기 설정 */
+    max-width: 1200px;
+    color: #000; /* 글꼴 색상 설정 */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
