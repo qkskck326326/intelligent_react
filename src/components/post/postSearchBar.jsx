@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import postAxios from "../../axiosApi/postAxios";
+import styles from "./PostSearch.module.css";
 
 function PostSearch() {
   const [keyword, setKeyword] = useState("");
@@ -21,13 +22,22 @@ function PostSearch() {
 
   return (
     <div>
-      <input
-        type="text"
-        value={keyword}
-        onChange={handleInputChange}
-        placeholder="검색어를 입력하세요..."
-      />
-      <button onClick={handleSearch}>Search</button>
+      <div className={styles.postSearchContainer}>
+        <input
+          type="text"
+          value={keyword}
+          onChange={handleInputChange}
+          placeholder="검색어를 입력하세요"
+          className={styles.postSearchInput}
+        />
+        <button onClick={handleSearch} className={styles.postSearchButton}>
+          <img
+            src="/images/searchBar.png"
+            alt="Search"
+            className={styles.searchIcon}
+          />
+        </button>
+      </div>
       <ul>
         {results.map((post) => (
           <li key={post.id}>{post.title}</li>
