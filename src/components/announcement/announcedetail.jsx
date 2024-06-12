@@ -4,7 +4,6 @@ import Axios from '../../axiosApi/Axios.js'
 import {observer} from "mobx-react";
 import React from 'react';
 import authStore from "../../stores/authStore";
-import {BrowserRouter} from "react-router-dom";
 
 const Announcedetail = observer(() => {
 

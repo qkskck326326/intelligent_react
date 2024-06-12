@@ -17,7 +17,7 @@
 .chatServiceMain{
     width:100%;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .chatServiceMain::-webkit-scrollbar {
@@ -64,4 +64,43 @@
 
 .animateExpand {
     animation: expand 0.5s forwards;
+}
+
+
+@keyframes rotate45deg {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(45deg);
+    }
+}
+
+@keyframes rotateBack {
+    0% {
+        transform: rotate(45deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.animateRotate {
+    animation: rotate45deg 0.15s linear forwards;
+}
+
+.animateBack {
+    animation: rotateBack 0.15s linear forwards;
+}
+
+.rotated {
+    transform: rotate(45deg);
+}
+
+.notRotated {
+    transform: rotate(0deg);
+}
+
+.chatTypeContainer{
+    display: flex;
 }
