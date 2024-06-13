@@ -30,6 +30,7 @@
     height: 3.8rem;
     overflow: hidden;
     flex-shrink: 0;
+    user-select: none;
 }
 .preview{
     width: 100%;
@@ -52,5 +53,16 @@
 
 .xImage{
     width: 0.75rem;
-    z-index: 4;
+    z-index: 1;
+}
+.numero{
+    position: absolute;
+    bottom: 0;
+    left: -5%;
+    background-color: rgb(240, 240, 240, 0.9);
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 25%;
+    text-align: center;
+    font-weight: 900;
 }

@@ -133,7 +133,8 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
             }
 
             {/*챗지피티의 경우 이거 안뜸 시작 */}
-            { (chatOption !== 'gpt') ?
+
+            { (chatOption !== 'gpt') &&
                 <div className={`${styles.announceContainer} ${isSearchButtonClicked ? styles.pushed: ''}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -152,8 +153,6 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                         </svg>
                     </button>
                 </div>
-                :
-                <></>
             }
 
             {/*챗지피티의 경우 이거 안뜸  끝 */}
@@ -165,7 +164,10 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
             <form className={styles.chatBottom} onSubmit={handleSubmit}>
                 {
                     <>
-                        <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
+                        {/*여기까지 챗지피티면 안떠야하나 현재 조작하고 있는 것이 있어 잠시 열어둠*/}
+                        {/*{ (chatOption !== 'gpt')*/}
+                        {
+                            <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
                             <svg
                                 className={isAttachButtonClicked ? commonStyles.animateRotate : commonStyles.animateBack}
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -173,6 +175,9 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                                     d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
                             </svg>
                         </button>
+                        }
+
+                        {/*여기까지 챗지피티면 안뜸 끝*/}
                         {
                             isAttachButtonClicked
                                 ?
@@ -199,7 +204,9 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                         <input
                             type="file"
                             ref={fileInputRef}
+                            name="files"
                             multiple
+                            accept="image/*"
                             onChange={handleFileChange}
                             style={{display: 'none'}}
                         />

@@ -10,12 +10,13 @@ const MediaFiles = observer(({items, setItems})=>{
     const [fileUrls, setFileUrls] = useState([]);
 
     useEffect(() => {
-        const newFileUrls = items.map(item => {
+        const newFileUrls = items.map((item) => {
             const reader = new FileReader();
             reader.readAsDataURL(item);
             return new Promise(resolve => {
                 reader.onloadend = () => {
-                    resolve({ url: reader.result, details: item });
+
+                    resolve({ url: reader.result, details: item,});
                 };
             });
         });
@@ -32,7 +33,7 @@ const MediaFiles = observer(({items, setItems})=>{
     return (
         <div className={styles.files}>
             {fileUrls.map((file, index) => (
-                <MediaFile key={index} details={file.details} url={file.url} onDelete={() => handleDelete(file.details)} />
+                <MediaFile key={index} details={file.details} url={file.url} index={index + 1} onDelete={() => handleDelete(file.details)} />
             ))}
         </div>
     );
