@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
@@ -12,6 +12,8 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
     const [announceExpand, setAnnounceExpand] = useState(false);
     const [isMenuClicked, setIsMenuClicked] = useState(false);
     const [items, setItems] = useState([])
+    const [isAttachButtonClicked, setIsAttachButtonClicked] = useState(false);
+    const fileInputRef = useRef(null);
 
     const handleClickBack = () => {
         setIsAnimating(true);
@@ -21,8 +23,15 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
             setIsSearchButtonClicked(false);
             setAnnounceExpand(false);
             setIsMenuClicked(false);
+            setIsAttachButtonClicked(false);
         }, 500);
     };
+
+    useEffect(() => {
+        console.log(items)
+
+    }, [items]);
+
 
     const handleSearchButtonClick = () => {
         setIsSearchButtonClicked(!isSearchButtonClicked)
@@ -41,6 +50,28 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
         setIsMenuClicked(!isMenuClicked)
     }
 
+    const handleAttachButtonClick = (event) => {
+        event.preventDefault();
+        setIsAttachButtonClicked(!isAttachButtonClicked);
+        console.log(isAttachButtonClicked)
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+    }
+
+    const handlePhotoAttach = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleFileChange = (event) => {
+        const files = Array.from(event.target.files);
+        setItems([...items, ...files])
+        setIsAttachButtonClicked(!isAttachButtonClicked);
+    };
+
 
     return (
         <div
@@ -56,7 +87,7 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                 <div className={styles.title}>
                     {
                         (chatOption !== 'gpt') ? `채팅방제목` : `인텔리봇`
-                        
+
                     }
                 </div>
                 <div className={styles.chatSubTop}>
@@ -127,24 +158,54 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
 
             {/*챗지피티의 경우 이거 안뜸  끝 */}
 
-            <div className={`${styles.chatMain} ${(items.length === 0) ? styles.fileAttached : ''}`}>
+            <div className={`${styles.chatMain} ${(items.length !== 0) ? styles.fileAttached : ''}`}>
                 <BubbleContainer />
             </div>
-            { items.length === 0 ?
-
-                    <MediaFile />
-
-                : <></>
-            }
-            <div className={styles.chatBottom}>
+            { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
+            <form className={styles.chatBottom} onSubmit={handleSubmit}>
                 {
                     <>
-                        <div>+</div>
-                        <div></div>
-                        <div>전송</div>
+                        <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
+                            <svg
+                                className={isAttachButtonClicked ? commonStyles.animateRotate : commonStyles.animateBack}
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path
+                                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+                            </svg>
+                        </button>
+                        {
+                            isAttachButtonClicked
+                                ?
+                                <div className={styles.attachContainer}>
+                                    <button className={styles.attachmentIcons} onClick={handlePhotoAttach}>
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 576 512">
+                                            <path
+                                                d="M160 80H512c8.8 0 16 7.2 16 16V320c0 8.8-7.2 16-16 16H490.8L388.1 178.9c-4.4-6.8-12-10.9-20.1-10.9s-15.7 4.1-20.1 10.9l-52.2 79.8-12.4-16.9c-4.5-6.2-11.7-9.8-19.4-9.8s-14.8 3.6-19.4 9.8L175.6 336H160c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16zM96 96V320c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H160c-35.3 0-64 28.7-64 64zM48 120c0-13.3-10.7-24-24-24S0 106.7 0 120V344c0 75.1 60.9 136 136 136H456c13.3 0 24-10.7 24-24s-10.7-24-24-24H136c-48.6 0-88-39.4-88-88V120zm208 24a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                :
+                                <textarea name="textContent" id="textContent" className={styles.textContent}></textarea>
+                        }
+
+                        <button className={styles.send} type='submit'>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 512 512">
+                                <path
+                                    d="M16.1 260.2c-22.6 12.9-20.5 47.3 3.6 57.3L160 376V479.3c0 18.1 14.6 32.7 32.7 32.7c9.7 0 18.9-4.3 25.1-11.8l62-74.3 123.9 51.6c18.9 7.9 40.8-4.5 43.9-24.7l64-416c1.9-12.1-3.4-24.3-13.5-31.2s-23.3-7.5-34-1.4l-448 256zm52.1 25.5L409.7 90.6 190.1 336l1.2 1L68.2 285.7zM403.3 425.4L236.7 355.9 450.8 116.6 403.3 425.4z"/>
+                            </svg>
+                        </button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            multiple
+                            onChange={handleFileChange}
+                            style={{display: 'none'}}
+                        />
                     </>
                 }
-            </div>
+            </form>
 
             {/*<button>{chatOption}</button>*/}
         </div>

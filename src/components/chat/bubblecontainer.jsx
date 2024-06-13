@@ -10,25 +10,7 @@ const BubbleContainer = observer(()=>{
     return(<div className={styles.bubbleContainer}>
         {<>
             <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble /><Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
+
         </>
         }
     </div>);

@@ -7,7 +7,7 @@ const Bubble = observer(()=>{
 
 
     return (
-        <div>엄청나게 길게 쓸거긔 ㄴㅇ럼노알먼오라ㅓ몽ㄴ라ㅓ몽라ㅓ몽ㄴ라ㅓ몽나러몬아러망ㄴ러</div>
+        <div>채팅예시</div>
     );
 })
 

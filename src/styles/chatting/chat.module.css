@@ -186,9 +186,69 @@
 .chatMain::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-
-
 .chatBottom{
+    display: flex;
     border: 1px red solid;
     height: 20%;
+    gap: 0.25rem;
+    align-items: flex-start;
 }
+.textContent{
+    all:unset;
+    border: 1px yellow solid;
+    margin-top: 0.35rem;
+    flex-grow: 1;
+    resize: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+    overflow-wrap: break-word;
+    height: 80%;
+}
+
+.textContent::-webkit-scrollbar {
+    width: 7px;
+}
+.textContent::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.textContent::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+.textContent::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.attachContainer{
+    border: 1px solid violet;
+    flex-grow:1;
+    margin-top: 0.35rem;
+    height: 80%;
+}
+.attachmentIcons{
+    all:unset;
+    background-color: #E2E2E2;
+    border-radius: 50%;
+    padding: 1rem;
+    box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+.attachmentIcons svg{
+    width: 2rem;
+}
+.attachButton,
+.send{
+    all:unset;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.attachButton > svg,
+.send > svg{
+    width: 1.5rem;
+}
+.chatBottom > *{
+    padding: 0.5rem;
+}
+
+
