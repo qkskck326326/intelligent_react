@@ -1,7 +1,6 @@
 import React from 'react';
 import NavBar from "../components/common/NavBar";
 import CourseList from "../components/common/CourseList";
-import { Button } from 'react-bootstrap';
 import styles from '../styles/common/HomePage.module.css'; // CSS 모듈 임포트
 
 const HomePage = () => {
@@ -20,13 +19,17 @@ const HomePage = () => {
                 <img src='/images/banner.png' alt="Banner" style={{width: '100%', height:'auto'}}/>
                 <NavBar/>
                 <CourseList/>
-                <Button
-                    variant="primary"
+                <div
                     className={styles.fixedButton}
                     onClick={handleOpenTestAI}
+                    style={{ cursor: 'pointer' }}
                 >
-                    Open AI Analysis
-                </Button>
+                    <img
+                        src="/images/SCC.png"
+                        alt="Simple Code Compiler"
+                        style={{ width: '100px', height: '100px' }}
+                    />
+                </div>
             </main>
         </div>
     );

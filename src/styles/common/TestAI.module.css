@@ -1,13 +1,6 @@
 @charset "UTF-8";
 
 @font-face {
-    font-family: 'SF_IceLemon';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_IceLemon.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
     font-family: 'ELAND_Choice_M';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/ELAND_Choice_M.woff') format('woff');
     font-weight: normal;
@@ -59,7 +52,7 @@
 }
 
 .feedbackSection {
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .feedbackPre {
@@ -72,17 +65,30 @@
     overflow: auto;
 }
 
-.row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Flexbox align to start */
+.fixedCodeSection {
+    margin-top: 20px;
 }
 
-.column {
-    flex: 1;
-    margin-right: 20px;
+.fixedCodePre {
+    background: #f5f5f5;
+    padding: 10px;
+    font-family: 'ELAND_Choice_M', monospace;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    height: 200px; /* 고정 높이 */
+    overflow: auto;
 }
 
-.column:last-child {
-    margin-right: 0; /* 마지막 컬럼은 여백 제거 */
+.fixedFeedbackSection {
+    margin-top: 20px;
+}
+
+.fixedFeedbackPre {
+    background: #f5f5f5;
+    padding: 10px;
+    font-family: 'ELAND_Choice_M', monospace;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    height: 200px; /* 고정 높이 */
+    overflow: auto;
 }
