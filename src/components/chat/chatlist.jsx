@@ -18,9 +18,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
     };
 
     const handleTurning = () => {
-
         setIsPlusClicked(!isPlusClicked)
-
     }
     return (
         <div
@@ -33,9 +31,9 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                             d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
                     </svg>
                 </button>
-                <button className={`${styles.topButtons}`} onClick={handleTurning}>
+                <button className={styles.topButtons} onClick={handleTurning}>
                     <svg
-                        className = {isPlusClicked ? `${commonStyles.animateRotate} ${commonStyles.rotated}` : `${commonStyles.animateBack} ${commonStyles.notRotated}`}
+                        className = {isPlusClicked ? `${commonStyles.animateRotate}` : `${commonStyles.animateBack}`}
                         xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 448 512">
                         <path
@@ -61,7 +59,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                     </svg>
                     <p>그룹채팅</p>
                 </div>
-                <div className={styles.chatTypeItem} onClick={() => onNavigateToChat('Chat 3')}>
+                <div className={styles.chatTypeItem} onClick={() => onNavigateToChat('gpt')}>
                     <svg className={styles.chatGPTIcon} xmlns="http://www.w3.org/2000/svg"
                          viewBox="-0.17090198558635983 0.482230148717937 41.14235318283891 40.0339509076386">
                         <path
@@ -74,6 +72,10 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
             <div className={commonStyles.chatServiceMain}>
                 <EachChat/>
                 <EachChat/>
+
+
+
+
 
             </div>
 

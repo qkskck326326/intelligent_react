@@ -1,0 +1,19 @@
+.bubbleContainer{
+    border: 1px solid;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+.bubbleContainer::-webkit-scrollbar {
+    width: 10px;
+}
+.bubbleContainer::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+.bubbleContainer::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 5px;
+}
+.bubbleContainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

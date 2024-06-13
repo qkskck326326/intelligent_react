@@ -5,7 +5,7 @@
 .chatServiceContainer{
     position: fixed;
     bottom: 3%;
-    right: 3%;
+    right: 1.5%;
     width: 24rem;
     height: 40rem;
     box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.3);
@@ -19,7 +19,6 @@
     height: 100%;
     overflow-y: auto;
 }
-
 .chatServiceMain::-webkit-scrollbar {
     width: 10px;
 }
@@ -32,10 +31,36 @@
     background: #888;
     border-radius: 5px;
 }
-
 .chatServiceMain::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+@keyframes rotate180deg {
+    0%{
+        transform: rotate(0deg)
+    }
+    100%{
+        transform: rotate(180deg)
+    }
+}
+.rotate180{
+    animation: rotate180deg 0.5s forwards;
+}
+
+@keyframes rotate180degBack {
+    0%{
+        transform: rotate(180deg)
+    }
+    100%{
+        transform: rotate(0);
+    }
+
+}
+
+.rotate180Back{
+    animation: rotate180degBack 0.5s forwards;
+}
+
 @keyframes collapse {
     0% {
         transform: scale(1);
@@ -91,14 +116,6 @@
 
 .animateBack {
     animation: rotateBack 0.15s linear forwards;
-}
-
-.rotated {
-    transform: rotate(45deg);
-}
-
-.notRotated {
-    transform: rotate(0deg);
 }
 
 .chatTypeContainer{

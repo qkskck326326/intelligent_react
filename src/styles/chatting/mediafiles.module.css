@@ -1,0 +1,44 @@
+.files{
+    padding-inline: 0.25rem;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.files::-webkit-scrollbar {
+    height: 0.5rem;
+}
+.files::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.files::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+.files::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.fileContainer{
+    border-radius: 0.5rem 0.5rem;
+    position: relative;
+    width: 3.8rem;
+    height: 3.8rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.x{
+    all:unset;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 5%;
+}
+
+.xImage{
+    width: 0.75rem;
+}

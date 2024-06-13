@@ -13,14 +13,12 @@ const Announcedetail = observer(() => {
 
     const convertNewlinesToBreaks = (text) => {
 
-        if(text !== undefined) {
-            return text.split('\n').map((item, index) => (
-                <React.Fragment key={index}>
-                    {item}
-                    <br/>
-                </React.Fragment>
-            ));
-        }
+        return text?.split('\n').map((item, index) => (
+            <React.Fragment key={index}>
+                {item}
+                <br/>
+            </React.Fragment>
+        ));
     };
 
     const categoryMap = {

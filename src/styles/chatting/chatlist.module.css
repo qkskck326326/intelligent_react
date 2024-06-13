@@ -10,7 +10,47 @@
     display: flex;
     align-items: center;
     padding-inline: 0.5rem;
+    position: relative;
 }
+.topButtons::before{
+    opacity: 0;
+    content:'뒤로가기';
+    position: absolute;
+    padding: 0.25rem;
+    width: 4rem;
+    z-index: 2;
+    background-color: white;
+    border-radius: 0.25rem 0.25rem;
+    box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.3);
+}
+
+.topButtons:nth-child(1)::before{
+    content:'뒤로가기';
+    top: 15%;
+    left: 90%;
+}
+
+.topButtons:nth-child(2)::before{
+    content:'채팅추가';
+    top: 15%;
+    right: 80%;
+}
+
+@keyframes textAppear {
+
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+
+}
+
+.topButtons:hover::before{
+    animation: textAppear 0.3s forwards;
+}
+
 .topButtons svg{
     width: 1.5rem;
     height: 1.5rem;
