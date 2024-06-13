@@ -1,0 +1,41 @@
+.postSearchContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+}
+
+.postSearchInput {
+  width: 400px;
+  padding: 10px;
+  border: 4px solid;
+  border-image: linear-gradient(to right, rgb(139, 218, 139), lightgreen) 1;
+  border-radius: 5px 0 0 5px; /* Only round left side */
+  outline: none;
+  background-color: white;
+}
+
+.postSearchButton {
+  padding: 10px;
+  border: 4px solid;
+  border-image: linear-gradient(to right, rgb(255, 255, 255), rgb(255, 255, 255)) 1;
+  border-radius: 0 5px 5px 0; /* Only round right side */
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+
+
+.searchIcon {
+  width: 45px;
+  height: 45px;
+  transition: transform 0.3s; /* Smooth transition for transform */
+}
+
+.searchIcon:hover {
+  transform: scale(1.2); /* Scale image to 120% on hover */
+}

@@ -13,7 +13,6 @@ const BoardList = () => {
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [currentData, setCurrentData] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
 
     const fetchData = () => {
         axiosClient.get('/itNewsSite', {params: {page: page, size: size}})
@@ -49,13 +48,11 @@ const BoardList = () => {
 
     const handleShow = () => {
         setCurrentData(null);
-        setIsEditing(false);
         setShowModal(true);
     };
 
     const handleEdit = (item) => {
         setCurrentData(item);
-        setIsEditing(true);
         setShowModal(true);
     };
 
@@ -72,7 +69,6 @@ const BoardList = () => {
 
     const handleClose = () => {
         setCurrentData(null);
-        setIsEditing(false);
         setShowModal(false);
     };
 
@@ -111,7 +107,7 @@ const BoardList = () => {
                         <td>{item.contextElement}</td>
                         <td>
                             <button onClick={() => handleEdit(item)}>수정</button> &nbsp;
-                            <button onClick={() => handleDelete(item)}>삭제</button>
+                            {/*<button onClick={() => handleDelete(item)}>삭제</button>*/}
                         </td>
                     </tr>
                 ))}

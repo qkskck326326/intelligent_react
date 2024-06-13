@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../../styles/announcement.module.css';
+import styles from '../../styles/cs/announcement.module.css';
 import AnnouncementItem from './announcementitem.jsx';
 import Link from "next/link";
 import authStore from "../../stores/authStore";
-import AnnouncementAxios from '../../axiosApi/announcementAxios';
+import Axios from '../../axiosApi/Axios';
 import { observer } from 'mobx-react';
 
 const Announcement = observer (() => {
@@ -147,7 +147,7 @@ const Announcement = observer (() => {
 
     function handleClick(id) {
         console.log('triggered');
-        const axios = new AnnouncementAxios();
+        const axios = new Axios();
         axios.get('/announcement/id', `?announcementId=${id}`)
             .then(data => {
                 setDetails(data);

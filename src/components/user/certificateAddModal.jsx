@@ -9,6 +9,7 @@ const CertificateAddModal = ({ onSave, onClose }) => {
     issuePlace: "",
     certificateNumber: "",
 
+
   });
 
 
@@ -29,7 +30,12 @@ const CertificateAddModal = ({ onSave, onClose }) => {
   };
 //ㅎ
   const handleSave = () => {
-    onSave(form);  // 부모에게 props로 받은 onSave를 이용하여 저장함.
+    if(form.pdfFile !== ""){
+      onSave(form);  // 부모에게 props로 받은 onSave를 이용하여 저장함.
+    }else{
+      alert("pdf파일을 올려주세요!")
+    }
+
   };
 
   return (

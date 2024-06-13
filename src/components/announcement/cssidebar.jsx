@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../../styles/cs.module.css'
+import styles from '../../styles/cs/cs.module.css'
 
 
 export default function CSSideBar(){

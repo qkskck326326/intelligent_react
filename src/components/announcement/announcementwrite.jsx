@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../../styles/announcementwrite.module.css';
+import styles from '../../styles/cs/announcementwrite.module.css';
 import { useRouter } from "next/router";
-import AnnouncementAxios from "../../axiosApi/announcementAxios";
+import Axios from "../../axiosApi/Axios";
 import { observer } from 'mobx-react';
 import authStore from "../../stores/authStore";
 
@@ -13,7 +13,7 @@ const AnnouncementWrite = observer(() => {
     const [importance, setImportance] = useState(0);
     const [announcementId, setAnnouncementId] = useState(0);
     const [createdAt, setCreatedAt] = useState(null);
-    const axios = new AnnouncementAxios();
+    const axios = new Axios();
 
     useEffect(() => {
         //받아온 쿼리가 있다면 그 값으로 필드 채워둠 아닐 경우 무시

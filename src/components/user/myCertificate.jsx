@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../common/Pagination";
-import CertificateAddModal from "./CertificateAddModal";
+import CertificateAddModal from "./certificateAddModal";
 import styles from "../../styles/user/mypage/myCertificate.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 
 const MyCertificate = observer(() => {
   const [certificates, setCertificates] = useState([]);
@@ -13,26 +13,16 @@ const MyCertificate = observer(() => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-
-
-
-
-  const ITEMS_PER_PAGE = 10;  // 페이지당 보이는 데이터 개수
+  const ITEMS_PER_PAGE = 10; // 페이지당 보이는 데이터 개수
 
   const fetchCertificates = async (nickname) => {
     setLoading(true);
     try {
-      axiosClient.get('/certificates', { params: { nickname: nickname } })
-          .then(response => {
-            const responseData = response.data;
-            const dataArray = Array.isArray(responseData) ? responseData : [responseData];
-            setCertificates(dataArray);
-            setLoading(false);
-          })
-          .catch(err => {
-            setError(err);
-            setLoading(false);
-          });
+      const response = await axiosClient.get('/certificates', { params: { nickname: nickname } });
+      const responseData = response.data;
+      const dataArray = Array.isArray(responseData) ? responseData : [responseData];
+      setCertificates(dataArray);
+      setLoading(false);
     } catch (error) {
       setError(error);
       setLoading(false);
@@ -40,9 +30,8 @@ const MyCertificate = observer(() => {
   };
 
   useEffect(() => {
-
-    fetchCertificates(authStore.getNickname());
-
+    const nickname = authStore.getNickname();
+    fetchCertificates(nickname);
   }, []);
 
   // 전체 페이지 수 계산
@@ -60,13 +49,15 @@ const MyCertificate = observer(() => {
   };
 
   const handleSave = async (newCertificate) => {
+    const nickname = authStore.getNickname();
+
     const certificateToSave = {
       ...newCertificate,
       nickname
     };
 
-
     try {
+      console.log("Saving certificate:", certificateToSave);
       const res = await axiosClient.post('/certificates', certificateToSave);
       if (res.status === 200 || res.status === 201) {
         fetchCertificates(nickname);
@@ -80,20 +71,12 @@ const MyCertificate = observer(() => {
   };
 
   const handleDelete = async (certificateNumber) => {
+    const nickname = authStore.getNickname();
     try {
-      axiosClient.delete(`/certificates/${certificateNumber}`)
-          .then(response => {
-            fetchCertificates(nickname);
-            setLoading(false);
-          })
-
-          .catch(err => {
-            setError(err);
-            setLoading(false);
-          });
+      await axiosClient.delete(`/certificates/${certificateNumber}`);
+      fetchCertificates(nickname);
     } catch (error) {
       setError("Error deleting certificate", error);
-      setLoading(false);
     }
   };
 

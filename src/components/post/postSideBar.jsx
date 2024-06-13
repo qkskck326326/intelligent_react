@@ -1,19 +1,23 @@
-import React, { useState } from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import React from "react";
+import Link from "next/link";
+import styles from "./Sidebar.module.css"; // Import the CSS file
 
-function Sidebar() {
+const Sidebar = () => {
   return (
-    <div className="sidebar">
+    <div className={styles.sidebar}>
       <ul>
         <li>
-          <Link to="/boards">게시판</Link>
+          <h1>공유게시판</h1>
         </li>
         <li>
-          <Link to="/my-posts">내 게시물</Link>
+          <Link href="http://localhost:3000/post">게시판 목록</Link>
+        </li>
+        <li>
+          <Link href="/myPosts">내 게시물</Link>
         </li>
       </ul>
     </div>
   );
-}
+};
 
 export default Sidebar;
