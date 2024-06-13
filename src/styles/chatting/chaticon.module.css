@@ -10,6 +10,7 @@
     border-radius: 50%;
     box-shadow: 0 0.2rem 0.3rem rgba(0,0,0,0.3);
     transition: all 0.3s ease-in-out;
+    background-color: white;
     cursor: pointer;
     z-index: 1;
 }

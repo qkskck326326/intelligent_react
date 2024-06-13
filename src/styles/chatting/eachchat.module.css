@@ -1,5 +1,5 @@
-.eachchatContainer{
-    width: 99%;
+.eachChatContainer{
+    width: 100%;
     height: 5rem;
     border-bottom: 1px solid #E2E2E2;
     display: flex;
@@ -7,6 +7,9 @@
     align-items: center;
     user-select: none;
     cursor: pointer;
+}
+.eachChatContainer:hover{
+    background-color: #E0E0E0;
 }
 .pictureFrame{
     width: 4rem;
@@ -75,6 +78,7 @@
     text-overflow: ellipsis;
 }
 .time{
+    padding-right: 0.2rem;
     font-size: 0.8rem;
     flex-shrink: 0;
     margin-top: 1.15rem;
