@@ -16,6 +16,8 @@ const App = ({ Component, pageProps }) => {
         authStore.setIsLoggedIn(true);
         authStore.setIsAdmin(localStorage.getItem("isAdmin") === "true");
         authStore.setNickname(localStorage.getItem("nickname") || '');
+        authStore.setUserEmail(localStorage.getItem("userEmail") || '');
+        authStore.setProvider(localStorage.getItem("provider") || '');
       }
     }
   }, []);
