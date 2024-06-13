@@ -33,10 +33,14 @@ const LectureDetail = ({ lectureId }) => {
                     <p className={styles.nickname}>강사 : {lecture.NICKNAME}</p>
                     <p className={styles.viewCount}>조회수 : {lecture.LECTURE_VIEWCOUNT}</p>
                     <div className={styles.videoContainer}>
-                        <video className={styles.video} controls>
-                            <source src={lecture.STREAM_URL} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
+                        <iframe
+                            className={styles.video}
+                            src={lecture.streamUrl}
+                            title={lecture.lectureName}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
                     </div>
                 </>
             )}
