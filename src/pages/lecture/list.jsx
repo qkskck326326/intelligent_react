@@ -57,6 +57,11 @@ const LecturePage = () => {
                 <div style={ratingStyle}>
                     <LectureAvgRating />
                 </div>
+                <div>
+                    <Link href="/lecture/addLecture" legacyBehavior>
+                        <a style={{ marginLeft: '20px', padding: '10px', backgroundColor: '#19CA83', color: 'white', borderRadius: '5px', textDecoration: 'none' }}>강의 등록</a>
+                    </Link>
+                </div>
                 <div style={previewStyle}>
                     {selectedLectureId && <LecturePreview lectureId={selectedLectureId} />}
                 </div>
