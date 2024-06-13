@@ -1,5 +1,33 @@
 /* global.css */
 
+@font-face {
+    font-family: 'SF_IceLemon';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_IceLemon.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ELAND_Choice_M';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/ELAND_Choice_M.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'ELAND_Choice_M', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'SF_IceLemon', sans-serif;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 .flex-container {
     display: flex;
 }
@@ -103,7 +131,7 @@
 
 /* 모바일 뷰 (기본 스타일) */
 .background-container {
-    background-image: url('/image/main.webp');
+    /*background-image: url('/image/main.webp');*/
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
