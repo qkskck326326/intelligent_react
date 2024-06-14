@@ -77,7 +77,6 @@ const FaceLogin = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>      
-      <h1>공사중... 통행에 불편을 드려 죄송합니다.</h1>
       <h1>Face Login</h1>
       <input
         type="text"
