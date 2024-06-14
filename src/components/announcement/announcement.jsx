@@ -3,7 +3,6 @@ import styles from '../../styles/cs/announcement.module.css';
 import AnnouncementItem from './announcementitem.jsx';
 import Link from "next/link";
 import authStore from "../../stores/authStore";
-import Axios from '../../axiosApi/Axios';
 import { observer } from 'mobx-react';
 
 const Announcement = observer (() => {
@@ -145,16 +144,6 @@ const Announcement = observer (() => {
         setSearchQuery(keyword);
     };
 
-    function handleClick(id) {
-        console.log('triggered');
-        const axios = new Axios();
-        axios.get('/announcement/id', `?announcementId=${id}`)
-            .then(data => {
-                setDetails(data);
-                console.log(`data임 ${data}`);
-            });
-    }
-
     return (
         <div className={styles.announceContainer}>
             <div className={styles.announceHeader}>
@@ -185,7 +174,6 @@ const Announcement = observer (() => {
                             <AnnouncementItem
                                 key={announcement.announcementId}
                                 details={announcement}
-                                onClick={() => { handleClick(announcement.announcementId) }}
                             />
                         ))
                         : <div></div>

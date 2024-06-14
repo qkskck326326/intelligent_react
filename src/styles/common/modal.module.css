@@ -1,0 +1,104 @@
+.modalBackground{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    user-select: none;
+}
+.buttonContainer{
+    display: flex;
+    gap: 8rem;
+}
+.modalContainer{
+    text-align: center;
+    width: 50vw;
+    height: 20vh;
+    background-color: white;
+    border-radius: 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    z-index: 11;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+}
+
+.modalDialog{
+    font-size: 1.25rem;
+    font-weight: 700;
+    width: 80%;
+}
+
+.buttons{
+    margin: 1rem;
+    all:unset;
+    cursor: pointer;
+    position: relative;
+    transition: color 1s, transform 1s;
+    font-size: 1.75rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.buttons:hover{
+    color: white;
+    transform: scale(1.1);
+}
+
+.buttons::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: -100%;
+    top: 0;
+    transition: left 1s;
+    z-index: -1;
+}
+
+.buttons:last-child::before{
+    background-color: rgba(255, 0, 30, 0.7);
+}
+
+.buttons:first-child::before{
+    background-color: rgba(0, 123, 255, 0.7);
+}
+
+.buttons:hover::before{
+    left: 0
+}
+
+@Keyframes scaleOut{
+    0%{
+        transform: scale(0)
+    }
+    100%{
+        transform: scale(1)
+    }
+}
+
+.popOut{
+    animation: scaleOut 0.5s forwards;
+}
+
+@Keyframes scaleIn{
+    0%{
+        transform: scale(1)
+    }
+    100%{
+        transform: scale(0)
+    }
+}
+
+.shrinkIn{
+    animation: scaleIn 0.5s forwards;
+}

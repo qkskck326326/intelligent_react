@@ -1,10 +1,8 @@
 import React, {useEffect} from "react";
 import { observer } from 'mobx-react';
-import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/mediafiles.module.css'
 
 const MediaFile = observer(({ details, url, onDelete, index }) => {
-    console.log(index)
     return (
         <div className={styles.fileContainer}>
             <img className={styles.preview} src={url} alt={details.name}/>
