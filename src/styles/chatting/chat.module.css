@@ -128,6 +128,7 @@
 }
 .announceContainer{
     width: 95%;
+    z-index:3;
     position: absolute;
     top : 5.5%;
     left: 1%;
@@ -137,6 +138,7 @@
     box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.3);
     display: flex;
     align-items: flex-start;
+    user-select: none;
 }
 .pushed{
     top: 8.5%;
@@ -167,6 +169,7 @@
 }
 .chatMain{
     height: 75%;
+    border-bottom: 1px solid #aaaaaa;
 }
 
 .fileAttached{
@@ -188,14 +191,15 @@
 }
 .chatBottom{
     display: flex;
-    border: 1px red solid;
+    border-top: 1px solid #e2e2e2;
     height: 20%;
     gap: 0.25rem;
     align-items: flex-start;
 }
 .textContent{
     all:unset;
-    border: 1px yellow solid;
+    background-color: #EEEEEE;
+    border-radius: 0.5rem 0.5rem;
     margin-top: 0.35rem;
     flex-grow: 1;
     resize: none;
@@ -221,18 +225,22 @@
 }
 
 .attachContainer{
-    border: 1px solid violet;
     flex-grow:1;
-    margin-top: 0.35rem;
     height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .attachmentIcons{
     all:unset;
     background-color: #E2E2E2;
-    border-radius: 50%;
+    border-radius: 2rem 2rem;
     padding: 1rem;
     box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.3);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 .attachmentIcons svg{
     width: 2rem;
@@ -250,5 +258,7 @@
 .chatBottom > *{
     padding: 0.5rem;
 }
+
+
 
 

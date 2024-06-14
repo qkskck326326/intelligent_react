@@ -23,8 +23,6 @@ const BubbleContainer = observer(()=>{
             <Bubble />
             <Bubble />
             <Bubble />
-
-
         </>
         }
     </div>);

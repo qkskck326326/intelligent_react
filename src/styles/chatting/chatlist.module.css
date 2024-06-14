@@ -5,14 +5,18 @@
     justify-content: space-between;
     border-bottom: 1px solid #E2E2E2;
 }
-.topButtons{
+
+.topButtons,
+.topButtons2{
     all:unset;
     display: flex;
     align-items: center;
     padding-inline: 0.5rem;
     position: relative;
 }
-.topButtons::before{
+
+.topButtons::before,
+.topButtons2::before{
     opacity: 0;
     content:'뒤로가기';
     position: absolute;
@@ -36,6 +40,13 @@
     right: 80%;
 }
 
+.topButtons2::before{
+    width: 2rem;
+    content:'확인';
+    top: 15%;
+    right: 80%;
+}
+
 @keyframes textAppear {
 
     0%{
@@ -47,11 +58,13 @@
 
 }
 
-.topButtons:hover::before{
+.topButtons:hover::before,
+.topButtons2:hover::before{
     animation: textAppear 0.3s forwards;
 }
 
-.topButtons svg{
+.topButtons svg,
+.topButtons2 svg{
     width: 1.5rem;
     height: 1.5rem;
     cursor: pointer;

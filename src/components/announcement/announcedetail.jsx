@@ -8,7 +8,7 @@ import authStore from "../../stores/authStore";
 const Announcedetail = observer(() => {
 
     const router = useRouter();
-    const {announcementId, title, createdAt, category, importance, content, ...rest} = router.query
+    const {announcementId, title, createdAt, category, importance, content} = router.query
     const axios = new Axios();
 
     const convertNewlinesToBreaks = (text) => {

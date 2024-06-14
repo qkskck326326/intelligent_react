@@ -15,8 +15,15 @@ const MediaFiles = observer(({items, setItems})=>{
             reader.readAsDataURL(item);
             return new Promise(resolve => {
                 reader.onloadend = () => {
+                    if (item.type.startsWith('image/')) {
+                        resolve({ url: reader.result, details: item})
+                    }
+                    else if (item.type.startsWith('video/')) {
+                        resolve({ url: '/images/defaultvideoicon.png', details: item})
+                    } else{
+                        resolve({ url: '/images/defaultfileicon.png', details: item})
+                    }
 
-                    resolve({ url: reader.result, details: item,});
                 };
             });
         });

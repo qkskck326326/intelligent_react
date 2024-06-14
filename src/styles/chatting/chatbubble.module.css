@@ -38,6 +38,7 @@
 }
 .profile{
     flex-shrink: 0;
+    user-select: none;
 }
 .main{
     flex-grow: 1;
@@ -47,6 +48,7 @@
 }
 .nickname{
     font-size: 0.8rem;
+    user-select: none;
 }
 .content{
     padding-block: 0.3rem;
@@ -66,5 +68,6 @@
 }
 .howManyRead,
 .time{
+    user-select: none;
     font-size: 0.75rem;
 }

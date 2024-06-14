@@ -13,11 +13,11 @@ const Bubble = observer(()=>{
     return (
         <div className={`${styles.bubbleWrapper} ${ isMe ? styles.reverseBubbleWrapper : ''}`}>
             <div className={`${styles.eachBubble} ${ isMe ? styles.reverseEachBubble : ''}`}>
-
                 {/* TODO 강사일 경우 강사의 페이지 이동기능도 필요할듯? */}
                 { !isMe ?
                     <div className={styles.profile}>
                         {/* TODO 사진인데 옵셔널체이닝으로 에러방지해야할듯*/}
+                        사진
                     </div>
                     :
                     <></>
@@ -35,9 +35,9 @@ const Bubble = observer(()=>{
 
                     <div className={styles.content}>
 
-                        {
-                            isThereMedia && <Media 사진이있다면 들어옴 아직정의되지 않음/>
-                        }
+                        {/*{*/}
+                        {/*    isThereMedia && <Media 사진이있다면 들어옴 아직정의되지 않음/>*/}
+                        {/*}*/}
 
                     {/*  TODO 이미지 조건 넣어서 이미지일시 조건 처리  */}
                         TODO 여기에 글을 쓸거고 오버래핑 처리 잘해야함
@@ -48,6 +48,7 @@ const Bubble = observer(()=>{
                         1
                     </div>
                     <div className={styles.time}>
+                        {/*TODO 시간을 넣어야함 */}
                         {`${new Date().toLocaleDateString('ko-KR').trim().split('.')[1]}.${new Date().toLocaleDateString('ko-KR').split('.')[2].trim()}`}
                     </div>
                 </div>

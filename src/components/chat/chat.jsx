@@ -5,8 +5,10 @@ import styles from '../../styles/chatting/chat.module.css'
 import BubbleContainer from "./bubblecontainer.jsx";
 import AuthStore from "../../stores/authStore";
 import MediaFile from "./mediafiles.jsx";
+import AlertModal from "../common/Modal";
 
 const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
+
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
     const [announceExpand, setAnnounceExpand] = useState(false);
@@ -14,6 +16,9 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
     const [items, setItems] = useState([])
     const [isAttachButtonClicked, setIsAttachButtonClicked] = useState(false);
     const fileInputRef = useRef(null);
+    const [modalOn, setModalOn] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('')
+    const modal = new AlertModal();
 
     const handleClickBack = () => {
         setIsAnimating(true);
@@ -24,6 +29,7 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
             setAnnounceExpand(false);
             setIsMenuClicked(false);
             setIsAttachButtonClicked(false);
+            setModalOn(false)
         }, 500);
     };
 
@@ -60,15 +66,54 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
         event.preventDefault();
     }
 
-    const handlePhotoAttach = () => {
+    const handleFileAttach = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
     };
 
+    const handleModalOn = () => {
+        setModalOn(!modalOn)
+    }
+
+
     const handleFileChange = (event) => {
-        const files = Array.from(event.target.files);
-        setItems([...items, ...files])
+
+        const newFiles = Array.from(event.target.files);
+        const AllFiles = [...items, ...newFiles]
+        const images = AllFiles.filter(file => file.type.startsWith('image/'));
+        const videos = AllFiles.filter(file => file.type.startsWith('video/'));
+        const others = AllFiles.filter(file => !file.type.startsWith('image/') && !file.type.startsWith('video/'));
+
+        if ((images.length > 0 && (videos.length > 0 || others.length > 0)) ||
+            (videos.length > 0 && (images.length > 0 || others.length > 0)) ||
+            (others.length > 0 && (images.length > 0 || videos.length > 0))) {
+
+            setAlertMessage('사진은 8장까지 첨부가 가능하며 비디오는 1개 파일은 1개만 첨부가 가능합니다.')
+            handleModalOn();
+            return;
+        }
+
+        if (images.length > 8) {
+
+            setAlertMessage('사진은 8장까지만 첨부 가능합니다.')
+            handleModalOn();
+            return;
+        }
+
+        if (videos.length > 1) {
+            setAlertMessage('비디오는 하나만 첨부 가능합니다.')
+            handleModalOn();
+            return;
+        }
+
+        if (others.length > 1) {
+            setAlertMessage('파일은 하나만 첨부 가능합니다.')
+            handleModalOn();
+            return;
+        }
+
+        setItems(AllFiles);
         setIsAttachButtonClicked(!isAttachButtonClicked);
     };
 
@@ -178,20 +223,28 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                         }
 
                         {/*여기까지 챗지피티면 안뜸 끝*/}
+
                         {
                             isAttachButtonClicked
                                 ?
                                 <div className={styles.attachContainer}>
-                                    <button className={styles.attachmentIcons} onClick={handlePhotoAttach}>
+                                    <button className={styles.attachmentIcons} onClick={handleFileAttach}>
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 576 512">
                                             <path
                                                 d="M160 80H512c8.8 0 16 7.2 16 16V320c0 8.8-7.2 16-16 16H490.8L388.1 178.9c-4.4-6.8-12-10.9-20.1-10.9s-15.7 4.1-20.1 10.9l-52.2 79.8-12.4-16.9c-4.5-6.2-11.7-9.8-19.4-9.8s-14.8 3.6-19.4 9.8L175.6 336H160c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16zM96 96V320c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H160c-35.3 0-64 28.7-64 64zM48 120c0-13.3-10.7-24-24-24S0 106.7 0 120V344c0 75.1 60.9 136 136 136H456c13.3 0 24-10.7 24-24s-10.7-24-24-24H136c-48.6 0-88-39.4-88-88V120zm208 24a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
                                         </svg>
+                                        파일 첨부
                                     </button>
                                 </div>
                                 :
-                                <textarea name="textContent" id="textContent" className={styles.textContent}></textarea>
+
+                                items.length === 0 ?
+                                    <textarea name="textContent" id="textContent" placeholder='텍스트를 입력해주세요'
+                                              className={styles.textContent}></textarea>
+                                    :
+                                    <div className={styles.dummy}>사진 메시지 동시전송 불가로 만들어 둔 빈 박스입니다</div>
+
                         }
 
                         <button className={styles.send} type='submit'>
@@ -206,16 +259,20 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                             ref={fileInputRef}
                             name="files"
                             multiple
-                            accept="image/*"
+                            accept="image/*,video/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
                             onChange={handleFileChange}
                             style={{display: 'none'}}
                         />
                     </>
                 }
             </form>
-
             {/*<button>{chatOption}</button>*/}
+            {
+                modalOn ? modal.yesOnly(alertMessage, setModalOn, false)
+                    : <></>
+            }
         </div>
+
     );
 });
 

@@ -51,7 +51,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                     </svg>
                     <p>강사와채팅</p>
                 </div>
-                <div className={styles.chatTypeItem}>
+                <div className={styles.chatTypeItem} onClick={() => onNavigateToFriends()}>
                     <svg className={styles.chatTypeIcon} xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 640 512">
                         <path
@@ -72,9 +72,6 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
             <div className={commonStyles.chatServiceMain}>
                 <EachChat/>
                 <EachChat/>
-
-
-
 
 
             </div>
