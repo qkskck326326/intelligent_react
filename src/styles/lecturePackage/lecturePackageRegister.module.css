@@ -1,0 +1,39 @@
+.lecturePackageRegister {
+    padding: 20px;
+}
+
+.formSection {
+    margin-bottom: 20px;
+}
+
+.categoryButton,
+.thumbnailButton,
+.saveButton {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.categoryButton:hover,
+.thumbnailButton:hover,
+.saveButton:hover {
+    background-color: #0056b3;
+}
+
+.selectedCategories {
+    margin-top: 10px;
+}
+
+.selectedCategory {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    background-color: #20c997;
+    border-radius: 3px;
+    color: white;
+}

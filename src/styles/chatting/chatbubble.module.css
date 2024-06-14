@@ -1,0 +1,70 @@
+.bubbleContainer{
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.bubbleContainer::-webkit-scrollbar {
+    width: 10px;
+}
+.bubbleContainer::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+.bubbleContainer::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 5px;
+}
+.bubbleContainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.bubbleWrapper{
+    display: flex;
+    padding-inline: 0.25rem;
+}
+.eachBubble{
+    display: flex;
+    width: 85%;
+    gap: 0.5rem;
+    padding-block: 0.2rem;
+}
+/*아래 두개가 각각 적용되어야 함*/
+.reverseBubbleWrapper{
+    flex-direction: row-reverse;
+}
+.reverseEachBubble{
+    flex-direction: row-reverse;
+}
+.profile{
+    flex-shrink: 0;
+}
+.main{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.nickname{
+    font-size: 0.8rem;
+}
+.content{
+    padding-block: 0.3rem;
+    padding-inline: 0.5rem;
+    background-color: #E0E0E0;
+    border-radius: 0.5rem 0.5rem;
+}
+.end{
+    flex-shrink: 0;
+    align-self: flex-end;
+    display:flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.reverseEnd{
+    align-items: flex-end;
+}
+.howManyRead,
+.time{
+    font-size: 0.75rem;
+}

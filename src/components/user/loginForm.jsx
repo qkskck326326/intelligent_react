@@ -35,14 +35,14 @@ const LoginForm = observer(() => {
         window.localStorage.setItem("token", pureToken);
         window.localStorage.setItem("isAdmin", response.data.isAdmin);
         window.localStorage.setItem("nickname", response.data.nickname);
-        window.localStorage.setItem("userEmail", formData.userEmail);
-        window.localStorage.setItem("provider", formData.provider);
+        window.localStorage.setItem("userEmail", response.data.userEmail);
+        window.localStorage.setItem("provider", response.data.provider);
 
         authStore.setIsLoggedIn(true);
         authStore.setIsAdmin(response.data.isAdmin);
         authStore.setNickname(response.data.nickname);
-        authStore.setUserEmail(formData.userEmail);
-        authStore.setProvider(formData.provider);
+        authStore.setUserEmail(response.data.userEmail);
+        authStore.setProvider(response.data.provider);
       }
       window.location.href = 'http://localhost:3000'; // 로그인 성공 시 이동
     } catch (error) {

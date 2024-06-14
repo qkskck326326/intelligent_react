@@ -6,7 +6,7 @@ const EachChat = observer((props) => {
 
 
     return(
-        <div className={styles.eachchatContainer}>
+        <div className={styles.eachChatContainer}>
             <div className={styles.pictureFrame}>
                 <div className={styles.eachPicture}>
                     <img

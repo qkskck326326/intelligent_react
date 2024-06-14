@@ -1,0 +1,164 @@
+/* General Styles */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+}
+
+.h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 48px;
+    color: #000000;
+}
+
+.h2 {
+    text-align: center;
+    margin-bottom: 50px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+}
+
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.leftColumn, .rightColumn {
+    flex: 1;
+    padding: 25px;
+    min-width: 45%;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 30px;
+    color: #000000;
+}
+
+.input, .textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+
+.textarea {
+    height: 200px;
+    resize: none;
+}
+
+.button {
+    margin-top: 5px;
+    padding: 10px 15px;
+    background-color: #19CA83;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #17b074;
+}
+
+.submitButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #19CA83;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 10%;
+}
+
+.submitButton:hover {
+    background-color: #17b074;
+}
+
+.thumbnailGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.thumbnailInputContainer {
+    display: flex;
+    align-items: center;
+}
+
+.thumbnailPreviewContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.thumbnailPreview {
+    width: 450px; /* 썸네일 미리보기 크기 조절 */
+    height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+
+.thumbnailUpload {
+    margin-top: 5px;
+}
+
+.underColumn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.fileInput {
+    display: none; /* 숨기기 */
+}
+
+.customFileInput {
+    padding: 10px 20px;
+    background-color: #179E85;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 15px;
+    white-space: nowrap;
+}
+
+.customFileInput:hover {
+    background-color: #128B6F;
+}
+
+.videoUploadContainer {
+    display: flex;
+    align-items: center;
+}
+
+.videoInputContainer {
+    display: flex;
+    align-items: center;
+}
+
+.videoFileInput {
+    display: none;
+}

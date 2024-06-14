@@ -1,8 +1,12 @@
 import LoginForm from "../../components/user/loginForm";
+import FaceLogin from "../../components/user/faceLogin";
 
 const Index = () => {
     return (
-        <LoginForm/>
+        <div>
+            <LoginForm/>
+            <FaceLogin/>
+        </div>
     );
 };
 

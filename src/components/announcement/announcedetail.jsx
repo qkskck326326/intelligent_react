@@ -4,7 +4,6 @@ import Axios from '../../axiosApi/Axios.js'
 import {observer} from "mobx-react";
 import React from 'react';
 import authStore from "../../stores/authStore";
-import {BrowserRouter} from "react-router-dom";
 
 const Announcedetail = observer(() => {
 
@@ -14,14 +13,12 @@ const Announcedetail = observer(() => {
 
     const convertNewlinesToBreaks = (text) => {
 
-        if(text !== undefined) {
-            return text.split('\n').map((item, index) => (
-                <React.Fragment key={index}>
-                    {item}
-                    <br/>
-                </React.Fragment>
-            ));
-        }
+        return text?.split('\n').map((item, index) => (
+            <React.Fragment key={index}>
+                {item}
+                <br/>
+            </React.Fragment>
+        ));
     };
 
     const categoryMap = {
