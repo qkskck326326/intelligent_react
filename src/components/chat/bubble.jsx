@@ -13,7 +13,6 @@ const Bubble = observer(()=>{
     return (
         <div className={`${styles.bubbleWrapper} ${ isMe ? styles.reverseBubbleWrapper : ''}`}>
             <div className={`${styles.eachBubble} ${ isMe ? styles.reverseEachBubble : ''}`}>
-
                 {/* TODO 강사일 경우 강사의 페이지 이동기능도 필요할듯? */}
                 { !isMe ?
                     <div className={styles.profile}>
