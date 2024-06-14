@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { handleAxiosError } from '../../axiosApi/errorAxiosHandler';
 import { axiosClient } from '../../axiosApi/axiosClient';
 import authStore from "../../stores/authStore";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import Link from 'next/link';
 import KakaoLogin from "./KakaoLogin";
 
@@ -56,7 +56,7 @@ const LoginForm = observer(() => {
       <h1>임시 로그인 페이지</h1>
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="userEmail">아이디</label>
+          <label htmlFor="userEmail">이메일</label>
           <input
             type="text"
             id="userEmail"
@@ -83,6 +83,27 @@ const LoginForm = observer(() => {
       </form>
       <div className="signup-link">
         <p>아직 회원이 아니신가요? <Link href="/user/enroll">회원가입</Link></p>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', height: '100px' }}>
+        <Link href="/user/faceLoginPage" passHref>
+          <button style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer' }}>
+            <div style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              backgroundColor: '#80DAEB', 
+              color: 'black', 
+              padding: '10px 20px', 
+              borderRadius: '7px', 
+              fontSize: '16px', 
+              fontWeight: 'bold', 
+              textDecoration: 'none',
+              border: 'none'
+            }}>
+              <span style={{ marginRight: '5px' }}>😊</span>얼굴로 시작하기
+            </div>
+          </button>
+        </Link>
       </div>
       <KakaoLogin/>
     </div>

@@ -1,13 +1,13 @@
 import LoginForm from "../../components/user/loginForm";
 import FaceLogin from "../../components/user/faceLogin";
 
-const Index = () => {
+const Login = () => {
     return (
         <div>
             <LoginForm/>
-            <FaceLogin/>
+            {/* <FaceLogin/> */}
         </div>
     );
 };
 
-export default Index;
+export default Login;
