@@ -162,3 +162,17 @@
 .videoFileInput {
     display: none;
 }
+
+.uploadButton {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #19CA83;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.uploadButton:hover {
+    background-color: #17b074;
+}
