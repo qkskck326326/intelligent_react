@@ -1,26 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { observer } from "mobx-react";
+import authStore from "../../stores/authStore"; // AuthStore 임포트
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "./PostDetail.module.css";
+import { TbEyeSearch } from "react-icons/tb";
+import { AiOutlineLike } from "react-icons/ai";
+import { AiOutlineComment } from "react-icons/ai";
+import { getRelativeTime } from "../../components/post/timeUtils"; // 유틸리티 함수 임포트
 
-const PostDetail = () => {
+const PostDetail = observer(() => {
   const router = useRouter();
   const { postId } = router.query;
-
-  console.log("postId:", postId);
-
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [liked, setLiked] = useState(false);
+  const [showCommentForm, setShowCommentForm] = useState(false);
+  const [commentContent, setCommentContent] = useState("");
 
   useEffect(() => {
     const fetchPost = async () => {
+      if (!postId) return;
       setLoading(true);
       setError(null);
 
       try {
-        const response = await axiosClient.get(`/posts/detail/${postId}`);
+        const userEmail = authStore.getUserEmail();
+        const provider = authStore.getProvider();
+        const nickname = authStore.getNickname();
+        console.log("Fetching post details for postId:", postId);
+        const response = await axiosClient.get(`/posts/detail/${postId}`, {
+          params: { userEmail, provider, nickname },
+          withCredentials: true,
+        });
+        console.log("Fetched post data:", response.data);
         setPost(response.data);
+        setLiked(response.data.userLiked); // 서버에서 사용자가 이 게시물을 좋아요 했는지 여부를 받아옴
       } catch (error) {
         console.error("Error fetching post:", error);
         setError(error);
@@ -32,7 +48,65 @@ const PostDetail = () => {
     fetchPost();
   }, [postId]);
 
-  // Handle loading, error, and success states
+  const handleLikeClick = async () => {
+    if (!post || !authStore.isLoggedIn) return;
+    const userEmail = authStore.getUserEmail();
+    const provider = authStore.getProvider();
+    try {
+      if (liked) {
+        await axiosClient.post(`/posts/${postId}/unlike`, {
+          userEmail: userEmail,
+          provider: provider,
+        });
+        setPost((prevPost) => ({
+          ...prevPost,
+          likeCount: prevPost.likeCount - 1,
+        }));
+      } else {
+        await axiosClient.post(`/posts/${postId}/like`, {
+          userEmail: userEmail,
+          provider: provider,
+        });
+        setPost((prevPost) => ({
+          ...prevPost,
+          likeCount: prevPost.likeCount + 1,
+        }));
+      }
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Error updating like status:", error);
+    }
+  };
+
+  const handleCommentIconClick = () => {
+    setShowCommentForm(!showCommentForm);
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!commentContent || !authStore.isLoggedIn) return;
+    const userEmail = authStore.getUserEmail();
+    const provider = authStore.getProvider();
+    try {
+      await axiosClient.post(`/posts/${postId}/comments`, {
+        content: commentContent,
+        userEmail: userEmail,
+        provider: provider,
+      });
+      setPost((prevPost) => ({
+        ...prevPost,
+        comments: [
+          ...prevPost.comments,
+          { content: commentContent, userEmail, provider },
+        ],
+      }));
+      setCommentContent("");
+      setShowCommentForm(false);
+    } catch (error) {
+      console.log(userEmail, provider);
+      console.error("Error submitting comment:", error);
+    }
+  };
+
   if (loading) {
     return <h2 className={styles.loading}>Loading...</h2>;
   }
@@ -51,16 +125,19 @@ const PostDetail = () => {
 
   const renderComments = () => {
     if (!post.comments || post.comments.length === 0) {
-      return <p>No comments yet.</p>;
+      return <p>아직 달린 댓글이 없습니다.</p>;
     }
 
     return (
       <div className={styles.comments}>
-        <h2>Comments</h2>
+        <span>
+          <AiOutlineComment size={25} /> {post.commentCount}
+        </span>
         <ul>
           {post.comments.map((comment) => (
             <li key={comment.commentId}>
-              <p>{comment.content}</p> <span>{comment.nickname}</span>
+              <span>{comment.nickname}</span>
+              <p>{comment.content}</p>
             </li>
           ))}
         </ul>
@@ -70,25 +147,39 @@ const PostDetail = () => {
 
   const renderFiles = () => {
     if (!post.files || post.files.length === 0) {
-      return null; // No need to render a container if there are no files
+      return null;
     }
 
     return (
       <div className={styles.files}>
-        <h2>Files</h2>
         <ul>
-          {post.files.map((file) => (
-            <li key={file.id}>
-              <img
-                src={file.fileUrl}
-                alt={file.fileName}
-                className={styles.imageFile}
-              />
-              <a href={file.fileUrl} target="_blank" rel="noopener noreferrer">
-                {file.fileName || file.fileUrl.split("/").pop()}
-              </a>
-            </li>
-          ))}
+          {post.files.map((file) => {
+            console.log("Processing file:", file);
+            if (!file.fileUrl) {
+              console.warn("File URL is undefined for file:", file);
+              return null;
+            }
+
+            const isImage = file.fileUrl.match(/\.(jpeg|jpg|gif|png)$/i);
+            const fileUrl = `http://localhost:8080${file.fileUrl}`;
+            console.log("File URL:", fileUrl, "Is image:", isImage);
+
+            return (
+              <li key={file.id}>
+                {isImage ? (
+                  <img
+                    src={fileUrl}
+                    alt={file.fileUrl.split("/").pop()}
+                    className={styles.imageFile}
+                  />
+                ) : (
+                  <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                    {file.fileUrl.split("/").pop()}
+                  </a>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     );
@@ -102,21 +193,42 @@ const PostDetail = () => {
           <span className={styles.postNickname}>{post.nickname}</span>
           <span className={styles.postCategory}>{post.categoryName}</span>
         </div>
-        <div className={styles.postTime}>
-          {new Date(post.postTime).toLocaleDateString()}
-        </div>
+        <div className={styles.postTime}>{getRelativeTime(post.postTime)}</div>
       </div>
       <h1 className={styles.postTitle}>{post.title}</h1>
       <p className={styles.postContent}>{post.content}</p>
       <div className={styles.postStats}>
-        <span>좋아요: {post.likeCount}</span>
+        <span>
+          <AiOutlineLike size={25} /> {post.likeCount}
+        </span>
         <span>조회수: {post.viewCount}</span>
-        <span>댓글: {post.commentCount}</span>
       </div>
-      {renderComments()}
+      <button onClick={handleLikeClick} className={styles.likeButton}>
+        {liked ? "좋아요 취소" : "좋아요"}
+      </button>
+      {/* <button onClick={handleCommentIconClick} className={styles.commentButton}>
+        댓글
+      </button> */}
+
       {renderFiles()}
+      {renderComments()}
+      {/* {showCommentForm && ( */}
+      <div className={styles.commentForm}>
+        <textarea
+          value={commentContent}
+          onChange={(e) => setCommentContent(e.target.value)}
+          placeholder="댓글을 작성하세요"
+        />
+        <button
+          onClick={handleCommentSubmit}
+          className={styles.submitCommentButton}
+        >
+          작성하기
+        </button>
+      </div>
+      {/* )} */}
     </div>
   );
-};
+});
 
 export default PostDetail;

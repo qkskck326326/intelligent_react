@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import styles from "./InsertPost.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
+import authStore from "../../stores/authStore";
+import { observer } from "mobx-react";
 
-const InsertPost = () => {
+const InsertPost = observer(() => {
   const [title, setTitle] = useState("");
   const [subCategoryId, setSubCategoryId] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [content, setContent] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const [viewCount, setViewCount] = useState(0);
   const router = useRouter();
 
-  const userEmail = "user1@example.com"; // 예시 값
-  const provider = "INTELLICLASS"; // 예시 값
+  const userEmail = authStore.getUserEmail();
+  const provider = authStore.getProvider();
 
   useEffect(() => {
     axiosClient
@@ -28,8 +30,13 @@ const InsertPost = () => {
 
   const handleFileDrop = (e) => {
     e.preventDefault();
-    const droppedFile = e.dataTransfer.files[0];
-    setFile(droppedFile);
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    setFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
   };
 
   const handleSubmit = async () => {
@@ -46,9 +53,11 @@ const InsertPost = () => {
       const postResponse = await axiosClient.post("/posts/insert", postDTO);
       const postId = postResponse.data.id;
 
-      if (file) {
+      if (files.length > 0) {
         const formData = new FormData();
-        formData.append("file", file);
+        files.forEach((file) => {
+          formData.append("files", file);
+        });
         await axiosClient.post(`/posts/${postId}/files`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -64,6 +73,20 @@ const InsertPost = () => {
 
   const handleCancel = () => {
     router.push("/post");
+  };
+
+  const renderFilePreview = (file) => {
+    if (file.type.startsWith("image/")) {
+      return (
+        <img
+          src={URL.createObjectURL(file)}
+          alt={file.name}
+          className={styles.filePreview}
+        />
+      );
+    } else {
+      return <p>{file.name}</p>;
+    }
   };
 
   return (
@@ -110,7 +133,23 @@ const InsertPost = () => {
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleFileDrop}
       >
-        {file ? <p>{file.name}</p> : <p>파일을 이곳에 드래그 앤 드롭하세요</p>}
+        <input
+          type="file"
+          id="fileInput"
+          multiple
+          onChange={handleFileChange}
+          className={styles.fileInput}
+        />
+        <label htmlFor="fileInput" className={styles.fileInputLabel}>
+          파일을 선택하거나 드래그 앤 드롭하세요
+        </label>
+        <div className={styles.filePreviewContainer}>
+          {files.map((file, index) => (
+            <div key={index} className={styles.filePreviewItem}>
+              {renderFilePreview(file)}
+            </div>
+          ))}
+        </div>
       </div>
       <div className={styles.buttonGroup}>
         <button onClick={handleSubmit} className={styles.submitButton}>
@@ -122,6 +161,6 @@ const InsertPost = () => {
       </div>
     </div>
   );
-};
+});
 
 export default InsertPost;

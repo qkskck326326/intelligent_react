@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PostSearch from "../../components/post/postSearchBar";
 import Sidebar from "../../components/post/postSideBar"; // Corrected import
-import PostList from "../../components/post/PostList"; // Corrected import
+import PostList from "../../components/post/postList"; // Corrected import
 import CategoryToggle from "../../components/post/CategoryToggle";
 import styles from "../../components/post/PostIndex.module.css"; // Import the CSS file
 
@@ -18,11 +18,14 @@ const Index = () => {
       <Sidebar />
       <div className={styles.mainContent}>
         {/* <PostSearch /> */}
-        <CategoryToggle
+        {/* <CategoryToggle
           selectedCategory={selectedCategory}
           onSelectCategory={handleSelectCategory}
+        /> */}
+        <PostList
+        // selectedCategory={selectedCategory}
+        // onSelectCategory={handleSelectCategory}
         />
-        <PostList />
       </div>
     </div>
   );
