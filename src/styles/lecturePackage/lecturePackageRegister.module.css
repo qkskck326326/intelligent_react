@@ -10,13 +10,17 @@
 .thumbnailButton,
 .saveButton {
     display: inline-block;
-    margin-right: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
+    margin-right: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    background-color: #0fa8f3;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 2px;
     cursor: pointer;
+    font-size: 15px;
+    height: 30px;
 }
 
 .categoryButton:hover,
@@ -36,4 +40,64 @@
     background-color: #20c997;
     border-radius: 3px;
     color: white;
+}
+
+/* Thumbnail preview */
+.thumbnailPreview {
+    width: 150px; /* 작게 설정 */
+    height: 150px; /* 작게 설정 */
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    background-color: #f8f8f8;
+    position: relative; /* 부모 컨테이너를 기준으로 자식 위치 조정 */
+}
+
+.thumbnailImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지가 상자에 맞게 조정됨 */
+}
+
+.placeholderText {
+    font-size: 10px;
+    color: #aaa;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* CKEditor styles */
+.ck.ck-editor__editable {
+    background: #fff;
+    border: 1px solid hsl(0, 0%, 70%);
+    width: 100%;
+}
+
+.editor__editable,
+    /* Classic build. */
+main .ck-editor[role='application'] .ck.ck-content,
+    /* Decoupled document build. */
+.ck.editor__editable[role='textbox'],
+.ck.ck-editor__editable[role='textbox'],
+    /* Inline & Balloon build. */
+.ck.editor[role='textbox'] {
+    width: 100%;
+    background: #fff;
+    font-size: 1em;
+    line-height: 1.6em;
+    min-height: var(--ck-sample-editor-min-height);
+    padding: 1.5em 2em;
+}
+
+.sidebar .ck-content[role='textbox'],
+.ck.ck-annotation-wrapper .ck-content[role='textbox'] {
+    min-height: unset;
+    width: unset;
+    padding: 0;
+    background: transparent;
 }

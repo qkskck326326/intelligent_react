@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LecturePackageRegister from '../../components/lecturePackage/lecturePackageRegister';
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";
 
+
+
 const Index = () => {
     const [showRegister, setShowRegister] = useState(false);
 

@@ -54,8 +54,8 @@ const LecturePackageDetail = ({ lecturePackageId }) => {
                         </div>
                         <div className={styles.center}>
                             <div className={styles.field}>
-                                <label>수강 대상자:</label>
-                                <p>{lecturePackage.recommendPerson}</p>
+                                <label>내용:</label>
+                                <p>{lecturePackage.content}</p>
                             </div>
                             <div className={styles.field}>
                                 <label>패키지 금액:</label>

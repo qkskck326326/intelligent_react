@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";
 import Pagination from "../common/pagination";
 import { axiosClient } from "../../axiosApi/axiosClient";
-import SortAndSearchBar from "../common/sortAndSearchBar"; // 검색창 및 드롭다운 컴포넌트 추가
+import SortAndSearchBar from "../common/sortAndSearchBar";
 import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CategoryToggle from "../post/CategoryToggle";
+// const [selectedCategory, setSelectedCategory] = useState(null);
 
-const LecturePackageList = () => {
+
+
+const LecturePackageList = ({ onRegisterClick }) => {
     const [lecturePackages, setLecturePackages] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -16,9 +19,8 @@ const LecturePackageList = () => {
     const [sortCriteria, setSortCriteria] = useState("latest");
     const [searchCriteria, setSearchCriteria] = useState("title");
     const [filteredAndSortedLectures, setFilteredAndSortedLectures] = useState([]);
-    const router = useRouter();
 
-    const ITEMS_PER_PAGE = 16; // 한 페이지에 16개의 항목 표시
+    const ITEMS_PER_PAGE = 16;
 
     const fetchLecturePackages = async () => {
         setLoading(true);
@@ -28,7 +30,7 @@ const LecturePackageList = () => {
             const dataArray = Array.isArray(responseData) ? responseData : [responseData];
 
             setLecturePackages(dataArray);
-            setFilteredAndSortedLectures(dataArray); // 초기값 설정
+            setFilteredAndSortedLectures(dataArray);
         } catch (err) {
             setError(err);
         } finally {
@@ -48,28 +50,27 @@ const LecturePackageList = () => {
 
     const handleSearch = () => {
         const filteredLectures = lecturePackages.filter((lecture) => {
-            if (searchCriteria === "title") {  //검색이 제목이라면!
-                return lecture.title.toLowerCase().includes(searchTerm.toLowerCase()); //검색창에 입력한 값과 리스트의 제목과 일치하면 반환
-            } else if (searchCriteria === "instructor") { // 검색이 작성자라면
-                return lecture.nickname.toLowerCase().includes(searchTerm.toLowerCase());//검색창에 입력한 값과 리스트의 강사와 일치하면 반환
+            if (searchCriteria === "title") {
+                return lecture.title.toLowerCase().includes(searchTerm.toLowerCase());
+            } else if (searchCriteria === "instructor") {
+                return lecture.nickname.toLowerCase().includes(searchTerm.toLowerCase());
             }
             return true;
         });
 
-        //정렬클릭 한다면 sortCriteria에 해당하는 값으로 정렬해줌.
         const sortedLectures = [...filteredLectures].sort((a, b) => {
             if (sortCriteria === "latest") {
                 return new Date(b.registerDate) - new Date(a.registerDate);
             } else if (sortCriteria === "views") {
                 return b.viewCount - a.viewCount;
             } else if (sortCriteria === "rating") {
-                return b.rating - a.rating;  //두 강의의 평점을 비교하여 배열을 내림차순으로 정렬하기 위한 연산임.
+                return b.rating - a.rating;
             }
             return 0;
         });
 
         setFilteredAndSortedLectures(sortedLectures);
-        setCurrentPage(1); // 새로운 검색 결과가 나올 때 첫 페이지로 이동
+        setCurrentPage(1);
     };
 
     const displayedLectures = filteredAndSortedLectures.slice(
@@ -81,12 +82,9 @@ const LecturePackageList = () => {
     if (error) return <p>Error: {error.message}</p>;
 
     const renderStars = (rating) => {
-        //평점에서 꽉 찬 별의 개수를 구함.
-        const fullStars = Math.floor(rating); //rating값을 내림하여 정수 부분만 함.
-        // 평점에서 반 별이 필요한지 여부를 구함.
-        const halfStar = rating % 1 >= 0.5;  //rating % 1은 rating값의 소수부분을 구함. 소수부분이 0.5이상이면 별을 표시함.(true)
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
 
-        //별을 렌더링함.
         return (
             <>
                 {Array(fullStars).fill(null).map((_, index) => (
@@ -96,6 +94,15 @@ const LecturePackageList = () => {
             </>
         );
     };
+
+
+    // const handleSelectCategory = (category) => {
+    //     setSelectedCategory(category);
+    //     // 하위 카테고리를 선택했을 때 추가 동작이 필요하다면 여기에 추가하십시오.
+    // };
+
+
+
 
     return (
         <div className={styles.container}>
@@ -108,6 +115,10 @@ const LecturePackageList = () => {
                 setSearchCriteria={setSearchCriteria}
                 onSearch={handleSearch}
             />
+            <CategoryToggle/>
+            <button className={styles.registerButton} onClick={onRegisterClick}>
+                등록하기
+            </button>
             <div className={styles.grid}>
                 {displayedLectures.map((lecture) => (
                     <div
