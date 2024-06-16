@@ -71,3 +71,38 @@
     user-select: none;
     font-size: 0.75rem;
 }
+.eachSettings{
+    cursor: pointer;
+    align-self: flex-end;
+    position: relative;
+}
+.eachSettings svg{
+    width: 0.7rem;
+}
+.settingDropdown{
+    box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.3);
+    user-select: none;
+    position: absolute;
+    right: 200%;
+    bottom: -100%;
+    background-color: white;
+    list-style: none;
+    padding-left: 0;
+    border-radius: 0.25rem 0.25rem;
+    overflow: hidden;
+    text-align: center;
+}
+.settingDropDown2{
+    bottom: -50%;
+    right: -800%;
+}
+
+.settingDropdown li{
+    width: 5rem;
+    padding: 0.1rem;
+    transition: background-color 0.5s;
+}
+
+.settingDropdown li:hover{
+    background-color: #E3E3E3;
+}

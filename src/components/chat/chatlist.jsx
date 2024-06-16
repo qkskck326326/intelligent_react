@@ -41,7 +41,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                     </svg>
                 </button>
             </div>
-
+            {/*TODO 추가 로직 만들어야함 강사일때 학생일때 채팅 가능한 것이 달라야함 */}
             { isPlusClicked ? <div className={styles.chatType}>
                 <div className={styles.chatTypeItem}>
                     <svg className={styles.chatTypeIcon} xmlns="http://www.w3.org/2000/svg"

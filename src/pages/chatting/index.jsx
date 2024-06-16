@@ -14,7 +14,7 @@ const ChatContainer = observer(() => {
     const [isIconHidden, setIsIconHidden] = useState(false);
     const [isExpanding, setIsExpanding] = useState(false);
     const [chatOption, setChatOption] = useState('');
-    const [totalCount, setTotlaCount] = useState(0);
+    const [totalCount, setTotalCount] = useState(0);
     const axios = new Axios
 
     const countTotal = () => {
