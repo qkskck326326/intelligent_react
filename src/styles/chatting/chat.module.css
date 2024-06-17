@@ -44,7 +44,7 @@
     border: 1px solid #E0E0E0;
     box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.3);
     border-radius: 0.5rem 0.5rem;
-    z-index: 2;
+    z-index: 5;
     overflow: hidden;
 }
 .menuItems > li{
@@ -121,6 +121,7 @@
 .searchBox{
     all:unset;
     width: 90%;
+    height: 1.1rem;
     border: 1px solid #e1e1e1;
     border-radius: 0.25rem;
     padding: 0.2rem;
@@ -191,6 +192,7 @@
 .chatBottom{
     display: flex;
     border-top: 1px solid #e2e2e2;
+    padding-inline: 0.3rem;
     height: 20%;
     gap: 0.25rem;
     align-items: flex-start;
@@ -207,6 +209,9 @@
     display: block;
     overflow-wrap: break-word;
     height: 80%;
+}
+.textContentResized{
+    height: 64%;
 }
 
 .textContent::-webkit-scrollbar {
@@ -230,7 +235,10 @@
     align-items: center;
     justify-content: center;
 }
-.attachmentIcons{
+.attachContainerResized{
+    height: 65%;
+}
+.attachmentIcon{
     all:unset;
     background-color: #E2E2E2;
     border-radius: 2rem 2rem;
@@ -241,7 +249,8 @@
     align-items: center;
     gap: 1rem;
 }
-.attachmentIcons svg{
+
+.attachmentIcon svg{
     width: 2rem;
 }
 .attachButton,

@@ -184,9 +184,8 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                 </form>
             }
 
-            {/*챗지피티의 경우 이거 안뜸 시작 마지막에 option만 바꾸면 됨 */}
 
-            { (option === 'gpt' && announce !== '') &&
+            { (option !== 'gpt' && announce !== '') &&
                 <div className={`${styles.announceContainer} ${isSearchButtonClicked ? styles.pushed: ''}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -207,18 +206,16 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                 </div>
             }
 
-            {/*챗지피티의 경우 이거 안뜸  끝 */}
 
             <div className={`${styles.chatMain} ${(items.length !== 0) ? styles.fileAttached : ''}`}>
-                <BubbleContainer onAnnouncementChange={handleAnnouncementChange} onReport={handleReport}/>
+                <BubbleContainer option={option} onAnnouncementChange={handleAnnouncementChange} onReport={handleReport}/>
             </div>
             { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
             <form className={styles.chatBottom} onSubmit={handleSubmit}>
                 {
                     <>
-                        {/*여기까지 챗지피티면 안떠야하나 현재 조작하고 있는 것이 있어 잠시 열어둠*/}
-                        {/*{ (option !== 'gpt')*/}
-                        {
+
+                        { (option !== 'gpt') &&
                             <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
                             <svg
                                 className={isAttachButtonClicked ? commonStyles.animateRotate : commonStyles.animateBack}
@@ -229,13 +226,12 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                         </button>
                         }
 
-                        {/*여기까지 챗지피티면 안뜸 끝*/}
 
                         {
                             isAttachButtonClicked
                                 ?
-                                <div className={styles.attachContainer}>
-                                    <button className={styles.attachmentIcons} onClick={handleFileAttach}>
+                                <div className={`${styles.attachContainer} ${isSearchButtonClicked && styles.attachContainerResized}`}>
+                                    <button className={styles.attachmentIcon} onClick={handleFileAttach}>
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 576 512">
                                             <path
@@ -248,7 +244,7 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
 
                                 items.length === 0 ?
                                     <textarea name="textContent" id="textContent" placeholder='텍스트를 입력해주세요'
-                                              className={styles.textContent}></textarea>
+                                              className={`${styles.textContent} ${isSearchButtonClicked && styles.textContentResized}`}></textarea>
                                     :
                                     <div className={styles.dummy}>사진 메시지 동시전송 불가로 만들어 둔 빈 박스입니다</div>
 
