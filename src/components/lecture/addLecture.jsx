@@ -58,7 +58,7 @@ const AddLecture = () => {
                     },
                     {
                         headers: {
-                            Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN}`,
+                            Authorization: `token ${process.env.ADD_LECTURE_GITHUB_TOKEN}`,
                         },
                     }
                 );

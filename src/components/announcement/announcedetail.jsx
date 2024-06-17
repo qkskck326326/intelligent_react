@@ -65,7 +65,7 @@ const Announcedetail = observer(() => {
                 {convertNewlinesToBreaks(content)}
             </div>
             <div className={styles.eachAnnounceBottom}>
-                <div className={styles.backToList} onClick={() => window.location.href = '/cs'}>
+                <div onClick={() => window.location.href = '/cs'}>
                     ← 목록으로
                 </div>
             </div>

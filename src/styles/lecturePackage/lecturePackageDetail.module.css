@@ -7,57 +7,99 @@
 
 .title {
     font-size: 2rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
-.form {
+.topInfo {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 1200px;
+    max-width: 900px;
+    margin-bottom: 10px;
 }
 
-.left, .center, .right {
-    flex: 1;
+.infoItem {
+    font-size: 1rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 900px;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.actionButton {
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    background: none;
+    cursor: pointer;
+}
+
+.yellowBox {
+    background-color: #fffae6;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.redBox {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    overflow-y: visible;
+}
+
+.redBox .field {
+    width: 90%;
+}
+
+.level {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: red;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.priceKind {
+    background-color: #ff8c00;
+    color: white;
     padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .field {
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .field label {
     display: block;
-    margin-bottom: 10px;
     font-weight: bold;
-}
-
-.field p {
-    margin: 0;
-    padding: 8px;
-    background: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.field button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #0070f3;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    margin-bottom: 5px;
 }
 
 .categories, .techStack {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
 .category, .techStack img {
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin: 5px;
 }
 
 .category {
@@ -70,4 +112,23 @@
     max-width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.content {
+    text-align: left;
+    width: 100%;
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.content table, .content th, .content td {
+    border: 1px solid black;
+}
+
+.content th, .content td {
+    padding: 8px;
+    text-align: left;
 }

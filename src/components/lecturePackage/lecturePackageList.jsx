@@ -53,7 +53,7 @@ const LecturePackageList = ({ onRegisterClick }) => {
             if (searchCriteria === "title") {
                 return lecture.title.toLowerCase().includes(searchTerm.toLowerCase());
             } else if (searchCriteria === "instructor") {
-                return lecture.nickname.toLowerCase().includes(searchTerm.toLowerCase());
+                return lecture.nickname?.toLowerCase().includes(searchTerm.toLowerCase()); // 여기서 null 체크
             }
             return true;
         });
@@ -72,6 +72,10 @@ const LecturePackageList = ({ onRegisterClick }) => {
         setFilteredAndSortedLectures(sortedLectures);
         setCurrentPage(1);
     };
+
+    useEffect(() => {
+        handleSearch(); // sortCriteria 변경될 때마다 검색 함수 호출
+    }, [sortCriteria]);
 
     const displayedLectures = filteredAndSortedLectures.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
@@ -144,11 +148,13 @@ const LecturePackageList = ({ onRegisterClick }) => {
                     </div>
                 ))}
             </div>
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-            />
+            <div className={styles.paginationContainer}>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            </div>
         </div>
     );
 };

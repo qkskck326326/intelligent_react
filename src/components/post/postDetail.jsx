@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react";
-import authStore from "../../stores/authStore"; // AuthStore 임포트
+import DOMPurify from "dompurify"; // Import DOMPurify
+import authStore from "../../stores/authStore";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "./PostDetail.module.css";
 import { TbEyeSearch } from "react-icons/tb";
-import { AiOutlineLike } from "react-icons/ai";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { AiOutlineComment } from "react-icons/ai";
-import { getRelativeTime } from "../../components/post/timeUtils"; // 유틸리티 함수 임포트
+import { getRelativeTime } from "../../components/post/timeUtils";
 
 const PostDetail = observer(() => {
   const router = useRouter();
@@ -36,7 +37,7 @@ const PostDetail = observer(() => {
         });
         console.log("Fetched post data:", response.data);
         setPost(response.data);
-        setLiked(response.data.userLiked); // 서버에서 사용자가 이 게시물을 좋아요 했는지 여부를 받아옴
+        setLiked(response.data.userLiked);
       } catch (error) {
         console.error("Error fetching post:", error);
         setError(error);
@@ -136,8 +137,14 @@ const PostDetail = observer(() => {
         <ul>
           {post.comments.map((comment) => (
             <li key={comment.commentId}>
-              <span>{comment.nickname}</span>
-              <p>{comment.content}</p>
+              <span>
+                <img src={comment.profileImageUrl} alt={comment.nickname} />
+                {comment.nickname}
+              </span>
+              <p>
+                {comment.content}
+                {getRelativeTime(comment.commentTime)}
+              </p>
             </li>
           ))}
         </ul>
@@ -185,34 +192,38 @@ const PostDetail = observer(() => {
     );
   };
 
+  const renderContent = () => {
+    const sanitizedContent = DOMPurify.sanitize(post.content, {
+      ADD_TAGS: ["iframe"], // iframe 태그를 허용
+      ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"], // iframe 속성을 허용
+    });
+
+    return <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />;
+  };
+
   return (
     <div className={styles.postDetailContainer}>
       <div className={styles.postHeader}>
-        <div className={styles.postAvatar}></div>
+        <div className={styles.postAvatar}>
+          <img src={post.profileImageUrl} alt={post.nickname} />
+        </div>
         <div className={styles.postMeta}>
           <span className={styles.postNickname}>{post.nickname}</span>
           <span className={styles.postCategory}>{post.categoryName}</span>
         </div>
         <div className={styles.postTime}>{getRelativeTime(post.postTime)}</div>
       </div>
-      <h1 className={styles.postTitle}>{post.title}</h1>
-      <p className={styles.postContent}>{post.content}</p>
       <div className={styles.postStats}>
-        <span>
-          <AiOutlineLike size={25} /> {post.likeCount}
+        <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
+          {liked ? <AiFillLike size={25} /> : <AiOutlineLike size={25} />}{" "}
+          {post.likeCount}
         </span>
         <span>조회수: {post.viewCount}</span>
       </div>
-      <button onClick={handleLikeClick} className={styles.likeButton}>
-        {liked ? "좋아요 취소" : "좋아요"}
-      </button>
-      {/* <button onClick={handleCommentIconClick} className={styles.commentButton}>
-        댓글
-      </button> */}
-
+      <h1 className={styles.postTitle}>{post.title}</h1>
+      {renderContent()}
       {renderFiles()}
       {renderComments()}
-      {/* {showCommentForm && ( */}
       <div className={styles.commentForm}>
         <textarea
           value={commentContent}
@@ -226,7 +237,6 @@ const PostDetail = observer(() => {
           작성하기
         </button>
       </div>
-      {/* )} */}
     </div>
   );
 });

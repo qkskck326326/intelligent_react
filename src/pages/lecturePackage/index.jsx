@@ -17,7 +17,7 @@ const Index = () => {
     return (
         <div className={styles.container}>
             {showRegister ? (
-                <LecturePackageRegister onRegisterClick={handleShowRegister} />
+                <LecturePackageRegister onBackListClick={handleShowRegister} />
             ) : (
                 <LecturePackageList onRegisterClick={handleShowRegister} />
             )}

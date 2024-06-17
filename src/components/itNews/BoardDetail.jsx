@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {axiosClient} from "../../axiosApi/axiosClient";
+import { axiosClient } from "../../axiosApi/axiosClient";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BoardDetail = ({ boardId }) => {
@@ -8,6 +8,7 @@ const BoardDetail = ({ boardId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     console.log("boardId: ", boardId)
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -33,35 +34,37 @@ const BoardDetail = ({ boardId }) => {
         return `${year}-${month}-${day}`;
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    if (loading) return <div className="text-center">Loading...</div>;
+    if (error) return <div className="alert alert-danger">Error: {error.message}</div>;
 
     return (
-        <div className="board-detail">
-            <h1>{post.title}</h1>
-            <div className="post-meta">
-                <span>작성일: {formatDate(post.registDate)}</span><br/>
-                <span>원글링크: <a href={post.boardUrl}>{post.boardUrl}</a></span>
+        <div className="container mt-4">
+            <div className="card">
+                <div className="card-body">
+                    <h1 className="card-title">{post.title}</h1>
+                    <div className="post-meta text-muted mb-3">
+                        <span>작성일: {formatDate(post.registDate)}</span><br />
+                        <span>원글링크: <a href={post.boardUrl} target="_blank" rel="noopener noreferrer">{post.boardUrl}</a></span>
+                    </div>
+                    <div className="originalContext mb-3">
+                        {post.originalContext}
+                    </div>
+                    <div className="videoTextlizedContext">
+                        <h5>영상 내용 :</h5>
+                        {post.videoTextlizedContext ? (
+                            <div>{post.videoTextlizedContext}</div>
+                        ) : (
+                            <p>없음</p>
+                        )}
+                    </div>
+                </div>
             </div>
-            <br/>
-            <div className="originalContext">
-                {post.originalContext}
-            </div>
-            <br/>
-            <div className="videoTextlizedContext">
-                <p>영상 내용 :</p>
-                {post.videoTextlizedContext ? (
-                    <div>{post.videoTextlizedContext}</div>
-                ) : (
-                    <p>없음</p>
-                )}
-            </div>
-            {/*<div className="comments-section">*/}
+            {/*<div className="comments-section mt-4">*/}
             {/*    <h2>댓글</h2>*/}
             {/*    {comments.length > 0 ? (*/}
             {/*        comments.map(comment => (*/}
-            {/*            <div key={comment.id} className="comment">*/}
-            {/*                <div className="comment-meta">*/}
+            {/*            <div key={comment.id} className="comment mb-3">*/}
+            {/*                <div className="comment-meta text-muted mb-1">*/}
             {/*                    <span>{comment.author}</span>*/}
             {/*                    <span>{new Date(comment.createdAt).toLocaleDateString()}</span>*/}
             {/*                </div>*/}

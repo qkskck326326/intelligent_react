@@ -32,7 +32,7 @@ const MyCertificate = observer(() => {
   useEffect(() => {
     const nickname = authStore.getNickname();
     fetchCertificates(nickname);
-  }, []);
+  }, [authStore.getNickname()]);
 
   // 전체 페이지 수 계산
   const totalPages = Math.ceil(certificates.length / ITEMS_PER_PAGE);
@@ -73,7 +73,7 @@ const MyCertificate = observer(() => {
   const handleDelete = async (certificateNumber) => {
     const nickname = authStore.getNickname();
     try {
-      await axiosClient.delete(`/certificates/${certificateNumber}`);
+      await axiosClient.delete('/certificates', {params: {certificateNumber: certificateNumber}});
       fetchCertificates(nickname);
     } catch (error) {
       setError("Error deleting certificate", error);
@@ -113,7 +113,7 @@ const MyCertificate = observer(() => {
                   <td>{item.passDate}</td>
                   <td>{item.issuePlace}</td>
                   <td>
-                    <button onClick={() => handleDelete(item.certificateNumber)} className={styles.deleteButton}>🗑️</button>
+                    <button  onClick={() => handleDelete(item.certificateNumber)}>🗑️</button>
                   </td>
                 </tr>
             ))}

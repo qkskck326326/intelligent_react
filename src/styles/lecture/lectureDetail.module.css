@@ -1,39 +1,40 @@
 .lectureDetailContainer {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    justify-content: flex-start;
+    align-items: center;
     padding: 20px;
-    font-family: "Noto Sans KR", sans-serif; /* 글꼴 설정 */
-    font-weight: bold; /* 볼드체 설정 */
-    font-size: 18px;
-    width: 100%; /* 컨테이너 너비 */
+    font-family: "Noto Sans KR", sans-serif;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 2px solid #00af9c;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .title {
-    font-size: 2em;
-    margin: 10px 0;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
-.nickname {
-    font-size: 1em;
-    color: #777;
-    margin-top: 10px;
-}
-
-.viewCount {
-    font-size: 1em;
+.info {
+    font-size: 0.9em;
     color: #555;
-    margin-top: 10px;
+    margin: 0 10px;
 }
 
 .videoContainer {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 비율 */
+    width: 80%;
+    padding-bottom: 45%; /* 16:9 비율 */
     height: 0;
     overflow: hidden;
-    max-width: 100%;
     background: #000;
+    border: 2px solid #00af9c;
 }
 
 .video {

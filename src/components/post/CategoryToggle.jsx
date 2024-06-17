@@ -11,7 +11,7 @@ const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
 
   useEffect(() => {
     axiosClient
-      .get("/categories/upper")
+      .get("api/categories/upper")
       .then((response) => {
         setUpperCategories(response.data);
       })
@@ -26,7 +26,7 @@ const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
   useEffect(() => {
     if (selectedUpperCategory) {
       axiosClient
-        .get(`/categories/sub/${selectedUpperCategory.id}`)
+        .get(`api/categories/sub/${selectedUpperCategory.id}`)
         .then((response) => {
           setSubCategories(response.data);
         })

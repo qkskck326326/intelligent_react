@@ -48,6 +48,7 @@ export default function AnnouncementItem(props){
         [styles.important]: checkImportance()
     });
 
+
     return (
         <li className={styles.announceItem}>
             <div className={styles.announceCategory}>{categoryMap[category]}</div>

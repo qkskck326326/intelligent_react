@@ -6,24 +6,15 @@ import Bubble from './bubble.jsx'
 import styles from '../../styles/chatting/chatbubble.module.css'
 import authStore from "../../stores/authStore";
 
-const BubbleContainer = observer(()=>{
+const BubbleContainer = observer(({onAnnouncementChange, onReport})=>{
 
+    const sampleArray = Array.from({length: 20}, (_, index) => index)
 
 
     return(
         <div className={`${styles.bubbleContainer}`}>
-        {<>
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-            <Bubble />
-        </>
+        {
+            sampleArray.map(sample => <Bubble key={sample} index={sample} onAnnouncementChange={onAnnouncementChange} onReport={onReport} />)
         }
     </div>);
 })

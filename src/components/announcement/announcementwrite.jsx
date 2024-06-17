@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../styles/cs/announcementwrite.module.css';
 import { useRouter } from "next/router";
 import Axios from "../../axiosApi/Axios";
@@ -14,6 +14,9 @@ const AnnouncementWrite = observer(() => {
     const [announcementId, setAnnouncementId] = useState(0);
     const [createdAt, setCreatedAt] = useState(null);
     const axios = new Axios();
+    const titleFocus = useRef();
+    const contentFocus = useRef();
+
 
     useEffect(() => {
         //받아온 쿼리가 있다면 그 값으로 필드 채워둠 아닐 경우 무시
@@ -86,6 +89,7 @@ const AnnouncementWrite = observer(() => {
         if (title.trim() === '') {
             console.log('제목에러 실행');
             window.alert('제목을 입력해주세요');
+            titleFocus.current.focus();
             return;
         }
         if (Number(category) === 9) {
@@ -96,6 +100,7 @@ const AnnouncementWrite = observer(() => {
         if (content.trim() === '') {
             console.log('내용에러 실행');
             window.alert('내용을 입력해주세요');
+            contentFocus.current.focus();
             return;
         }
 
@@ -125,6 +130,7 @@ const AnnouncementWrite = observer(() => {
                         value={title}
                         placeholder="제 목"
                         onChange={handelTitle}
+                        ref={titleFocus}
                     />
                     <select
                         name="announceWriteCategory"
@@ -146,6 +152,7 @@ const AnnouncementWrite = observer(() => {
                         className={styles.announceWriteContent}
                         value={content}
                         onChange={handleContent}
+                        ref={contentFocus}
                     ></textarea>
                 </div>
                 <div className={styles.announceWriteBottom}>

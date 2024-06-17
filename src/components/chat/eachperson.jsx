@@ -8,9 +8,18 @@ const EachPerson = observer(({ index, isSelected, onSelectionChange }) => {
         onSelectionChange(index);
     }
 
+
+
+    //TODO 여기 디자인 작성
     return (
-        <div className={`${styles.eachPersonContainer} ${isSelected ? styles.checked : ''}`} onClick={handleSelection}>
-            눌러보삼
+        <div className={`${styles.eachPersonContainer} ${isSelected && styles.checked}`} onClick={handleSelection}>
+            <div className={styles.imageFrame}>
+                {/* TODO 받아온 값*/}
+                <img src="/7.jpg" alt="" />
+            </div>
+            <div className={styles.userdetail}>
+
+            </div>
         </div>
     );
 });

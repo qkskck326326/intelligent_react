@@ -4,6 +4,12 @@ import styles from "./InsertPost.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
+import dynamic from "next/dynamic";
+
+// CKEditorComponent를 동적으로 로드합니다.
+const CKEditorComponent = dynamic(() => import("./CKEditorComponent"), {
+  ssr: false,
+});
 
 const InsertPost = observer(() => {
   const [title, setTitle] = useState("");
@@ -19,7 +25,7 @@ const InsertPost = observer(() => {
 
   useEffect(() => {
     axiosClient
-      .get("/categories/sub")
+      .get("api/categories/sub")
       .then((response) => {
         setSubCategories(response.data);
       })
@@ -121,12 +127,7 @@ const InsertPost = observer(() => {
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="content">내용</label>
-        <textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className={styles.textarea}
-        ></textarea>
+        <CKEditorComponent data={content} onChange={setContent} />
       </div>
       <div
         className={styles.fileDropArea}
