@@ -5,7 +5,7 @@
 
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
 
-import { Italic } from '@ckeditor/ckeditor5-basic-styles';
+import { Italic, Bold } from '@ckeditor/ckeditor5-basic-styles';
 import { CKBox } from '@ckeditor/ckeditor5-ckbox';
 import { CloudServices } from '@ckeditor/ckeditor5-cloud-services';
 import type { EditorConfig } from '@ckeditor/ckeditor5-core';
@@ -29,6 +29,8 @@ import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
 import { Undo } from '@ckeditor/ckeditor5-undo';
 
+
+
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
 
@@ -45,6 +47,7 @@ class Editor extends ClassicEditor {
 		ImageUpload,
 		Indent,
 		Italic,
+		Bold,
 		Link,
 		List,
 		MediaEmbed,

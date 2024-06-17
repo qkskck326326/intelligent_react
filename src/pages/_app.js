@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import HeaderBar from "../components/common/HeaderBar";
 import '../styles/style.css';
 import authStore from "../stores/authStore";
-import '/public/ckeditor5/sample/styles.css'; // CKEditor 스타일 포함
+// import '/public/ckeditor5/sample/styles.css'; // CKEditor 스타일 포함
 
 const queryClient = new QueryClient();
 
