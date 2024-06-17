@@ -19,17 +19,17 @@ const HomePage = () => {
                 <img src='/images/banner.png' alt="Banner" style={{width: '100%', height:'auto'}}/>
                 <NavBar/>
                 <CourseList/>
-                {/*<div*/}
-                {/*    className={styles.fixedButton}*/}
-                {/*    onClick={handleOpenTestAI}*/}
-                {/*    style={{ cursor: 'pointer' }}*/}
-                {/*>*/}
-                {/*    <img*/}
-                {/*        src="/images/SCC.png"*/}
-                {/*        alt="Simple Code Compiler test"*/}
-                {/*        style={{ width: '100px', height: '100px' }}*/}
-                {/*    />*/}
-                {/*</div>*/}
+                <div
+                    className={styles.fixedButton}
+                    onClick={handleOpenTestAI}
+                    style={{ cursor: 'pointer' }}
+                >
+                    <img
+                        src="/images/SCC.png"
+                        alt="Simple Code Compiler test"
+                        style={{ width: '100px', height: '100px' }}
+                    />
+                </div>
             </main>
         </div>
     );
