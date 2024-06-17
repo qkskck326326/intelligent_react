@@ -11,13 +11,14 @@ const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
 
   useEffect(() => {
     axiosClient
-      .get("api/categories/upper")
+      .get("/categories/upper")
       .then((response) => {
         setUpperCategories(response.data);
+        console.log("upperCategory : ", response.data);
       })
       .catch((error) => {
         console.error(
-          "There was an error fetching the upper categories!",
+          "상위카테고리를 불러오지못했습니다!",
           error
         );
       });
@@ -26,9 +27,10 @@ const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
   useEffect(() => {
     if (selectedUpperCategory) {
       axiosClient
-        .get(`api/categories/sub/${selectedUpperCategory.id}`)
+        .get(`/categories/sub/${selectedUpperCategory.id}`)
         .then((response) => {
           setSubCategories(response.data);
+          console.log("subCategory : ", response.data);
         })
         .catch((error) => {
           console.error(
