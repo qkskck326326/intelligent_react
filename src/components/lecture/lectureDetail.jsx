@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from '../../styles/lecture/lectureDetail.module.css';
+import LectureComment from './LectureComment'; // 댓글 컴포넌트 불러오기
 
 const LectureDetail = ({ lectureId }) => {
     const [lecture, setLecture] = useState(null);
@@ -29,15 +30,19 @@ const LectureDetail = ({ lectureId }) => {
         <div className={styles.lectureDetailContainer}>
             {lecture && (
                 <>
-                    <h1 className={styles.title}>{lecture.LECTURE_NAME}</h1>
-                    <p className={styles.nickname}>강사 : {lecture.NICKNAME}</p>
-                    <p className={styles.viewCount}>조회수 : {lecture.LECTURE_VIEWCOUNT}</p>
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>{lecture.LECTURE_NAME}</h1>
+                        <p className={styles.info}>조회수 : {lecture.LECTURE_VIEWCOUNT}</p>
+                        <p className={styles.info}>날짜 : {lecture.LECTURE_DATE}</p>
+                        <p className={styles.info}>강사 : {lecture.NICKNAME}</p>
+                    </div>
                     <div className={styles.videoContainer}>
-                    <video className={styles.video} controls>
+                        <video className={styles.video} controls>
                             <source src={lecture.streamUrl} type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                     </div>
+                    <LectureComment lectureId={lectureId} /> {/* 댓글 컴포넌트 추가 */}
                 </>
             )}
         </div>
