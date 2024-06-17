@@ -6,6 +6,7 @@ import authStore from "../../stores/authStore";
 import { observer } from 'mobx-react';
 
 const Announcement = observer (() => {
+
     const [announcements, setAnnouncements] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -20,11 +21,13 @@ const Announcement = observer (() => {
             setAnnouncements([]);
             setPage(1);
             fetchCategorizedAnnouncements(1, category);
+
         } else if (keyword !== '') {
             // 키워드가 입력되었을 때
             setAnnouncements([]);
             setPage(1);
             searchAnnouncements(1, keyword);
+
         } else {
             // 첫 진입시
             setAnnouncements([]);
@@ -158,7 +161,7 @@ const Announcement = observer (() => {
                 </ul>
                 <form className={styles.searchBar} onSubmit={handleSearch}>
                     <input type="text" name="searchTextarea" id="search-textarea" className={styles.searchTextarea}
-                           placeholder="검색어 입력" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                           placeholder="검색어 입력" value={keyword} onChange={event => setKeyword(event.target.value)} />
                     <button type="submit" className={styles.searchButton}>
                         <svg className={styles.searchIcon} viewBox="0 0 512 512">
                             <path
@@ -168,6 +171,7 @@ const Announcement = observer (() => {
                 </form>
             </div>
             <div className={styles.announceMain}>
+                {/* TODO 여기에 로더가 트루 펄스 조건문 넣고 fetch문에 로더 설정하는 문으로 로더 설정하기 */}
                 <ul className={styles.announce}>
                     {announcements.length > 0
                         ? announcements.map(announcement => (
@@ -179,12 +183,13 @@ const Announcement = observer (() => {
                         : <div></div>
                     }
                 </ul>
+                {/* TODO 여기까지 설정하면 될 듯*/}
                 <div className={styles.announceBottom}>
                     <div></div>
                     {hasMore ?
                         <div className={styles.loadMore} onClick={loadMoreData}>더보기</div>
                         :
-                        <div></div>
+                        page > 2 ? <div>더 표시할 페이지가 없어요.</div> : <div></div>
                     }
                     {authStore.checkIsAdmin() ?
                     <Link className={styles.writeAnnounce} href='cs/write'>글작성</Link>

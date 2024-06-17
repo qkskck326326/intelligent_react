@@ -100,5 +100,34 @@
     align-self: flex-end;
 }
 
+.invalid > svg{
+    cursor: initial;
+}
 
+/*여기 친구추가용 */
+.searchBar{
+    display: flex;
+    width: 100%;
+}
+.searchBox{
+    all:unset;
+    width: 90%;
+    border: 1px solid #e1e1e1;
+    border-radius: 0.25rem;
+    padding: 0.2rem;
+    flex-grow: 1;
+}
+.resetButton{
+    background-color: white;
+    border: 0;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.searchBox:focus{
+    border: 2px solid black;
+}
+
+.resetButton > svg{
+    width: 0.7rem;
+}
 

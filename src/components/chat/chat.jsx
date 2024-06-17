@@ -19,6 +19,14 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
     const [modalOn, setModalOn] = useState(false);
     const [alertMessage, setAlertMessage] = useState('')
     const modal = new AlertModal();
+    //TODO 랜더링시 정보를 받아야하나 일단 그냥 특정한 단어로 해버림
+    const [announce, setAnnounce] = useState('') //받아온 정보 넣어야함
+
+    useEffect(() => {
+        console.log(items)
+        console.log(announce)
+
+    }, [items, announce]);
 
     const handleClickBack = () => {
         setIsAnimating(true);
@@ -32,12 +40,6 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
             setModalOn(false)
         }, 500);
     };
-
-    useEffect(() => {
-        console.log(items)
-
-    }, [items]);
-
 
     const handleSearchButtonClick = () => {
         setIsSearchButtonClicked(!isSearchButtonClicked)
@@ -76,6 +78,14 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
         setModalOn(!modalOn)
     }
 
+    const handleAnnouncementChange = (text) => {
+    //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
+        setAnnounce(text)
+    }
+
+    const handleReport = (index, isMe) => {
+        console.log(index, isMe)
+    }
 
     const handleFileChange = (event) => {
 
@@ -147,23 +157,20 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                                     <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
                             </button>
                         {/*  메뉴 구성  */}
-                            { (isMenuClicked)?
+                            { isMenuClicked &&
                                 <ul className={styles.menuItems}>
                                     <li>1번메뉴</li>
                                     <li>2번메뉴</li>
                                 </ul>
-                                :
-                                <></>
-
-                        }
+                            }
                         </>
                         :
-                        <div className={styles.dummy}>abc</div>
+                        <div className={styles.dummy}>더미</div>
                     }
 
                 </div>
             </div>
-            { (isSearchButtonClicked) ?
+            { (isSearchButtonClicked) &&
                 <form className={`${styles.searchBar}`} onSubmit={handleSearch}>
                     <input className={styles.searchBox} type="text"/>
                     <button className={styles.resetButton} type='reset'>
@@ -174,12 +181,11 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                         </svg>
                     </button>
                 </form>
-                : <div></div>
             }
 
-            {/*챗지피티의 경우 이거 안뜸 시작 */}
+            {/*챗지피티의 경우 이거 안뜸 시작 마지막에 chatOption만 바꾸면 됨 */}
 
-            { (chatOption === 'gpt') &&
+            { (chatOption === 'gpt' && announce !== '') &&
                 <div className={`${styles.announceContainer} ${isSearchButtonClicked ? styles.pushed: ''}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +194,7 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                                 d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75H192 160 64c-35.3 0-64 28.7-64 64v96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V352l8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V300.4c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4V32zm-64 76.7V240 371.3C357.2 317.8 280.5 288 200.7 288H192V192h8.7c79.8 0 156.5-29.8 215.3-83.3z"/>
                         </svg>
                     </span>
-                    <span className={`${styles.announce} ${announceExpand ? styles.expanded : ''}`}>공지사항 공지사항공지사항 공지사항 공지사항 공지사항공지사항 공지사항공지사항 공지사항공지사항 공지사항공지사항 공지사항</span>
+                    <span className={`${styles.announce} ${announceExpand && styles.expanded}`}>{announce}</span>
                     <button className={`${styles.carot}`} onClick={handleAnnounce}>
                         <svg className={`${announceExpand ? commonStyles.rotate180 : commonStyles.rotate180Back}`}
                              xmlns="http://www.w3.org/2000/svg"
@@ -203,7 +209,7 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
             {/*챗지피티의 경우 이거 안뜸  끝 */}
 
             <div className={`${styles.chatMain} ${(items.length !== 0) ? styles.fileAttached : ''}`}>
-                <BubbleContainer />
+                <BubbleContainer onAnnouncementChange={handleAnnouncementChange} onReport={handleReport}/>
             </div>
             { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
             <form className={styles.chatBottom} onSubmit={handleSubmit}>
