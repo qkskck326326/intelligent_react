@@ -27,7 +27,9 @@ const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigat
         console.log(roomType)
         axios.post(`/chat/makechat/${roomType}`, {
             ...names
-        }).then(data => console.log(data))
+        }).then(data => {
+            onNavigateToChat(data)
+        })
     }
     return (
         <div className={modalStyles.modalBackground}>

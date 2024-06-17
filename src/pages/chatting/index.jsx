@@ -15,6 +15,7 @@ const ChatContainer = observer(() => {
     const [isExpanding, setIsExpanding] = useState(false);
     const [option, setOption] = useState('')
     const [roomType, setRoomType] = useState('')
+    const [roomData, setRoomData] = useState({})
     const [totalCount, setTotalCount] = useState(0);
     const userType = authStore.checkIsAdmin() ? 2 : authStore.checkIsTeacher() ? 1 : 0
     const userId = authStore.getNickname();
@@ -26,7 +27,7 @@ const ChatContainer = observer(() => {
         return axios.get('/chat/countunreadall', `?userId=${userId}`)
     }
 
-    const handleNavigation = (component, option ='', roomType='') => {
+    const handleNavigation = (component, option ='', roomType='', roomData={}) => {
 
         console.log(option)
 
@@ -41,6 +42,8 @@ const ChatContainer = observer(() => {
         setActiveComponent(component);
         setOption(option)
         setRoomType(roomType);
+        setRoomData(roomData);
+
         console.log(`roomType: ${roomType}`)
 
         setTimeout(() => setIsExpanding(false), 500);
@@ -83,11 +86,12 @@ const ChatContainer = observer(() => {
                     roomType={roomType}
                     isExpanding={isExpanding}
                     onNavigateToList={() => handleNavigation('ChatList')}
-                    onNavigateToChat={() => handleNavigation('Chat')}
+                    onNavigateToChat={(roomData) => handleNavigation('Chat', roomData)}
                 />
             )}
             {activeComponent === 'Chat' && (
                 <Chat
+                    roomData={roomData}
                     option={option}
                     isExpanding={isExpanding}
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}

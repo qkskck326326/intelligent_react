@@ -7,7 +7,7 @@ import AuthStore from "../../stores/authStore";
 import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
 
-const Chat = observer(({ option, isExpanding, onNavigateToIcon }) => {
+const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
 
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
@@ -25,6 +25,7 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon }) => {
     useEffect(() => {
         console.log(items)
         console.log(announce)
+        console.log(roomData)
 
     }, [items, announce]);
 
@@ -141,7 +142,7 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon }) => {
                 </button>
                 <div className={styles.title}>
                     {
-                        (option !== 'gpt') ? `채팅방제목` : `인텔리봇`
+                        (option !== 'gpt') ? `${roomData.roomName}` : `인텔리봇`
 
                     }
                 </div>
