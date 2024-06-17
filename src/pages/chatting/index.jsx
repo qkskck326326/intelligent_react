@@ -13,18 +13,23 @@ const ChatContainer = observer(() => {
     const [activeComponent, setActiveComponent] = useState('ChatIcon');
     const [isIconHidden, setIsIconHidden] = useState(false);
     const [isExpanding, setIsExpanding] = useState(false);
-    const [chatOption, setChatOption] = useState('');
+    const [option, setOption] = useState('')
+    const [roomType, setRoomType] = useState('')
     const [totalCount, setTotalCount] = useState(0);
-    const [userType, setUserType] = useState(authStore.checkIsAdmin ? 2 : 1)
-    const [userId, setUserId] = useState(authStore.getNickname())
+    const userType = authStore.checkIsAdmin() ? 2 : authStore.checkIsTeacher() ? 1 : 0
+    const userId = authStore.getNickname();
     const axios = new Axios
+
 
     const countTotal = () => {
         //로직-> 내 아이디로 채팅방 모조리 확인 => 방아이디로 메시지
         return axios.get('/chat/countunreadall', `?userId=${userId}`)
     }
 
-    const handleNavigation = (component, option ='') => {
+    const handleNavigation = (component, option ='', roomType='') => {
+
+        console.log(option)
+
         if (component === 'ChatIcon') {
             setIsIconHidden(false);
             setIsExpanding(true);
@@ -32,8 +37,12 @@ const ChatContainer = observer(() => {
             setIsIconHidden(true);
             setIsExpanding(true);
         }
+
         setActiveComponent(component);
-        setChatOption(option);
+        setOption(option)
+        setRoomType(roomType);
+        console.log(`roomType: ${roomType}`)
+
         setTimeout(() => setIsExpanding(false), 500);
     };
 
@@ -50,7 +59,7 @@ const ChatContainer = observer(() => {
             {activeComponent === 'ChatList' && (
                 <ChatList
                     isExpanding={isExpanding}
-                    onNavigateToFriends={() => handleNavigation('AddingFriends')}
+                    onNavigateToFriends={(option) => handleNavigation('AddingFriends', option)}
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}
                     onNavigateToChat={(option) => handleNavigation('Chat', option)}
                     userId={userId}
@@ -59,9 +68,10 @@ const ChatContainer = observer(() => {
             )}
             {activeComponent === 'AddingFriends' && (
                 <AddingFriends
+                    option={option}
                     isExpanding={isExpanding}
                     onNavigateToList={() => handleNavigation('ChatList')}
-                    onNavigateToModal={() => handleNavigation('ActionModal')}
+                    onNavigateToModal={(option) => handleNavigation('ActionModal', option, roomType)}
                     onNavigateToChat={() => handleNavigation('Chat')}
                     userId={userId}
                     userType={userType}
@@ -69,14 +79,16 @@ const ChatContainer = observer(() => {
             )}
             {activeComponent === 'ActionModal' && (
                 <ActionModal
+                    option={option}
+                    roomType={roomType}
                     isExpanding={isExpanding}
-                    onNavigateToFriends={() => handleNavigation('AddingFriends')}
+                    onNavigateToList={() => handleNavigation('ChatList')}
                     onNavigateToChat={() => handleNavigation('Chat')}
                 />
             )}
             {activeComponent === 'Chat' && (
                 <Chat
-                    chatOption={chatOption}
+                    option={option}
                     isExpanding={isExpanding}
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}
                     userId={userId}

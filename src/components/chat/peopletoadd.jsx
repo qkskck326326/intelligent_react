@@ -2,21 +2,19 @@ import React, {useEffect, useState} from "react";
 import {observer} from 'mobx-react'
 import EachPerson from './eachperson'
 
-const PeopleToAdd = observer(({ selectedIndices, onSelectionChange }) => {
 
-    const peopleArray = Array.from({ length: 20 }, (_, index) => index);
+const PeopleToAdd = observer(({ selectedIndices, onSelectionChange, people }) => {
 
     return (
         <>
-            {peopleArray.map((index) => (
+            {people.map((person) => (
                 <EachPerson
-                    key={index}
-                    index={index}
-                    isSelected={selectedIndices.includes(index)}
+                    key={person.nickname}
+                    person={person}
+                    isSelected={selectedIndices.includes(person.nickname)}
                     onSelectionChange={onSelectionChange}
                 />
             ))}
-            <div>Clicked Count: {selectedIndices.length}</div>
         </>
     );
 });
