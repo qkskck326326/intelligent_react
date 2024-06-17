@@ -1,57 +1,99 @@
-.commentSection {
-    width: 100%;
-    margin-top: 20px;
-    padding: 10px;
-    border-top: 1px solid #e0e0e0;
+.commentsContainer {
+    margin: 20px;
 }
 
-.comment {
+.commentItem {
     display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 10px 0;
+    align-items: flex-start;
+    margin-bottom: 15px;
 }
 
-.commentHeader {
-    display: flex;
-    align-items: center;
-}
-
-.avatar {
+.profileImage {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-.nickname {
+.commentHeader {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+.commentNickname {
     font-weight: bold;
     margin-right: 10px;
 }
 
-.date {
-    font-size: 0.8em;
-    color: #777;
+.commentContent {
+    margin-left: 50px;
+    width: 100%;
 }
 
-.content {
-    margin: 10px 0;
-    font-size: 1em;
+.commentInput,
+.replyInput,
+.editInput {
+    width: calc(100% - 50px);
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+    margin-left: 50px;
 }
 
-.actions {
-    display: flex;
-    justify-content: flex-end;
+.commentInput:focus,
+.replyInput:focus,
+.editInput:focus {
+    outline: none;
+    border-bottom: 1px solid #000;
 }
 
-.replyButton, .editButton {
+.submitButton {
     background: none;
     border: none;
-    color: #00af9c;
     cursor: pointer;
     margin-left: 10px;
 }
 
-.replyButton:hover, .editButton:hover {
+.submitButton img {
+    width: 20px;
+    height: 20px;
+}
+
+.commentActions {
+    margin-left: auto;
+}
+
+.editButton,
+.deleteButton {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.replyContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+    margin-top: 10px;
+}
+
+.replyButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+    margin-left: auto;
+}
+
+.replyButton:hover {
     text-decoration: underline;
+}
+
+.editContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+    margin-top: 10px;
 }
