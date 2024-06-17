@@ -15,7 +15,7 @@ const NaverLogin = () => {
 
 	const initializeNaverLogin = () => {
 		// const naverLogin = new naver.LoginWithNaverId({
-
+		//
         //   // 위에 Client Id 랑 Callback Url 적었는데 ? 라고 혹시 생각한다면
         //   // 변수 처리를 해준 것이기에 그냥 넘어가면 된다.
 		// 	clientId: NAVER_CLIENT_ID,

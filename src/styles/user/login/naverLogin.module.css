@@ -28,7 +28,7 @@
 .NaverLoginTitle {
 	margin-left: 4px;
 	color: #ffffff; /* Assuming theme.White translates to #ffffff */
-	font-weight: 400;
+	font-weight: bold;
 	font-size: 14px;
 	line-height: 24px;
 }
