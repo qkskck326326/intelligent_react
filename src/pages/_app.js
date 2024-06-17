@@ -17,16 +17,19 @@ const App = ({ Component, pageProps }) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       if (token) {
+        console.log("Setting authStore values from localStorage");
         authStore.setIsLoggedIn(true);
+        authStore.setIsStudent(localStorage.getItem("isStudent") === "true");
+        authStore.setIsTeacher(localStorage.getItem("isTeacher") === "true");
         authStore.setIsAdmin(localStorage.getItem("isAdmin") === "true");
-        authStore.setNickname(localStorage.getItem("nickname") || '');
         authStore.setUserEmail(localStorage.getItem("userEmail") || '');
         authStore.setProvider(localStorage.getItem("provider") || '');
+        authStore.setNickname(localStorage.getItem("nickname") || '');
+        authStore.setProfileImageUrl(localStorage.getItem("profileImageUrl") || '');
       }
     }
   }, []);
 
-  // 현재 경로가 /admin/testAI가 아닌 경우에만 HeaderBar를 렌더링합니다.
   const shouldRenderHeader = router.pathname !== '/admin/testAI';
 
   return (
