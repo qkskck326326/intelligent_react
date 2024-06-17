@@ -11,7 +11,7 @@ const Editor = dynamic(() => import('/public/ckeditor5/build/ckeditor'), {
     ssr: false,
 });
 
-const TextEditor = ({ setEditorData }) => {
+const TextEditor = ({ setEditorData, initialData }) => {
     const editorRef = useRef();
 
     useEffect(() => {
@@ -24,6 +24,11 @@ const TextEditor = ({ setEditorData }) => {
                         window.editor = editor;
                         editorRef.current = editor;
 
+                        // 초기 데이터를 설정합니다.
+                        if (initialData) {
+                            editor.setData(initialData);
+                        }
+
                         editor.model.document.on('change:data', () => {
                             setEditorData(editor.getData());
                         });
@@ -33,7 +38,7 @@ const TextEditor = ({ setEditorData }) => {
                     });
             });
         }
-    }, [setEditorData]);
+    }, [setEditorData, initialData]);
 
     return (
         <div className="editor">

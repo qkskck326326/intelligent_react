@@ -21,7 +21,6 @@ const Thumbnail = ({ isOpen, onClose }) => {
     };
 
     const handleSave = () => {
-        // 여기에서 썸네일을 저장하는 로직을 추가
         onClose();
     };
 

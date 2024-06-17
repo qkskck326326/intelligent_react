@@ -8,6 +8,7 @@ const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCrit
 
     const handleSortChange = (e) => {
         setSortCriteria(e.target.value);
+        onSearch();
     };
 
     const handleSearchCriteriaChange = (e) => {

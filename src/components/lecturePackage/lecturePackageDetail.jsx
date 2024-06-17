@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { axiosClient } from '../../axiosApi/axiosClient';
 import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css';
 
-const LecturePackageDetail = ({ lecturePackageId }) => {
+const LecturePackageDetail = () => {
     const router = useRouter();
+    const { lecturePackageId } = router.query;
 
     const [lecturePackage, setLecturePackage] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -14,20 +15,68 @@ const LecturePackageDetail = ({ lecturePackageId }) => {
         const fetchLecturePackage = async () => {
             setLoading(true);
             console.log("lecturePackageId : ", lecturePackageId);
+
+
             try {
-                const response = await axiosClient.get('/packages/detail', { params: { lecturePackageId } });
+                const response = await axiosClient.get('/packages/detail', {params: {lecturePackageId}});
                 setLecturePackage(response.data);
             } catch (err) {
                 setError(err);
             } finally {
                 setLoading(false);
             }
+
         };
+
+        if (lecturePackageId) {
+            // 조회수 증가
+            axiosClient.put(`/packages/view/${lecturePackageId}`);
+            fetchLecturePackage();
+        }
 
         if (lecturePackageId) {
             fetchLecturePackage();
         }
     }, [lecturePackageId]);
+
+    useEffect(() => {
+        if (lecturePackage) {
+            // oembed 태그를 iframe으로 변환하는 함수
+            const convertOembedToIframe = () => {
+                const contentDiv = document.getElementById('content');
+                if (!contentDiv) return;
+
+                const oembedElements = contentDiv.getElementsByTagName('oembed');
+                for (const oembed of oembedElements) {
+                    const url = oembed.getAttribute('url');
+                    const iframe = document.createElement('iframe');
+                    iframe.setAttribute('src', url.replace('watch?v=', 'embed/'));
+                    iframe.setAttribute('width', '560');
+                    iframe.setAttribute('height', '315');
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    iframe.setAttribute('allowfullscreen', 'true');
+                    oembed.parentNode.replaceChild(iframe, oembed);
+                }
+            };
+
+            convertOembedToIframe();
+        }
+    }, [lecturePackage]);
+
+    const handleDelete = async () => {
+        const confirmDelete = confirm('정말로 이 패키지를 삭제하시겠습니까?');
+        if (confirmDelete) {
+            try {
+                await axiosClient.delete(`/packages/${lecturePackageId}`);
+                alert('패키지가 성공적으로 삭제되었습니다.');
+                router.push('/lecturePackage'); // 목록 페이지로 이동
+            } catch (error) {
+                console.error('삭제 중 오류 발생:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            }
+        }
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -37,43 +86,49 @@ const LecturePackageDetail = ({ lecturePackageId }) => {
             {lecturePackage && (
                 <>
                     <h1 className={styles.title}>{lecturePackage.title}</h1>
-                    <div className={styles.form}>
-                        <div className={styles.left}>
-                            <div className={styles.field}>
-                                <label>내용:</label>
-                                <p>입력되지 않은 부분이 있습니다. 입력해주세요.</p>
-                            </div>
-                            <div className={styles.field}>
-                                <label>카테고리:</label>
-                                <div className={styles.categories}>
-                                    {lecturePackage.subCategoryName.split(',').map((category, index) => (
-                                        <span key={index} className={styles.category}>{category}</span>
-                                    ))}
-                                </div>
-                            </div>
+                    <div className={styles.topInfo}>
+                        <div className={styles.infoItem}>
+                            <p>등록 날짜: {lecturePackage.registerDate}</p>
                         </div>
-                        <div className={styles.center}>
-                            <div className={styles.field}>
-                                <label>내용:</label>
-                                <p>{lecturePackage.content}</p>
-                            </div>
-                            <div className={styles.field}>
-                                <label>패키지 금액:</label>
-                                <p>{lecturePackage.price} 원</p>
-                            </div>
-                            <div className={styles.field}>
-                                <label>강의 등록 날짜:</label>
-                                <p>{lecturePackage.register}</p>
-                            </div>
-                            <div className={styles.field}>
-                                <label>기술 스택:</label>
-                                <div className={styles.techStack}>
-                                    {lecturePackage.techStackPath.split(',').map((tech, index) => (
-                                        <img key={index} src={tech} alt={`tech-${index}`} />
-                                    ))}
-                                </div>
-                            </div>
+                        <div className={styles.infoItem}>
+                            <p>조회수: {lecturePackage.viewCount}</p>
                         </div>
+                    </div>
+                    <div className={styles.yellowBox}>
+                        <div className={styles.redBox}>
+                            <div id="content" className={styles.content} dangerouslySetInnerHTML={{ __html: lecturePackage.content }} />
+                        </div>
+                        <div className={styles.field}>
+                            <p className={styles.level}><i className="fas fa-check"></i> {lecturePackage.packageLevel} 과정</p>
+                        </div>
+                    </div>
+                    <div className={styles.field}>
+                        <p className={styles.priceKind}>{lecturePackage.priceKind === 0 ? '월정액' : '평생소장'} &gt;&gt;&gt; {lecturePackage.price} ₩</p>
+                    </div>
+                    <div className={styles.field}>
+                        <label>해당 카테고리</label>
+                        <div className={styles.categories}>
+                            {lecturePackage.subCategoryName.split(',').map((category, index) => (
+                                <span key={index} className={styles.category}>{category}</span>
+                            ))}
+                        </div>
+                    </div>
+                    <div className={styles.field}>
+                        <label>기술 스택</label>
+                        <div className={styles.techStack}>
+                            {lecturePackage.techStackPath.split(',').map((tech, index) => (
+                                <img key={index} src={tech} alt={`tech-${index}`} />
+                            ))}
+                        </div>
+                    </div>
+                    <div className={styles.actions}>
+                        <button className={styles.actionButton}
+                                onClick={() => router.push(`/lecturePackage/edit/${lecturePackage.lecturePackageId}`)}>수정하기
+                        </button>
+                        <button className={styles.actionButton} onClick={handleDelete}>삭제하기</button>
+                        <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>패키지 리스트로
+                            이동
+                        </button>
 
                     </div>
                 </>
