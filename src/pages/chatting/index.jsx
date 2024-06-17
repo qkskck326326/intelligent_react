@@ -71,7 +71,7 @@ const ChatContainer = observer(() => {
                     option={option}
                     isExpanding={isExpanding}
                     onNavigateToList={() => handleNavigation('ChatList')}
-                    onNavigateToModal={(option) => handleNavigation('ActionModal', option, roomType)}
+                    onNavigateToModal={(option, roomType) => handleNavigation('ActionModal', option, roomType)}
                     onNavigateToChat={() => handleNavigation('Chat')}
                     userId={userId}
                     userType={userType}
