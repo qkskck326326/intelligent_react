@@ -18,7 +18,16 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
 
     useEffect(()=>{
         axios.get('/chat/chatlist', `?userId=${userId}`)
-            .then(data => console.log(data))
+            .then(data => {
+                (data.map((each)=>{
+                    console.log(each.chatUser.isMuted)
+                    console.log(each.chatUser.isPinned)
+                    console.log(each.chatroom.roomId)
+                    console.log(each.chatroom.roomName)
+                    console.log(each.chatroom.roomType)
+                    //TODO 시간이랑 이런정보도 다 가져와야할듯...
+                }))
+            })
 
     }, [])
 
