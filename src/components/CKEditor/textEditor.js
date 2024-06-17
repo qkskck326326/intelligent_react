@@ -14,7 +14,11 @@ const TextEditor = ({ setEditorData, initialData }) => {
             import('/public/ckeditor5/build/ckeditor').then(({ default: ClassicEditor }) => {
                 if (!editorRef.current && containerRef.current) {
                     ClassicEditor
-                        .create(containerRef.current)
+                        .create(containerRef.current, {
+                            ckfinder: {
+                                uploadUrl: '/api/upload' // 업로드 엔드포인트 설정
+                            }
+                        })
                         .then(editor => {
                             editorRef.current = editor;
                             window.editor = editor;
