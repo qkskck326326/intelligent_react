@@ -16,7 +16,7 @@ const ChatContainer = observer(() => {
     const [chatOption, setChatOption] = useState('');
     const [totalCount, setTotalCount] = useState(0);
     const [userType, setUserType] = useState(authStore.checkIsAdmin ? 2 : 1)
-    const [userId] = useState(authStore.getNickname())
+    const [userId, setUserId] = useState(authStore.getNickname())
     const axios = new Axios
 
     const countTotal = () => {
@@ -24,7 +24,7 @@ const ChatContainer = observer(() => {
         return axios.get('/chat/countunreadall', `?userId=${userId}`)
     }
 
-    const handleNavigation = (component, option ='', userId = '', userType = 0 ) => {
+    const handleNavigation = (component, option ='') => {
         if (component === 'ChatIcon') {
             setIsIconHidden(false);
             setIsExpanding(true);
@@ -44,6 +44,8 @@ const ChatContainer = observer(() => {
                 isExpanding={isExpanding}
                 onNavigate={() => handleNavigation('ChatList')}
                 onCountTotal={() => countTotal()}
+                userId={userId}
+                userType={userType}
             />
             {activeComponent === 'ChatList' && (
                 <ChatList
@@ -51,6 +53,8 @@ const ChatContainer = observer(() => {
                     onNavigateToFriends={() => handleNavigation('AddingFriends')}
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}
                     onNavigateToChat={(option) => handleNavigation('Chat', option)}
+                    userId={userId}
+                    userType={userType}
                 />
             )}
             {activeComponent === 'AddingFriends' && (
@@ -59,6 +63,8 @@ const ChatContainer = observer(() => {
                     onNavigateToList={() => handleNavigation('ChatList')}
                     onNavigateToModal={() => handleNavigation('ActionModal')}
                     onNavigateToChat={() => handleNavigation('Chat')}
+                    userId={userId}
+                    userType={userType}
                 />
             )}
             {activeComponent === 'ActionModal' && (
@@ -69,7 +75,13 @@ const ChatContainer = observer(() => {
                 />
             )}
             {activeComponent === 'Chat' && (
-                <Chat chatOption={chatOption} isExpanding={isExpanding} onNavigateToIcon={() => handleNavigation('ChatIcon')} />
+                <Chat
+                    chatOption={chatOption}
+                    isExpanding={isExpanding}
+                    onNavigateToIcon={() => handleNavigation('ChatIcon')}
+                    userId={userId}
+                    userType={userType}
+                />
             )}
         </>
     );

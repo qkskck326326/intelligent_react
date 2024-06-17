@@ -24,6 +24,9 @@
     border-radius: 1rem 1rem;
     overflow: hidden;
 }
+.eachPicture > img{
+    object-fit: scale-down;
+}
 .pin{
     position: absolute;
     width: 1.2rem;
