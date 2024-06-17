@@ -192,6 +192,15 @@ const PostDetail = observer(() => {
     );
   };
 
+  const renderContent = () => {
+    const sanitizedContent = DOMPurify.sanitize(post.content, {
+      ADD_TAGS: ["iframe"], // iframe 태그를 허용
+      ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"], // iframe 속성을 허용
+    });
+
+    return <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />;
+  };
+
   return (
     <div className={styles.postDetailContainer}>
       <div className={styles.postHeader}>
@@ -212,11 +221,7 @@ const PostDetail = observer(() => {
         <span>조회수: {post.viewCount}</span>
       </div>
       <h1 className={styles.postTitle}>{post.title}</h1>
-      <p
-        className={styles.postContent}
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} // Use DOMPurify to sanitize the content
-      ></p>
-
+      {renderContent()}
       {renderFiles()}
       {renderComments()}
       <div className={styles.commentForm}>
