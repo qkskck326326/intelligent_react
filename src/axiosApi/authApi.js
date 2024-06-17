@@ -66,8 +66,8 @@ instance.interceptors.response.use(
         if(error.response.status === 401 && !originalRequest._retry) { // 액세스, 리프레쉬 둘다 죽었을경우 처리
             originalRequest._retry = true;  //재시도로 변경
             // 토큰을 갱신하고 재시도
-            const newAccessToke = await refreshToken();
-            originalRequest.headers['Authorization'] = 'Bearer ${newAccessToken}';
+            const newAccessToken = await refreshToken();
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
             // 원래 요청을 다시 수행
             return instance(originalRequest);
         }
