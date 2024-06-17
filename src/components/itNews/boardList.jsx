@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from "react";
-import {Pagination} from "react-bootstrap";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import BoardSaveModal from "./BoardSaveModal";
 import { useRouter } from 'next/router';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CustomPagination from "../common/customPagenation";
 
 const BoardList = () => {
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [size, setSize] = useState(10);
+    const [size, setSize] = useState(1);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [currentData, setCurrentData] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [isSearch, setIsSearch] = useState("");
     const router = useRouter();
 
     const fetchData = () => {
-        axiosClient.get('/itNewsBoard', {params: {page: page, size: size}})
+        let url = "/itNewsBoard";
+        const params = { page: page - 1, size: size };
+        if (isSearch !== "") {
+            url += "/search/" + isSearch;
+        }
+        axiosClient.get(url, { params })
             .then(response => {
-                const responseData = response.data;
-                const dataArray = Array.isArray(responseData) ? responseData : [responseData];
-                setData(dataArray);
+                const responseData = response.data.content || response.data;
+                setData(responseData);
+                setTotalPages(response.data.totalPages);
+                console.log("response : ", response);
                 setLoading(false);
             })
             .catch(err => {
@@ -41,7 +48,7 @@ const BoardList = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [page, size]);
 
     const handleSave = (newData) => {
         axiosClient.post('/itNewsBoard', newData)
@@ -55,9 +62,9 @@ const BoardList = () => {
     };
 
     const handleDelete = (itNewsBoardDto) => {
-        axiosClient.delete('/itNewsBoard', {data:itNewsBoardDto})
+        axiosClient.delete('/itNewsBoard', { data: itNewsBoardDto })
             .then(() => {
-                fetchData(); // 데이터 삭제 후 목록을 다시 불러옴
+                fetchData();
             })
             .catch(err => {
                 setError(err);
@@ -68,11 +75,6 @@ const BoardList = () => {
         setPage(newPage);
     };
 
-    const handleShow = () => {
-        setCurrentData(null);
-        setIsEditing(false);
-        setShowModal(true);
-    };
 
     const handleEdit = (item) => {
         setCurrentData(item);
@@ -86,57 +88,72 @@ const BoardList = () => {
         setShowModal(false);
     };
 
+    const handleSearch = () => {
+        setPage(1);
+        fetchData();
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
     return (
         <div className="container">
-            <h1>Board List</h1>
-            <BoardSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave} initialData={currentData}/>
+            <h1>게시판 목록</h1>
+            <div className="mb-3 d-flex align-items-center">
+                <input
+                    type="text"
+                    className="form-control me-sm-1"
+                    style={{ width: '300px' }}
+                    placeholder="검색어를 입력하세요"
+                    value={isSearch}
+                    onChange={(e) => setIsSearch(e.target.value)}
+                />
+                <button className="btn btn-primary" onClick={handleSearch}>검색</button>
+            </div>
+            <BoardSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave}
+                            initialData={currentData}/>
             <table className="table">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Link</th>
-                    <th scope="col">수정 / 삭제</th>
-                    <th scope="col">등록일</th>
+                    <th scope="col" className="text-center">#</th>
+                    <th scope="col" className="text-center">제목</th>
+                    <th scope="col" className="text-center" style={{ width: '120px' }}>링크</th>
+                    <th scope="col" className="text-center" style={{ width: '150px' }}>수정 / 삭제</th>
+                    <th scope="col" className="text-center" style={{ width: '100px' }}>등록일</th>
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((item, index) => (
-                    <tr key={item.boardId}>
-                        <th scope="row">{index + 1}</th>
-                        <td onClick={() => router.push(`/itNewsBoard/${item.boardId}`)}>{item.title}</td>
-                        <td>
-                            <a href={item.siteUrl} className="btn btn-primary" target="_blank"
-                               rel="noopener noreferrer">
-                                원글이동
-                            </a>
-                        </td>
-                        <td>
-                            <button onClick={() => handleEdit(item)}>수정</button>
-                            &nbsp;
-                            <button onClick={() => handleDelete(item)}>삭제</button>
-                        </td>
-                        <td>
-                            {formatDate(item.registDate)}
-                        </td>
+                {isSearch !== "" && data.length === 0 ? (
+                    <tr>
+                        <td colSpan="5" className="text-center">검색 결과가 없습니다.</td>
                     </tr>
-                ))}
+                ) : (
+                    data.map((item, index) => (
+                        <tr key={item.boardId} >
+                            <th scope="row" className="text-center" >{index + 1}</th>
+                            <td onClick={() => router.push(`/itNewsBoard/${item.boardId}`)}
+                                className="text-center" style={{ transition: 'background-color 0.3s' }}
+                                onMouseOver={e => e.currentTarget.style.backgroundColor = '#f0f0f0'}
+                                onMouseOut={e => e.currentTarget.style.backgroundColor = ''}>{item.title}</td>
+                            <td className="text-center">
+                                <a href={item.siteUrl} className="btn btn-primary" target="_blank"
+                                   rel="noopener noreferrer">
+                                    원글이동
+                                </a>
+                            </td>
+                            <td className="text-center">
+                                <button className="btn btn-secondary" onClick={() => handleEdit(item)}>수정</button>
+                                &nbsp;
+                                <button className="btn btn-danger" onClick={() => handleDelete(item)}>삭제</button>
+                            </td>
+                            <td className="text-center">{formatDate(item.registDate)}</td>
+                        </tr>
+                    ))
+                )}
                 </tbody>
             </table>
-            <Pagination style={{justifyContent: 'center'}}>
-                <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
-                <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
-                {[...Array(Math.max(totalPages, 1))].map((_, i) => (
-                    <Pagination.Item key={i} active={i === page} onClick={() => handlePageChange(i)}>
-                        {i + 1}
-                    </Pagination.Item>
-                ))}
-                <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
-                <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
-            </Pagination>
+                <CustomPagination align="center" currentPage={page} totalPages={totalPages}
+                                  onPageChange={handlePageChange}/>
         </div>
     );
 }
