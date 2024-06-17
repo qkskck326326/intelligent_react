@@ -6,6 +6,7 @@ import PeopleToAdd from "./peopletoadd.jsx";
 import AlertModal from "../common/Modal";
 
 const AddingFriends = observer(({ isExpanding, onNavigateToList, onNavigateToModal, onNavigateToChat }) => {
+
     const [isAnimating, setIsAnimating] = useState(false);
     const [checkColor, setCheckColor] = useState('lightgray')
     const [selectedIndices, setSelectedIndices] = useState([]);

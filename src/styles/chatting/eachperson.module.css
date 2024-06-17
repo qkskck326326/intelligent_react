@@ -3,7 +3,7 @@
     height: 5rem;
     border-bottom: 1px solid #E2E2E2;
     display: flex;
-    gap: 0.2rem;
+    gap: 1rem;
     align-items: center;
     user-select: none;
     cursor: pointer;
@@ -13,4 +13,23 @@
 }
 .checked{
     background-color: #E0E0E0;
+}
+.imageFrame{
+    margin-left: 1rem;
+    border: 1px solid;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.7rem 0.7rem;
+    overflow: hidden;
+}
+
+.imageFrame img{
+    image-rendering: optimizeQuality;
+    object-fit: scale-down;
+
+}
+.userdetail{
+    margin-right: 1rem;
+    border: 1px solid;
+    flex-grow: 5;
 }

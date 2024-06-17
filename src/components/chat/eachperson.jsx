@@ -13,9 +13,11 @@ const EachPerson = observer(({ index, isSelected, onSelectionChange }) => {
         <div className={`${styles.eachPersonContainer} ${isSelected && styles.checked}`} onClick={handleSelection}>
             <div className={styles.imageFrame}>
                 {/* TODO 받아온 값*/}
-                <img src="" alt="" />
+                <img src="" alt="" onError=""/>
             </div>
+            <div className={styles.userdetail}>
 
+            </div>
         </div>
     );
 });
