@@ -126,7 +126,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             }
 
             if (response.status === 200) {
-                alert(isEditMode ? '수정이 성공적으로 완료되었습니다.' : '등록이 성공적으로 완료되었습니다.');
+                alert(isEditMode ? '수정이 완료되었습니다.' : '등록이 성공적으로 완료되었습니다.');
                 const { lecturePackageId } = response.data;
                 router.push(`/lecturePackage/${lecturePackageId}`);
             }
@@ -135,8 +135,6 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             alert(isEditMode ? '수정 중 오류가 발생했습니다.' : '등록 중 오류가 발생했습니다.');
         }
     };
-
-
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -238,16 +236,15 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                     <DropZone onDrop={handleDrop} selectedStacks={selectedTechStacks} onRemove={handleRemove}/>
                 </div>
 
-                <TextEditor setEditorData={setEditorData} initialData={editorData}/>
+                <TextEditor setEditorData={setEditorData} initialData={editorData} />
                 <button className={styles.saveButton} onClick={handleSubmit}>{isEditMode ? '수정하기' : '등록하기'}</button>
-                {isEditMode ? (  // 변경된 부분: isEditMode에 따라 버튼을 다르게 렌더링
+                {isEditMode ? (
                     <button className={styles.actionButton}
                             onClick={() => router.push(`/lecturePackage/${packageData.lecturePackageId}`)}>상세보기</button>
                 ) : (
                     <button className={styles.actionButton} onClick={onBackListClick}>리스트목록으로 이동</button>
                 )}
             </div>
-
         </DndProvider>
     );
 });
