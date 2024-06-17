@@ -2,23 +2,19 @@ import React, {useEffect, useState} from "react";
 import {observer} from 'mobx-react'
 import styles from '../../styles/chatting/eachperson.module.css'
 
-const EachPerson = observer(({ index, isSelected, onSelectionChange }) => {
+const EachPerson = observer(({person, isSelected, onSelectionChange }) => {
 
     function handleSelection() {
-        onSelectionChange(index);
+        onSelectionChange(person.nickname);
     }
 
-
-
-    //TODO 여기 디자인 작성
     return (
         <div className={`${styles.eachPersonContainer} ${isSelected && styles.checked}`} onClick={handleSelection}>
             <div className={styles.imageFrame}>
-                {/* TODO 받아온 값*/}
-                <img src="/7.jpg" alt="" />
+                <img className={styles.image} src={person.profileImageUrl} alt="" />
             </div>
             <div className={styles.userdetail}>
-
+                {person.nickname}
             </div>
         </div>
     );

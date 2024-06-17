@@ -6,9 +6,6 @@ import SortAndSearchBar from "../common/sortAndSearchBar";
 import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CategoryToggle from "../post/CategoryToggle";
-// const [selectedCategory, setSelectedCategory] = useState(null);
-
-
 
 const LecturePackageList = ({ onRegisterClick }) => {
     const [lecturePackages, setLecturePackages] = useState([]);
@@ -19,6 +16,7 @@ const LecturePackageList = ({ onRegisterClick }) => {
     const [sortCriteria, setSortCriteria] = useState("latest");
     const [searchCriteria, setSearchCriteria] = useState("title");
     const [filteredAndSortedLectures, setFilteredAndSortedLectures] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     const ITEMS_PER_PAGE = 16;
 
@@ -42,6 +40,34 @@ const LecturePackageList = ({ onRegisterClick }) => {
         fetchLecturePackages();
     }, []);
 
+
+
+    const fetchLecturePackagesByCategory = async (categoryId) => {
+        setLoading(true);
+        try {
+            console.log("categoryId : ", categoryId);
+            const response = await axiosClient.get(`/packages/categorysort?categoryId=${categoryId}`);
+            setLecturePackages(response.data);
+            setFilteredAndSortedLectures(response.data);
+            console.log("categorysort : ", response);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
+    useEffect(() => {
+        if (selectedCategory) {
+            fetchLecturePackagesByCategory(selectedCategory.id);
+        } else {
+            handleSearch();
+        }
+    }, [selectedCategory]);
+
     const totalPages = Math.ceil(filteredAndSortedLectures.length / ITEMS_PER_PAGE);
 
     const handlePageChange = (page) => {
@@ -49,14 +75,24 @@ const LecturePackageList = ({ onRegisterClick }) => {
     };
 
     const handleSearch = () => {
-        const filteredLectures = lecturePackages.filter((lecture) => {
-            if (searchCriteria === "title") {
-                return lecture.title.toLowerCase().includes(searchTerm.toLowerCase());
-            } else if (searchCriteria === "instructor") {
-                return lecture.nickname?.toLowerCase().includes(searchTerm.toLowerCase()); // 여기서 null 체크
-            }
-            return true;
-        });
+        let filteredLectures = lecturePackages;
+
+        if (selectedCategory) {
+            filteredLectures = filteredLectures.filter(
+                lecture => lecture.subCategoryId === selectedCategory.id
+            );
+        }
+
+        if (searchTerm) {
+            filteredLectures = filteredLectures.filter((lecture) => {
+                if (searchCriteria === "title") {
+                    return lecture.title.toLowerCase().includes(searchTerm.toLowerCase());
+                } else if (searchCriteria === "instructor") {
+                    return lecture.nickname?.toLowerCase().includes(searchTerm.toLowerCase());
+                }
+                return true;
+            });
+        }
 
         const sortedLectures = [...filteredLectures].sort((a, b) => {
             if (sortCriteria === "latest") {
@@ -99,11 +135,13 @@ const LecturePackageList = ({ onRegisterClick }) => {
         );
     };
 
+    const handleSelectCategory = (category) => {
+        setSelectedCategory(category);
+    };
 
-    // const handleSelectCategory = (category) => {
-    //     setSelectedCategory(category);
-    //     // 하위 카테고리를 선택했을 때 추가 동작이 필요하다면 여기에 추가하십시오.
-    // };
+
+
+
 
 
 
@@ -119,7 +157,9 @@ const LecturePackageList = ({ onRegisterClick }) => {
                 setSearchCriteria={setSearchCriteria}
                 onSearch={handleSearch}
             />
-            <CategoryToggle/>
+            <CategoryToggle selectedCategory={selectedCategory}
+                            onSelectCategory={handleSelectCategory} />
+
             <button className={styles.registerButton} onClick={onRegisterClick}>
                 등록하기
             </button>

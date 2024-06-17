@@ -23,7 +23,7 @@ class AuthStore {
         this.isLoggedIn = !!localStorage.getItem("token");
         return this.isLoggedIn;  // 로그인 상태를 반환
     }
-  
+
     // 학생 여부
     setIsStudent(isStudent) {
         this.isStudent = isStudent;

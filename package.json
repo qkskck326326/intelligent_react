@@ -11,6 +11,7 @@
     "aws-sdk": "^2.1642.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "browser-image-compression": "^2.0.2",
     "build": "^0.1.4",
     "ckeditor5-custom-build": "file:src/ckeditor5",
     "clsx": "^2.1.1",

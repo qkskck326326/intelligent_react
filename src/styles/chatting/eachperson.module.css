@@ -16,20 +16,19 @@
 }
 .imageFrame{
     margin-left: 1rem;
-    border: 1px solid;
+    border: 1px solid #bbbbbb;
     width: 4rem;
     height: 4rem;
     border-radius: 0.7rem 0.7rem;
     overflow: hidden;
 }
 
-.imageFrame img{
-    image-rendering: optimizeQuality;
+.image{
+    width: 100%;
     object-fit: scale-down;
-
 }
 .userdetail{
     margin-right: 1rem;
-    border: 1px solid;
+
     flex-grow: 5;
 }

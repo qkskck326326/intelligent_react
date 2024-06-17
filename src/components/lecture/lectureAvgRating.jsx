@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "../../styles/lecture/lectureAvgRating.module.css";
 
 const LectureAvgRating = ({ lecturePackageId }) => {
@@ -8,7 +8,7 @@ const LectureAvgRating = ({ lecturePackageId }) => {
     useEffect(() => {
         const fetchAverageRating = async () => {
             try {
-                const response = await axios.get(`/lectures/rating?lecturePackageId=${lecturePackageId}`);
+                const response = await axiosClient.get(`/lecture/rating?lecturePackageId=${lecturePackageId}`);
                 setAverageRating(response.data.rating);
             } catch (error) {
                 console.error("Error fetching average rating:", error);

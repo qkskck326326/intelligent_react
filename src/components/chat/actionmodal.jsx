@@ -1,22 +1,45 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
-import commonStyles from '../../styles/chatting/chatcommon.module.css';
+import modalStyles from "../../styles/common/modal.module.css";
+import Axios from '../../axiosApi/Axios.js'
+import AuthStore from "../../stores/authStore";
+import authStore from "../../stores/authStore";
 
-const ActionModal = observer(({ isExpanding, onNavigateToFriends, onNavigateToChat }) => {
+const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigateToChat, roomType }) => {
+
     const [isAnimating, setIsAnimating] = useState(false);
+    const [people, setPeople] = useState(option.split(', '))
+    const axios = new Axios();
 
     const handleClickBack = () => {
         setIsAnimating(true);
         setTimeout(() => {
-            onNavigateToFriends();
+            onNavigateToList();
             setIsAnimating(false);
+            setPeople([]);
         }, 500);
     };
 
+
+    const handleMakeChat = () => {
+        const names = [authStore.getNickname(), ...people]
+        console.log(names)
+        console.log(roomType)
+        axios.post(`/chat/makechat/${roomType}`, {
+            ...names
+        }).then(data => console.log(data))
+    }
     return (
-        <div className={`${commonStyles.actionModalContainer} ${isAnimating ? commonStyles.animateCollapse : ''} ${isExpanding ? commonStyles.animateExpand : ''}`}>
-            <button onClick={handleClickBack}>Back to Add Friends</button>
-            <button onClick={onNavigateToChat}>Proceed to Chat</button>
+        <div className={modalStyles.modalBackground}>
+            <div
+                className={`${modalStyles.modalContainer} ${isAnimating ? modalStyles.shrinkIn : modalStyles.popOut}`}
+            >
+                <div className={modalStyles.modalDialog}>{option}(와)과 채팅하시겠습니까?</div>
+                <div className={modalStyles.buttonContainer}>
+                    <button className={modalStyles.buttons} onClick={handleMakeChat}>확인</button>
+                    <button className={modalStyles.buttons} onClick={handleClickBack}>취소</button>
+                </div>
+            </div>
         </div>
     );
 });

@@ -5,7 +5,8 @@ import { axiosClient } from '../../axiosApi/axiosClient';
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 import Link from 'next/link';
-import KakaoLogin from "./KakaoLogin";
+import KakaoLogin from "./kakaoLogin";
+import NaverLogin from "./naverLogin";
 import styles from "../../styles/user/login/loginForm.module.css";
 
 const LoginForm = observer(() => {
@@ -101,7 +102,7 @@ const LoginForm = observer(() => {
 					<Link href="/user/resetPasswordPage">비밀번호 찾기</Link>
 				</p>
 			</div>
-			<div className={styles.buttons_face_and_social}s>
+			<div className={styles.buttons_face_and_social}>
 				<div
 					style={{
 						display: "flex",
@@ -146,6 +147,7 @@ const LoginForm = observer(() => {
 					</Link>
 				</div>
 				<KakaoLogin />
+				<NaverLogin />
 			</div>
 		</div>
 	);

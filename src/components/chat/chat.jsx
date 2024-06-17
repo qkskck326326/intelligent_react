@@ -7,7 +7,7 @@ import AuthStore from "../../stores/authStore";
 import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
 
-const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
+const Chat = observer(({ option, isExpanding, onNavigateToIcon }) => {
 
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
@@ -141,13 +141,13 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                 </button>
                 <div className={styles.title}>
                     {
-                        (chatOption !== 'gpt') ? `채팅방제목` : `인텔리봇`
+                        (option !== 'gpt') ? `채팅방제목` : `인텔리봇`
 
                     }
                 </div>
                 <div className={styles.chatSubTop}>
                     {/*챗지피티면 검색버튼만 */}
-                    { (chatOption !== 'gpt') ?
+                    { (option !== 'gpt') ?
                         <>
                             <button className={`${styles.topButtons} ${styles.search}`} onClick={handleSearchButtonClick}>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
@@ -183,9 +183,9 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                 </form>
             }
 
-            {/*챗지피티의 경우 이거 안뜸 시작 마지막에 chatOption만 바꾸면 됨 */}
+            {/*챗지피티의 경우 이거 안뜸 시작 마지막에 option만 바꾸면 됨 */}
 
-            { (chatOption === 'gpt' && announce !== '') &&
+            { (option === 'gpt' && announce !== '') &&
                 <div className={`${styles.announceContainer} ${isSearchButtonClicked ? styles.pushed: ''}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +216,7 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                 {
                     <>
                         {/*여기까지 챗지피티면 안떠야하나 현재 조작하고 있는 것이 있어 잠시 열어둠*/}
-                        {/*{ (chatOption !== 'gpt')*/}
+                        {/*{ (option !== 'gpt')*/}
                         {
                             <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
                             <svg
@@ -272,7 +272,7 @@ const Chat = observer(({ chatOption, isExpanding, onNavigateToIcon }) => {
                     </>
                 }
             </form>
-            {/*<button>{chatOption}</button>*/}
+            {/*<button>{option}</button>*/}
             {
                 modalOn ? modal.yesOnly(alertMessage, setModalOn, false)
                     : <></>
