@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import axios from 'axios';
+import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/addLecture.module.css';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 const AddLecture = () => {
     const [lectureName, setLectureName] = useState('');
@@ -12,7 +12,7 @@ const AddLecture = () => {
     const [streamUrl, setStreamUrl] = useState('');
     const [imgFile, setImgFile] = useState("");
     const imgRef = useRef();
-    const history = useHistory();
+    const router = useRouter();
 
     // GitHub 정보 (환경 변수 사용)
     const REPO_OWNER = 'rudalsdl'; // GitHub 사용자명
@@ -21,7 +21,7 @@ const AddLecture = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const lectureResponse = await axios.post('http://localhost:8080/lecture/register', {
+            const lectureResponse = await axiosClient.post('/lecture/register', {
                 lectureName,
                 lectureContent,
                 lectureThumbnail,
@@ -30,7 +30,7 @@ const AddLecture = () => {
 
             alert('Lecture registered successfully');
             // 강의 등록이 완료되면 목록 페이지로 이동
-            history.push('/lecture/list');
+            router.push('/lecture/list');
         } catch (error) {
             console.error('Error registering lecture', error);
             alert('Error registering lecture');
@@ -50,7 +50,7 @@ const AddLecture = () => {
                 const base64File = fileReader.result.split(',')[1];
                 const fileName = videoFile.name;
 
-                const response = await axios.put(
+                const response = await axiosClient.put(
                     `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/uploads/${fileName}`,
                     {
                         message: `upload video ${fileName}`,
@@ -58,7 +58,7 @@ const AddLecture = () => {
                     },
                     {
                         headers: {
-                            Authorization: `token ${process.env.ADD_LECTURE_GITHUB_TOKEN}`,
+                            Authorization: `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
                         },
                     }
                 );

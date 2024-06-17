@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import styles from "../../styles/lecture/lectureRating.module.css";
+import { axiosClient } from "../../axiosApi/axiosClient";
+import styles from "../../styles/lecture/insertRating.module.css";
 
 const InsertRating = ({ lecturePackageId }) => {
     const [averageRating, setAverageRating] = useState(0);
@@ -10,7 +10,7 @@ const InsertRating = ({ lecturePackageId }) => {
     useEffect(() => {
         const fetchAverageRating = async () => {
             try {
-                const response = await axios.get(`/lectures/rating?lecturePackageId=${lecturePackageId}`);
+                const response = await axiosClient.get(`/lecture/rating?lecturePackageId=${lecturePackageId}`);
                 setAverageRating(response.data.rating);
             } catch (error) {
                 console.error("Error fetching average rating:", error);
@@ -22,7 +22,7 @@ const InsertRating = ({ lecturePackageId }) => {
 
     const handleRatingSubmit = async () => {
         try {
-            await axios.post('/lectures/rating', {
+            await axiosClient.post('/lecture/rating', {
                 lecturePackageId,
                 rating: myRating
             });
@@ -41,7 +41,7 @@ const InsertRating = ({ lecturePackageId }) => {
                 {Array(fullStars).fill().map((_, i) => (
                     <span key={i} className={styles.star}>⭐</span>
                 ))}
-                {halfStar && <span className={styles.halfStar}></span>}
+                {halfStar && <span className={styles.halfStar}>⭐</span>}
                 {Array(5 - fullStars - (halfStar ? 1 : 0)).fill().map((_, i) => (
                     <span key={i + fullStars + (halfStar ? 1 : 0)} className={styles.star}>☆</span>
                 ))}
