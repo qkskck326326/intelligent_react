@@ -1,33 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from "../../styles/chatting/chatlist.module.css";
 import PeopleToAdd from "./peopletoadd.jsx";
 import AlertModal from "../common/Modal";
+import Axios from '../../axiosApi/Axios'
 
-const AddingFriends = observer(({ isExpanding, onNavigateToList, onNavigateToModal, onNavigateToChat }) => {
+const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNavigateToModal, onNavigateToChat, userId, userType }) => {
 
     const [isAnimating, setIsAnimating] = useState(false);
+    const [people, setPeople] = useState([])
+    const [roomType, setRoomType] = useState(option)
     const [checkColor, setCheckColor] = useState('lightgray')
     const [selectedIndices, setSelectedIndices] = useState([]);
     const [noOneSelected, setNoOneSelected] = useState(false);
-    const [activeModal, setActiveModal] = useState()
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [activeModal, setActiveModal] = useState();
     const modal = new AlertModal();
+    const [keyword, setKeyword] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const axios = new Axios();
 
     useEffect(()=>{
+        console.log(roomType)
+        setPeople([]);
+        setSelectedIndices([]);
+        setPage(1);
+        setHasMore(true);
 
-        (selectedIndices?.length > 0) ? setCheckColor('black') : setCheckColor('lightgray')
+        if(searchQuery === ''){
+            fetchFriends(1)
+        } else {
+            fetchFriendswithQuery(1, searchQuery)
+        }
 
-    },[selectedIndices, searchQuery])
+    }, [searchQuery])
 
+    useEffect(() => {
+        setCheckColor(selectedIndices.length > 0 ? 'black' : 'lightgray');
+        console.log(selectedIndices)
+    }, [selectedIndices]);
 
-    const handleSelectionChange = (index) => {
-        setSelectedIndices((prevSelectedIndices) => {
-            if (prevSelectedIndices.includes(index)) {
-                return prevSelectedIndices.filter((i) => i !== index);
+    const fetchFriends = page => {
+        axios.get(`/users/getpeople`, `?userId=${userId}&userType=${userType}&addingOption=${option}&page=${page}`)
+            .then(data => {
+                if (data.length > 0) {
+                    setPeople(prevPeople => [...prevPeople, ...data]);
+                    setPage(prevPage => prevPage + 1);
+
+                    if (data.length < 10) {
+                        setHasMore(false);
+                    }
+                } else {
+                    setHasMore(false);
+                }
+            });
+    };
+
+    const fetchFriendswithQuery = (page, searchQuery) => {
+
+        axios.get(`/users/getpeople`, `?userId=${userId}&userType=${userType}&addingOption=${option}&page=${page}&searchQuery=${searchQuery}`)
+            .then(data => {
+
+                if (data.length > 0) {
+                    setPeople(prevPeople => [...prevPeople, ...data]);
+                    setPage(prevPage =>  prevPage + 1);
+
+                    if (data.length < 10) {
+                        setHasMore(false);
+                    }
+                } else {
+                    setHasMore(false);
+                }
+            })
+
+    }
+
+    const handleSelectionChange = (nickname) => {
+
+        setSelectedIndices(prevSelectedIndices => {
+            if (option === 'groups') {
+                if (prevSelectedIndices.includes(nickname)) {
+                    return prevSelectedIndices.filter(i => i !== nickname);
+                } else {
+                    return [...prevSelectedIndices, nickname];
+                }
             } else {
-                return [...prevSelectedIndices, index];
+                if (prevSelectedIndices.includes(nickname)) {
+                    return [];
+                } else {
+                    return [nickname];
+                }
             }
         });
     };
@@ -38,30 +102,42 @@ const AddingFriends = observer(({ isExpanding, onNavigateToList, onNavigateToMod
             onNavigateToList();
             setIsAnimating(false);
             setCheckColor('lightgrey')
+            setRoomType('')
         }, 500);
     };
 
     const handleSubmission = (event) => {
+
         event.preventDefault();
 
-        console.log(selectedIndices.join(', '))
         //0명이 선택되었을 때
         if (selectedIndices.length === 0){
             setNoOneSelected(true)
             return false;
+        } else{
+            console.log(roomType)
+            onNavigateToModal(selectedIndices.join(', '), roomType)
         }
+
     }
 
     function handleSearchChange(event){
-        // TODO useEffect로 변환시 마다 재랜더링 할수 있게 작업
-        console.log(event.target.value)
-        setSearchQuery(event.target.value)
+        setKeyword(event.target.value)
     }
 
     function handleSubmit(event){
         event.preventDefault();
+        setSearchQuery(keyword)
     }
 
+    function handleReset(event){
+        event.preventDefault();
+        setPeople([]);
+        setSelectedIndices([]);
+        setPage(1);
+        setHasMore(true);
+        fetchFriends(1);
+    }
     return (
         <div
             className={`${commonStyles.chatServiceContainer} ${isAnimating && commonStyles.animateCollapse} ${isExpanding ? commonStyles.animateExpand : ''}`}>
@@ -85,7 +161,7 @@ const AddingFriends = observer(({ isExpanding, onNavigateToList, onNavigateToMod
             </div>
             <form className={styles.searchBar} onSubmit={handleSubmit}>
                 <input className={styles.searchBox} type="text" placeholder='검색어를 입력하세요' onChange={handleSearchChange}/>
-                <button className={styles.resetButton} type='reset'>
+                <button className={styles.resetButton} type='reset' onClick={handleReset}>
                     <svg xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 384 512">
                         <path
@@ -97,6 +173,7 @@ const AddingFriends = observer(({ isExpanding, onNavigateToList, onNavigateToMod
                 <PeopleToAdd
                     selectedIndices={selectedIndices}
                     onSelectionChange={handleSelectionChange}
+                    people={people}
                 />
             </div>
             {
