@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import DOMPurify from "dompurify"; // Import DOMPurify
 import { axiosClient } from "../../axiosApi/axiosClient";
 import { Pagination } from "react-bootstrap";
 import styles from "./PostList.module.css";
@@ -61,27 +62,6 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
     // 하위 카테고리를 선택했을 때 추가 동작이 필요하다면 여기에 추가하십시오.
   };
 
-  // const getRelativeTime = (timestamp) => {
-  //   const now = new Date();
-  //   const postDate = new Date(timestamp);
-  //   const diffInSeconds = Math.floor((now - postDate) / 1000);
-
-  //   if (diffInSeconds < 60) {
-  //     return `${diffInSeconds}초 전`;
-  //   } else if (diffInSeconds < 3600) {
-  //     const diffInMinutes = Math.floor(diffInSeconds / 60);
-  //     return `${diffInMinutes}분 전`;
-  //   } else if (diffInSeconds < 86400) {
-  //     const diffInHours = Math.floor(diffInSeconds / 3600);
-  //     return `${diffInHours}시간 전`;
-  //   } else if (diffInSeconds < 604800) {
-  //     const diffInDays = Math.floor(diffInSeconds / 86400);
-  //     return `${diffInDays}일 전`;
-  //   } else {
-  //     return postDate.toLocaleDateString();
-  //   }
-  // };
-
   return (
     <div className={styles.postListContainer}>
       <h1 className={styles.title}>Posts</h1>
@@ -121,9 +101,18 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                     </div>
                   </div>
                   <h5 className={styles.postTitle}>{post.title}</h5>
-                  <p className={styles.postSnippet}>
-                    {post.contentSnippet}....
+                  <p
+                    className={styles.postSnippet}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(post.contentSnippet),
+                    }}
+                  >
+                    {/* {post.contentSnippet}.... */}
                   </p>
+                  {/* <p
+        className={styles.postContent}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contentSnippet) }} // Use DOMPurify to sanitize the content
+      ></p> */}
                   <div className={styles.postFooter}>
                     <div className={styles.postStats}>
                       <span>
