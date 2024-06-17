@@ -13,7 +13,7 @@ axiosClient.interceptors.request.use(
         // '/reissue' 요청은 인터셉터에서 엑세스 토큰을 추가하지 않도록 함
         // '/login' 요청시 토큰이 저장되도록 처리하기 위함
         // 또는 저장된 토큰을 확인해서 로그인 상태 확인을 하기 위함
-        if (config.url != '/reissue'){ // 사용자 요청이 /reissue가 아니면
+        if (config.url !== '/reissue'){ // 사용자 요청이 /reissue가 아니면
             const token = localStorage.getItem('token'); // localStorage에서 'token'을 가져 와서
             if (token){  // 로그인 상태, 토큰이 존재하면
                 config.headers['Authorization'] = `Bearer ${token}`; // 주의 : `(백팁) 사용,  Authorization 헤더에 Bearer ${token} 형식으로 토큰을 추가
@@ -24,11 +24,10 @@ axiosClient.interceptors.request.use(
     error => Promise.reject(error)
 );
 
-
 const refreshToken = async() => {
     try{
         const refreshToken = localStorage.getItem('refresh');
-        const response = await instance.post('/reissue', null, {
+        const response = await axiosClient.post('/reissue', null, {
             headers: {
                 'Authorization': `Bearer ${refreshToken}`
             }
@@ -70,10 +69,10 @@ axiosClient.interceptors.response.use(
             const newAccessToken = await refreshToken();
             originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
             // 원래 요청을 다시 수행
-            return instance(originalRequest);
+            return axiosClient(originalRequest);
         }
         return Promise.reject(error);
     }
 );
 
-export {axiosClient};
+export { axiosClient };
