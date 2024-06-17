@@ -23,6 +23,15 @@ const HeaderBar = observer(() => {
             console.log('로그아웃 성공:', response.data);
             localStorage.clear();
             authStore.setIsLoggedIn(false);
+            authStore.setIsStudent(false);
+            authStore.setIsTeacher(false);
+			authStore.setIsAdmin(false);
+			authStore.setUserEmail('');
+			authStore.setProvider('');
+            authStore.setNickname('');
+            authStore.setProfileImageUrl('');      
+
+            
             window.location.href = 'http://localhost:3000'; // 로그아웃 성공 시 이동
         } catch (error) {
             console.error('로그아웃 실패:', error);
@@ -44,8 +53,6 @@ const HeaderBar = observer(() => {
                 <Nav.Link href="/lecturePackage" className={styles['nav-link']}>강의패키지</Nav.Link>
                 <Nav.Link href="/lecture/list" className={styles['nav-link']}>강의</Nav.Link>
                 <Nav.Link href="/itNewsBoard" className={styles['nav-link']}>itNewsBoard</Nav.Link>
-                <Nav.Link href="/user" className={styles['nav-link']}>유저</Nav.Link>
-                <Nav.Link href="/user/login" className={styles['nav-link']}>로그인페이지</Nav.Link>
                 <Nav.Link href="/payment" className={styles['nav-link']}>결제</Nav.Link>
                 <Nav.Link href="/chatting" className={styles['nav-link']}>채팅</Nav.Link>
                 <Nav.Link href="/post" className={styles['nav-link']}>공유게시판</Nav.Link>

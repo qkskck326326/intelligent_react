@@ -2,28 +2,49 @@ import { makeAutoObservable } from 'mobx';
 
 class AuthStore {
     isLoggedIn = false;
+    isStudent = false;
+    isTeacher = false;
     isAdmin = false;
     nickname = '';
     userEmail = '';
     provider = '';
+    profileImageUrl = '';
 
     constructor() {
         makeAutoObservable(this);
     }
 
     // 로그인 상태
-    setIsLoggedIn(status) {
-        this.isLoggedIn = status;
+    setIsLoggedIn(isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
 
     checkIsLoggedIn() {
         this.isLoggedIn = !!localStorage.getItem("token");
         return this.isLoggedIn;  // 로그인 상태를 반환
     }
+  
+    // 학생 여부
+    setIsStudent(isStudent) {
+        this.isStudent = isStudent;
+    }
+
+    checkIsStudent() {
+        return this.isStudent; // 학생인지 여부를 반환
+    }
+
+    // 강사 여부
+    setIsTeacher(isTeacher) {
+        this.isTeacher = isTeacher;
+    }
+
+    checkIsTeacher() {
+        return this.isTeacher; // 강사인지 여부를 반환
+    }
 
     // 관리자 여부
-    setIsAdmin(status) {
-        this.isAdmin = status;
+    setIsAdmin(isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     checkIsAdmin() {
@@ -40,8 +61,8 @@ class AuthStore {
     }
 
     // 이메일
-    setUserEmail(email) {
-        this.userEmail = email;
+    setUserEmail(userEmail) {
+        this.userEmail = userEmail;
     }
 
     getUserEmail() {
@@ -56,6 +77,33 @@ class AuthStore {
     getProvider() {
         return this.provider;
     }
+
+
+    // 프로필 이미지 URL
+    setProfileImageUrl(profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    // 프로필 이미지는 로그인후에 변경이 가능하므로 부트로 요청을 보내서 다시 set
+    async fetchProfileImageUrl() {
+        try {
+            const response = await axiosClient.get(`/users/${this.userEmail}/${this.provider}`);
+            this.setProfileImageUrl(response.data.profileImageUrl);
+            return response.data.profileImageUrl;
+        } catch (error) {
+            console.error('Error fetching profile image URL:', error);
+        }
+    }
+
+    getProfileImageUrl() {
+        if (!this.profileImageUrl) {
+            return this.fetchProfileImageUrl();
+        }
+        return this.profileImageUrl;
+    }
+
+
+
 }
 
 const authStore = new AuthStore();

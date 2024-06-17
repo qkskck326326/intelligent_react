@@ -1,26 +1,25 @@
-// import React, { useEffect, useState } from "react";
-// import jwtDecode from "jwt-decode";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import { observer } from "mobx-react";
+import authStore from "../../stores/authStore";
 import MyCertificate from "../../components/user/myCertificate";
 import styles from "../../styles/user/mypage/mypage.module.css";
 
- const MyPage = () => {
-  // const [nickname, setNickname] = useState("");
-  //
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     const decodedToken = jwtDecode(token);
-  //     setNickname(decodedToken.sub); // 토큰에서 닉네임 추출
-  //   }
-  // }, []);
+const MyPage = observer(() => {
+    const router = useRouter();
 
-  return (
-    <div className={styles.title}>
-      <h1>My Page</h1>
-      {/*{nickname && <MyCertificate nickname={nickname} />}*/}
-        <MyCertificate />
-    </div>
-  );
-};
+    useEffect(() => {
+        if (!authStore.checkIsLoggedIn()) {
+            router.push("/user/login"); // 로그인 페이지로 리디렉션
+        }
+    }, []);
+
+    return (
+        <div className={styles.title}>
+            <h1>My Page</h1>
+            <MyCertificate />
+        </div>
+    );
+});
 
 export default MyPage;

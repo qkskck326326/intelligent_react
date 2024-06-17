@@ -6,6 +6,7 @@ import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 import Link from 'next/link';
 import KakaoLogin from "./KakaoLogin";
+import styles from "../../styles/user/login/loginForm.module.css";
 
 const LoginForm = observer(() => {
   const router = useRouter();
@@ -31,18 +32,25 @@ const LoginForm = observer(() => {
       console.log('로그인 성공:', response.data);
       const token = response.headers['authorization'] || response.headers['Authorization'];
       if (token) {
-        const pureToken = token.split(' ')[1];
-        window.localStorage.setItem("token", pureToken);
+        const access = token.split(' ')[1];
+        window.localStorage.setItem("token", access);
+        window.localStorage.setItem("refresh", response.data.refresh);
+        window.localStorage.setItem("isStudent", response.data.isStudent);
+        window.localStorage.setItem("isTeacher", response.data.isTeacher);
         window.localStorage.setItem("isAdmin", response.data.isAdmin);
         window.localStorage.setItem("nickname", response.data.nickname);
         window.localStorage.setItem("userEmail", response.data.userEmail);
         window.localStorage.setItem("provider", response.data.provider);
+        window.localStorage.setItem("profileImageUrl", response.data.profileImageUrl);
 
         authStore.setIsLoggedIn(true);
+		authStore.setIsStudent(response.data.isStudent);
+		authStore.setIsTeacher(response.data.isTeacher);
         authStore.setIsAdmin(response.data.isAdmin);
         authStore.setNickname(response.data.nickname);
         authStore.setUserEmail(response.data.userEmail);
         authStore.setProvider(response.data.provider);
+        authStore.setProfileImageUrl(response.data.profileImageUrl);
       }
       window.location.href = 'http://localhost:3000'; // 로그인 성공 시 이동
     } catch (error) {
@@ -52,62 +60,95 @@ const LoginForm = observer(() => {
   };
 
   return (
-    <div className="center-div">
-      <h1>임시 로그인 페이지</h1>
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="userEmail">이메일</label>
-          <input
-            type="text"
-            id="userEmail"
-            name="userEmail"
-            value={formData.userEmail}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="userPwd">비밀번호</label>
-          <input
-            type="password"
-            id="userPwd"
-            name="userPwd"
-            value={formData.userPwd}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="button-container">
-          <button type="submit">로그인</button>
-        </div>
-      </form>
-      <div className="signup-link">
-        <p>아직 회원이 아니신가요? <Link href="/user/enroll">회원가입</Link></p>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', height: '100px' }}>
-        <Link href="/user/faceLoginPage" passHref>
-          <button style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer' }}>
-            <div style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              backgroundColor: '#80DAEB', 
-              color: 'black', 
-              padding: '10px 20px', 
-              borderRadius: '7px', 
-              fontSize: '16px', 
-              fontWeight: 'bold', 
-              textDecoration: 'none',
-              border: 'none'
-            }}>
-              <span style={{ marginRight: '5px' }}>😊</span>얼굴로 시작하기
-            </div>
-          </button>
-        </Link>
-      </div>
-      <KakaoLogin/>
-    </div>
-  );
+		<div className={styles.center_div}>
+			<form className={styles.form} onSubmit={handleSubmit}>
+				<div className={styles.form_group}>
+        <h2>IntelliClass에 로그인 하세요</h2>
+					{/* <label htmlFor="userEmail">이메일</label> */}
+					<input
+						type="text"
+						id="userEmail"
+						name="userEmail"
+            placeholder="이메일 입력"
+						value={formData.userEmail}
+						onChange={handleInputChange}
+						required
+					/>
+				</div>
+				<div className={styles.form_group}>
+					{/* <label htmlFor="userPwd">비밀번호</label> */}
+					<input
+						type="password"
+						id="userPwd"
+						name="userPwd"
+            placeholder="비밀번호 입력"
+						value={formData.userPwd}
+						onChange={handleInputChange}
+						required
+					/>
+				</div>
+				<div className={styles.button_container}>
+					<button type="submit">로그인</button>
+				</div>
+			</form>
+			<div className={styles.signup_link}>
+				<p className={styles.signup_link}>
+					아직 회원이 아니신가요?{" "}
+					<Link href="/user/enroll">회원가입</Link>
+				</p>
+				<p className={styles.signup_link}>
+					비밀번호를 잊으셨나요?{" "}
+					<Link href="/user/resetPasswordPage">비밀번호 찾기</Link>
+				</p>
+			</div>
+			<div className={styles.buttons_face_and_social}s>
+				<div
+					style={{
+						display: "flex",
+						alignItems: "center",
+						height: "50px",
+					}}
+				>
+					<Link href="/user/faceLoginPage" passHref>
+						<button
+							style={{
+								border: "none",
+								background: "none",
+								padding: "0",
+								cursor: "pointer",
+							}}
+						>
+							<div
+								style={{
+									display: "inline-flex",
+									alignItems: "center",
+									justifyContent: "center",
+									backgroundColor: "#80DAEB",
+									color: "black",
+									padding: "10px 20px",
+									borderRadius: "7px",
+									fontSize: "16px",
+									fontWeight: "bold",
+									textDecoration: "none",
+									border: "none",
+								}}
+							>
+								<span
+									style={{
+										marginRight: "5px",
+									}}
+								>
+									😊
+								</span>
+								얼굴로 시작하기
+							</div>
+						</button>
+					</Link>
+				</div>
+				<KakaoLogin />
+			</div>
+		</div>
+	);
 });
 
 export default LoginForm;
