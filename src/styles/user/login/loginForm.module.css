@@ -51,7 +51,7 @@
 .signup_link {
     margin: 0;
     text-align: center;
-    /* margin-top: 1rem; */
+    margin-top: 0.2rem;
 }
 
 .signup_link a {

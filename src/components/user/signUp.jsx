@@ -22,7 +22,7 @@ const SignUpForm = () => {
         phone: '',
         nickname: '',
         userType: 0,
-        profileImageUrl: 'https://intelliclassbucket.s3.ap-northeast-2.amazonaws.com/ProfileImages/defaultProfile.png', // 기본 프로필 이미지 URL 설정
+        profileImageUrl: 'https://intelliclassbucket.s3.ap-northeast-2.amazonaws.com/ProfileImages/defaultProfile.png',
     });
     const [profileImage, setProfileImage] = useState(null);
 
@@ -34,9 +34,11 @@ const SignUpForm = () => {
         });
     };
 
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
         if (e.target.files.length > 0) {
-            setProfileImage(e.target.files[0]);
+            const file = e.target.files[0];
+            const resizedImage = await resizeImage(file, 128, 128);
+            setProfileImage(resizedImage);
         } else {
             setProfileImage(null);
             setFormData({
@@ -46,12 +48,34 @@ const SignUpForm = () => {
         }
     };
 
+    const resizeImage = (file, width, height) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob((blob) => {
+                        resolve(new File([blob], file.name, { type: file.type }));
+                    }, file.type);
+                };
+                img.onerror = (error) => reject(error);
+                img.src = event.target.result;
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+    };
+
     const uploadImageToS3 = async (file) => {
         const params = {
             Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_TAESEOK,
             Key: `ProfileImages/${Date.now()}_${file.name}`,
             Body: file,
-            //ACL: 'public-read',
             ContentType: file.type,
         };
 
