@@ -4,9 +4,9 @@ import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import AuthStore from "../../stores/authStore";
 import styles from '../../styles/chatting/chatbubble.module.css'
 
-const Bubble = observer(({index, onAnnouncementChange, onReport})=>{
+const Bubble = observer(({index, onAnnouncementChange, onReport, option})=>{
 
-    const [isMe, setIsMe] = useState(true) //여기에 조건 바로 넣어서 쓰면 될 듯
+    const [isMe, setIsMe] = useState(false) //여기에 조건 바로 넣어서 쓰면 될 듯
     const [isThereMedia, setIsThereMedia] = useState(false)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false)
     const textRef = useRef();
@@ -37,12 +37,11 @@ const Bubble = observer(({index, onAnnouncementChange, onReport})=>{
 
                 <div className={styles.main}>
 
-                    { !isMe ?
+                    { !isMe &&
                         <div className={styles.nickname}>
-                            닉네임(자기자신은 안보임)
+                            {
+                                option === 'gpt' ? '인텔리봇' : '닉네임(자기자신은 안보임)' }
                         </div>
-                        :
-                        <></>
                     }
 
                     <div className={styles.content} ref={textRef}>
@@ -64,20 +63,22 @@ const Bubble = observer(({index, onAnnouncementChange, onReport})=>{
                         {`${new Date().toLocaleDateString('ko-KR').trim().split('.')[1]}.${new Date().toLocaleDateString('ko-KR').split('.')[2].trim()}`}
                     </div>
                 </div>
-                <div className={styles.eachSettings} onClick={() => setIsEachSettingOn(!isEachSettingOn)}>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 448 512">
-                        <path
-                            d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"/>
-                    </svg>
-                    <ul className={`${styles.settingDropdown} ${!isEachSettingOn && commonStyles.hidden} ${isMe && styles.settingDropDown2}` }>
-                        { !isMe &&
-                            <li onClick={handleEachReport}>신고하기</li>
-                        }
-                        {/*TODO 온클릭을 위에서 내려줘야함*/}
-                        <li onClick={handleAnnouncement}>공지등록</li>
-                    </ul>
-                </div>
+                { option !== 'gpt' &&
+                    <div className={styles.eachSettings} onClick={() => setIsEachSettingOn(!isEachSettingOn)}>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 448 512">
+                            <path
+                                d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"/>
+                        </svg>
+                        <ul className={`${styles.settingDropdown} ${!isEachSettingOn && commonStyles.hidden} ${isMe && styles.settingDropDown2}` }>
+                            { !isMe &&
+                                <li onClick={handleEachReport}>신고하기</li>
+                            }
+                            {/*TODO 온클릭을 위에서 내려줘야함*/}
+                            <li onClick={handleAnnouncement}>공지등록</li>
+                        </ul>
+                    </div>
+                }
             </div>
         </div>
     );

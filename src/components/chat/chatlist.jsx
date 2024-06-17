@@ -17,6 +17,8 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
     //type 0은 학생 1은 강사 2는 관리자
 
     useEffect(()=>{
+        axios.get('/chat/chatlist', `?userId=${userId}`)
+            .then(data => console.log(data))
 
     }, [])
 
