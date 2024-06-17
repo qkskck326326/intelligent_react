@@ -25,7 +25,7 @@ const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigat
         const names = [authStore.getNickname(), ...people]
         console.log(names)
         console.log(roomType)
-        axios.post(`/makechat/${roomType}`, {
+        axios.post(`/chat/makechat/${roomType}`, {
             ...names
         }).then(data => console.log(data))
     }
