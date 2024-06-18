@@ -19,7 +19,6 @@
     gap: 16px;
     width: 100%;
     max-width: 1200px;
-    padding: 16px;
 }
 
 .cardContainer {
@@ -86,7 +85,7 @@
 .halfStar {
     position: relative;
     display: inline-block;
-    width:1.5rem; /* 별 크기와 동일 */
+    width: 1.5rem; /* 별 크기와 동일 */
     height: 1.5rem; /* 별 크기와 동일 */
     overflow: hidden;
 }
@@ -153,16 +152,83 @@
     max-width: 1200px;
 }
 
-
-.paginationContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: sticky;
-    bottom: 0;
+.header {
     width: 100%;
-    background-color: #fff;
-    padding: 10px 0;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 100;
+    max-width: 1100px;
+    text-align: left; /* 제목을 왼쪽 정렬 */
+}
+
+.paginationWrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 16px 0;
+}
+
+.prevButton, .nextButton {
+    width: 40px; /* 버튼의 너비 */
+    height: 40px; /* 버튼의 높이 */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.prevButton::before, .nextButton::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prevButton::before {
+    border-width: 10px 15px 10px 0;
+    border-color: transparent #000 transparent transparent;
+    left: 10px;
+}
+
+.nextButton::before {
+    border-width: 10px 0 10px 15px;
+    border-color: transparent transparent transparent #000;
+    right: 10px;
+}
+
+.prevButton:hover::before, .nextButton:hover::before {
+    border-color: transparent transparent transparent #45a049;
+}
+
+.prevButton:disabled::before {
+    border-color: transparent #ddd transparent transparent;
+}
+
+.nextButton:disabled::before {
+    border-color: transparent transparent transparent #ddd;
+}
+
+.categoryHeader {
+    width: 100%;
+    text-align: left;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    padding-left: 16px;
+}
+
+/* 상위 카테고리별 패키지 크기 조정 */
+.upperCategoryGrid .card,
+.upperCategoryGrid .thumbnail,
+.upperCategoryGrid .details {
+    width: 100%;
+}
+
+.upperCategoryGrid .thumbnail {
+    padding-bottom: 56.25%; /* 16:9 비율 유지 */
+}
+
+.upperCategoryGrid .details {
+    padding: 8px 16px;
 }
