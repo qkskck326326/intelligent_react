@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
@@ -6,6 +6,7 @@ import BubbleContainer from "./bubblecontainer.jsx";
 import AuthStore from "../../stores/authStore";
 import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
+import Axios from '../../axiosApi/Axios.js'
 
 const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
 
@@ -15,19 +16,42 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
     const [isMenuClicked, setIsMenuClicked] = useState(false);
     const [items, setItems] = useState([])
     const [isAttachButtonClicked, setIsAttachButtonClicked] = useState(false);
+    const [textContent, setTextContent] = useState('');
     const fileInputRef = useRef(null);
     const [modalOn, setModalOn] = useState(false);
     const [alertMessage, setAlertMessage] = useState('')
     const modal = new AlertModal();
-    //TODO 랜더링시 정보를 받아야하나 일단 그냥 특정한 단어로 해버림
+    const axios = new Axios();
+
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
     const [announce, setAnnounce] = useState('') //받아온 정보 넣어야함
+    const [messages, setMessages] = useState([]);
+    const bubbleContainerRef = useRef();
 
     useEffect(() => {
-        console.log(items)
-        console.log(announce)
-        console.log(roomData)
+        const fetchData = async () => {
+            axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${encodeURIComponent(AuthStore.getNickname())}`)
+                .then(data => {
+                    console.log(data)
+                    if (data.messages) {
+                        setMessages((prevMessages) => [...prevMessages, ...data.messages]);
+                        if (data.messages.length < 25) {
+                            setHasMore(false)
+                        }
+                    } else {
+                        setHasMore(false)
+                    }
 
-    }, [items, announce]);
+                    if (data.announcement) {
+                        setAnnounce(data.announcement.messageContent);
+                    }
+                })
+        }
+
+        fetchData();
+
+    }, [page, roomData.roomId]);
 
     const handleClickBack = () => {
         setIsAnimating(true);
@@ -47,7 +71,6 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
     }
 
     const handleAnnounce = () => {
-        console.log(announceExpand)
         setAnnounceExpand(!announceExpand);
     }
 
@@ -62,14 +85,38 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
     const handleAttachButtonClick = (event) => {
         event.preventDefault();
         setIsAttachButtonClicked(!isAttachButtonClicked);
-        console.log(isAttachButtonClicked)
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        if (items.length > 0) {
+            // Handle file submission logic
+        } else {
+            // Handle text message submission
+            const newMessage = {
+                roomId: roomData.roomId,
+                senderId: AuthStore.getNickname(),
+                messageContent: textContent,
+                messageType: 0,
+                dateSent: new Date(),
+                isAnnouncement: 0
+            };
+
+            try {
+                const response = await axios.post('/chat/sendmessage', newMessage);
+                const savedMessage = response.data;
+
+                setMessages((prevMessages) => [...prevMessages, savedMessage]);
+                setTextContent('');
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+
+        }
     }
 
     const handleFileAttach = () => {
+        setTextContent('');
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
@@ -186,7 +233,7 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
 
 
             { (option !== 'gpt' && announce !== '') &&
-                <div className={`${styles.announceContainer} ${isSearchButtonClicked ? styles.pushed: ''}`}>
+                <div className={`${styles.announceContainer} ${isSearchButtonClicked && styles.pushed}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
                              viewBox="0 0 512 512">
@@ -207,8 +254,14 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
             }
 
 
-            <div className={`${styles.chatMain} ${(items.length !== 0) ? styles.fileAttached : ''}`}>
-                <BubbleContainer option={option} onAnnouncementChange={handleAnnouncementChange} onReport={handleReport}/>
+            <div className={`${styles.chatMain} ${(items.length !== 0) && styles.fileAttached}`}>
+                <BubbleContainer
+                    option={option}
+                    onAnnouncementChange={handleAnnouncementChange}
+                    onReport={handleReport}
+                    messages={messages}
+                    bubbleContainerRef={bubbleContainerRef}
+                />
             </div>
             { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
             <form className={styles.chatBottom} onSubmit={handleSubmit}>
@@ -243,8 +296,13 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                                 :
 
                                 items.length === 0 ?
-                                    <textarea name="textContent" id="textContent" placeholder='텍스트를 입력해주세요'
-                                              className={`${styles.textContent} ${isSearchButtonClicked && styles.textContentResized}`}></textarea>
+                                    <textarea
+                                        name="textContent"
+                                        id="textContent"
+                                        placeholder='텍스트를 입력해주세요'
+                                        className={`${styles.textContent} ${isSearchButtonClicked && styles.textContentResized}`}
+                                        value={textContent}
+                                        onChange={(event)=> setTextContent(event.target.value)}></textarea>
                                     :
                                     <div className={styles.dummy}>사진 메시지 동시전송 불가로 만들어 둔 빈 박스입니다</div>
 
@@ -269,10 +327,8 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                     </>
                 }
             </form>
-            {/*<button>{option}</button>*/}
             {
-                modalOn ? modal.yesOnly(alertMessage, setModalOn, false)
-                    : <></>
+                modalOn && modal.yesOnly(alertMessage, setModalOn, false)
             }
         </div>
 
