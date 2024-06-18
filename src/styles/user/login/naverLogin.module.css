@@ -1,6 +1,6 @@
 /* NaverIdLogin */
 #naverIdLogin {
-	display: none;
+    display: none !important;
 }
 
 /* NaverLoginBtn */
