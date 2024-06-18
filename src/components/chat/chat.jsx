@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { observer } from 'mobx-react';
+import React, {useEffect, useRef, useState} from 'react';
+import {observer} from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
 import BubbleContainer from "./bubblecontainer.jsx";
@@ -33,9 +33,9 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
         const fetchData = async () => {
             axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${encodeURIComponent(AuthStore.getNickname())}`)
                 .then(data => {
-                    console.log(data)
                     if (data.messages) {
-                        setMessages((prevMessages) => [...prevMessages, ...data.messages]);
+                        setMessages(() => [...data.messages]);
+                        console.log([...data.messages])
                         if (data.messages.length < 25) {
                             setHasMore(false)
                         }
@@ -92,7 +92,9 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
         if (items.length > 0) {
             // Handle file submission logic
         } else {
-            // Handle text message submission
+            if(textContent.trim() === ''){
+                return window.alert('메시지를 작성해주세요.')
+            }
             const newMessage = {
                 roomId: roomData.roomId,
                 senderId: AuthStore.getNickname(),
@@ -103,9 +105,8 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
             };
 
             try {
-                const response = await axios.post('/chat/sendmessage', newMessage);
-                const savedMessage = response.data;
-
+                const savedMessage = await axios.post('/chat/sendmessage', newMessage);
+                console.log(savedMessage)
                 setMessages((prevMessages) => [...prevMessages, savedMessage]);
                 setTextContent('');
             } catch (error) {

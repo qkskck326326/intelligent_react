@@ -7,6 +7,11 @@ import styles from '../../styles/chatting/chatbubble.module.css'
 
 const BubbleContainer = observer(({onAnnouncementChange, onReport, option, messages, bubbleContainerRef})=>{
 
+    messages.map((message) => {
+        console.log(message)
+        console.log(message.messageId)
+    })
+
     return (
         <div ref={bubbleContainerRef} className={styles.bubbleContainer}>
             {
