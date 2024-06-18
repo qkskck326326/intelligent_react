@@ -1,41 +1,117 @@
-import React from 'react';
-import styles from '../../styles/admin/userManagement.module.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import styles from '../../styles/admin/UserManagement.module.css';
 import Sidebar from "../../components/admin/Sidebar";
 
 const UserManagement = () => {
+    const [users, setUsers] = useState([]);
+    const [page, setPage] = useState(0);
+    const [size] = useState(10); // 페이지당 항목 수
+    const [totalPages, setTotalPages] = useState(0);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [userType, setUserType] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/admins/users', {
+                    params: {
+                        page,
+                        size,
+                        searchQuery,
+                        userType,
+                        startDate,
+                        endDate
+                    }
+                });
+                console.log(response.data); // API 응답 데이터 로그 출력
+                setUsers(response.data.content);
+                setTotalPages(response.data.totalPages);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        fetchUsers();
+    }, [page, size, searchQuery, userType, startDate, endDate]);
+
+    const handleSearch = () => {
+        setPage(0);
+        // Trigger the useEffect to fetch new data
+    };
+
+    const handleReset = () => {
+        setSearchQuery('');
+        setUserType('');
+        setStartDate('');
+        setEndDate('');
+        setPage(0);
+    };
+
+    const handlePreviousPage = () => {
+        if (page > 0) {
+            setPage(page - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (page < totalPages - 1) {
+            setPage(page + 1);
+        }
+    };
+
     return (
         <div className={styles.container}>
-           <Sidebar/>
+            <Sidebar />
             <div className={styles.content}>
+                <div className={styles.header}>
+                    <button className={styles.logout}>Logout</button>
+                </div>
                 <h1 className={styles.title}>전체 회원 리스트</h1>
                 <div className={styles.filterSection}>
                     <div className={styles.filterRow}>
                         <label>조건 검색</label>
-                        <select className={styles.filterSelect}>
-                            <option>사용자명</option>
-                            <option>아이디</option>
-                            <option>전화번호</option>
-                            <option>이메일</option>
+                        <select
+                            className={styles.filterSelect}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        >
+                            <option value="">전체</option>
+                            <option value="name">사용자명</option>
+                            <option value="id">아이디</option>
+                            <option value="phone">전화번호</option>
+                            <option value="email">이메일</option>
                         </select>
                         <label>회원 구분</label>
-                        <select className={styles.filterSelect}>
-                            <option>학생</option>
-                            <option>강사</option>
-                        </select>
-                        <label>기타</label>
-                        <select className={styles.filterSelect}>
-                            <option>전체</option>
-                            <option>진행중</option>
-                            <option>종료</option>
+                        <select
+                            className={styles.filterSelect}
+                            value={userType}
+                            onChange={(e) => setUserType(e.target.value)}
+                        >
+                            <option value="">전체</option>
+                            <option value="0">학생</option>
+                            <option value="1">강사</option>
                         </select>
                     </div>
                     <div className={styles.filterRow}>
                         <label>날짜</label>
-                        <input type="date" className={styles.filterInput} />
+                        <input
+                            type="date"
+                            className={styles.filterInput}
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                        />
                         <span> - </span>
-                        <input type="date" className={styles.filterInput} />
-                        <button className={styles.filterButton}>조회</button>
-                        <button className={styles.filterButton}>초기화</button>
+                        <input
+                            type="date"
+                            className={styles.filterInput}
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
+                        <button className={styles.filterButton} onClick={handleSearch}>조회</button>
+                        <button className={styles.filterButton} onClick={handleReset}>초기화</button>
                     </div>
                 </div>
                 <div className={styles.tableSection}>
@@ -47,41 +123,41 @@ const UserManagement = () => {
                             <th>아이디</th>
                             <th>이메일</th>
                             <th>연락처</th>
+                            <th>가입 날짜</th>
                             <th>직급</th>
                             <th>비고</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>관리자</td>
-                            <td>ADMIN</td>
-                            <td>admin@example.com</td>
-                            <td>010-0000-0000</td>
-                            <td>관리자</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>김철수</td>
-                            <td>USER01</td>
-                            <td>test1@example.com</td>
-                            <td>010-0000-0001</td>
-                            <td>팀원</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>이영희</td>
-                            <td>USER02</td>
-                            <td>test2@example.com</td>
-                            <td>010-0000-0002</td>
-                            <td>팀장</td>
-                            <td></td>
-                        </tr>
-                        {/* Add more rows as needed */}
+                        {users.length > 0 ? (
+                            users.map((user, index) => (
+                                <tr key={`${user.userEmail}-${user.provider}`}>
+                                    <td>{page * size + index + 1}</td>
+                                    <td>{user.userName}</td>
+                                    <td>{user.userEmail}</td>
+                                    <td>{user.userEmail}</td>
+                                    <td>{user.phone}</td>
+                                    <td>{new Date(user.registerTime).toLocaleDateString()}</td> {/* 가입 날짜 추가 */}
+                                    <td>{user.userType === 0 ? '학생' : user.userType === 1 ? '강사' : '관리자'}</td>
+                                    <td></td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="8">데이터가 없습니다</td>
+                            </tr>
+                        )}
                         </tbody>
                     </table>
+                    <div className={styles.pagination}>
+                        <button onClick={handlePreviousPage} disabled={page === 0}>
+                            이전
+                        </button>
+                        <span>{page + 1} / {totalPages}</span>
+                        <button onClick={handleNextPage} disabled={page === totalPages - 1}>
+                            다음
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -89,4 +165,3 @@ const UserManagement = () => {
 };
 
 export default UserManagement;
-
