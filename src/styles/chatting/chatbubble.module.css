@@ -40,6 +40,11 @@
     flex-shrink: 0;
     user-select: none;
 }
+.profile > img{
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: scale-down;
+}
 .main{
     flex-grow: 1;
     display: flex;

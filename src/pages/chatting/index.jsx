@@ -64,7 +64,7 @@ const ChatContainer = observer(() => {
                     isExpanding={isExpanding}
                     onNavigateToFriends={(option) => handleNavigation('AddingFriends', option)}
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}
-                    onNavigateToChat={(option) => handleNavigation('Chat', option)}
+                    onNavigateToChat={(roomData) => handleNavigation('Chat', '', '', roomData)}
                     userId={userId}
                     userType={userType}
                 />
@@ -86,7 +86,7 @@ const ChatContainer = observer(() => {
                     roomType={roomType}
                     isExpanding={isExpanding}
                     onNavigateToList={() => handleNavigation('ChatList')}
-                    onNavigateToChat={(roomData) => handleNavigation('Chat', roomData)}
+                    onNavigateToChat={(roomData) => handleNavigation('Chat', '', '', roomData)}
                 />
             )}
             {activeComponent === 'Chat' && (
