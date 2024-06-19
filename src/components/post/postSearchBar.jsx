@@ -1,50 +1,138 @@
-import React, { useState } from "react";
-import axios from "axios";
-import postAxios from "../../axiosApi/postAxios";
+import React, { useState, useEffect } from "react";
+import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "./PostSearch.module.css";
+import { IoIosSearch } from "react-icons/io";
 
-function PostSearch() {
-  const [keyword, setKeyword] = useState("");
-  const [results, setResults] = useState([]);
+const PostSearch = ({ onSearch, onSelectCategory, onSortOrderChange }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [upperCategories, setUpperCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [selectedUpperCategory, setSelectedUpperCategory] = useState(null);
+  const [isUpperCategoryVisible, setIsUpperCategoryVisible] = useState(false);
 
-  const handleInputChange = (event) => {
-    setKeyword(event.target.value);
+  useEffect(() => {
+    axiosClient
+      .get("/categories/upper")
+      .then((response) => {
+        setUpperCategories(response.data);
+        console.log("upperCategory : ", response.data);
+      })
+      .catch((error) => {
+        console.error("상위카테고리를 불러오지 못했습니다!", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedUpperCategory) {
+      axiosClient
+        .get(`/categories/sub/${selectedUpperCategory.id}`)
+        .then((response) => {
+          setSubCategories(response.data);
+          console.log("subCategory : ", response.data);
+        })
+        .catch((error) => {
+          console.error("하위카테고리를 불러오지 못했습니다!", error);
+        });
+    }
+  }, [selectedUpperCategory]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
-  const handleSearch = async () => {
-    try {
-      const response = await postAxios.getPostTitleOrContent(keyword);
-      setResults(response.data);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    onSearch(searchQuery);
+  };
+
+  const handleUpperCategoryClick = (category) => {
+    if (selectedUpperCategory && selectedUpperCategory.id === category.id) {
+      setSelectedUpperCategory(null);
+    } else {
+      setSelectedUpperCategory(category);
     }
   };
 
   return (
-    <div>
-      <div className={styles.postSearchContainer}>
+    <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+      <div className={styles.categoryToggle}>
+        <div className={styles.flexContainer}>
+          <div className={styles.dropdown}>
+            <button
+              className={styles.dropdownToggle}
+              type="button"
+              onClick={() => {
+                setIsUpperCategoryVisible(!isUpperCategoryVisible);
+                if (isUpperCategoryVisible) {
+                  setSelectedUpperCategory(null);
+                }
+              }}
+            >
+              카테고리 검색
+            </button>
+            {isUpperCategoryVisible && (
+              <div
+                className={`${styles.dropdownMenu} ${styles.customGradient}`}
+              >
+                {upperCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    className={`${styles.dropdownItem} ${
+                      selectedUpperCategory &&
+                      selectedUpperCategory.id === category.id
+                        ? styles.dropdownItemActive
+                        : ""
+                    }`}
+                    onClick={() => handleUpperCategoryClick(category)}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          {selectedUpperCategory && isUpperCategoryVisible && (
+            <div className={styles.dropdown}>
+              <div
+                className={`${styles.dropdownMenu} ${styles.customGradient}`}
+              >
+                {subCategories.map((subCategory) => (
+                  <button
+                    key={subCategory.id}
+                    className={styles.dropdownItem}
+                    onClick={() => {
+                      console.log(`Selected subcategory: ${subCategory.name}`);
+                      onSelectCategory(subCategory);
+                    }}
+                  >
+                    {subCategory.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      <select className={styles.sortOrderSelect} onChange={onSortOrderChange}>
+        <option value="latest">최신순</option>
+        <option value="views">조회수 순</option>
+        <option value="likes">좋아요 순</option>
+        <option value="comments">댓글 순</option>
+      </select>
+      <div className={styles.searchInputContainer}>
         <input
           type="text"
-          value={keyword}
-          onChange={handleInputChange}
-          placeholder="검색어를 입력하세요"
-          className={styles.postSearchInput}
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="제목+내용으로 검색해보세요"
+          className={styles.searchInput}
         />
-        <button onClick={handleSearch} className={styles.postSearchButton}>
-          <img
-            src="/images/searchBar.png"
-            alt="Search"
-            className={styles.searchIcon}
-          />
+        <button type="submit" className={styles.searchButton}>
+          <IoIosSearch />
         </button>
       </div>
-      <ul>
-        {results.map((post) => (
-          <li key={post.id}>{post.title}</li>
-        ))}
-      </ul>
-    </div>
+    </form>
   );
-}
+};
 
 export default PostSearch;

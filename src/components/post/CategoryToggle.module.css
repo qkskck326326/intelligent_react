@@ -1,53 +1,67 @@
-.categoryToggle {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .categoryButton {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    display: block;
-  }
-  
-  .upperCategories {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .upperCategories button {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-  }
-  
-  .upperCategories button.selected {
-    background-color: #e0e0e0;
-    color: red;
-  }
-  
-  .subCategories {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    left: 100%;
-    top: 0;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    z-index: 1;
-  }
-  
-  .subCategories button {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #ffffff;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .subCategories button:hover {
-    background-color: #f0f0f0;
-  }
+/* CategoryToggle.module.css */
+.container {
+  margin-top: 20px;
+}
+
+.flexContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.dropdown {
+  position: relative;
+  margin-right: 10px;
+}
+
+.dropdownToggle {
+  padding: 10px 20px;
+  border: rgb(37, 182, 155) solid 2px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: rgb(110, 110, 110);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdownToggle:hover {
+  background-color: #ffffff;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  padding: 10px 0;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownItem {
+  padding: 10px 20px;
+  width: 100%;
+  color: #212529;
+  text-align: left;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdownItem:hover,
+.dropdownItemActive {
+  background-color: #f8f9fa;
+}
+
+.customGradient {
+  background: linear-gradient(135deg, #fbfbfb, #ffffff);
+}

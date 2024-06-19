@@ -4,15 +4,16 @@
   }
   
   .mainContent {
-    margin-left: 220px; /* Adjust this value based on the width of your sidebar */
+    margin-left: 0px;
+    margin-right: 230px; /* Adjust this value based on the width of your sidebar */
     padding: 20px;
-    flex-grow: 1;
+    flex-grow: 0.8;
   }
   
   .searchContainer {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
   }
   
   .postListContainer {

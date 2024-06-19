@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import DOMPurify from "dompurify"; // Import DOMPurify
+import DOMPurify from "dompurify";
 import { axiosClient } from "../../axiosApi/axiosClient";
-import { Pagination } from "react-bootstrap";
 import styles from "./PostList.module.css";
 import { TbEyeSearch } from "react-icons/tb";
 import { AiOutlineLike, AiOutlineComment } from "react-icons/ai";
 import PostSearch from "../../components/post/postSearchBar";
-import LoginPopup from "../../components/post/LoginPopup"; // 새로운 팝업 컴포넌트 임포트
-import authStore from "../../stores/authStore"; // AuthStore 임포트
+import LoginPopup from "../../components/post/LoginPopup";
+import authStore from "../../stores/authStore";
 import { observer } from "mobx-react-lite";
-import UploadButton from "../../components/post/PostUploadBtn"; // UploadButton 컴포넌트 임포트
-import { getRelativeTime } from "../../components/post/timeUtils"; // 유틸리티 함수 임포트
-import CategoryToggle from "../../components/post/CategoryToggle";
+import UploadButton from "../../components/post/PostUploadBtn";
+import { getRelativeTime } from "../../components/post/timeUtils";
 
 const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [posts, setPosts] = useState([]);
@@ -20,18 +18,37 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
-  const [showPopup, setShowPopup] = useState(false); // 팝업 상태
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [sortOrder, setSortOrder] = useState("latest");
 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const res = await axiosClient.get("/posts/list", {
-          params: { page: page, size: size },
-        });
+        const res = searchQuery
+          ? await axiosClient.get("/posts/searchTitleOrContent", {
+              params: {
+                keyword: searchQuery,
+                page: page,
+                size: size,
+                sort: sortOrder,
+              },
+            })
+          : selectedCategory
+          ? await axiosClient.get("/posts/searchlistByCategory", {
+              params: {
+                categoryId: selectedCategory.id,
+                page: page,
+                size: size,
+                sort: sortOrder,
+              },
+            })
+          : await axiosClient.get("/posts/list", {
+              params: { page: page, size: size, sort: sortOrder },
+            });
         setPosts(res.data.content || []);
         setTotalPages(res.data.totalPages || 0);
-        console.log(res.data.content);
       } catch (error) {
         console.error("게시물 로드 중 오류 발생:", error);
       } finally {
@@ -40,7 +57,7 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
     };
 
     fetchPosts();
-  }, [page, size]);
+  }, [page, size, searchQuery, selectedCategory, sortOrder]);
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
@@ -57,19 +74,28 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
     setShowPopup(true);
   };
 
-  const handleSelectCategory = (category) => {
-    setSelectedCategory(category);
-    // 하위 카테고리를 선택했을 때 추가 동작이 필요하다면 여기에 추가하십시오.
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setPage(0);
+  };
+
+  const handleCategorySelect = (category) => {
+    onSelectCategory(category);
+    setPage(0);
+  };
+
+  const handleSortOrderChange = (e) => {
+    setSortOrder(e.target.value);
+    setPage(0);
   };
 
   return (
     <div className={styles.postListContainer}>
-      <h1 className={styles.title}>Posts</h1>
-      <CategoryToggle
-        selectedCategory={selectedCategory}
-        onSelectCategory={handleSelectCategory}
+      <PostSearch
+        onSearch={handleSearch}
+        onSelectCategory={handleCategorySelect}
+        onSortOrderChange={handleSortOrderChange}
       />
-      <PostSearch />
       {loading ? (
         <h2 className={styles.loading}>Loading...</h2>
       ) : (
@@ -106,13 +132,7 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(post.contentSnippet),
                     }}
-                  >
-                    {/* {post.contentSnippet}.... */}
-                  </p>
-                  {/* <p
-        className={styles.postContent}
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contentSnippet) }} // Use DOMPurify to sanitize the content
-      ></p> */}
+                  ></p>
                   <div className={styles.postFooter}>
                     <div className={styles.postStats}>
                       <span>
@@ -132,33 +152,42 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
           ))}
         </ul>
       )}
-      <Pagination>
-        <Pagination.First
-          onClick={() => handlePageChange(0)}
-          disabled={page === 0}
-        />
-        <Pagination.Prev
-          onClick={() => handlePageChange(page - 1)}
-          disabled={page === 0}
-        />
-        {[...Array(totalPages).keys()].map((i) => (
-          <Pagination.Item
-            key={i}
-            active={i === page}
-            onClick={() => handlePageChange(i)}
+      <ul className={styles.pagination}>
+        <li>
+          <button onClick={() => handlePageChange(0)} disabled={page === 0}>
+            {"<<"}
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 0}
           >
-            {i + 1}
-          </Pagination.Item>
+            {"<"}
+          </button>
+        </li>
+        {[...Array(totalPages).keys()].map((i) => (
+          <li key={i} className={i === page ? styles.active : ""}>
+            <button onClick={() => handlePageChange(i)}>{i + 1}</button>
+          </li>
         ))}
-        <Pagination.Next
-          onClick={() => handlePageChange(page + 1)}
-          disabled={page === totalPages - 1}
-        />
-        <Pagination.Last
-          onClick={() => handlePageChange(totalPages - 1)}
-          disabled={page === totalPages - 1}
-        />
-      </Pagination>
+        <li>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === totalPages - 1}
+          >
+            {">"}
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => handlePageChange(totalPages - 1)}
+            disabled={page === totalPages - 1}
+          >
+            {">>"}
+          </button>
+        </li>
+      </ul>
       <div className={styles.uploadButton}>
         <UploadButton onLoginRequired={handleUploadClick} />
       </div>
