@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import modalStyles from '../../styles/common/modal.module.css';
 
-/**
- * Modal 전용 클래스 입니다.
- * 자세한 내용은 메소드에서 확인해주세용 ^0^!
- * */
 class AlertModal {
 
     constructor() {

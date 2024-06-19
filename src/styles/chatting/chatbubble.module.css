@@ -46,7 +46,7 @@
     object-fit: scale-down;
 }
 .main{
-    flex-grow: 1;
+    max-width: 14rem;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -56,6 +56,10 @@
     user-select: none;
 }
 .content{
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
     padding-block: 0.3rem;
     padding-inline: 0.5rem;
     background-color: #E0E0E0;

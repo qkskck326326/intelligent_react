@@ -94,7 +94,7 @@ const ChatContainer = observer(() => {
                     roomData={roomData}
                     option={option}
                     isExpanding={isExpanding}
-                    onNavigateToIcon={() => handleNavigation('ChatIcon')}
+                    onNavigateToList={() => handleNavigation('ChatList')}
                     userId={userId}
                     userType={userType}
                 />

@@ -61,17 +61,12 @@
     padding: 0.3rem;
     text-align: center;
 }
-.bell{
+.people{
     font-size: 0.8rem;
+    font-weight: 900;
     flex-shrink: 0;
     display: flex;
     align-items: center;
-}
-.belliconon{
-    width: 1.0rem;
-}
-.belliconoff{
-    width: 1.2rem;
 }
 
 .message{
@@ -84,6 +79,6 @@
     padding-right: 0.2rem;
     font-size: 0.8rem;
     flex-shrink: 0;
-    margin-top: 1.15rem;
+    margin-top: 1rem;
     align-self: flex-start;
 }
