@@ -4,6 +4,7 @@ import Sidebar from "../../components/post/postSideBar"; // Corrected import
 import PostList from "../../components/post/postList"; // Corrected import
 import CategoryToggle from "../../components/post/CategoryToggle";
 import styles from "../../components/post/PostIndex.module.css"; // Import the CSS file
+import PopularPosts from "../../components/post/PopularPosts";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -15,16 +16,11 @@ const Index = () => {
 
   return (
     <div className={styles.container}>
-      <Sidebar />
+      <PopularPosts />
       <div className={styles.mainContent}>
-        {/* <PostSearch /> */}
-        {/* <CategoryToggle
+        <PostList
           selectedCategory={selectedCategory}
           onSelectCategory={handleSelectCategory}
-        /> */}
-        <PostList
-        // selectedCategory={selectedCategory}
-        // onSelectCategory={handleSelectCategory}
         />
       </div>
     </div>

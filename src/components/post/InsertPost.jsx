@@ -5,8 +5,6 @@ import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 import dynamic from "next/dynamic";
-
-// CKEditorComponent를 동적으로 로드합니다.
 const CKEditorComponent = dynamic(() => import("./CKEditorComponent"), {
   ssr: false,
 });
@@ -16,8 +14,7 @@ const InsertPost = observer(() => {
   const [subCategoryId, setSubCategoryId] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [content, setContent] = useState("");
-  const [files, setFiles] = useState([]);
-  const [viewCount, setViewCount] = useState(0);
+  const [files, setFiles] = useState([]); // files 상태 변수 선언
   const router = useRouter();
 
   const userEmail = authStore.getUserEmail();
@@ -25,7 +22,7 @@ const InsertPost = observer(() => {
 
   useEffect(() => {
     axiosClient
-      .get("api/categories/sub")
+      .get("/categories/sub")
       .then((response) => {
         setSubCategories(response.data);
       })
@@ -50,28 +47,27 @@ const InsertPost = observer(() => {
       const postDTO = {
         title,
         content,
-        viewCount,
         userEmail,
         provider,
         subCategoryId,
       };
 
       const postResponse = await axiosClient.post("/posts/insert", postDTO);
-      const postId = postResponse.data.id;
+      const newPostId = postResponse.data.id;
 
       if (files.length > 0) {
         const formData = new FormData();
         files.forEach((file) => {
           formData.append("files", file);
         });
-        await axiosClient.post(`/posts/${postId}/files`, formData, {
+        await axiosClient.post(`/posts/${newPostId}/files`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
       }
 
-      router.push("/post");
+      router.push(`/post/${newPostId}`);
     } catch (error) {
       console.error("Error submitting post:", error);
     }
@@ -142,7 +138,7 @@ const InsertPost = observer(() => {
           className={styles.fileInput}
         />
         <label htmlFor="fileInput" className={styles.fileInputLabel}>
-          파일을 선택하거나 드래그 앤 드롭하세요
+          공유하고 싶은 파일을 선택하거나 드래그 앤 드롭하세요
         </label>
         <div className={styles.filePreviewContainer}>
           {files.map((file, index) => (
@@ -152,6 +148,7 @@ const InsertPost = observer(() => {
           ))}
         </div>
       </div>
+
       <div className={styles.buttonGroup}>
         <button onClick={handleSubmit} className={styles.submitButton}>
           작성하기

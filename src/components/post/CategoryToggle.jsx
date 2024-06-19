@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
-import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./CategoryToggle.module.css"; // Import the custom CSS
+import styles from "./CategoryToggle.module.css";
 
-const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
+const CategoryToggle = ({ onSelectCategory }) => {
   const [upperCategories, setUpperCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [selectedUpperCategory, setSelectedUpperCategory] = useState(null);
@@ -17,10 +16,7 @@ const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
         console.log("upperCategory : ", response.data);
       })
       .catch((error) => {
-        console.error(
-          "상위카테고리를 불러오지못했습니다!",
-          error
-        );
+        console.error("상위카테고리를 불러오지 못했습니다!", error);
       });
   }, []);
 
@@ -33,49 +29,46 @@ const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
           console.log("subCategory : ", response.data);
         })
         .catch((error) => {
-          console.error(
-            "There was an error fetching the sub categories!",
-            error
-          );
+          console.error("하위카테고리를 불러오지 못했습니다!", error);
         });
     }
   }, [selectedUpperCategory]);
 
   const handleUpperCategoryClick = (category) => {
     if (selectedUpperCategory && selectedUpperCategory.id === category.id) {
-      setSelectedUpperCategory(null); // 하위 카테고리 숨기기
+      setSelectedUpperCategory(null);
     } else {
       setSelectedUpperCategory(category);
     }
   };
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex">
-        <div className="dropdown me-2">
+    <div className={styles.container}>
+      <div className={styles.flexContainer}>
+        <div className={styles.dropdown}>
           <button
-            className="btn btn-primary dropdown-toggle"
+            className={styles.dropdownToggle}
             type="button"
             onClick={() => {
               setIsUpperCategoryVisible(!isUpperCategoryVisible);
               if (isUpperCategoryVisible) {
-                setSelectedUpperCategory(null); // 상위 카테고리를 숨길 때 하위 카테고리도 숨기기
+                setSelectedUpperCategory(null);
               }
             }}
           >
             카테고리 검색
           </button>
           {isUpperCategoryVisible && (
-            <div className={`dropdown-menu show ${styles.customGradient}`}>
+            <div className={`${styles.dropdownMenu} ${styles.customGradient}`}>
               {upperCategories.map((category) => (
                 <button
                   key={category.id}
-                  className={`dropdown-item ${
+                  className={`${styles.dropdownItem} ${
                     selectedUpperCategory &&
                     selectedUpperCategory.id === category.id
                       ? styles.dropdownItemActive
                       : ""
-                  } ${styles.dropdownItem}`}
+                  }`}
                   onClick={() => handleUpperCategoryClick(category)}
                 >
                   {category.name}
@@ -85,12 +78,12 @@ const CategoryToggle = ({ selectedCategory, onSelectCategory }) => {
           )}
         </div>
         {selectedUpperCategory && isUpperCategoryVisible && (
-          <div className="dropdown">
-            <div className={`dropdown-menu show ${styles.customGradient}`}>
+          <div className={styles.dropdown}>
+            <div className={`${styles.dropdownMenu} ${styles.customGradient}`}>
               {subCategories.map((subCategory) => (
                 <button
                   key={subCategory.id}
-                  className={`dropdown-item ${styles.dropdownItem}`}
+                  className={styles.dropdownItem}
                   onClick={() => {
                     console.log(`Selected subcategory: ${subCategory.name}`);
                     onSelectCategory(subCategory);

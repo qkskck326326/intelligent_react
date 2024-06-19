@@ -1,76 +1,136 @@
-/* InsertPost.module.css */
 .postInsertContainer {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ffffff;
-    border-radius: 4px;
-  }
-  
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
 
-  
-  .formGroup {
-    margin-bottom: 20px;
-  }
+.postInsertContainer h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
 
-  
-  .input,
-  .select,
-  .textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .textarea {
-    height: 500px;
-    resize: vertical;
-  }
-  
-  .fileDropArea {
-    width: 100%;
-    padding: 20px;
-    border: 2px dashed #ddd;
-    border-radius: 4px;
-    text-align: center;
-    margin-bottom: 20px;
-    cursor: pointer;
-  }
-  
-  .fileDropArea p {
-    margin: 0;
-  }
-  
-  .buttonGroup {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .submitButton {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .submitButton:hover {
-    background-color: #0056b3;
-  }
-  
-  .cancelButton {
-    background-color: #6c757d;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .cancelButton:hover {
-    background-color: #5a6268;
-  }
-  
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #25b69b;
+  box-shadow: 0 0 5px rgba(37, 182, 155, 0.3);
+}
+
+.textarea {
+  height: 500px;
+  resize: vertical;
+}
+
+.fileDropArea {
+  width: 90%;
+  padding: 20px;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.fileDropArea:hover {
+  border-color: #25b69b;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileInputLabel {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #25b69b;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.fileInputLabel:hover {
+  color: #007bff;
+}
+
+.filePreviewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.filePreviewItem {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.filePreview img {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submitButton {
+  background-color: #25b69b;
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: #007bff;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+.cancelButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+  box-shadow: 0 4px 8px rgba(90, 98, 104, 0.2);
+}
