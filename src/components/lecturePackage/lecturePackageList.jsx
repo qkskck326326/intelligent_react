@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Pagination } from 'react-bootstrap';
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";
-import Pagination from "../common/pagination";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import SortAndSearchBar from "../common/sortAndSearchBar";
 import Link from "next/link";
@@ -10,113 +10,59 @@ import CategoryToggle from "../post/CategoryToggle";
 const LecturePackageList = ({ onRegisterClick }) => {
     const [lecturePackages, setLecturePackages] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortCriteria, setSortCriteria] = useState("latest");
     const [searchCriteria, setSearchCriteria] = useState("title");
-    const [filteredAndSortedLectures, setFilteredAndSortedLectures] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
 
     const ITEMS_PER_PAGE = 16;
 
-    const fetchLecturePackages = async () => {
+    const fetchLecturePackages = async (page, size, sort, search, category, searchCriteria) => {
         setLoading(true);
         try {
-            const response = await axiosClient.get('/packages');
+            const params = {
+                page: page - 1,
+                size: size,
+                sortCriteria: sort,
+                searchTerm: search,
+                searchCriteria: searchCriteria
+            };
+            if (category) {
+                params.subCategoryId = category.id;
+            }
+            const response = await axiosClient.get('/packages', { params });
             const responseData = response.data;
-            const dataArray = Array.isArray(responseData) ? responseData : [responseData];
-
-            setLecturePackages(dataArray);
-            setFilteredAndSortedLectures(dataArray);
+            setLecturePackages(responseData.content);
+            setTotalPages(responseData.totalPages);
         } catch (err) {
             setError(err);
+            console.error('Failed to fetch lecture packages:', err);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchLecturePackages();
-    }, []);
-
-
-
-    const fetchLecturePackagesByCategory = async (categoryId) => {
-        setLoading(true);
-        try {
-            console.log("categoryId : ", categoryId);
-            const response = await axiosClient.get(`/packages/categorysort?categoryId=${categoryId}`);
-            setLecturePackages(response.data);
-            setFilteredAndSortedLectures(response.data);
-            console.log("categorysort : ", response);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
-
-
-    useEffect(() => {
-        if (selectedCategory) {
-            fetchLecturePackagesByCategory(selectedCategory.id);
-        } else {
-            handleSearch();
-        }
-    }, [selectedCategory]);
-
-    const totalPages = Math.ceil(filteredAndSortedLectures.length / ITEMS_PER_PAGE);
+        fetchLecturePackages(currentPage, ITEMS_PER_PAGE, sortCriteria, searchTerm, selectedCategory, searchCriteria);
+    }, [currentPage, sortCriteria, selectedCategory]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
     const handleSearch = () => {
-        let filteredLectures = lecturePackages;
-
-        if (selectedCategory) {
-            filteredLectures = filteredLectures.filter(
-                lecture => lecture.subCategoryId === selectedCategory.id
-            );
-        }
-
-        if (searchTerm) {
-            filteredLectures = filteredLectures.filter((lecture) => {
-                if (searchCriteria === "title") {
-                    return lecture.title.toLowerCase().includes(searchTerm.toLowerCase());
-                } else if (searchCriteria === "instructor") {
-                    return lecture.nickname?.toLowerCase().includes(searchTerm.toLowerCase());
-                }
-                return true;
-            });
-        }
-
-        const sortedLectures = [...filteredLectures].sort((a, b) => {
-            if (sortCriteria === "latest") {
-                return new Date(b.registerDate) - new Date(a.registerDate);
-            } else if (sortCriteria === "views") {
-                return b.viewCount - a.viewCount;
-            } else if (sortCriteria === "rating") {
-                return b.rating - a.rating;
-            }
-            return 0;
-        });
-
-        setFilteredAndSortedLectures(sortedLectures);
         setCurrentPage(1);
+        fetchLecturePackages(1, ITEMS_PER_PAGE, sortCriteria, searchTerm, selectedCategory, searchCriteria); // 검색 시 첫 페이지로 이동
     };
 
-    useEffect(() => {
-        handleSearch(); // sortCriteria 변경될 때마다 검색 함수 호출
-    }, [sortCriteria]);
-
-    const displayedLectures = filteredAndSortedLectures.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
-        currentPage * ITEMS_PER_PAGE
-    );
+    const handleSelectCategory = (category) => {
+        setSelectedCategory(category);
+        setCurrentPage(1);
+        fetchLecturePackages(1, ITEMS_PER_PAGE, sortCriteria, searchTerm, category, searchCriteria); // 카테고리로 검색
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -135,17 +81,6 @@ const LecturePackageList = ({ onRegisterClick }) => {
         );
     };
 
-    const handleSelectCategory = (category) => {
-        setSelectedCategory(category);
-    };
-
-
-
-
-
-
-
-
     return (
         <div className={styles.container}>
             <SortAndSearchBar
@@ -157,21 +92,17 @@ const LecturePackageList = ({ onRegisterClick }) => {
                 setSearchCriteria={setSearchCriteria}
                 onSearch={handleSearch}
             />
-            <CategoryToggle selectedCategory={selectedCategory}
-                            onSelectCategory={handleSelectCategory} />
+            <CategoryToggle selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory} />
 
             <button className={styles.registerButton} onClick={onRegisterClick}>
                 등록하기
             </button>
             <div className={styles.grid}>
-                {displayedLectures.map((lecture) => (
-                    <div
-                        key={lecture.lecturePackageId}
-                        className={styles.cardContainer}
-                    >
+                {lecturePackages.map((lecture) => (
+                    <div key={lecture.lecturePackageId} className={styles.cardContainer}>
                         <div className={styles.card}>
                             <div className={styles.thumbnail}>
-                                <img src={lecture.thumbnail} alt={lecture.thumbnail} />
+                                <img src={lecture.thumbnail} alt={lecture.title} />
                             </div>
                         </div>
                         <div className={styles.details}>
@@ -188,13 +119,21 @@ const LecturePackageList = ({ onRegisterClick }) => {
                     </div>
                 ))}
             </div>
-            <div className={styles.paginationContainer}>
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
-            </div>
+            <Pagination className={styles.paginationContainer}>
+                <Pagination.First onClick={() => handlePageChange(1)} />
+                <Pagination.Prev onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)} />
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <Pagination.Item
+                        key={i + 1}
+                        active={i + 1 === currentPage}
+                        onClick={() => handlePageChange(i + 1)}
+                    >
+                        {i + 1}
+                    </Pagination.Item>
+                ))}
+                <Pagination.Next onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)} />
+                <Pagination.Last onClick={() => handlePageChange(totalPages)} />
+            </Pagination>
         </div>
     );
 };

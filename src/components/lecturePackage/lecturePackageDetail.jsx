@@ -16,9 +16,8 @@ const LecturePackageDetail = () => {
             setLoading(true);
             console.log("lecturePackageId : ", lecturePackageId);
 
-
             try {
-                const response = await axiosClient.get('/packages/detail', {params: {lecturePackageId}});
+                const response = await axiosClient.get('/packages/detail', { params: { lecturePackageId } });
                 setLecturePackage(response.data);
             } catch (err) {
                 setError(err);
@@ -78,6 +77,25 @@ const LecturePackageDetail = () => {
         }
     };
 
+
+    const handleEdit = async () => {
+        setLoading(true);
+        try {
+            const response = await axiosClient.get(`/packages/detail`, { params: { lecturePackageId } });
+            router.push({
+                pathname: `/lecturePackage/edit/${lecturePackage.lecturePackageId}`,
+                query: { data: JSON.stringify(response.data) }
+            });
+        } catch (error) {
+            console.error('패키지 데이터를 가져오는 중 오류 발생:', error);
+            alert('데이터를 가져오는 중 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
@@ -96,7 +114,12 @@ const LecturePackageDetail = () => {
                     </div>
                     <div className={styles.yellowBox}>
                         <div className={styles.redBox}>
-                            <div id="content" className={styles.content} dangerouslySetInnerHTML={{ __html: lecturePackage.content }} />
+                            <div
+                                id="content"
+                                className={styles.content}
+                                style={{ backgroundColor: lecturePackage.backgroundColor }} // 배경색 적용
+                                dangerouslySetInnerHTML={{ __html: lecturePackage.content }}
+                            />
                         </div>
                         <div className={styles.field}>
                             <p className={styles.level}><i className="fas fa-check"></i> {lecturePackage.packageLevel} 과정</p>
@@ -123,13 +146,12 @@ const LecturePackageDetail = () => {
                     </div>
                     <div className={styles.actions}>
                         <button className={styles.actionButton}
-                                onClick={() => router.push(`/lecturePackage/edit/${lecturePackage.lecturePackageId}`)}>수정하기
+                                onClick={handleEdit}>수정하기
                         </button>
                         <button className={styles.actionButton} onClick={handleDelete}>삭제하기</button>
                         <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>패키지 리스트로
                             이동
                         </button>
-
                     </div>
                 </>
             )}
