@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { axiosClient } from '../../axiosApi/axiosClient';
 import styles from "../../styles/user/login/naverLogin.module.css";
 
 const NaverLogin = () => {
@@ -8,8 +7,6 @@ const NaverLogin = () => {
     const NAVER_CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
     const NAVER_CALLBACK_URL = process.env.NEXT_PUBLIC_NAVER_CALLBACK_URL;
     const STATE = "false";
-
-    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${NAVER_CALLBACK_URL}`;
 
     const loadNaverScript = () => {
         return new Promise((resolve) => {
