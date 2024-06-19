@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { axiosClient } from "../../axiosApi/axiosClient";
+import { axiosClient } from '../../axiosApi/axiosClient';
 import styles from '../../styles/lecture/transcriptSummary.module.css';
 
 const TranscriptSummary = ({ streamUrl }) => {
@@ -7,7 +7,6 @@ const TranscriptSummary = ({ streamUrl }) => {
     const [summary, setSummary] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState('transcript');
 
     useEffect(() => {
         if (streamUrl) {
@@ -17,24 +16,15 @@ const TranscriptSummary = ({ streamUrl }) => {
 
     const fetchTranscript = async (streamUrl) => {
         try {
-            const response = await axiosClient.get(`/api/transcript`, {
-                params: { stream_url: streamUrl }
+            const response = await axiosClient.get(`/transcript_and_summary`, {
+                params: { video_url: streamUrl }
             });
-            setTranscript(response.data);
+            setTranscript(response.data.transcript);
+            setSummary(response.data.summary);
             setLoading(false);
-            fetchSummary(response.data);
         } catch (error) {
             setError(error);
             setLoading(false);
-        }
-    };
-
-    const fetchSummary = async (transcript) => {
-        try {
-            const response = await axiosClient.post(`/api/summary`, { transcript });
-            setSummary(response.data);
-        } catch (error) {
-            setError(error);
         }
     };
 
@@ -44,32 +34,14 @@ const TranscriptSummary = ({ streamUrl }) => {
     return (
         <div className={styles.transcriptContainer}>
             <div className={styles.tabMenu}>
-                <button 
-                    className={activeTab === 'transcript' ? styles.activeTabButton : styles.tabButton}
-                    onClick={() => setActiveTab('transcript')}
-                >
-                    텍스트
-                </button>
-                <button 
-                    className={activeTab === 'summary' ? styles.activeTabButton : styles.tabButton}
-                    onClick={() => setActiveTab('summary')}
-                >
-                    요약
-                </button>
+                <button className={styles.tabButton}>텍스트</button>
+                <button className={styles.tabButton}>요약</button>
             </div>
             <div className={styles.content}>
-                {activeTab === 'transcript' && (
-                    <>
-                        <h2>Transcript</h2>
-                        <pre>{transcript}</pre>
-                    </>
-                )}
-                {activeTab === 'summary' && (
-                    <>
-                        <h2>Summary</h2>
-                        <pre>{summary}</pre>
-                    </>
-                )}
+                <h2>Transcript</h2>
+                <pre>{transcript}</pre>
+                <h2>Summary</h2>
+                <pre>{summary}</pre>
             </div>
         </div>
     );
