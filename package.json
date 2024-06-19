@@ -30,8 +30,7 @@
     "react-query": "^3.39.3",
     "react-responsive": "^10.0.0",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "5.0.1",
-    "yeb-vitals": "^2.1.4"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "dev": "next dev",
