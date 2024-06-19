@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { axiosClient } from "../../axiosApi/axiosClient"; // axiosClient를 가져옴
+import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lecturePreview.module.css';
 
 const LecturePreview = ({ lectureId }) => {

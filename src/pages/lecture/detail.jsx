@@ -20,7 +20,7 @@ const verticalLineStyle = {
 };
 
 const leftSideStyle = {
-    width: '60%',
+    width: '70%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -28,7 +28,7 @@ const leftSideStyle = {
 };
 
 const rightSideStyle = {
-    width: '40%',
+    width: '30%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start'
@@ -42,11 +42,11 @@ const LectureDetailPage = () => {
         <div style={containerStyle}>
             <div style={leftSideStyle}>
                 {lectureId ? <LectureDetail lectureId={lectureId} /> : <p>Loading...</p>}
-                {lectureId ? <LectureComment lectureId={lectureId} /> : <p>Loading...</p>}
+                {/* {lectureId ? <LectureComment lectureId={lectureId} /> : <p>Loading...</p>} */}
             </div>
             <div style={verticalLineStyle}></div>
             <div style={rightSideStyle}>
-                {lectureId && <TranscriptSummary streamUrl={`URL_OF_THE_VIDEO_FOR_${lectureId}`} />}
+                {/* {lectureId && <TranscriptSummary streamUrl={`URL_OF_THE_VIDEO_FOR_${lectureId}`} />} */}
             </div>
         </div>
     );

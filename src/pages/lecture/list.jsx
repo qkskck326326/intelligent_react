@@ -5,6 +5,7 @@ import LecturePreview from "../../components/lecture/lecturePreview";
 import LectureAvgRating from "../../components/lecture/lectureAvgRating";
 import InsertRating from "../../components/lecture/InsertRating";
 import { axiosClient } from "../../axiosApi/axiosClient";
+import authStore from "../../stores/authStore";
 
 const containerStyle = {
     display: 'flex',
@@ -43,11 +44,14 @@ const ratingStyle = {
 
 const previewStyle = {
     width: '100%',
-    marginTop: '20px'
+    marginTop: '20px',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    marginLeft: '-50px'
 };
 
 const buttonStyle = {
-    marginLeft: '10px',
+    marginLeft: '90px',
     padding: '10px',
     backgroundColor: '#19CA83',
     color: 'white',
@@ -63,41 +67,45 @@ const buttonStyle = {
     lineHeight: '20px' 
 };
 
-const deleteButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: '#ff4d4d',
-    width: '88.45px',
-    height: '37.78px'
-};
-
-
 const LecturePage = ({ lecturePackageId }) => {
     const [selectedLectureId, setSelectedLectureId] = useState(null);
     const [authNickname, setAuthNickname] = useState('');
     const [packageOwnerNickname, setPackageOwnerNickname] = useState('');
     const [deletingMode, setDeletingMode] = useState(false);
+    const [lectures, setLectures] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const fetchData = () => {
+        axiosClient.get(`/lecture/list/${lecturePackageId}`)
+            .then(response => {
+                const responseData = response.data;
+                const dataArray = Array.isArray(responseData) ? responseData : [responseData];
+                setLectures(dataArray);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err);
+                setLoading(false);
+            });
+    };
 
     useEffect(() => {
-        const fetchCurrentUser = async () => {
-            try {
-                const response = await axiosClient.get('/auth/currentUser');
-                setAuthNickname(response.data.nickname);
-            } catch (error) {
-                console.error('Error fetching current user:', error);
-            }
-        };
+        // 현재 사용자의 닉네임 가져오기
+        const currentNickname = localStorage.getItem("nickname");
+        setAuthNickname(currentNickname);
 
         const fetchLecturePackageOwner = async () => {
             try {
-                const response = await axiosClient.get(`/lecturePackage/owner/${lecturePackageId}`);
+                const response = await axiosClient.get(`/lecture/owner/${lecturePackageId}`);
                 setPackageOwnerNickname(response.data.nickname);
             } catch (error) {
                 console.error('Error fetching lecture package owner:', error);
             }
         };
 
-        fetchCurrentUser();
         fetchLecturePackageOwner();
+        fetchData(); // LecturePage에서 fetchData 호출 추가
     }, [lecturePackageId]);
 
     return (
@@ -108,6 +116,10 @@ const LecturePage = ({ lecturePackageId }) => {
                     lecturePackageId={lecturePackageId} 
                     isOwner={authNickname === packageOwnerNickname} 
                     setDeletingMode={setDeletingMode}
+                    fetchData={fetchData} // LectureList에 fetchData 전달
+                    lectures={lectures}
+                    loading={loading}
+                    error={error}
                 />
             </div>
             <div style={verticalLineStyle}></div>
@@ -118,10 +130,9 @@ const LecturePage = ({ lecturePackageId }) => {
                 <div>
                     {authNickname === packageOwnerNickname ?
                         <>
-                            <Link href="/lecture/addLecture" legacyBehavior>
+                            <Link href={`/lecture/addLecture?lecturePackageId=${lecturePackageId}&nickname=${authNickname}`} legacyBehavior>
                                 <a style={buttonStyle}>강의 등록</a>
                             </Link>
-                            <button onClick={() => setDeletingMode(true)} style={deleteButtonStyle}>강의 삭제</button>
                         </>
                         :
                         <InsertRating lecturePackageId={lecturePackageId} />
@@ -133,6 +144,15 @@ const LecturePage = ({ lecturePackageId }) => {
             </div>
         </div>
     );
+};
+
+export const getServerSideProps = async (context) => {
+    const lecturePackageId = context.query.lecturePackageId || 1; // URL에서 lecturePackageId를 가져오거나 기본값으로 1을 사용
+    return {
+        props: {
+            lecturePackageId
+        }
+    };
 };
 
 export default LecturePage;

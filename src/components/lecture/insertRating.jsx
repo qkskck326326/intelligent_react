@@ -1,60 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
+import authStore from "../../stores/authStore";
 import styles from "../../styles/lecture/insertRating.module.css";
 
 const InsertRating = ({ lecturePackageId }) => {
-    const [averageRating, setAverageRating] = useState(0);
     const [myRating, setMyRating] = useState(null);
     const [hover, setHover] = useState(null);
+    const [nickname, setNickname] = useState('');
 
     useEffect(() => {
-        const fetchAverageRating = async () => {
-            try {
-                const response = await axiosClient.get(`/lecture/rating?lecturePackageId=${lecturePackageId}`);
-                setAverageRating(response.data.rating);
-            } catch (error) {
-                console.error("Error fetching average rating:", error);
-            }
-        };
-
-        fetchAverageRating();
-    }, [lecturePackageId]);
+        const currentNickname = authStore.getNickname();
+        setNickname(currentNickname);
+    }, []);
 
     const handleRatingSubmit = async () => {
         try {
-            await axiosClient.post('/lecture/rating', {
-                lecturePackageId,
-                rating: myRating
+            const response = await axiosClient.post(`/lecture/rating/${lecturePackageId}`, {
+                rating: myRating,
+                nickname
             });
-            alert("별점이 등록되었습니다.");
+            if (response.status === 201) {
+                alert("별점이 등록되었습니다.");
+            } else if (response.status === 409) {
+                alert("이미 별점을 등록했습니다.");
+            }
         } catch (error) {
             console.error("Error submitting rating:", error);
+            alert("별점을 이미 등록 하셨습니다.");
         }
     };
-
-    const renderStars = (rating) => {
-        const fullStars = Math.floor(rating);
-        const halfStar = rating % 1 >= 0.5;
-
-        return (
-            <div className={styles.rating}>
-                {Array(fullStars).fill().map((_, i) => (
-                    <span key={i} className={styles.star}>⭐</span>
-                ))}
-                {halfStar && <span className={styles.halfStar}>⭐</span>}
-                {Array(5 - fullStars - (halfStar ? 1 : 0)).fill().map((_, i) => (
-                    <span key={i + fullStars + (halfStar ? 1 : 0)} className={styles.star}>☆</span>
-                ))}
-            </div>
-        );
-    };
-
+    
     return (
         <div className={styles.App}>
-            <div className={styles.inlineContainer}>
-                <h3 className={styles.title}>강의 별점</h3>
-                {renderStars(averageRating)}
-            </div>
             <div className={styles.inlineContainer}>
                 <h3 className={styles.title}>내 별점</h3>
                 <div className={styles.rating}>

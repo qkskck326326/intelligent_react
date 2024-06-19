@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { axiosClient } from "../../axiosApi/axiosClient";
+import axios from 'axios';
 import styles from '../../styles/lecture/addLecture.module.css';
 import { useRouter } from 'next/router';
+import authStore from '../../stores/authStore';
 
 const AddLecture = () => {
     const [lectureName, setLectureName] = useState('');
@@ -10,38 +12,55 @@ const AddLecture = () => {
     const [videoFile, setVideoFile] = useState(null);
     const [videoPath, setVideoPath] = useState('');
     const [streamUrl, setStreamUrl] = useState('');
-    const [imgFile, setImgFile] = useState("");
+    const [imgFile, setImgFile] = useState('');
+    const [lecturePackageId, setLecturePackageId] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [loadingThumbnail, setLoadingThumbnail] = useState(false);
+    const [loadingVideo, setLoadingVideo] = useState(false);
     const imgRef = useRef();
     const router = useRouter();
 
-    // GitHub 정보 (환경 변수 사용)
-    const REPO_OWNER = 'rudalsdl'; // GitHub 사용자명
-    const REPO_NAME = 'lectureSave'; // 저장소 이름
+    useEffect(() => {
+        const currentNickname = authStore.getNickname();
+        const lecturePackageIdFromQuery = router.query.lecturePackageId || '1';
+        setLecturePackageId(lecturePackageIdFromQuery);
+        setNickname(currentNickname);
+    }, [router.query]);
+
+    const REPO_OWNER = 'rudalsdl';
+    const REPO_NAME = 'lectureSave';
+
+    const handleLectureRegister = async (lectureInput) => {
+        try {
+            const response = await axiosClient.post(`/lecture/register/${lecturePackageId}?nickname=${nickname}`, lectureInput);
+            alert('강의가 성공적으로 등록되었습니다.');
+            router.push(`/lecture/list?lecturePackageId=${lecturePackageId}`);
+        } catch (error) {
+            console.error('Error registering lecture:', error);
+            alert('강의 등록에 실패했습니다.');
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const lectureResponse = await axiosClient.post('/lecture/register', {
-                lectureName,
-                lectureContent,
-                lectureThumbnail,
-                streamUrl
-            });
-
-            alert('Lecture registered successfully');
-            // 강의 등록이 완료되면 목록 페이지로 이동
-            router.push('/lecture/list');
-        } catch (error) {
-            console.error('Error registering lecture', error);
-            alert('Error registering lecture');
-        }
+        const lectureInput = {
+            lectureName,
+            lectureContent,
+            lectureThumbnail,
+            streamUrl,
+            lecturePackageId,
+            nickname
+        };
+        await handleLectureRegister(lectureInput);
     };
 
     const handleVideoUpload = async (videoFile) => {
         if (!videoFile) {
-            alert('No video file selected');
+            alert('동영상 파일이 선택되지 않았습니다.');
             return;
         }
+
+        setLoadingVideo(true);
 
         try {
             const fileReader = new FileReader();
@@ -50,7 +69,7 @@ const AddLecture = () => {
                 const base64File = fileReader.result.split(',')[1];
                 const fileName = videoFile.name;
 
-                const response = await axiosClient.put(
+                const response = await axios.put(
                     `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/uploads/${fileName}`,
                     {
                         message: `upload video ${fileName}`,
@@ -58,18 +77,20 @@ const AddLecture = () => {
                     },
                     {
                         headers: {
-                            Authorization: `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
+                            Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
                         },
                     }
                 );
 
                 const fileUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/uploads/${fileName}`;
                 setStreamUrl(fileUrl);
-                alert('Video uploaded successfully');
+                alert('동영상이 성공적으로 업로드되었습니다.');
+                setLoadingVideo(false);
             };
         } catch (error) {
-            console.error('Error uploading video:', error);
-            alert('Error uploading video: ' + (error.response?.data?.error || error.message));
+            console.error('동영상 업로드 중 오류 발생:', error);
+            alert('동영상 업로드 중 오류 발생: ' + (error.response?.data?.error || error.message));
+            setLoadingVideo(false);
         }
     };
 
@@ -78,20 +99,48 @@ const AddLecture = () => {
         setVideoPath(file.name);
     };
 
-    const handleThumbnailUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setLectureThumbnail(file.name);
+    const handleThumbnailUpload = async (thumbnailFile) => {
+        if (!thumbnailFile) {
+            alert('썸네일 파일이 선택되지 않았습니다.');
+            return;
+        }
+
+        setLoadingThumbnail(true);
+
+        try {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(thumbnailFile);
+            fileReader.onloadend = async () => {
+                const base64File = fileReader.result.split(',')[1];
+                const fileName = thumbnailFile.name;
+
+                const response = await axios.put(
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/thumbnails/${fileName}`,
+                    {
+                        message: `upload thumbnail ${fileName}`,
+                        content: base64File,
+                    },
+                    {
+                        headers: {
+                            Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
+                        },
+                    }
+                );
+
+                const fileUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/thumbnails/${fileName}`;
+                setLectureThumbnail(fileUrl);
+                alert('썸네일이 성공적으로 업로드되었습니다.');
+                setLoadingThumbnail(false);
+            };
+        } catch (error) {
+            console.error('썸네일 업로드 중 오류 발생:', error);
+            alert('썸네일 업로드 중 오류 발생: ' + (error.response?.data?.error || error.message));
+            setLoadingThumbnail(false);
         }
     };
 
-    const saveImgFile = () => {
-        const file = imgRef.current.files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            setImgFile(reader.result);
-        };
+    const handleThumbnailFileChange = (file) => {
+        setImgFile(file);
     };
 
     return (
@@ -127,7 +176,7 @@ const AddLecture = () => {
                         <label htmlFor="lectureThumbnail" className={styles.label}>영상 썸네일</label>
                         <div className={styles.thumbnailInputContainer}>
                             <img
-                                src={imgFile}
+                                src={imgFile ? URL.createObjectURL(imgFile) : ''}
                                 alt="썸네일 미리보기"
                                 className={styles.thumbnailPreview}
                             />
@@ -135,14 +184,25 @@ const AddLecture = () => {
                                 type="file"
                                 id="thumbnailFile"
                                 className={styles.fileInput}
-                                onChange={(e) => {
-                                    handleThumbnailUpload(e);
-                                    saveImgFile();
-                                }}
+                                onChange={(e) => handleThumbnailFileChange(e.target.files[0])}
                                 ref={imgRef}
                             />
                             <label htmlFor="thumbnailFile" className={styles.customFileInput}>첨부파일</label>
                         </div>
+                        <button
+                            type="button"
+                            className={styles.uploadButton}
+                            onClick={() => handleThumbnailUpload(imgFile)}
+                            disabled={loadingThumbnail}
+                        >
+                            {loadingThumbnail ? (
+                                <div className={styles.loadingContainer}>
+                                    <div className={styles.loadingSpinner}></div>
+                                </div>
+                            ) : (
+                                '썸네일 업로드'
+                            )}
+                        </button>
                     </div>
                     <div className={styles.formGroup}>
                         <label htmlFor="videoPath" className={styles.label}>영상</label>
@@ -166,8 +226,15 @@ const AddLecture = () => {
                             type="button"
                             className={styles.uploadButton}
                             onClick={() => handleVideoUpload(videoFile)}
+                            disabled={loadingVideo}
                         >
-                            영상 업로드
+                            {loadingVideo ? (
+                                <div className={styles.loadingContainer}>
+                                    <div className={styles.loadingSpinner}></div>
+                                </div>
+                            ) : (
+                                '영상 업로드'
+                            )}
                         </button>
                     </div>
                     <div className={styles.formGroup}>

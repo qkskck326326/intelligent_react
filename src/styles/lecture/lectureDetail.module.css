@@ -1,9 +1,11 @@
 .lectureDetailContainer {
-    margin: 20px;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
 }
 
 .lectureTitle {
@@ -11,27 +13,22 @@
     margin-bottom: 10px;
 }
 
-.lectureContent {
+.lectureInfo {
     font-size: 1.2em;
-    margin-bottom: 20px;
+    color: #555;
 }
 
 .videoContainer {
-    position: relative;
-    width: 80%;
-    padding-bottom: 45%; /* 16:9 비율 */
-    height: 0;
-    overflow: hidden;
-    background: #000;
-    border: 2px solid #00af9c;
-    border-radius: 10px; /* 둥근 테두리 적용 */
+    margin-bottom: 20px;
 }
 
 .video {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    border-radius: 10px; /* 비디오 테두리도 둥글게 적용 */
+    max-width: 1200px;
+    border-radius: 10px;
+}
+
+.lectureContent {
+    font-size: 1.1em;
+    color: #333;
 }

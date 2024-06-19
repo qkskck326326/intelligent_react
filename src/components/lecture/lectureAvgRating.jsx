@@ -8,7 +8,7 @@ const LectureAvgRating = ({ lecturePackageId }) => {
     useEffect(() => {
         const fetchAverageRating = async () => {
             try {
-                const response = await axiosClient.get(`/lecture/rating?lecturePackageId=${lecturePackageId}`);
+                const response = await axiosClient.get(`/lecture/rating/${lecturePackageId}`);
                 setAverageRating(response.data.rating);
             } catch (error) {
                 console.error("Error fetching average rating:", error);
@@ -40,6 +40,7 @@ const LectureAvgRating = ({ lecturePackageId }) => {
             <div className={styles.inlineContainer}>
                 <h3 className={styles.title}>강의 별점</h3>
                 {renderStars(averageRating)}
+                <span className={styles.score}>{averageRating.toFixed(1)} 점</span>
             </div>
         </div>
     );
