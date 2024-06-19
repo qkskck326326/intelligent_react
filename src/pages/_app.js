@@ -30,7 +30,7 @@ const App = ({ Component, pageProps }) => {
     }
   }, []);
 
-  const shouldRenderHeader = router.pathname !== '/admin/testAI' &&  router.pathname !== '/user/naverLoginPopupPage';
+  const shouldRenderHeader = router.pathname !== '/admin/testAI' &&  router.pathname !== '/user/naverLoginPopupPage' &&  router.pathname !== '/user/googleLoginPopupPage';
 
   return (
       <QueryClientProvider client={queryClient}>

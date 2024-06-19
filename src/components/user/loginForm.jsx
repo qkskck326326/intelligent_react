@@ -7,6 +7,7 @@ import { observer } from "mobx-react";
 import Link from 'next/link';
 import KakaoLogin from "./kakaoLogin";
 import NaverLogin from "./naverLogin";
+import GoogleLogin from "./googleLogin";
 import styles from "../../styles/user/login/loginForm.module.css";
 
 const LoginForm = observer(() => {
@@ -146,8 +147,9 @@ const LoginForm = observer(() => {
 						</button>
 					</Link>
 				</div>
-				<KakaoLogin />
-				<NaverLogin />
+				<KakaoLogin/>
+				<NaverLogin/>
+				<GoogleLogin/>
 			</div>
 		</div>
 	);
