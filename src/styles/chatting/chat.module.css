@@ -33,6 +33,7 @@
     cursor: pointer;
 }
 .menuItems{
+    text-align: center;
     cursor: pointer;
     list-style: none;
     position: absolute;

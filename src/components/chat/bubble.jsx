@@ -9,13 +9,25 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const [isMe, setIsMe] = useState(false) //여기에 조건 바로 넣어서 쓰면 될 듯
     const [isThereMedia, setIsThereMedia] = useState(false)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false)
+    const eachSettingsRef = useRef();
     const textRef = useRef();
 
     useEffect(() => {
-        console.log(message)
         const currentUserNickname = AuthStore.getNickname();
         setIsMe(currentUserNickname === message.senderId);
     }, [message.senderId]);
+
+    useEffect(() => {
+        if (isEachSettingOn) {
+            document.addEventListener('click', handleClickOutside);
+        } else {
+            document.removeEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isEachSettingOn]);
 
     function handleAnnouncement(){
         //TODO 실제보낼 정보를 여기 담음
@@ -27,7 +39,11 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
         onReport(index, isMe)
     }
 
-
+    const handleClickOutside = (event) => {
+        if (eachSettingsRef.current && !eachSettingsRef.current.contains(event.target)) {
+            setIsEachSettingOn(false);
+        }
+    };
 
     return (
         <div className={`${styles.bubbleWrapper} ${ isMe && styles.reverseBubbleWrapper}`}>
@@ -35,7 +51,6 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                 {/* TODO 강사일 경우 강사의 페이지 이동기능도 필요할듯? */}
                 { !isMe &&
                     <div className={styles.profile}>
-                        {/* TODO 사진인데 옵셔널체이닝으로 에러방지해야할듯*/}
                         <img src={message.senderProfileImageUrl || ''} alt="Profile" />
                     </div>
 
@@ -67,12 +82,14 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                         {message.readCount}
                     </div>
                     <div className={styles.time}>
-                        {/*TODO 시간을 넣어야함 */}
-                        {new Date(message.dateSent).toLocaleTimeString('ko-KR')}
+                        {new Date(message.dateSent).toLocaleTimeString('ko-KR').substring(0,8)}
                     </div>
                 </div>
                 { option !== 'gpt' &&
-                    <div className={styles.eachSettings} onClick={() => setIsEachSettingOn(!isEachSettingOn)}>
+                    <div
+                        className={styles.eachSettings}
+                        onClick={() => setIsEachSettingOn(!isEachSettingOn)}
+                        ref={eachSettingsRef} >
                         <svg xmlns="http://www.w3.org/2000/svg"
                              viewBox="0 0 448 512">
                             <path

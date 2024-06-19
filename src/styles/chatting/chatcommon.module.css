@@ -137,3 +137,8 @@
     justify-content: center;
 
 }
+
+.chatEmpty{
+    text-align: center;
+    font-size: 1.25rem;
+}

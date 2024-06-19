@@ -8,8 +8,9 @@ import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
 import Axios from '../../axiosApi/Axios.js'
 
-const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
+const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
+    const [activeForm, setActiveForm] = useState(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
     const [announceExpand, setAnnounceExpand] = useState(false);
@@ -20,6 +21,7 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
     const fileInputRef = useRef(null);
     const [modalOn, setModalOn] = useState(false);
     const [alertMessage, setAlertMessage] = useState('')
+    const [isAtBottom, setIsAtBottom] = useState(true);
     const modal = new AlertModal();
     const axios = new Axios();
 
@@ -28,35 +30,99 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
     const [announce, setAnnounce] = useState('') //받아온 정보 넣어야함
     const [messages, setMessages] = useState([]);
     const bubbleContainerRef = useRef();
+    const menuRef = useRef();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${encodeURIComponent(AuthStore.getNickname())}`)
-                .then(data => {
-                    if (data.messages) {
-                        setMessages(() => [...data.messages]);
-                        console.log([...data.messages])
-                        if (data.messages.length < 25) {
-                            setHasMore(false)
-                        }
-                    } else {
+
+    const fetchData = async () => {
+        axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${encodeURIComponent(AuthStore.getNickname())}`)
+            .then(data => {
+                console.log(data)
+                if (data.messages) {
+                    //백엔드쪽 페이지 로직 에러가 있음 최신이아닌 오래된 100개를 불러오고 있음 진짜 죽어
+                    // 최신순으로 정렬해 정보를 담고 역순으로 정렬?
+
+                    setMessages((prevMessages) => [...data.messages.reverse(), ...prevMessages]);
+                    if (data.messages.length < 25) {
                         setHasMore(false)
                     }
+                } else {
+                    setHasMore(false)
+                }
+                if (data.announcement) {
+                    setAnnounce(data.announcement.messageContent);
+                }
+            })
+    }
 
-                    if (data.announcement) {
-                        setAnnounce(data.announcement.messageContent);
-                    }
-                })
-        }
+    useEffect(() => {
+        document.addEventListener('keypress', handleKeyPress);
+
+        return () => {
+            document.removeEventListener('keypress', handleKeyPress);
+        };
+    }, [activeForm]);
+
+    useEffect(() => {
 
         fetchData();
+        // const intervalId = setInterval(fetchData, 1000); // Fetch data every 5 seconds
+        // return () => clearInterval(intervalId);
+        if (isAtBottom) {
+            scrollToBottom();
+        }
 
-    }, [page, roomData.roomId]);
+    }, [page]);
+
+
+    const handleScroll = () => {
+        const scrollTop = bubbleContainerRef.current.scrollTop;
+        const clientHeight = bubbleContainerRef.current.clientHeight;
+        const scrollHeight = bubbleContainerRef.current.scrollHeight;
+
+        if (scrollTop === 0) {
+            //추가 로직
+            console.log(page)
+            if(hasMore){
+                setPage((prevPage) => prevPage + 1);
+            }
+            //패치로직
+        }
+
+        setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 1);
+    };
+
+    const scrollToBottom = () => {
+        console.log('스크롤 최하단 작동')
+        if (bubbleContainerRef.current) {
+            bubbleContainerRef.current.scrollTop = bubbleContainerRef.current.scrollHeight;
+        }
+    };
+
+    const handleForm1Submit = (event) => {
+        event.preventDefault();
+        handleSubmit(event);
+    };
+
+    const handleForm2Submit = (event) => {
+        event.preventDefault();
+        console.log('Form 2 submitted');
+        // Your form 2 submission logic here
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            if (activeForm === 'form1') {
+                handleForm1Submit(event);
+            } else if (activeForm === 'form2') {
+                handleForm2Submit(event);
+            }
+        }
+    };
 
     const handleClickBack = () => {
         setIsAnimating(true);
         setTimeout(() => {
-            onNavigateToIcon();
+            onNavigateToList();
             setIsAnimating(false);
             setIsSearchButtonClicked(false);
             setAnnounceExpand(false);
@@ -82,6 +148,24 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
         setIsMenuClicked(!isMenuClicked)
     }
 
+    useEffect(() => {
+        if (isMenuClicked) {
+            document.addEventListener('click', handleClickOutside);
+        } else {
+            document.removeEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isMenuClicked]);
+
+    const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target)) {
+            setIsMenuClicked(false);
+        }
+    };
+
     const handleAttachButtonClick = (event) => {
         event.preventDefault();
         setIsAttachButtonClicked(!isAttachButtonClicked);
@@ -106,21 +190,23 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
 
             try {
                 const savedMessage = await axios.post('/chat/sendmessage', newMessage);
-                console.log(savedMessage)
                 setMessages((prevMessages) => [...prevMessages, savedMessage]);
                 setTextContent('');
+                setIsAtBottom(true);
             } catch (error) {
                 console.error('Error sending message:', error);
             }
 
         }
+
     }
 
-    const handleFileAttach = () => {
-        setTextContent('');
+    const handleFileAttach = (event) => {
+        event.preventDefault();
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
+        setTextContent('');
     };
 
     const handleModalOn = () => {
@@ -129,7 +215,7 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
 
     const handleAnnouncementChange = (text) => {
     //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
-        setAnnounce(text)
+        setAnnounce(text);
     }
 
     const handleReport = (index, isMe) => {
@@ -179,7 +265,8 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
 
     return (
         <div
-            className={`${styles.chatContainer} ${isAnimating ? commonStyles.animateCollapse : ''} ${isExpanding ? commonStyles.animateExpand : ''}`}>
+            className={`${styles.chatContainer} ${isAnimating ? commonStyles.animateCollapse : ''} ${isExpanding ? commonStyles.animateExpand : ''}`}
+            onKeyDown={handleKeyPress}>
             <div className={styles.chatTop}>
                 <button className={`${styles.topButtons} ${styles.back}`} onClick={handleClickBack}>
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -201,15 +288,19 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                             <button className={`${styles.topButtons} ${styles.search}`} onClick={handleSearchButtonClick}>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
                             </button>
-                            <button className={styles.topButtons} onClick={handleMenuClick}>
+                            <button
+                                className={styles.topButtons}
+                                onClick={handleMenuClick}
+                                ref={menuRef} >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                     <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
                             </button>
                         {/*  메뉴 구성  */}
                             { isMenuClicked &&
                                 <ul className={styles.menuItems}>
-                                    <li>1번메뉴</li>
-                                    <li>2번메뉴</li>
+                                    <li >핀하기</li>
+                                    <li >채팅방나가기</li>
+                                    <li >방제목변경</li>
                                 </ul>
                             }
                         </>
@@ -221,7 +312,9 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
             </div>
             { (isSearchButtonClicked) &&
                 <form className={`${styles.searchBar}`} onSubmit={handleSearch}>
-                    <input className={styles.searchBox} type="text"/>
+                    <input className={styles.searchBox}
+                           type="text"
+                            onFocus={()=> setActiveForm('form2')}/>
                     <button className={styles.resetButton} type='reset'>
                         <svg xmlns="http://www.w3.org/2000/svg"
                              viewBox="0 0 384 512">
@@ -261,7 +354,8 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                     onAnnouncementChange={handleAnnouncementChange}
                     onReport={handleReport}
                     messages={messages}
-                    bubbleContainerRef={bubbleContainerRef}
+                    ref={bubbleContainerRef}
+                    onScroll={handleScroll}
                 />
             </div>
             { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
@@ -303,6 +397,7 @@ const Chat = observer(({ option, isExpanding, onNavigateToIcon, roomData}) => {
                                         placeholder='텍스트를 입력해주세요'
                                         className={`${styles.textContent} ${isSearchButtonClicked && styles.textContentResized}`}
                                         value={textContent}
+                                        onFocus={() => setActiveForm('form1')}
                                         onChange={(event)=> setTextContent(event.target.value)}></textarea>
                                     :
                                     <div className={styles.dummy}>사진 메시지 동시전송 불가로 만들어 둔 빈 박스입니다</div>

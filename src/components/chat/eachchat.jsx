@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from "mobx-react";
 import styles from '../../styles/chatting/eachchat.module.css';
+import TimeAgo from '../../axiosApi/timeDifference.js'
 
 const EachChat = observer(({chat, onClick}) => {
 
@@ -58,7 +59,7 @@ const EachChat = observer(({chat, onClick}) => {
             </div>
             {chat.latestMessageTimestamp !== null ?
                 <div className={styles.time}>
-                    {(chat.latestMessageTimestamp)}
+                    {TimeAgo(chat.latestMessageTimestamp)}
                 </div>
                 :
                 <div className={styles.time}> {/* 칸 맞추기용 더미 데이터 */}
