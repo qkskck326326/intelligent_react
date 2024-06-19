@@ -6,16 +6,11 @@ import styles from '../../styles/chatting/chatbubble.module.css'
 
 const Bubble = observer(({index, onAnnouncementChange, onReport, option, message})=>{
 
-    const [isMe, setIsMe] = useState(false) //여기에 조건 바로 넣어서 쓰면 될 듯
+    const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId) //여기에 조건 바로 넣어서 쓰면 될 듯
     const [isThereMedia, setIsThereMedia] = useState(false)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false)
     const eachSettingsRef = useRef();
     const textRef = useRef();
-
-    useEffect(() => {
-        const currentUserNickname = AuthStore.getNickname();
-        setIsMe(currentUserNickname === message.senderId);
-    }, [message.senderId]);
 
     useEffect(() => {
         if (isEachSettingOn) {
@@ -30,9 +25,8 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     }, [isEachSettingOn]);
 
     function handleAnnouncement(){
-        //TODO 실제보낼 정보를 여기 담음
-        const text = textRef.current.textContent;
-        onAnnouncementChange(text);
+        //TODO 실제보낼 정보를 여기 담음;
+        onAnnouncementChange(message.messageId, message.roomId);
     }
 
     const handleEachReport = () => {
@@ -82,7 +76,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                         {message.readCount}
                     </div>
                     <div className={styles.time}>
-                        {new Date(message.dateSent).toLocaleTimeString('ko-KR').substring(0,8)}
+                        {new Date(message.dateSent).toLocaleTimeString('ko-KR').slice(0, -3)}
                     </div>
                 </div>
                 { option !== 'gpt' &&

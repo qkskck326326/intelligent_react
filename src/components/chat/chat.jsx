@@ -8,8 +8,10 @@ import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
 import Axios from '../../axiosApi/Axios.js'
 
+
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
+    const [currentRoomData, setCurrentRoomData] = useState(roomData);
     const [activeForm, setActiveForm] = useState(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
@@ -22,9 +24,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [modalOn, setModalOn] = useState(false);
     const [alertMessage, setAlertMessage] = useState('')
     const [isAtBottom, setIsAtBottom] = useState(true);
+    const [userData, setUserData] = useState({});
     const modal = new AlertModal();
     const axios = new Axios();
-
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [announce, setAnnounce] = useState('') //받아온 정보 넣어야함
@@ -32,14 +34,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
 
-
     const fetchData = async () => {
-        axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${encodeURIComponent(AuthStore.getNickname())}`)
+        axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${AuthStore.getNickname()}`)
             .then(data => {
                 console.log(data)
                 if (data.messages) {
-                    //백엔드쪽 페이지 로직 에러가 있음 최신이아닌 오래된 100개를 불러오고 있음 진짜 죽어
-                    // 최신순으로 정렬해 정보를 담고 역순으로 정렬?
 
                     setMessages((prevMessages) => [...data.messages.reverse(), ...prevMessages]);
                     if (data.messages.length < 25) {
@@ -65,13 +64,20 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     useEffect(() => {
 
         fetchData();
-        // const intervalId = setInterval(fetchData, 1000); // Fetch data every 5 seconds
-        // return () => clearInterval(intervalId);
         if (isAtBottom) {
             scrollToBottom();
         }
 
     }, [page]);
+
+    useEffect(()=>{
+        axios.get('/chat/chatuserdetail', `?userId=${AuthStore.getNickname()}&roomId=${roomData.roomId}`)
+            .then(data => {
+                setUserData(data)
+                console.log(data)
+            })
+
+    }, [])
 
 
     const handleScroll = () => {
@@ -81,7 +87,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
         if (scrollTop === 0) {
             //추가 로직
-            console.log(page)
             if(hasMore){
                 setPage((prevPage) => prevPage + 1);
             }
@@ -213,9 +218,52 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         setModalOn(!modalOn)
     }
 
-    const handleAnnouncementChange = (text) => {
+    const handleAnnouncementChange = (messageId, roomId) => {
     //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
-        setAnnounce(text);
+
+        axios.put('/chat/announce', {
+            messageId,
+            roomId
+        }).then(data => setAnnounce(data.messageContent))
+
+    }
+
+    const handleRoomTitleName = () => {
+        const roomName = window.prompt('변경할 방 제목을 입력해주세요')
+        if(roomName !== null){
+            axios.put('/chat/changeroomname', {
+                roomId: userData.chatUserCompositeKey.roomId,
+                roomName
+            }).then(data => {
+                setCurrentRoomData(prevState => ({
+                    ...prevState,
+                    roomName: data.roomName
+                }));
+            })
+        }
+
+    }
+
+    const handlePin = () => {
+        const isPinned = (userData.isPinned === 0 ? 1 : 0)
+        axios.put('/chat/changepin', {
+            userId:userData.chatUserCompositeKey.userId,
+            roomId:userData.chatUserCompositeKey.roomId,
+            isPinned
+        }).then(data => setUserData(data))
+            .catch(error => console.error(error))
+    }
+
+    const handleLeave = () => {
+        window.confirm('혼또니 나가겠습니까?') &&
+            axios.delete('/chat/leaveroom', {
+                userId:userData.chatUserCompositeKey.userId,
+                roomId:userData.chatUserCompositeKey.roomId
+            }).then(data => {
+                console.log(data)
+                onNavigateToList()
+            })
+
     }
 
     const handleReport = (index, isMe) => {
@@ -277,7 +325,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 </button>
                 <div className={styles.title}>
                     {
-                        (option !== 'gpt') ? `${roomData.roomName}` : `인텔리봇`
+                        (option !== 'gpt') ? `${currentRoomData.roomName}` : `인텔리봇`
 
                     }
                 </div>
@@ -298,9 +346,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                         {/*  메뉴 구성  */}
                             { isMenuClicked &&
                                 <ul className={styles.menuItems}>
-                                    <li >핀하기</li>
-                                    <li >채팅방나가기</li>
-                                    <li >방제목변경</li>
+                                    {/*TODO */}
+                                    <li onClick={handlePin}>{userData.isPinned === 1 ? '핀해제' : '핀하기'}</li>
+                                    <li onClick={handleRoomTitleName}>방제목변경</li>
+                                    <li onClick={handleLeave}>채팅방나가기</li>
+
                                 </ul>
                             }
                         </>
@@ -324,7 +374,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     </button>
                 </form>
             }
-
 
             { (option !== 'gpt' && announce !== '') &&
                 <div className={`${styles.announceContainer} ${isSearchButtonClicked && styles.pushed}`}>
@@ -358,6 +407,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     onScroll={handleScroll}
                 />
             </div>
+
             { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
             <form className={styles.chatBottom} onSubmit={handleSubmit}>
                 {

@@ -6,8 +6,6 @@ import EachChat from '../../components/chat/eachchat.jsx';
 import Axios from '../../axiosApi/Axios.js'
 
 /*
-* TODO 여기서 할일
-*  2.
 * */
 const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, userId, userType }) => {
     const [isAnimating, setIsAnimating] = useState(false);
