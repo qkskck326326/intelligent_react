@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react';
 import modalStyles from "../../styles/common/modal.module.css";
 import Axios from '../../axiosApi/Axios.js'
-import AuthStore from "../../stores/authStore";
 import authStore from "../../stores/authStore";
 
 const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigateToChat, roomType }) => {
@@ -23,8 +22,6 @@ const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigat
 
     const handleMakeChat = () => {
         const names = [authStore.getNickname(), ...people]
-        console.log(names)
-        console.log(roomType)
         axios.post(`/chat/makechat/${roomType}`, {
             ...names
         }).then(data => {

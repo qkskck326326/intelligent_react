@@ -2,6 +2,8 @@ import React from 'react';
 import NavBar from "../components/common/NavBar";
 import CourseList from "../components/common/CourseList";
 import styles from '../styles/common/HomePage.module.css'; // CSS 모듈 임포트
+import UserInterestPackageList from "../components/main/userInterestPakcageList";
+import UpperCategoryPackageList from "../components/main/upperCategoryPackageList";
 
 const HomePage = () => {
 
@@ -18,7 +20,9 @@ const HomePage = () => {
             <main>
                 <img src='/images/banner.png' alt="Banner" style={{width: '100%', height:'auto'}}/>
                 <NavBar/>
-                <CourseList/>
+                {/*<CourseList/>*/}
+                <UserInterestPackageList/>
+                <UpperCategoryPackageList/>
                 <div
                     className={styles.fixedButton}
                     onClick={handleOpenTestAI}

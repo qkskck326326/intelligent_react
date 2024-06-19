@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 
-const TextEditor = dynamic(() => import('../CKEditor/textEditor'), { ssr: false });
+const CKEditorComponent  = dynamic(() => import('../CKEditor/CKEditorComponent'), { ssr: false });
 
 const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListClick }) => {
     const router = useRouter();
@@ -137,7 +137,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
     };
 
     return (
-        <DndProvider backend={HTML5Backend}>
+
             <div className={styles.lecturePackageRegister}>
                 <h1>{isEditMode ? '강의 패키지 수정' : '강의 패키지 등록'}</h1>
                 <div className={styles.formSection}>
@@ -224,7 +224,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                         onSave={handleThumbnailSave}
                     />
                 )}
-
+                <DndProvider backend={HTML5Backend}>
                 <div className={styles.techStackSection}>
                     <div className={styles.techStacks}>
                         {techStacks.map(stack => (
@@ -235,8 +235,9 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                 <div className={styles.selectedTechStacks}>
                     <DropZone onDrop={handleDrop} selectedStacks={selectedTechStacks} onRemove={handleRemove}/>
                 </div>
+                </DndProvider>
 
-                <TextEditor setEditorData={setEditorData} initialData={editorData} />
+                <CKEditorComponent data={editorData} onChange={setEditorData} />
                 <button className={styles.saveButton} onClick={handleSubmit}>{isEditMode ? '수정하기' : '등록하기'}</button>
                 {isEditMode ? (
                     <button className={styles.actionButton}
@@ -245,7 +246,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                     <button className={styles.actionButton} onClick={onBackListClick}>리스트목록으로 이동</button>
                 )}
             </div>
-        </DndProvider>
+
     );
 });
 

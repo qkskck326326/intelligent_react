@@ -12,14 +12,17 @@ import Axios from '../../axiosApi/Axios.js'
 const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, userId, userType }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
+    const [chatData, setChatData] = useState([])
     const axios = new Axios();
 
     //type 0은 학생 1은 강사 2는 관리자
 
     useEffect(()=>{
         axios.get('/chat/chatlist', `?userId=${userId}`)
-            .then(data => console.log(data))
-
+            .then(data => {
+                console.log(data)
+                setChatData(data)
+            })
     }, [])
 
 
@@ -34,6 +37,16 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
 
     const handleTurning = () => {
         setIsPlusClicked(!isPlusClicked)
+    }
+
+    const handleEnteringChat = (chatroom) => {
+
+        setIsAnimating(true);
+        setTimeout(() => {
+            onNavigateToChat({...chatroom})
+            setIsAnimating(false);
+            setIsPlusClicked(false);
+        }, 500);
     }
     return (
         <div
@@ -131,13 +144,13 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
             }
 
             <div className={commonStyles.chatServiceMain}>
-                <EachChat/>
+                {
+                    chatData.map((chatDatum) =>
+                        <EachChat key={chatDatum.chatroom.roomId} chat={chatDatum} onClick={() => handleEnteringChat(chatDatum.chatroom)} />
+                    )
+                }
             </div>
 
-
-            {/*<button onClick={() => onNavigateToChat('Chat 1')}>Go to Chat 1</button>*/}
-            {/*<button onClick={() => onNavigateToChat('Chat 2')}>Go to Chat 2</button>*/}
-            {/*<button onClick={() => onNavigateToChat('Chat 3')}>Go to Chat 3</button>*/}
 
         </div>
     );
