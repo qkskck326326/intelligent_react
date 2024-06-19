@@ -8,17 +8,23 @@ import axios from 'axios';
 const REPO_OWNER = 'rudalsdl';
 const REPO_NAME = 'lectureSave';
 
+// 추가: getSHAFromGitHub 함수
+const getSHAFromGitHub = async (filePath) => {
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
+    const response = await axios.get(url, {
+        headers: {
+            Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
+            Accept: 'application/vnd.github.v3+json'
+        },
+    });
+    return response.data.sha;
+};
+
+// 수정: deleteFileFromGitHub 함수 수정
 const deleteFileFromGitHub = async (filePath) => {
     try {
+        const sha = await getSHAFromGitHub(filePath);
         const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
-            },
-        });
-
-        const sha = response.data.sha;
-
         await axios.delete(url, {
             headers: {
                 Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
@@ -28,10 +34,12 @@ const deleteFileFromGitHub = async (filePath) => {
                 sha: sha,
             },
         });
-
         console.log(`${filePath} deleted successfully from GitHub`);
     } catch (error) {
         console.error(`Error deleting ${filePath} from GitHub:`, error);
+        if (error.response) {
+            console.error('Response data:', error.response.data);
+        }
     }
 };
 
@@ -40,6 +48,8 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
     const [deletingMode, setDeletingMode] = useState(false);
     const [selectedLectures, setSelectedLectures] = useState(new Set());
     const [isLayerOpen, setIsLayerOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
     const [lectureReadStatuses, setLectureReadStatuses] = useState({});
 
     useEffect(() => {
@@ -79,12 +89,14 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
         }
     };
 
+    // 수정: handleDeleteLectures 함수 수정
     const handleDeleteLectures = async () => {
         try {
-            // 강의 정보 가져오기
+            setIsLoading(true);
+            setIsDeleted(false);
             const lecturesToDelete = lectures.filter(lecture => selectedLectures.has(lecture.lectureId));
+            console.log('Lectures to delete:', lecturesToDelete);
 
-            // GitHub에서 파일 삭제
             for (const lecture of lecturesToDelete) {
                 if (lecture.lectureThumbnail) {
                     await deleteFileFromGitHub(`thumbnails/${lecture.lectureThumbnail}`);
@@ -95,16 +107,18 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
                 }
             }
 
-            // 서버에서 강의 삭제
-            const lectureIdsArray = Array.from(selectedLectures).map(Number);
-            await axiosClient.post("/lecture/delete", lectureIdsArray);
+            console.log('Deleting lectures from server');
+            await axiosClient.delete("/lecture/delete", { data: { lectureIds: Array.from(selectedLectures) } });
 
-            fetchData(); // 강의 삭제 후 목록 새로고침
+            fetchData();
             setSelectedLectures(new Set());
             setDeletingMode(false);
             setIsLayerOpen(false);
+            setIsDeleted(true);
+            setIsLoading(false);
         } catch (err) {
-            console.error("Error deleting lectures:", err);
+            console.error("Error deleting lectures:", err.response ? err.response.data : err.message);
+            setIsLoading(false);
         }
     };
 
@@ -122,6 +136,7 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
 
     const openLayer = () => {
         setIsLayerOpen(true);
+        setIsDeleted(false);
     };
 
     const closeLayer = () => {
@@ -187,16 +202,34 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
             {isLayerOpen && (
                 <div className={styles.layerContainer}>
                     <div className={styles.layerContent}>
-                        <h3>삭제 확인</h3>
-                        <p>선택한 강의를 삭제하시겠습니까?</p>
-                        <div className={styles.layerButtons}>
-                            <button className={styles.secondaryButton} onClick={closeLayer}>
-                                취소
-                            </button>
-                            <button className={styles.dangerButton} onClick={handleDeleteLectures}>
-                                삭제
-                            </button>
-                        </div>
+                        {isLoading ? (
+                            <>
+                                <p>삭제 중입니다. 잠시만 기다려 주세요...</p>
+                                <div className={styles.loadingIcon}></div>
+                            </>
+                        ) : isDeleted ? (
+                            <>
+                                <p>삭제가 완료 되었습니다.</p>
+                                <div className={styles.layerButtons}>
+                                    <button className={styles.secondaryButton} onClick={closeLayer}>
+                                        확인
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <h3>삭제 확인</h3>
+                                <p>선택한 강의를 삭제하시겠습니까?</p>
+                                <div className={styles.layerButtons}>
+                                    <button className={styles.secondaryButton} onClick={closeLayer}>
+                                        취소
+                                    </button>
+                                    <button className={styles.dangerButton} onClick={handleDeleteLectures}>
+                                        삭제
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             )}

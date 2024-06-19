@@ -33,11 +33,11 @@ const AddLecture = () => {
     const handleLectureRegister = async (lectureInput) => {
         try {
             const response = await axiosClient.post(`/lecture/register/${lecturePackageId}?nickname=${nickname}`, lectureInput);
-            alert('Lecture registered successfully');
+            alert('강의가 성공적으로 등록되었습니다.');
             router.push(`/lecture/list?lecturePackageId=${lecturePackageId}`);
         } catch (error) {
             console.error('Error registering lecture:', error);
-            alert('Error registering lecture');
+            alert('강의 등록에 실패했습니다.');
         }
     };
 
