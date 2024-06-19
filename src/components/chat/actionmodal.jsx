@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
 import modalStyles from "../../styles/common/modal.module.css";
-import Axios from '../../axiosApi/Axios.js'
 import authStore from "../../stores/authStore";
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigateToChat, roomType }) => {
 
     const [isAnimating, setIsAnimating] = useState(false);
     const [people, setPeople] = useState(option.split(', '))
-    const axios = new Axios();
 
     const handleClickBack = () => {
         setIsAnimating(true);
@@ -21,13 +20,19 @@ const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigat
 
 
     const handleMakeChat = () => {
-        const names = [authStore.getNickname(), ...people]
-        axios.post(`/chat/makechat/${roomType}`, {
-            ...names
-        }).then(data => {
-            onNavigateToChat(data)
+        const names = [authStore.getNickname(), ...people];
+        console.log(names)
+        axiosClient.post(`/chat/makechat/${roomType}`, {
+            names: names
         })
-    }
+            .then(response => {
+                onNavigateToChat(response.data);
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
+    };
+
     return (
         <div className={modalStyles.modalBackground}>
             <div

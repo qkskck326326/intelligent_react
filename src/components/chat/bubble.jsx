@@ -25,7 +25,6 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     }, [isEachSettingOn]);
 
     function handleAnnouncement(){
-        //TODO 실제보낼 정보를 여기 담음;
         onAnnouncementChange(message.messageId, message.roomId);
     }
 

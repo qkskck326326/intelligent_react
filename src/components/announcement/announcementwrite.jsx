@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Axios from "../../axiosApi/Axios";
 import { observer } from 'mobx-react';
 import authStore from "../../stores/authStore";
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 const AnnouncementWrite = observer(() => {
     const router = useRouter();
@@ -55,32 +56,40 @@ const AnnouncementWrite = observer(() => {
     }
 
     function postSubmit() {
-        axios.post('/announcement', {
-            title,
-            content,
+        axiosClient.post('/announcement', {
+            title: title,
+            content: content,
             createdAt: new Date(),
             creator: authStore.getNickname(),
-            category,
-            importance
-        }).then(data => {
-            console.log(data);
-            window.location.href = '/cs';
-        });
+            category: category,
+            importance: importance
+        })
+            .then(response => {
+                console.log(response.data);
+                window.location.href = '/cs';
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     function putSubmit() {
-        axios.put('/announcement', {
-            announcementId,
-            title,
-            content,
-            createdAt,
+        axiosClient.put('/announcement', {
+            announcementId: announcementId,
+            title: title,
+            content: content,
+            createdAt: new Date(),
             creator: authStore.getNickname(),
-            category,
-            importance
-        }).then(data => {
-            console.log(data);
-            window.location.href = '/cs';
-        });
+            category: category,
+            importance: importance
+        })
+            .then(response => {
+                console.log(response.data);
+                window.location.href = '/cs';
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     function handleAnnouncementSubmit(event) {

@@ -4,12 +4,12 @@ import Axios from '../../axiosApi/Axios.js'
 import {observer} from "mobx-react";
 import React from 'react';
 import authStore from "../../stores/authStore";
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Announcedetail = observer(() => {
 
     const router = useRouter();
     const {announcementId, title, createdAt, category, importance, content} = router.query
-    const axios = new Axios();
 
     const convertNewlinesToBreaks = (text) => {
 
@@ -27,11 +27,16 @@ const Announcedetail = observer(() => {
         2: '이벤트'
     };
 
-    function handleDelete(id){
-        axios.delete('/announcement',{
-            announcementId
+    function handleDelete(){
+        axiosClient.delete('/announcement', {
+            data: { announcementId: announcementId }
         })
-        window.location.href = '/cs'
+            .then(() => {
+                window.location.href = '/cs';
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     function handleEdit(){

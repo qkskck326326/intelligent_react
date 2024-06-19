@@ -6,7 +6,7 @@ import BubbleContainer from "./bubblecontainer.jsx";
 import AuthStore from "../../stores/authStore";
 import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
-import Axios from '../../axiosApi/Axios.js'
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
@@ -26,7 +26,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [isAtBottom, setIsAtBottom] = useState(true);
     const [userData, setUserData] = useState({});
     const modal = new AlertModal();
-    const axios = new Axios();
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [announce, setAnnounce] = useState('') //받아온 정보 넣어야함
@@ -34,24 +33,36 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
 
+    //TODO
     const fetchData = async () => {
-        axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${AuthStore.getNickname()}`)
-            .then(data => {
-                console.log(data)
-                if (data.messages) {
+        try {
+            const response = await axiosClient.get('/chat/chatdata', {
+                params: {
+                    roomId: roomData.roomId,
+                    page: page,
+                    userId: AuthStore.getNickname()
+                }
+            });
 
-                    setMessages((prevMessages) => [...data.messages.reverse(), ...prevMessages]);
-                    if (data.messages.length < 25) {
-                        setHasMore(false)
-                    }
-                } else {
-                    setHasMore(false)
+            const data = response.data;
+            console.log(data);
+
+            if (data.messages) {
+                setMessages((prevMessages) => [...data.messages.reverse(), ...prevMessages]);
+                if (data.messages.length < 25) {
+                    setHasMore(false);
                 }
-                if (data.announcement) {
-                    setAnnounce(data.announcement.messageContent);
-                }
-            })
-    }
+            } else {
+                setHasMore(false);
+            }
+
+            if (data.announcement) {
+                setAnnounce(data.announcement.messageContent);
+            }
+        } catch (error) {
+            console.error('An error occurred!', error);
+        }
+    };
 
     useEffect(() => {
         document.addEventListener('keypress', handleKeyPress);
@@ -70,14 +81,22 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     }, [page]);
 
-    useEffect(()=>{
-        axios.get('/chat/chatuserdetail', `?userId=${AuthStore.getNickname()}&roomId=${roomData.roomId}`)
-            .then(data => {
-                setUserData(data)
-                console.log(data)
+    //TODO
+    useEffect(() => {
+        axiosClient.get('/chat/chatuserdetail', {
+            params: {
+                userId: AuthStore.getNickname(),
+                roomId: roomData.roomId
+            }
+        })
+            .then(response => {
+                setUserData(response.data);
+                console.log(response.data);
             })
-
-    }, [])
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
+    }, []);
 
 
     const handleScroll = () => {
@@ -193,8 +212,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 isAnnouncement: 0
             };
 
+            //TODO
             try {
-                const savedMessage = await axios.post('/chat/sendmessage', newMessage);
+                const response = await axiosClient.post('/chat/sendmessage', newMessage);
+                const savedMessage = response.data;
                 setMessages((prevMessages) => [...prevMessages, savedMessage]);
                 setTextContent('');
                 setIsAtBottom(true);
@@ -221,48 +242,72 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const handleAnnouncementChange = (messageId, roomId) => {
     //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
 
-        axios.put('/chat/announce', {
-            messageId,
-            roomId
-        }).then(data => setAnnounce(data.messageContent))
-
+        //TODO
+        axiosClient.put('/chat/announce', {
+            messageId: messageId,
+            roomId: roomId
+        })
+            .then(response => {
+                setAnnounce(response.data.messageContent);
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     const handleRoomTitleName = () => {
         const roomName = window.prompt('변경할 방 제목을 입력해주세요')
         if(roomName !== null){
-            axios.put('/chat/changeroomname', {
+            //TODO
+            axiosClient.put('/chat/changeroomname', {
                 roomId: userData.chatUserCompositeKey.roomId,
-                roomName
-            }).then(data => {
-                setCurrentRoomData(prevState => ({
-                    ...prevState,
-                    roomName: data.roomName
-                }));
+                roomName: roomName
             })
+                .then(response => {
+                    setCurrentRoomData(prevState => ({
+                        ...prevState,
+                        roomName: response.data.roomName
+                    }));
+                })
+                .catch(error => {
+                    console.error('An error occurred!', error);
+                });
         }
 
     }
 
     const handlePin = () => {
         const isPinned = (userData.isPinned === 0 ? 1 : 0)
-        axios.put('/chat/changepin', {
-            userId:userData.chatUserCompositeKey.userId,
-            roomId:userData.chatUserCompositeKey.roomId,
-            isPinned
-        }).then(data => setUserData(data))
-            .catch(error => console.error(error))
+        //TODO
+        axiosClient.put('/chat/changepin', {
+            userId: userData.chatUserCompositeKey.userId,
+            roomId: userData.chatUserCompositeKey.roomId,
+            isPinned: isPinned
+        })
+            .then(response => {
+                setUserData(response.data);
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     const handleLeave = () => {
         window.confirm('혼또니 나가겠습니까?') &&
-            axios.delete('/chat/leaveroom', {
-                userId:userData.chatUserCompositeKey.userId,
-                roomId:userData.chatUserCompositeKey.roomId
-            }).then(data => {
-                console.log(data)
-                onNavigateToList()
+            //TODO
+        axiosClient.delete('/chat/leaveroom', {
+            data: {
+                userId: userData.chatUserCompositeKey.userId,
+                roomId: userData.chatUserCompositeKey.roomId
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+                onNavigateToList();
             })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
 
     }
 
@@ -329,8 +374,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
                     }
                 </div>
+                {/*단체챗만 나옴*/}
                 <div className={styles.chatSubTop}>
-                    {/*챗지피티면 검색버튼만 */}
+                    {/*챗지피티는 아무버튼도 업다 */}
                     { (option !== 'gpt') ?
                         <>
                             <button className={`${styles.topButtons} ${styles.search}`} onClick={handleSearchButtonClick}>
