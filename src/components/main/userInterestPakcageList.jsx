@@ -85,13 +85,14 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
                 <h3>'{authStore.getNickname()}' 님의 관심사별 TOP10</h3>
             </div>
             <div className={styles.paginationWrapper}>
-                <button onClick={handlePreviousPage} disabled={currentPage === 0} className={styles.prevButton}></button>
+                <button onClick={handlePreviousPage} disabled={currentPage === 0}
+                        className={styles.prevButton}></button>
                 <div className={styles.grid}>
                     {currentItems.map((lecture) => (
                         <div key={lecture.lecturePackageId} className={styles.cardContainer}>
                             <div className={styles.card}>
                                 <div className={styles.thumbnail}>
-                                    <img src={lecture.thumbnail} alt={lecture.thumbnail} />
+                                    <img src={lecture.thumbnail} alt={lecture.thumbnail}/>
                                 </div>
                             </div>
                             <div className={styles.details}>
@@ -108,8 +109,10 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
                         </div>
                     ))}
                 </div>
-                <button onClick={handleNextPage} disabled={(currentPage + 1) * ITEMS_PER_PAGE >= lecturePackages.length} className={styles.nextButton}></button>
+                <button onClick={handleNextPage} disabled={(currentPage + 1) * ITEMS_PER_PAGE >= lecturePackages.length}
+                        className={styles.nextButton}></button>
             </div>
+            <div className={styles.horizontalLine}></div>
         </div>
     );
 });
