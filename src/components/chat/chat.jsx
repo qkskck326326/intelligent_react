@@ -236,6 +236,8 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     },
                 });
                 const { message, files } = response.data;
+                console.log(response.data);
+                setMessages((prevMessages) => [...prevMessages, { ...message, files }]);
 
             } catch (error) {
                 console.error('Error uploading files:', error);

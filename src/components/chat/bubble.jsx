@@ -69,7 +69,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                                     <img
                                         key={index}
                                         className={styles.img}
-                                        src={`http://localhost:8080/${file.fileURL.replace(/\\/g, '/')}`}
+                                        src={`http://localhost:8080${file.fileURL}`}
                                         alt={file.originalName}
                                     />
                                 ))}
@@ -85,7 +85,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                         {new Date(message.dateSent).toLocaleTimeString('ko-KR').slice(0, -3)}
                     </div>
                 </div>
-                { option !== 'gpt' &&
+                {option !== 'gpt' &&
                     <div
                         className={styles.eachSettings}
                         onClick={() => setIsEachSettingOn(!isEachSettingOn)}
