@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@react-oauth/google": "^0.12.1",
     "aws-sdk": "^2.1642.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
@@ -20,6 +21,7 @@
     "mobx": "^6.12.3",
     "mobx-react": "^9.1.1",
     "next": "^14.2.3",
+    "next-transpile-modules": "^10.0.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
     "react-chartjs-2": "^5.2.0",
@@ -30,7 +32,9 @@
     "react-query": "^3.39.3",
     "react-responsive": "^10.0.0",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "recharts": "^2.12.7",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "dev": "next dev",
