@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/admin/UserManagement.module.css';
 import Sidebar from "../../components/admin/Sidebar";
 
@@ -12,11 +12,12 @@ const UserManagement = () => {
     const [userType, setUserType] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [selectedUsers, setSelectedUsers] = useState([]); // 선택된 사용자들
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/admins/users', {
+                const response = await axiosClient.get('/admins/users', {
                     params: {
                         page,
                         size,
@@ -39,7 +40,6 @@ const UserManagement = () => {
 
     const handleSearch = () => {
         setPage(0);
-        // Trigger the useEffect to fetch new data
     };
 
     const handleReset = () => {
@@ -59,6 +59,31 @@ const UserManagement = () => {
     const handleNextPage = () => {
         if (page < totalPages - 1) {
             setPage(page + 1);
+        }
+    };
+
+    const handleSelectUser = (user) => {
+        setSelectedUsers((prevSelected) => {
+            if (prevSelected.includes(user)) {
+                return prevSelected.filter((selected) => selected !== user);
+            } else {
+                return [...prevSelected, user];
+            }
+        });
+    };
+
+    const handleDeleteSelected = async () => {
+        try {
+            const reason = prompt('삭제 이유를 입력하세요.');  // 삭제 이유를 입력받습니다.
+            if (reason) {
+                await axiosClient.post('/admins/delete-users',
+                    selectedUsers.map(user => ({ email: user.userEmail, provider: user.provider, reason }))
+                );
+                setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user)));
+                setSelectedUsers([]);
+            }
+        } catch (error) {
+            console.error('Error deleting users:', error);
         }
     };
 
@@ -114,10 +139,12 @@ const UserManagement = () => {
                         <button className={styles.filterButton} onClick={handleReset}>초기화</button>
                     </div>
                 </div>
+                <button className={styles.filterButton} onClick={handleDeleteSelected}>삭제</button>
                 <div className={styles.tableSection}>
                     <table className={styles.userTable}>
                         <thead>
                         <tr>
+                            <th>선택</th>
                             <th>번호</th>
                             <th>이름</th>
                             <th>아이디</th>
@@ -132,19 +159,26 @@ const UserManagement = () => {
                         {users.length > 0 ? (
                             users.map((user, index) => (
                                 <tr key={`${user.userEmail}-${user.provider}`}>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedUsers.includes(user)}
+                                            onChange={() => handleSelectUser(user)}
+                                        />
+                                    </td>
                                     <td>{page * size + index + 1}</td>
                                     <td>{user.userName}</td>
                                     <td>{user.userEmail}</td>
                                     <td>{user.userEmail}</td>
                                     <td>{user.phone}</td>
-                                    <td>{new Date(user.registerTime).toLocaleDateString()}</td> {/* 가입 날짜 추가 */}
+                                    <td>{new Date(user.registerTime).toLocaleDateString()}</td>
                                     <td>{user.userType === 0 ? '학생' : user.userType === 1 ? '강사' : '관리자'}</td>
                                     <td></td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="8">데이터가 없습니다</td>
+                                <td colSpan="9">데이터가 없습니다</td>
                             </tr>
                         )}
                         </tbody>

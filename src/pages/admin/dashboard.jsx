@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Sidebar from '../../components/admin/Sidebar';
 import styles from '../../styles/admin/Dashboard.module.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Dashboard = () => {
     const [registrationStats, setRegistrationStats] = useState([]);
     const [page, setPage] = useState(0);
-    const [size] = useState(10); // 페이지당 항목 수
+    const [size] = useState(10); // 페이지당 항목 수를 10으로 설정
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchRegistrationStats = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/admins/registration-stats-monthly', {
+                const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_API_URL}/admins/registration-stats`, {
                     params: {
                         startDate: '2023-01-01',
-                        endDate: new Date().toISOString().split('T')[0], // 오늘 날짜
+                        endDate: new Date().toISOString().split('T')[0],
                         page,
-                        size: 500 // 모든 데이터를 가져와서 그래프로 사용하기 위해 큰 숫자로 설정
+                        size // size를 10으로 설정
                     }
                 });
-                console.log(response.data); // API 응답 데이터 로그 출력
-                const stats = Object.entries(response.data)
-                    .map(([date, count]) => ({ date, count }))
-                    .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신 날짜순으로 정렬
+                console.log(response.data);
+                const stats = response.data.content.map(({ date, count }) => ({ date, count }))
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 setRegistrationStats(stats);
-                setTotalPages(Math.ceil(stats.length / size));
+                setTotalPages(response.data.totalPages);
             } catch (error) {
                 console.error('Error fetching registration stats:', error);
             }
