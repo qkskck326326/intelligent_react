@@ -43,20 +43,14 @@ const BoardDetail = ({ boardId }) => {
                 <div className="card-body">
                     <h1 className="card-title">{post.title}</h1>
                     <div className="post-meta text-muted mb-3">
-                        <span>작성일: {formatDate(post.registDate)}</span><br />
-                        <span>원글링크: <a href={post.boardUrl} target="_blank" rel="noopener noreferrer">{post.boardUrl}</a></span>
+                        <span>작성일: {formatDate(post.registDate)}</span><br/>
                     </div>
                     <div className="originalContext mb-3">
                         {post.originalContext}
                     </div>
-                    <div className="videoTextlizedContext">
-                        <h5>영상 내용 :</h5>
-                        {post.videoTextlizedContext ? (
-                            <div>{post.videoTextlizedContext}</div>
-                        ) : (
-                            <p>없음</p>
-                        )}
-                    </div>
+
+                    <span>원글링크: <a href={post.boardUrl} target="_blank"
+                                   rel="noopener noreferrer">{post.boardUrl}</a></span>
                 </div>
             </div>
             {/*<div className="comments-section mt-4">*/}

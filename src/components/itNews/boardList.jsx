@@ -99,6 +99,8 @@ const BoardList = () => {
         setPage(1);
     };
 
+
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
@@ -150,7 +152,7 @@ const BoardList = () => {
                                 onMouseOver={e => e.currentTarget.style.backgroundColor = '#f0f0f0'}
                                 onMouseOut={e => e.currentTarget.style.backgroundColor = ''}>{item.title}</td>
                             <td className="text-center">
-                                <a href={item.siteUrl} className="btn btn-primary" target="_blank"
+                                <a href={item.boardUrl} className="btn btn-primary" target="_blank"
                                    rel="noopener noreferrer">
                                     원글이동
                                 </a>
