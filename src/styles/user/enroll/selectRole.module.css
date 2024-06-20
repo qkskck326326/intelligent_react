@@ -1,0 +1,60 @@
+.container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.title {
+    display: block;
+    font-size: 2rem;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    /* unicode-bidi: isolate; */
+}
+
+.card {
+    display: inline-block;
+    width: 250px;
+    height: 300px;
+    margin: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.student {
+    background-color: #9fe0f1;
+}
+
+.teacher {
+    background-color: #92e9c3;
+}
+
+.icon {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    margin-top: 25px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.studentIcon {
+    background-image: url('../images/student.png'); 
+}
+
+.teacherIcon {
+    background-image: url('../images/teacher.png'); 
+}
+
+.cardName {
+    font-weight: bold;
+    color:aliceblue;
+    font-size: 50px;
+    margin-top: 40px;
+}

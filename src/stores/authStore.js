@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import { axiosClient } from "../axiosApi/axiosClient";
 
 class AuthStore {
     isLoggedIn = false;
