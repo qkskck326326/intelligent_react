@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 export default function GetText() {
     const [url, setUrl] = useState('');
@@ -15,7 +16,7 @@ export default function GetText() {
         setOriginalText(''); // 기존 텍스트 초기화
         setTranslatedText(''); // 번역 텍스트 초기화
         try {
-            const response = await axios.post('http://localhost:5000/getAudio', { url }, {
+            const response = await axios.post('http://localhost:5000/getText', { url }, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -30,10 +31,14 @@ export default function GetText() {
         }
     };
 
+    const doCrowling = () => {
+        axios.get("http://localhost:5000/crowling")
+    }
 
     return (
         <div>
-            <h1>유튜브 링크 → 텍스트</h1>
+            <h1>유튜브 링크 → 텍스트</h1><button onClick={doCrowling}>크롤링 요청</button>
+            <p>※ 서버 성능 한계로 연산자원이 부족하여 긴 영상을 요청하거나 동시에 요청하면 시간이 오래 걸릴 수 있습니다.</p>
             <div style={{ display: 'flex', alignItems: 'center' }}>
             <input
                 type="text"
