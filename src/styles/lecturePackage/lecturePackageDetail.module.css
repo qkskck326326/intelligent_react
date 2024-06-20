@@ -1,8 +1,11 @@
+
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    background-color: #f6f6f6;
 }
 
 .title {
@@ -15,20 +18,22 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 900px;
-    margin-bottom: 10px;
+    max-width: 800px;
+    /*margin-bottom: 10px;*/
 }
 
 .infoItem {
     font-size: 1rem;
+
 }
 
 .actions {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     width: 100%;
-    max-width: 900px;
+    max-width: 100%;
     gap: 10px;
+    margin-bottom: 10px;
     margin-top: 20px;
 }
 
@@ -36,24 +41,24 @@
     font-size: 1rem;
     border: 1px solid #ccc;
     padding: 5px 10px;
-    background: none;
+    background-color: #ffffff;
     cursor: pointer;
 }
 
-.yellowBox {
-    background-color: #fffae6;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 900px;
-    width: 100%;
-    margin-bottom: 20px;
-}
+/*.yellowBox {*/
+/*    background-color: #fffae6;*/
+/*    padding: 20px;*/
+/*    border-radius: 8px;*/
+/*    max-width: 900px;*/
+/*    width: 100%;*/
+/*    margin-bottom: 20px;*/
+/*}*/
 
 .redBox {
     display: flex;
     justify-content: center;
-    padding: 20px;
-    margin-bottom: 20px;
+    /*padding: 20px;*/
+    /*margin-bottom: 20px;*/
     width: 100%;
     overflow-y: visible;
 }
@@ -71,7 +76,7 @@
 }
 
 .priceKind {
-    background-color: #ff8c00;
+    background-color: #a499ff;
     color: white;
     padding: 10px;
     border-radius: 4px;
@@ -104,8 +109,9 @@
 
 .category {
     padding: 5px 10px;
-    background-color: #e0e0e0;
+    background-color: #20c997;
     border-radius: 4px;
+    color:white;
 }
 
 .thumbnail {
@@ -117,6 +123,7 @@
 .content {
     text-align: left;
     width: 100%;
+    /*border-radius: 0px;*/
 }
 
 .content table {
@@ -135,11 +142,41 @@
 
 .content {
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 0px;
+    width:800px;
+
 }
 
 .content img {
     width: 100%; /* 100% 너비로 설정하여 컨테이너에 맞게 조정 */
     max-width: 300px; /* 최대 너비를 설정 */
     height: auto; /* 높이를 자동으로 조정하여 비율 유지 */
+}
+
+.fixedBox {
+    position: fixed;
+    bottom: 0;
+    width: 50%;
+    border:1px solid black;
+    background-color: #ffffff;
+    text-align: right;
+    padding: 20px;
+    box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.07);
+    z-index: 1000;
+    margin-bottom:5px;
+
+}
+
+.applyButton {
+    background-color: #00c7b7;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.foot{
+    height: 70px;
 }

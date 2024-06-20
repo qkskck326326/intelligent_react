@@ -141,7 +141,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
 
     return (
         <div className={styles.lecturePackageRegister}>
-            <h1>{isEditMode ? '강의 패키지 수정' : '강의 패키지 등록'}</h1>
+            <h1 className={styles.h1Title}>{isEditMode ? '강의 패키지 수정' : '강의 패키지 등록'}</h1>
             <div className={styles.formSection}>
                 <label htmlFor="title">제목</label>
                 <input

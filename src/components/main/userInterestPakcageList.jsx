@@ -117,4 +117,22 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
     );
 });
 
-export default UserInterestPackageList;
+const ConditionalUserInterestPackageList = observer(({ onRegisterClick }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // const token = localStorage.getItem("token");
+            // setIsLoggedIn(!!token);
+            setIsLoggedIn(authStore.checkIsLoggedIn());
+        }
+    }, []);
+
+    if (!isLoggedIn) {
+        return null; // 사용자가 로그인하지 않은 경우 컴포넌트를 렌더링하지 않음
+    }
+
+    return <UserInterestPackageList onRegisterClick={onRegisterClick} />;
+});
+
+export default ConditionalUserInterestPackageList;

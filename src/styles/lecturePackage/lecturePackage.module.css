@@ -9,8 +9,11 @@
 .searchContainer {
     width: 100%;
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    justify-content: space-between; /* 검색바와 버튼을 양 끝으로 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    /*margin-bottom: 10px;*/
+    gap: 10px; /* 요소 간 간격 조정 */
+    margin-bottom:10px;
 }
 
 .grid {
@@ -18,7 +21,8 @@
     grid-template-columns: repeat(4, 1fr); /* 4개의 항목을 각 행에 표시합니다 */
     gap: 16px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1800px;
+    margin-top:10px;
 }
 
 .cardContainer {
@@ -102,23 +106,23 @@
     width: 50%; /* 절반만 표시 */
 }
 
+
+
 .registerButton {
-    position: absolute;
-    top: 120px;
-    right: 100px;
-    background-color: #4CAF50; /* 초록색 배경 */
+    background-color: #5fbd87; /* 초록색 배경 */
     color: white; /* 흰색 텍스트 */
     border: none;
-    padding: 10px 20px;
+    padding: 8px 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin-right: 10px;
+    margin-bottom: 5px;
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 3px;
+    margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
 }
-
 .actionButton {
     font-size: 1rem;
     border: 1px solid #ccc;
