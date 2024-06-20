@@ -16,6 +16,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
     const [announceExpand, setAnnounceExpand] = useState(false);
+    const [isAnnounceHidden, setIsAnnounceHidden] = useState(false)
     const [isMenuClicked, setIsMenuClicked] = useState(false);
     const [items, setItems] = useState([])
     const [isAttachButtonClicked, setIsAttachButtonClicked] = useState(false);
@@ -249,6 +250,8 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         })
             .then(response => {
                 setAnnounce(response.data.messageContent);
+                setAnnounceExpand(false)
+                setIsAnnounceHidden(false)
             })
             .catch(error => {
                 console.error('An error occurred!', error);
@@ -421,7 +424,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 </form>
             }
 
-            { (option !== 'gpt' && announce !== '') &&
+            { (option !== 'gpt' && announce !== '' && !isAnnounceHidden) ?
                 <div className={`${styles.announceContainer} ${isSearchButtonClicked && styles.pushed}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -430,7 +433,14 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                                 d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75H192 160 64c-35.3 0-64 28.7-64 64v96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V352l8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V300.4c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4V32zm-64 76.7V240 371.3C357.2 317.8 280.5 288 200.7 288H192V192h8.7c79.8 0 156.5-29.8 215.3-83.3z"/>
                         </svg>
                     </span>
-                    <span className={`${styles.announce} ${announceExpand && styles.expanded}`}>{announce}</span>
+                    <span className={`${styles.announce} ${announceExpand && styles.expanded}`}>{announce}
+                        {   announceExpand &&
+                            <div>
+                                <button className={styles.hide} onClick={() => setIsAnnounceHidden(true)} >
+                                    최소화
+                                </button>
+                            </div>
+                        }</span>
                     <button className={`${styles.carot}`} onClick={handleAnnounce}>
                         <svg className={`${announceExpand ? commonStyles.rotate180 : commonStyles.rotate180Back}`}
                              xmlns="http://www.w3.org/2000/svg"
@@ -438,8 +448,23 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                             <path
                                 d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/>
                         </svg>
+
                     </button>
                 </div>
+                :
+                <div className={styles.announceContainerSmall} onClick={() => {
+                    setIsAnnounceHidden(false)
+                    setAnnounceExpand(false)
+                }}>
+                    <span className={styles.horn}>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 512 512">
+                            <path
+                                d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75H192 160 64c-35.3 0-64 28.7-64 64v96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V352l8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V300.4c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4V32zm-64 76.7V240 371.3C357.2 317.8 280.5 288 200.7 288H192V192h8.7c79.8 0 156.5-29.8 215.3-83.3z"/>
+                        </svg>
+                    </span>
+                </div>
+
             }
 
 
@@ -454,7 +479,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 />
             </div>
 
-            { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
+            {items.length !== 0 && <MediaFile items={items} setItems={setItems}/>}
             <form className={styles.chatBottom} onSubmit={handleSubmit}>
                 {
                     <>
