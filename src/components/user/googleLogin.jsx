@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styles from "../../styles/user/login/googleLogin.module.css";
+import { GoogleOAuthProvider, GoogleLogin as GoogleOAuthLogin } from '@react-oauth/google';
 
 const GoogleLogin = () => {
+  const hiddenButtonRef = useRef(null);
+
   const handleGoogleLogin = () => {
+    if (hiddenButtonRef.current) {
+      hiddenButtonRef.current.click();
+    }
     const width = 500;
     const height = 600;
     const left = (window.innerWidth - width) / 2;
@@ -14,9 +20,20 @@ const GoogleLogin = () => {
   };
 
   return (
-    <button className={styles.GoogleLoginBtn} onClick={handleGoogleLogin}>
-        
-    </button>
+    <div>
+      <button className={styles.GoogleLoginBtn} onClick={handleGoogleLogin}>
+      </button>
+      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+        <div style={{ display: 'none' }}>
+          <GoogleOAuthLogin
+            onSuccess={() => {}}
+            onError={() => {}}
+            buttonText="구글로 로그인"
+            ref={hiddenButtonRef}
+          />
+        </div>
+      </GoogleOAuthProvider>
+    </div>
   );
 };
 

@@ -23,6 +23,7 @@ const Login = observer(() => {
         };
     }, []);
 
+
     useEffect(() => {
         const { access, refresh, userEmail, provider, nickname, profileImageUrl, isStudent, isTeacher, isAdmin } = router.query;
 
