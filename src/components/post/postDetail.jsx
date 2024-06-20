@@ -12,6 +12,8 @@ import {
   AiOutlineWarning,
 } from "react-icons/ai";
 import { AiOutlineComment } from "react-icons/ai";
+import { LuSend } from "react-icons/lu";
+
 import { getRelativeTime } from "../../components/post/timeUtils";
 import EditPost from "./EditPost";
 
@@ -191,7 +193,7 @@ const PostDetail = observer(({ postId }) => {
             : comment
         ),
       }));
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error("Error updating comment:", error);
     }
@@ -360,7 +362,7 @@ const PostDetail = observer(({ postId }) => {
         )}
         {!isOwner() && (
           <button className={styles.reportButton} onClick={openReportPopup}>
-            <AiOutlineWarning size={25} /> 신고
+            <AiOutlineWarning size={25} />
           </button>
         )}
       </div>
@@ -377,24 +379,28 @@ const PostDetail = observer(({ postId }) => {
       {renderComments()}
 
       <div className={styles.commentForm}>
-        <textarea
-          value={commentContent}
-          onChange={(e) => setCommentContent(e.target.value)}
-          placeholder="댓글을 작성하세요"
-        />
-        <button
-          onClick={handleCommentSubmit}
-          className={styles.submitCommentButton}
-        >
-          작성하기
-        </button>
+        <div className={styles.inputContainer}>
+          <input
+            type="text"
+            value={commentContent}
+            onChange={(e) => setCommentContent(e.target.value)}
+            placeholder="댓글을 작성하세요"
+          />
+          <button
+            onClick={handleCommentSubmit}
+            className={styles.submitCommentButton}
+          >
+            <LuSend />
+          </button>
+        </div>
       </div>
 
       {isReportPopupOpen && (
         <div className={styles.reportPopup}>
           <div className={styles.popupContent}>
             <h2>게시물 신고</h2>
-            <textarea
+            <input
+              type="text"
               value={reportContent}
               onChange={(e) => setReportContent(e.target.value)}
               placeholder="게시물 신고 사유를 작성해주세요."
@@ -432,6 +438,12 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
   const handleUpdate = async () => {
     await onUpdate(comment.id, updatedContent);
     setIsEditing(false);
+    setIsDropdownOpen(false);
+  };
+  const handleCancel = () => {
+    setUpdatedContent(comment.content);
+    setIsEditing(false);
+    setIsDropdownOpen(false);
   };
 
   const handleDelete = async () => {
@@ -487,7 +499,10 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
                 <div className={styles.commentDropdownMenu}>
                   <div
                     className={styles.commentDropdownMenuItem}
-                    onClick={() => setIsEditing(true)}
+                    onClick={() => {
+                      setIsEditing(true);
+                      setIsDropdownOpen(false);
+                    }}
                   >
                     수정
                   </div>
@@ -503,17 +518,21 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
           )}
           {!isCommentOwner() && (
             <button className={styles.reportButton} onClick={openReportPopup}>
-              <AiOutlineWarning size={20} /> 신고
+              <AiOutlineWarning size={20} />
             </button>
           )}
         </div>
         {isEditing ? (
           <div className={styles.editComment}>
-            <textarea
+            <input
+              type="text"
               value={updatedContent}
               onChange={(e) => setUpdatedContent(e.target.value)}
             />
-            <button onClick={handleUpdate}>저장</button>
+            <div class={styles.buttonContainer}>
+              <button onClick={handleUpdate}>저장</button>
+              <button onClick={handleCancel}>취소</button>
+            </div>
           </div>
         ) : (
           <p className={styles.commentText}>{comment.content}</p>
@@ -524,7 +543,8 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
         <div className={styles.reportPopup}>
           <div className={styles.popupContent}>
             <h2>댓글 신고</h2>
-            <textarea
+            <input
+              type="text"
               value={reportContent}
               onChange={(e) => setReportContent(e.target.value)}
               placeholder="댓글 신고 사유를 작성해주세요."

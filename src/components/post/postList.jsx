@@ -11,6 +11,7 @@ import authStore from "../../stores/authStore";
 import { observer } from "mobx-react-lite";
 import UploadButton from "../../components/post/PostUploadBtn";
 import { getRelativeTime } from "../../components/post/timeUtils";
+import "./LoginPopup.module.css";
 
 const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [posts, setPosts] = useState([]);

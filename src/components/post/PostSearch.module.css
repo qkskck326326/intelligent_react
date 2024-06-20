@@ -24,7 +24,7 @@
 
 .dropdownToggle {
   padding: 10px 20px;
-  border: 1px solid #25b69b;
+  border: 1px solid #ced4da;
   border-radius: 25px;
   background-color: #ffffff;
   color: #6e6e6e;
@@ -34,10 +34,10 @@
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
-.dropdownToggle:hover {
-  background-color: #25b69b;
-  color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.dropdownToggle:focus {
+  outline: none;
+  border-color: #25b69b;
+  box-shadow: 0 0 5px rgba(37, 182, 155, 0.3);
 }
 
 .dropdownMenu {
@@ -118,7 +118,7 @@
 .sortOrderSelect {
   margin-left: 10px;
   padding: 10px;
-  border: 1px solid #25b69b;
+  border: 1px solid #ced4da;
   border-radius: 25px;
   font-size: 16px;
   background-color: #ffffff;

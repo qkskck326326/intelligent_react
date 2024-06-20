@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import PostSearch from "../../components/post/postSearchBar";
-import Sidebar from "../../components/post/postSideBar"; // Corrected import
 import PostList from "../../components/post/postList"; // Corrected import
-import CategoryToggle from "../../components/post/CategoryToggle";
 import styles from "../../components/post/PostIndex.module.css"; // Import the CSS file
 import PopularPosts from "../../components/post/PopularPosts";
-
+import "../../components/post/LoginPopup.module.css";
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
