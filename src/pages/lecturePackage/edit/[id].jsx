@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import LecturePackageRegister from '../../../components/lecturePackage/lecturePackageRegister';
+import {axiosClient} from "../../../axiosApi/axiosClient";
 
 const EditLecturePackage = () => {
     const router = useRouter();

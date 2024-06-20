@@ -5,9 +5,11 @@ import { axiosClient } from "../../axiosApi/axiosClient";
 import SortAndSearchBar from "../common/sortAndSearchBar";
 import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CategoryToggle from "../post/CategoryToggle";
+import CategoryToggle from "./CategoryToggle";
+import { observer } from "mobx-react";
+import authStore from "../../stores/authStore";
 
-const LecturePackageList = ({ onRegisterClick }) => {
+const LecturePackageList = observer(({ onRegisterClick }) => {
     const [lecturePackages, setLecturePackages] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -83,26 +85,32 @@ const LecturePackageList = ({ onRegisterClick }) => {
 
     return (
         <div className={styles.container}>
-            <SortAndSearchBar
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                sortCriteria={sortCriteria}
-                setSortCriteria={setSortCriteria}
-                searchCriteria={searchCriteria}
-                setSearchCriteria={setSearchCriteria}
-                onSearch={handleSearch}
-            />
-            <CategoryToggle selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory} />
+            <div className={styles.searchContainer}>
+                <CategoryToggle selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory}/>
+                <SortAndSearchBar
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    sortCriteria={sortCriteria}
+                    setSortCriteria={setSortCriteria}
+                    searchCriteria={searchCriteria}
+                    setSearchCriteria={setSearchCriteria}
+                    onSearch={handleSearch}
+                />
 
-            <button className={styles.registerButton} onClick={onRegisterClick}>
-                등록하기
-            </button>
+            </div>
+            <div className={styles.horizontalLine}></div>
+
+            {(authStore.checkIsTeacher() || authStore.checkIsAdmin()) && (
+                <button className={styles.registerButton} onClick={onRegisterClick}>
+                    패키지 등록하기
+                </button>
+            )}
             <div className={styles.grid}>
                 {lecturePackages.map((lecture) => (
                     <div key={lecture.lecturePackageId} className={styles.cardContainer}>
                         <div className={styles.card}>
                             <div className={styles.thumbnail}>
-                                <img src={lecture.thumbnail} alt={lecture.title} />
+                                <img src={lecture.thumbnail} alt={lecture.title}/>
                             </div>
                         </div>
                         <div className={styles.details}>
@@ -120,9 +128,9 @@ const LecturePackageList = ({ onRegisterClick }) => {
                 ))}
             </div>
             <Pagination className={styles.paginationContainer}>
-                <Pagination.First onClick={() => handlePageChange(1)} />
-                <Pagination.Prev onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)} />
-                {Array.from({ length: totalPages }, (_, i) => (
+                <Pagination.First onClick={() => handlePageChange(1)}/>
+                <Pagination.Prev onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}/>
+                {Array.from({length: totalPages}, (_, i) => (
                     <Pagination.Item
                         key={i + 1}
                         active={i + 1 === currentPage}
@@ -131,11 +139,12 @@ const LecturePackageList = ({ onRegisterClick }) => {
                         {i + 1}
                     </Pagination.Item>
                 ))}
-                <Pagination.Next onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)} />
-                <Pagination.Last onClick={() => handlePageChange(totalPages)} />
+                <Pagination.Next
+                    onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)}/>
+                <Pagination.Last onClick={() => handlePageChange(totalPages)}/>
             </Pagination>
         </div>
     );
-};
+});
 
 export default LecturePackageList;
