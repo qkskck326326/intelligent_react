@@ -4,6 +4,7 @@ import AnnouncementItem from './announcementitem.jsx';
 import Link from "next/link";
 import authStore from "../../stores/authStore";
 import { observer } from 'mobx-react';
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Announcement = observer (() => {
 
@@ -36,19 +37,11 @@ const Announcement = observer (() => {
         }
     }, [category, searchQuery]);
 
-    // fetch문 작성 연습
+
     const fetchAnnouncements = async (page) => {
         try {
-            const response = await fetch(`http://localhost:8080/announcement?page=${page}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                throw new Error('An error occurred!');
-            }
-            const data = await response.json();
+            const response = await axiosClient.get(`/announcement?page=${page}`);
+            const data = response.data;
 
             if (data.length > 0) {
                 setAnnouncements(prevAnnouncements => [...prevAnnouncements, ...data]);
@@ -61,26 +54,23 @@ const Announcement = observer (() => {
                 setHasMore(false);
             }
         } catch (error) {
-            console.error(error);
+            console.error('An error occurred!', error);
         }
     };
 
     const fetchCategorizedAnnouncements = async (page, category) => {
         try {
-            const response = await fetch(`http://localhost:8080/announcement/categorized?page=${page}&category=${category}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
+            const response = await axiosClient.get(`/announcement/categorized`, {
+                params: {
+                    page: page,
+                    category: category
                 }
             });
-            if (!response.ok) {
-                throw new Error('An error occurred!');
-            }
-            const data = await response.json();
+
+            const data = response.data;
 
             if (data.length > 0) {
                 setAnnouncements(prevAnnouncements => [...prevAnnouncements, ...data]);
-                // page 값을 1을 올림
                 setPage(page + 1);
 
                 if (data.length < 10) {
@@ -90,22 +80,20 @@ const Announcement = observer (() => {
                 setHasMore(false);
             }
         } catch (error) {
-            console.error(error);
+            console.error('An error occurred!', error);
         }
     };
 
     const searchAnnouncements = async (page, keyword) => {
         try {
-            const response = await fetch(`http://localhost:8080/announcement/search?page=${page}&keyword=${keyword}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
+            const response = await axiosClient.get(`/announcement/search`, {
+                params: {
+                    page: page,
+                    keyword: keyword
                 }
             });
-            if (!response.ok) {
-                throw new Error('An error occurred!');
-            }
-            const data = await response.json();
+
+            const data = response.data;
 
             if (data.length > 0) {
                 setAnnouncements(prevAnnouncements => [...prevAnnouncements, ...data]);
@@ -118,7 +106,7 @@ const Announcement = observer (() => {
                 setHasMore(false);
             }
         } catch (error) {
-            console.error(error);
+            console.error('An error occurred!', error);
         }
     };
 

@@ -4,7 +4,7 @@ import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from "../../styles/chatting/chatlist.module.css";
 import PeopleToAdd from "./peopletoadd.jsx";
 import AlertModal from "../common/Modal";
-import Axios from '../../axiosApi/Axios'
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNavigateToModal, onNavigateToChat, userId, userType }) => {
 
@@ -20,7 +20,6 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
     const modal = new AlertModal();
     const [keyword, setKeyword] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    const axios = new Axios();
 
     useEffect(()=>{
         console.log(roomType)
@@ -42,9 +41,18 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
         console.log(selectedIndices)
     }, [selectedIndices]);
 
-    const fetchFriends = page => {
-        axios.get(`/users/getpeople`, `?userId=${userId}&userType=${userType}&addingOption=${option}&page=${page}`)
-            .then(data => {
+    //TODO
+    const fetchFriends = (page) => {
+        axiosClient.get('/users/getpeople', {
+            params: {
+                userId: userId,
+                userType: userType,
+                addingOption: option,
+                page: page
+            }
+        })
+            .then(response => {
+                const data = response.data;
                 if (data.length > 0) {
                     setPeople(prevPeople => [...prevPeople, ...data]);
                     setPage(prevPage => prevPage + 1);
@@ -55,17 +63,28 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
                 } else {
                     setHasMore(false);
                 }
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
             });
     };
 
     const fetchFriendswithQuery = (page, searchQuery) => {
-
-        axios.get(`/users/getpeople`, `?userId=${userId}&userType=${userType}&addingOption=${option}&page=${page}&searchQuery=${searchQuery}`)
-            .then(data => {
-
+        //TODO
+        axiosClient.get('/users/getpeople', {
+            params: {
+                userId: userId,
+                userType: userType,
+                addingOption: option,
+                page: page,
+                searchQuery: searchQuery
+            }
+        })
+            .then(response => {
+                const data = response.data;
                 if (data.length > 0) {
                     setPeople(prevPeople => [...prevPeople, ...data]);
-                    setPage(prevPage =>  prevPage + 1);
+                    setPage(prevPage => prevPage + 1);
 
                     if (data.length < 10) {
                         setHasMore(false);
@@ -74,7 +93,9 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
                     setHasMore(false);
                 }
             })
-
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     const handleSelectionChange = (nickname) => {

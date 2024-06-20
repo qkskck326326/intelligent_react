@@ -1,4 +1,3 @@
-import React, {useEffect, useState} from "react";
 import {observer} from 'mobx-react'
 import styles from '../../styles/chatting/eachperson.module.css'
 

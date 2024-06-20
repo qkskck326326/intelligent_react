@@ -3,11 +3,9 @@ import styles from '../../styles/cs/announcement.module.css';
 import clsx from 'clsx'
 import {authStore} from "../../stores/authStore";
 import { useRouter } from 'next/router';
-import Axios from '../../axiosApi/Axios'
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 export default function AnnouncementItem(props){
-
-    const axios = new Axios();
 
     const{announcementId, title, createdAt, category, importance, content, ...rest} = props.details
     const router = useRouter();
@@ -18,23 +16,31 @@ export default function AnnouncementItem(props){
     };
 
 
-    function handlePageMove(event) {
-        console.log(announcementId)
-        axios.get(`/announcement/id`, `?announcementId=${announcementId}`)
-            .then(data =>  console.log(data))
+    function handlePageMove() {
 
-        router.push({
-            pathname: '/cs/announcedetail',
-            query: {
-                announcementId,
-                title,
-                createdAt,
-                category,
-                importance,
-                content,
-                ...rest
+        axiosClient.get(`/announcement/id`, {
+            params: {
+                announcementId: announcementId
             }
-        });
+        })
+            .then(response => {
+                console.log(response.data);
+                router.push({
+                    pathname: '/cs/announcedetail',
+                    query: {
+                        announcementId,
+                        title,
+                        createdAt,
+                        category,
+                        importance,
+                        content,
+                        ...rest
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     const important = Number(importance)

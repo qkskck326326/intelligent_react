@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chatlist.module.css'
 import EachChat from '../../components/chat/eachchat.jsx';
-import Axios from '../../axiosApi/Axios.js'
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 /*
 * */
@@ -11,17 +11,25 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
     const [isAnimating, setIsAnimating] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
     const [chatData, setChatData] = useState([])
-    const axios = new Axios();
 
     //type 0은 학생 1은 강사 2는 관리자
 
-    useEffect(()=>{
-        axios.get('/chat/chatlist', `?userId=${userId}`)
-            .then(data => {
-                console.log(data)
-                setChatData(data)
+
+    //TODO
+    useEffect(() => {
+        axiosClient.get('/chat/chatlist', {
+            params: {
+                userId: userId
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+                setChatData(response.data);
             })
-    }, [])
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
+    }, [userId]);
 
 
     const handleClickBack = () => {
@@ -37,7 +45,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
         setIsPlusClicked(!isPlusClicked)
     }
 
-    const handleEnteringChat = (chatroom) => {
+    const handleEnteringChat = (chatroom, totalPeople) => {
 
         setIsAnimating(true);
         setTimeout(() => {

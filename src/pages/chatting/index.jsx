@@ -6,7 +6,7 @@ import ChatList from "../../components/chat/chatlist";
 import AddingFriends from '../../components/chat/addingfriends';
 import ActionModal from '../../components/chat/actionmodal';
 import Chat from '../../components/chat/chat'
-import Axios from '../../axiosApi/Axios'
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 const ChatContainer = observer(() => {
 
@@ -19,13 +19,17 @@ const ChatContainer = observer(() => {
     const [totalCount, setTotalCount] = useState(0);
     const userType = authStore.checkIsAdmin() ? 2 : authStore.checkIsTeacher() ? 1 : 0
     const userId = authStore.getNickname();
-    const axios = new Axios
+
 
 
     const countTotal = () => {
-        //로직-> 내 아이디로 채팅방 모조리 확인 => 방아이디로 메시지
-        return axios.get('/chat/countunreadall', `?userId=${userId}`)
-    }
+
+        return axiosClient.get('/chat/countunreadall', {
+            params: {
+                userId: userId
+            }
+        });
+    };
 
     const handleNavigation = (component, option ='', roomType='', roomData={}) => {
 

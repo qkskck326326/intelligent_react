@@ -6,7 +6,7 @@ import BubbleContainer from "./bubblecontainer.jsx";
 import AuthStore from "../../stores/authStore";
 import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
-import Axios from '../../axiosApi/Axios.js'
+import {axiosClient} from "../../axiosApi/axiosClient";
 
 
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
@@ -16,6 +16,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
     const [announceExpand, setAnnounceExpand] = useState(false);
+    const [isAnnounceHidden, setIsAnnounceHidden] = useState(false)
     const [isMenuClicked, setIsMenuClicked] = useState(false);
     const [items, setItems] = useState([])
     const [isAttachButtonClicked, setIsAttachButtonClicked] = useState(false);
@@ -26,7 +27,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [isAtBottom, setIsAtBottom] = useState(true);
     const [userData, setUserData] = useState({});
     const modal = new AlertModal();
-    const axios = new Axios();
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [announce, setAnnounce] = useState('') //받아온 정보 넣어야함
@@ -35,23 +35,34 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const menuRef = useRef();
 
     const fetchData = async () => {
-        axios.get('/chat/chatdata', `?roomId=${roomData.roomId}&page=${page}&userId=${AuthStore.getNickname()}`)
-            .then(data => {
-                console.log(data)
-                if (data.messages) {
+        try {
+            const response = await axiosClient.get('/chat/chatdata', {
+                params: {
+                    roomId: roomData.roomId,
+                    page: page,
+                    userId: AuthStore.getNickname()
+                }
+            });
 
-                    setMessages((prevMessages) => [...data.messages.reverse(), ...prevMessages]);
-                    if (data.messages.length < 25) {
-                        setHasMore(false)
-                    }
-                } else {
-                    setHasMore(false)
+            const data = response.data;
+            console.log(data);
+
+            if (data.messages) {
+                setMessages((prevMessages) => [...data.messages.reverse(), ...prevMessages]);
+                if (data.messages.length < 25) {
+                    setHasMore(false);
                 }
-                if (data.announcement) {
-                    setAnnounce(data.announcement.messageContent);
-                }
-            })
-    }
+            } else {
+                setHasMore(false);
+            }
+
+            if (data.announcement) {
+                setAnnounce(data.announcement.messageContent);
+            }
+        } catch (error) {
+            console.error('An error occurred!', error);
+        }
+    };
 
     useEffect(() => {
         document.addEventListener('keypress', handleKeyPress);
@@ -70,14 +81,21 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     }, [page]);
 
-    useEffect(()=>{
-        axios.get('/chat/chatuserdetail', `?userId=${AuthStore.getNickname()}&roomId=${roomData.roomId}`)
-            .then(data => {
-                setUserData(data)
-                console.log(data)
+    useEffect(() => {
+        axiosClient.get('/chat/chatuserdetail', {
+            params: {
+                userId: AuthStore.getNickname(),
+                roomId: roomData.roomId
+            }
+        })
+            .then(response => {
+                setUserData(response.data);
+                console.log(response.data);
             })
-
-    }, [])
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
+    }, []);
 
 
     const handleScroll = () => {
@@ -176,14 +194,58 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         setIsAttachButtonClicked(!isAttachButtonClicked);
     }
 
+    const determineMessageType = (files) => {
+        if (files.some(file => file.type.startsWith('video/'))) {
+            return 2; // Video
+        } else if (files.some(file => file.type.startsWith('image/'))) {
+            return 1; // Image
+        } else {
+            return 3; // Other
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         if (items.length > 0) {
-            // Handle file submission logic
-        } else {
-            if(textContent.trim() === ''){
-                return window.alert('메시지를 작성해주세요.')
+            const newMessage = {
+                roomId: roomData.roomId,
+                senderId: AuthStore.getNickname(),
+                messageType: determineMessageType(items),
+                dateSent: new Date().toISOString(),
+                isAnnouncement: 0
+            };
+
+            const formData = new FormData();
+
+            items.forEach((file) => {
+                formData.append('files', file);
+            });
+
+            const url = `/chat/uploadfiles/${newMessage.roomId}/${newMessage.senderId}/${newMessage.messageType}/${newMessage.dateSent}/${newMessage.isAnnouncement}`;
+            console.log(url)
+
+            for (let pair of formData.entries()) {
+                console.log(pair[0], pair[1]);
             }
+
+            try {
+                const response = await axiosClient.post(url, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                const { message, files } = response.data;
+
+            } catch (error) {
+                console.error('Error uploading files:', error);
+            }
+
+        } else {
+            if (textContent.trim() === '') {
+                return window.alert('메시지를 작성해주세요.');
+            }
+
             const newMessage = {
                 roomId: roomData.roomId,
                 senderId: AuthStore.getNickname(),
@@ -194,17 +256,16 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             };
 
             try {
-                const savedMessage = await axios.post('/chat/sendmessage', newMessage);
+                const response = await axiosClient.post('/chat/sendmessage', newMessage);
+                const savedMessage = response.data;
                 setMessages((prevMessages) => [...prevMessages, savedMessage]);
                 setTextContent('');
                 setIsAtBottom(true);
             } catch (error) {
                 console.error('Error sending message:', error);
             }
-
         }
-
-    }
+    };
 
     const handleFileAttach = (event) => {
         event.preventDefault();
@@ -221,48 +282,72 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const handleAnnouncementChange = (messageId, roomId) => {
     //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
 
-        axios.put('/chat/announce', {
-            messageId,
-            roomId
-        }).then(data => setAnnounce(data.messageContent))
-
+        //TODO
+        axiosClient.put('/chat/announce', {
+            messageId: messageId,
+            roomId: roomId
+        })
+            .then(response => {
+                setAnnounce(response.data.messageContent);
+                setAnnounceExpand(false)
+                setIsAnnounceHidden(false)
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     const handleRoomTitleName = () => {
         const roomName = window.prompt('변경할 방 제목을 입력해주세요')
         if(roomName !== null){
-            axios.put('/chat/changeroomname', {
+            axiosClient.put('/chat/changeroomname', {
                 roomId: userData.chatUserCompositeKey.roomId,
-                roomName
-            }).then(data => {
-                setCurrentRoomData(prevState => ({
-                    ...prevState,
-                    roomName: data.roomName
-                }));
+                roomName: roomName
             })
+                .then(response => {
+                    setCurrentRoomData(prevState => ({
+                        ...prevState,
+                        roomName: response.data.roomName
+                    }));
+                })
+                .catch(error => {
+                    console.error('An error occurred!', error);
+                });
         }
 
     }
 
     const handlePin = () => {
         const isPinned = (userData.isPinned === 0 ? 1 : 0)
-        axios.put('/chat/changepin', {
-            userId:userData.chatUserCompositeKey.userId,
-            roomId:userData.chatUserCompositeKey.roomId,
-            isPinned
-        }).then(data => setUserData(data))
-            .catch(error => console.error(error))
+        //TODO
+        axiosClient.put('/chat/changepin', {
+            userId: userData.chatUserCompositeKey.userId,
+            roomId: userData.chatUserCompositeKey.roomId,
+            isPinned: isPinned
+        })
+            .then(response => {
+                setUserData(response.data);
+            })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
     }
 
     const handleLeave = () => {
         window.confirm('혼또니 나가겠습니까?') &&
-            axios.delete('/chat/leaveroom', {
-                userId:userData.chatUserCompositeKey.userId,
-                roomId:userData.chatUserCompositeKey.roomId
-            }).then(data => {
-                console.log(data)
-                onNavigateToList()
+        axiosClient.delete('/chat/leaveroom', {
+            data: {
+                userId: userData.chatUserCompositeKey.userId,
+                roomId: userData.chatUserCompositeKey.roomId
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+                onNavigateToList();
             })
+            .catch(error => {
+                console.error('An error occurred!', error);
+            });
 
     }
 
@@ -329,8 +414,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
                     }
                 </div>
+                {/*단체챗만 나옴*/}
                 <div className={styles.chatSubTop}>
-                    {/*챗지피티면 검색버튼만 */}
+                    {/*챗지피티는 아무버튼도 업다 */}
                     { (option !== 'gpt') ?
                         <>
                             <button className={`${styles.topButtons} ${styles.search}`} onClick={handleSearchButtonClick}>
@@ -346,11 +432,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                         {/*  메뉴 구성  */}
                             { isMenuClicked &&
                                 <ul className={styles.menuItems}>
-                                    {/*TODO */}
                                     <li onClick={handlePin}>{userData.isPinned === 1 ? '핀해제' : '핀하기'}</li>
                                     <li onClick={handleRoomTitleName}>방제목변경</li>
                                     <li onClick={handleLeave}>채팅방나가기</li>
-
                                 </ul>
                             }
                         </>
@@ -375,7 +459,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 </form>
             }
 
-            { (option !== 'gpt' && announce !== '') &&
+            { (option !== 'gpt' && announce !== '' && !isAnnounceHidden) ?
                 <div className={`${styles.announceContainer} ${isSearchButtonClicked && styles.pushed}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -384,7 +468,14 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                                 d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75H192 160 64c-35.3 0-64 28.7-64 64v96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V352l8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V300.4c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4V32zm-64 76.7V240 371.3C357.2 317.8 280.5 288 200.7 288H192V192h8.7c79.8 0 156.5-29.8 215.3-83.3z"/>
                         </svg>
                     </span>
-                    <span className={`${styles.announce} ${announceExpand && styles.expanded}`}>{announce}</span>
+                    <span className={`${styles.announce} ${announceExpand && styles.expanded}`}>{announce}
+                        {   announceExpand &&
+                            <div>
+                                <button className={styles.hide} onClick={() => setIsAnnounceHidden(true)} >
+                                    최소화
+                                </button>
+                            </div>
+                        }</span>
                     <button className={`${styles.carot}`} onClick={handleAnnounce}>
                         <svg className={`${announceExpand ? commonStyles.rotate180 : commonStyles.rotate180Back}`}
                              xmlns="http://www.w3.org/2000/svg"
@@ -392,8 +483,23 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                             <path
                                 d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/>
                         </svg>
+
                     </button>
                 </div>
+                :
+                announce !== '' && <div className={styles.announceContainerSmall} onClick={() => {
+                    setIsAnnounceHidden(false)
+                    setAnnounceExpand(false)
+                }}>
+                    <span className={styles.horn}>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 512 512">
+                            <path
+                                d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75H192 160 64c-35.3 0-64 28.7-64 64v96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V352l8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V300.4c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4V32zm-64 76.7V240 371.3C357.2 317.8 280.5 288 200.7 288H192V192h8.7c79.8 0 156.5-29.8 215.3-83.3z"/>
+                        </svg>
+                    </span>
+                </div>
+
             }
 
 
@@ -408,7 +514,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 />
             </div>
 
-            { items.length !== 0 && <MediaFile items={items} setItems={setItems}/> }
+            {items.length !== 0 && <MediaFile items={items} setItems={setItems}/>}
             <form className={styles.chatBottom} onSubmit={handleSubmit}>
                 {
                     <>
