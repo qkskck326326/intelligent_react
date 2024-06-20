@@ -2,21 +2,19 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import LectureDetail from '../../components/lecture/lectureDetail';
 import LectureComment from '../../components/lecture/lectureComment';
-import TranscriptSummary from '../../components/lecture/transcriptSummary'; // 추가
+import Transportext from '../../components/lecture/transportext'; // 추가
 
 const containerStyle = {
     display: 'flex',
     justifyContent: 'center',
     height: '100vh',
-    width: '100vw',
     padding: '20px'
 };
 
 const verticalLineStyle = {
     borderLeft: '2px solid #19CA83',
     height: '70vh',
-    margin: '0 20px',
-    width: '10%'
+    margin: '0 20px'
 };
 
 const leftSideStyle = {
@@ -46,7 +44,7 @@ const LectureDetailPage = () => {
             </div>
             <div style={verticalLineStyle}></div>
             <div style={rightSideStyle}>
-                {/* {lectureId && <TranscriptSummary streamUrl={`URL_OF_THE_VIDEO_FOR_${lectureId}`} />} */}
+                {lectureId && <Transportext lectureId={lectureId} />}
             </div>
         </div>
     );

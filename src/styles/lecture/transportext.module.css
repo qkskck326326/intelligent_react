@@ -1,0 +1,48 @@
+.transcriptContainer {
+    padding: 20px;
+    border: 1px solid #19CA83;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.tabMenu {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.tabButton {
+    font-family: "Noto Sans KR", sans-serif; /* 글꼴 설정 */
+    font-weight: bold; /* 볼드체 설정 */
+    font-size: 15px;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    outline: none;
+    
+}
+
+.tabButton.active {
+    background-color: #19CA83;
+    border-color: #19CA83;
+}
+
+.content {
+    border: 1px solid #19CA83;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto; 
+    margin-left: 10px;
+    top: 20px;
+}
+
+.contentPre {
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 17px;
+    white-space: pre-wrap; /* 텍스트 줄바꿈을 위해 추가 */
+    word-wrap: break-word; /* 텍스트 줄바꿈을 위해 추가 */
+}

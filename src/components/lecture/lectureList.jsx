@@ -8,22 +8,23 @@ import axios from 'axios';
 const REPO_OWNER = 'rudalsdl';
 const REPO_NAME = 'lectureSave';
 
-// 추가: getSHAFromGitHub 함수
 const getSHAFromGitHub = async (filePath) => {
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
-    const response = await axios.get(url, {
-        headers: {
-            Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
-            Accept: 'application/vnd.github.v3+json'
-        },
-    });
-    return response.data.sha;
+    try {
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
+            },
+        });
+        return response.data.sha;
+    } catch (error) {
+        console.error(`Error getting SHA for ${filePath} from GitHub:`, error);
+        return null;
+    }
 };
 
-// 수정: deleteFileFromGitHub 함수 수정
-const deleteFileFromGitHub = async (filePath) => {
+const deleteFileFromGitHub = async (filePath, sha) => {
     try {
-        const sha = await getSHAFromGitHub(filePath);
         const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
         await axios.delete(url, {
             headers: {
@@ -34,6 +35,7 @@ const deleteFileFromGitHub = async (filePath) => {
                 sha: sha,
             },
         });
+
         console.log(`${filePath} deleted successfully from GitHub`);
     } catch (error) {
         console.error(`Error deleting ${filePath} from GitHub:`, error);
@@ -89,28 +91,42 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
         }
     };
 
-    // 수정: handleDeleteLectures 함수 수정
     const handleDeleteLectures = async () => {
         try {
             setIsLoading(true);
-            setIsDeleted(false);
+            setIsDeleted(false); // 삭제 상태 초기화
+    
+            // 강의 정보 가져오기
             const lecturesToDelete = lectures.filter(lecture => selectedLectures.has(lecture.lectureId));
+    
             console.log('Lectures to delete:', lecturesToDelete);
-
+    
+            // GitHub에서 파일 삭제
             for (const lecture of lecturesToDelete) {
+                // 썸네일 SHA 값 가져오기
                 if (lecture.lectureThumbnail) {
-                    await deleteFileFromGitHub(`thumbnails/${lecture.lectureThumbnail}`);
+                    const thumbnailSHA = await getSHAFromGitHub(`thumbnails/${lecture.lectureThumbnail}`);
+                    if (thumbnailSHA) {
+                        await deleteFileFromGitHub(`thumbnails/${lecture.lectureThumbnail}`, thumbnailSHA);
+                    }
                 }
+    
+                // 영상 SHA 값 가져오기
                 if (lecture.streamUrl) {
                     const videoFileName = lecture.streamUrl.split('/').pop();
-                    await deleteFileFromGitHub(`uploads/${videoFileName}`);
+                    const videoSHA = await getSHAFromGitHub(`uploads/${videoFileName}`);
+                    if (videoSHA) {
+                        await deleteFileFromGitHub(`uploads/${videoFileName}`, videoSHA);
+                    }
                 }
             }
-
+    
             console.log('Deleting lectures from server');
+    
+            // 서버에서 강의 삭제
             await axiosClient.delete("/lecture/delete", { data: { lectureIds: Array.from(selectedLectures) } });
-
-            fetchData();
+    
+            fetchData(); // 강의 삭제 후 목록 새로고침
             setSelectedLectures(new Set());
             setDeletingMode(false);
             setIsLayerOpen(false);
@@ -120,7 +136,7 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
             console.error("Error deleting lectures:", err.response ? err.response.data : err.message);
             setIsLoading(false);
         }
-    };
+    };     
 
     const handleSelectLecture = (lectureId) => {
         setSelectedLectures(prevSelected => {
