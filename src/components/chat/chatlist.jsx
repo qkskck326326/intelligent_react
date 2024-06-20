@@ -6,8 +6,6 @@ import EachChat from '../../components/chat/eachchat.jsx';
 import Axios from '../../axiosApi/Axios.js'
 
 /*
-* TODO 여기서 할일
-*  2.
 * */
 const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, userId, userType }) => {
     const [isAnimating, setIsAnimating] = useState(false);
@@ -144,10 +142,12 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
             }
 
             <div className={commonStyles.chatServiceMain}>
-                {
+                { chatData.length > 0 ?
                     chatData.map((chatDatum) =>
                         <EachChat key={chatDatum.chatroom.roomId} chat={chatDatum} onClick={() => handleEnteringChat(chatDatum.chatroom)} />
                     )
+                    :
+                    <div className={commonStyles.chatEmpty}><p>아직 채팅이 없어요.</p><p>오른쪽 위 + 아이콘을 눌러서</p><p>채팅을 시작해보세요</p></div>
                 }
             </div>
 

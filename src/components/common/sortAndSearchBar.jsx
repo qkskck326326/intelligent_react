@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../styles/common/sortAndSearchBar.module.css";
 
 const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCriteria, searchCriteria, setSearchCriteria, onSearch }) => {
+
+    const [searchBar, setSearchBar] = useState('');
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -25,12 +27,12 @@ const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCrit
         <div className={styles.sortAndSearchBar}>
             <select className={styles.dropdown} value={sortCriteria} onChange={handleSortChange}>
                 <option className={styles.dropdownDetail} value="latest">최신순</option>
-                <option className={styles.dropdownDetail} value="views">조회순</option>
+                <option className={styles.dropdownDetail} value="viewCount">조회순</option>
                 <option className={styles.dropdownDetail} value="rating">별점순</option>
             </select>
             <select className={styles.dropdown} value={searchCriteria} onChange={handleSearchCriteriaChange}>
                 <option className={styles.dropdownDetail} value="title">제목</option>
-                <option className={styles.dropdownDetail} value="instructor">강사</option>
+                <option className={styles.dropdownDetail} value="nickname">강사</option>
             </select>
             <div className={styles.searchBar}>
                 <div className={styles.icon} onClick={onSearch}>
@@ -43,6 +45,7 @@ const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCrit
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="feather feather-search"
+
                     >
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>

@@ -1,10 +1,21 @@
 .tableContainer {
-    width: 120%; /* 전체 너비의 70%로 설정 */
+    width: 120%;
     display: flex;
     flex-direction: column;
-    font-family: "Noto Sans KR", sans-serif; /* 글꼴 설정 */
-    font-weight: bold; /* 볼드체 설정 */
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: bold;
     font-size: 18px;
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 10px;
 }
 
 .packagetitle {
@@ -36,24 +47,28 @@
     border-style: solid;
     border-color: #19CA83;
     display: flex;
-    align-items: center;   
+    align-items: center;
 }
 
 .subtitle .num {
     flex-basis: 15%;
 }
-  
+
 .subtitle .title {
     flex-basis: 60%;
 }
-  
+
 .subtitle .read {
     flex-basis: 25%;
 }
 
+.subtitle .select {
+    flex-basis: 5%;
+}
+
 .list {
     box-sizing: border-box;
-    position: relative; /* 상대 위치 설정 */
+    position: relative;
     width: 100%;
     max-width: 1200px;
     height: 50px;
@@ -79,13 +94,101 @@
     text-align: center;
 }
 
+.list .select {
+    flex-basis: 5%;
+    text-align: center;
+}
+
 .summary {
-    margin-right: 50px; /* 오른쪽 여백 설정 */
-    margin-bottom: 20px; /* 아래쪽 여백 설정 */
-    font-size: 16px; /* 글꼴 크기 설정 */
+    margin-right: 50px;
+    margin-bottom: 20px;
+    font-size: 16px;
     max-width: 1200px;
-    color: #000; /* 글꼴 색상 설정 */
+    color: #000;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+}
+
+.layerContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.layerContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.layerButtons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.secondaryButton {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dangerButton {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buttonContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: flex-end;
+}
+
+.buttonContainer button {
+    padding: 10px 20px;
+    background-color: #19CA83;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.buttonContainer button:hover {
+    background-color: #17b374; /* 호버 시 약간 어두운 녹색 */
+}
+
+.loadingIcon {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

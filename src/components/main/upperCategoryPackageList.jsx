@@ -62,7 +62,7 @@ const UpperCategoryPackageList = () => {
                             <div key={lecture.lecturePackageId} className={styles.cardContainer}>
                                 <div className={styles.card}>
                                     <div className={styles.thumbnail}>
-                                        <img src={lecture.thumbnail} alt={lecture.title} />
+                                        <img src={lecture.thumbnail} alt={lecture.title}/>
                                     </div>
                                 </div>
                                 <div className={styles.details}>
@@ -79,6 +79,7 @@ const UpperCategoryPackageList = () => {
                             </div>
                         ))}
                     </div>
+                    <div className={styles.horizontalLine}></div>
                 </div>
             ))}
         </div>

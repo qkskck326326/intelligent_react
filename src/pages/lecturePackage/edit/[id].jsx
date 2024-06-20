@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { axiosClient } from '../../../axiosApi/axiosClient';
 import LecturePackageRegister from '../../../components/lecturePackage/lecturePackageRegister';
 
 const EditLecturePackage = () => {
     const router = useRouter();
-    const { id } = router.query;
-    const [packageData, setPackageData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { id, data } = router.query;
+    const [packageData, setPackageData] = useState(data ? JSON.parse(data) : null);
+    const [loading, setLoading] = useState(!data);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -23,10 +22,10 @@ const EditLecturePackage = () => {
             }
         };
 
-        if (id) {
+        if (!data && id) {
             fetchPackageData();
         }
-    }, [id]);
+    }, [id, data]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;

@@ -1,14 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import { observer } from 'mobx-react';
-import commonStyles from '../../styles/chatting/chatcommon.module.css';
-import AuthStore from "../../stores/authStore";
+import React, {forwardRef} from 'react';
 import Bubble from './bubble.jsx'
 import styles from '../../styles/chatting/chatbubble.module.css'
 
-const BubbleContainer = observer(({onAnnouncementChange, onReport, option, messages, bubbleContainerRef})=>{
+const BubbleContainer = forwardRef(({onAnnouncementChange, onReport, option, messages, onScroll}, ref)=>{
 
     return (
-        <div ref={bubbleContainerRef} className={styles.bubbleContainer}>
+        <div ref={ref} className={styles.bubbleContainer} onScroll={onScroll}>
             {
                 messages.map((message, index) => (
                     <Bubble

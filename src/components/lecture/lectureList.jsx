@@ -1,65 +1,126 @@
 import React, { useState, useEffect } from "react";
 import Link from 'next/link';
 import { axiosClient } from "../../axiosApi/axiosClient";
-import { Modal, Button } from 'react-bootstrap';
 import styles from '../../styles/lecture/lectureList.module.css';
+import authStore from '../../stores/authStore';
+import axios from 'axios';
 
-const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, setDeletingMode }) => {
-    const [lectures, setLectures] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [lecturePackageTitle, setLecturePackageTitle] = useState('');
-    const [deletingMode, setInternalDeletingMode] = useState(false);
-    const [selectedLectures, setSelectedLectures] = useState(new Set());
-    const [isModalOpen, setIsModalOpen] = useState(false);
+const REPO_OWNER = 'rudalsdl';
+const REPO_NAME = 'lectureSave';
 
-    const fetchData = () => {
-        axiosClient.get("/lecture/list")
-            .then(response => {
-                const responseData = response.data;
-                const dataArray = Array.isArray(responseData) ? responseData : [responseData];
-                setLectures(dataArray);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError(err);
-                setLoading(false);
-            });
-    };
+// 추가: getSHAFromGitHub 함수
+const getSHAFromGitHub = async (filePath) => {
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
+    const response = await axios.get(url, {
+        headers: {
+            Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
+            Accept: 'application/vnd.github.v3+json'
+        },
+    });
+    return response.data.sha;
+};
 
-    const fetchLecturePackageTitle = () => {
-        axiosClient.get("/title", {
-            params: { lecturePackageId }
-        })
-            .then(response => {
-                setLecturePackageTitle(response.data.title);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError(err);
-                setLoading(false);
-            });
-    };
-
-    const handleDeleteLectures = async () => {
-        try {
-            await axiosClient.post("/lecture/delete", { lectureIds: Array.from(selectedLectures) });
-            setLectures(lectures.filter(lecture => !selectedLectures.has(lecture.lectureId)));
-            setSelectedLectures(new Set());
-            setInternalDeletingMode(false);
-            setDeletingMode(false);
-            setIsModalOpen(false);
-        } catch (err) {
-            console.error("Error deleting lectures:", err);
+// 수정: deleteFileFromGitHub 함수 수정
+const deleteFileFromGitHub = async (filePath) => {
+    try {
+        const sha = await getSHAFromGitHub(filePath);
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
+        await axios.delete(url, {
+            headers: {
+                Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
+            },
+            data: {
+                message: `delete file ${filePath}`,
+                sha: sha,
+            },
+        });
+        console.log(`${filePath} deleted successfully from GitHub`);
+    } catch (error) {
+        console.error(`Error deleting ${filePath} from GitHub:`, error);
+        if (error.response) {
+            console.error('Response data:', error.response.data);
         }
-    };
+    }
+};
+
+const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, lectures }) => {
+    const [lecturePackageTitle, setLecturePackageTitle] = useState('');
+    const [deletingMode, setDeletingMode] = useState(false);
+    const [selectedLectures, setSelectedLectures] = useState(new Set());
+    const [isLayerOpen, setIsLayerOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
+    const [lectureReadStatuses, setLectureReadStatuses] = useState({});
 
     useEffect(() => {
-        fetchData();
-        if (lecturePackageId) {
-            fetchLecturePackageTitle();
-        }
+        fetchLecturePackageTitle();
     }, [lecturePackageId]);
+
+    useEffect(() => {
+        const fetchReadStatuses = async () => {
+            const nickname = authStore.getNickname();
+            const statuses = {};
+            for (const lecture of lectures) {
+                const status = await getLectureReadStatus(lecture.lectureId, nickname);
+                statuses[lecture.lectureId] = status;
+            }
+            setLectureReadStatuses(statuses);
+        };
+        fetchReadStatuses();
+    }, [lectures]);
+
+    const fetchLecturePackageTitle = () => {
+        axiosClient.get(`/lecture/title/${lecturePackageId}`)
+            .then(response => {
+                setLecturePackageTitle(response.data.title);
+            })
+            .catch(err => {
+                console.error("Error fetching lecture package title:", err);
+            });
+    };
+
+    const getLectureReadStatus = async (lectureId, nickname) => {
+        try {
+            const response = await axiosClient.get(`/lecture/read-status/${lectureId}?nickname=${nickname}`);
+            return response.data.lectureRead || 'N';
+        } catch (err) {
+            console.error("Error fetching lecture read status:", err);
+            return 'N';
+        }
+    };
+
+    // 수정: handleDeleteLectures 함수 수정
+    const handleDeleteLectures = async () => {
+        try {
+            setIsLoading(true);
+            setIsDeleted(false);
+            const lecturesToDelete = lectures.filter(lecture => selectedLectures.has(lecture.lectureId));
+            console.log('Lectures to delete:', lecturesToDelete);
+
+            for (const lecture of lecturesToDelete) {
+                if (lecture.lectureThumbnail) {
+                    await deleteFileFromGitHub(`thumbnails/${lecture.lectureThumbnail}`);
+                }
+                if (lecture.streamUrl) {
+                    const videoFileName = lecture.streamUrl.split('/').pop();
+                    await deleteFileFromGitHub(`uploads/${videoFileName}`);
+                }
+            }
+
+            console.log('Deleting lectures from server');
+            await axiosClient.delete("/lecture/delete", { data: { lectureIds: Array.from(selectedLectures) } });
+
+            fetchData();
+            setSelectedLectures(new Set());
+            setDeletingMode(false);
+            setIsLayerOpen(false);
+            setIsDeleted(true);
+            setIsLoading(false);
+        } catch (err) {
+            console.error("Error deleting lectures:", err.response ? err.response.data : err.message);
+            setIsLoading(false);
+        }
+    };
 
     const handleSelectLecture = (lectureId) => {
         setSelectedLectures(prevSelected => {
@@ -73,32 +134,27 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, setDeletingMo
         });
     };
 
-    const toggleDeletingMode = () => {
-        setInternalDeletingMode(!deletingMode);
-        setDeletingMode(!deletingMode);
+    const openLayer = () => {
+        setIsLayerOpen(true);
+        setIsDeleted(false);
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
+    const closeLayer = () => {
+        setIsLayerOpen(false);
     };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
 
     return (
         <div className={styles.tableContainer}>
-            <h1 className={styles.packagetitle}>{lecturePackageTitle}</h1>
+            <div className={styles.headerContainer}>
+                <h1 className={styles.packagetitle}>{lecturePackageTitle}</h1>
+            </div>
             {isOwner && (
-                <div>
-                    <button onClick={toggleDeletingMode}>
-                        {deletingMode ? '취소' : '삭제하기'}
+                <div className={styles.buttonContainer}>
+                    <button onClick={() => setDeletingMode(!deletingMode)}>
+                        {deletingMode ? '취소' : '강의 삭제'}
                     </button>
                     {deletingMode && (
-                        <button onClick={openModal} disabled={selectedLectures.size === 0}>
+                        <button onClick={openLayer} disabled={selectedLectures.size === 0}>
                             선택한 강의 삭제
                         </button>
                     )}
@@ -107,10 +163,10 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, setDeletingMo
             <table className={styles.table}>
                 <thead>
                     <tr className={styles.subtitle}>
-                        {deletingMode && <th className={styles.num} scope="col">선택</th>}
                         <th className={styles.num} scope="col">번호</th>
                         <th className={styles.title} scope="col">제목</th>
-                        <th className={styles.read} scope="col">나의 진행도</th>
+                        <th className={styles.read} scope="col">시청 여부</th>
+                        {deletingMode && <th className={styles.select} scope="col">선택</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -120,8 +176,17 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, setDeletingMo
                             key={lecture.lectureId}
                             onClick={() => !deletingMode && onSelectLecture(lecture.lectureId)}
                         >
+                            <th className={styles.num} scope="row">{index + 1}</th>
+                            <td className={styles.title}>
+                                <Link href={`/lecture/detail?lectureId=${lecture.lectureId}`} legacyBehavior>
+                                    <a>{lecture.lectureName}</a>
+                                </Link>
+                            </td>
+                            <td className={styles.read}>
+                                {lectureReadStatuses[lecture.lectureId] === 'Y' ? '시청 완료' : '미시청'}
+                            </td>
                             {deletingMode && (
-                                <td>
+                                <td className={styles.select}>
                                     <input
                                         type="checkbox"
                                         checked={selectedLectures.has(lecture.lectureId)}
@@ -129,38 +194,45 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, setDeletingMo
                                     />
                                 </td>
                             )}
-                            <th className={styles.num} scope="row">{index + 1}</th>
-                            <td className={styles.title}>
-                                <Link href={`/lecture/detail?lectureId=${lecture.lectureId}`} legacyBehavior>
-                                    <a>{lecture.lectureName}</a>
-                                </Link>
-                            </td>
-                            <td className={styles.read}>{lecture.lectureRead}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            <Modal
-                show={isModalOpen}
-                onHide={closeModal}
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>삭제 확인</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {Array.from(selectedLectures).join(', ')}번 강의를 삭제하시겠습니까?
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={closeModal}>
-                        취소
-                    </Button>
-                    <Button variant="danger" onClick={handleDeleteLectures}>
-                        삭제
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {isLayerOpen && (
+                <div className={styles.layerContainer}>
+                    <div className={styles.layerContent}>
+                        {isLoading ? (
+                            <>
+                                <p>삭제 중입니다. 잠시만 기다려 주세요...</p>
+                                <div className={styles.loadingIcon}></div>
+                            </>
+                        ) : isDeleted ? (
+                            <>
+                                <p>삭제가 완료 되었습니다.</p>
+                                <div className={styles.layerButtons}>
+                                    <button className={styles.secondaryButton} onClick={closeLayer}>
+                                        확인
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <h3>삭제 확인</h3>
+                                <p>선택한 강의를 삭제하시겠습니까?</p>
+                                <div className={styles.layerButtons}>
+                                    <button className={styles.secondaryButton} onClick={closeLayer}>
+                                        취소
+                                    </button>
+                                    <button className={styles.dangerButton} onClick={handleDeleteLectures}>
+                                        삭제
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

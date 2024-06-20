@@ -132,3 +132,14 @@
     padding: 8px;
     text-align: left;
 }
+
+.content {
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.content img {
+    width: 100%; /* 100% 너비로 설정하여 컨테이너에 맞게 조정 */
+    max-width: 300px; /* 최대 너비를 설정 */
+    height: auto; /* 높이를 자동으로 조정하여 비율 유지 */
+}
