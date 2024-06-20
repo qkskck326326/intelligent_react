@@ -34,7 +34,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
 
-    //TODO
     const fetchData = async () => {
         try {
             const response = await axiosClient.get('/chat/chatdata', {
@@ -82,7 +81,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     }, [page]);
 
-    //TODO
     useEffect(() => {
         axiosClient.get('/chat/chatuserdetail', {
             params: {
@@ -196,14 +194,58 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         setIsAttachButtonClicked(!isAttachButtonClicked);
     }
 
+    const determineMessageType = (files) => {
+        if (files.some(file => file.type.startsWith('video/'))) {
+            return 2; // Video
+        } else if (files.some(file => file.type.startsWith('image/'))) {
+            return 1; // Image
+        } else {
+            return 3; // Other
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         if (items.length > 0) {
-            // Handle file submission logic
-        } else {
-            if(textContent.trim() === ''){
-                return window.alert('메시지를 작성해주세요.')
+            const newMessage = {
+                roomId: roomData.roomId,
+                senderId: AuthStore.getNickname(),
+                messageType: determineMessageType(items),
+                dateSent: new Date().toISOString(),
+                isAnnouncement: 0
+            };
+
+            const formData = new FormData();
+
+            items.forEach((file) => {
+                formData.append('files', file);
+            });
+
+            const url = `/chat/uploadfiles/${newMessage.roomId}/${newMessage.senderId}/${newMessage.messageType}/${newMessage.dateSent}/${newMessage.isAnnouncement}`;
+            console.log(url)
+
+            for (let pair of formData.entries()) {
+                console.log(pair[0], pair[1]);
             }
+
+            try {
+                const response = await axiosClient.post(url, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                const { message, files } = response.data;
+
+            } catch (error) {
+                console.error('Error uploading files:', error);
+            }
+
+        } else {
+            if (textContent.trim() === '') {
+                return window.alert('메시지를 작성해주세요.');
+            }
+
             const newMessage = {
                 roomId: roomData.roomId,
                 senderId: AuthStore.getNickname(),
@@ -213,7 +255,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 isAnnouncement: 0
             };
 
-            //TODO
             try {
                 const response = await axiosClient.post('/chat/sendmessage', newMessage);
                 const savedMessage = response.data;
@@ -223,10 +264,8 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             } catch (error) {
                 console.error('Error sending message:', error);
             }
-
         }
-
-    }
+    };
 
     const handleFileAttach = (event) => {
         event.preventDefault();
@@ -261,7 +300,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const handleRoomTitleName = () => {
         const roomName = window.prompt('변경할 방 제목을 입력해주세요')
         if(roomName !== null){
-            //TODO
             axiosClient.put('/chat/changeroomname', {
                 roomId: userData.chatUserCompositeKey.roomId,
                 roomName: roomName
@@ -297,7 +335,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     const handleLeave = () => {
         window.confirm('혼또니 나가겠습니까?') &&
-            //TODO
         axiosClient.delete('/chat/leaveroom', {
             data: {
                 userId: userData.chatUserCompositeKey.userId,
@@ -395,11 +432,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                         {/*  메뉴 구성  */}
                             { isMenuClicked &&
                                 <ul className={styles.menuItems}>
-                                    {/*TODO */}
                                     <li onClick={handlePin}>{userData.isPinned === 1 ? '핀해제' : '핀하기'}</li>
                                     <li onClick={handleRoomTitleName}>방제목변경</li>
                                     <li onClick={handleLeave}>채팅방나가기</li>
-
                                 </ul>
                             }
                         </>
@@ -452,7 +487,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     </button>
                 </div>
                 :
-                <div className={styles.announceContainerSmall} onClick={() => {
+                announce !== '' && <div className={styles.announceContainerSmall} onClick={() => {
                     setIsAnnounceHidden(false)
                     setAnnounceExpand(false)
                 }}>

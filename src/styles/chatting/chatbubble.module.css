@@ -21,11 +21,11 @@
 }
 .bubbleWrapper{
     display: flex;
-    padding-inline: 0.25rem;
+    padding-inline: 0.1rem;
 }
 .eachBubble{
     display: flex;
-    width: 85%;
+    width: 94%;
     gap: 0.5rem;
     padding-block: 0.2rem;
 }
@@ -56,7 +56,6 @@
     user-select: none;
 }
 .content{
-
     word-wrap: break-word;
     overflow-wrap: break-word;
     overflow: hidden;
@@ -64,6 +63,18 @@
     padding-inline: 0.5rem;
     background-color: #E0E0E0;
     border-radius: 0.5rem 0.5rem;
+}
+.imgContainer{
+    display: flex;
+    justify-content: space-between;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+.img{
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+    object-fit: scale-down;
 }
 .end{
     flex-shrink: 0;

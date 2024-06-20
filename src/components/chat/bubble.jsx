@@ -61,13 +61,20 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                     }
 
                     <div className={styles.content} ref={textRef}>
-
-                        {/*{*/}
-                        {/*    isThereMedia && <Media 사진이있다면 들어옴 아직정의되지 않음/>*/}
-                        {/*}*/}
-
-                    {/*  TODO 이미지 조건 넣어서 이미지일시 조건 처리  */}
-                        {message.messageContent}
+                        {   message.messageContent !== null ?
+                            message.messageContent
+                            :
+                            <div className={styles.imgContainer}>
+                                {message.files.map((file, index) => (
+                                    <img
+                                        key={index}
+                                        className={styles.img}
+                                        src={`http://localhost:8080/${file.fileURL.replace(/\\/g, '/')}`}
+                                        alt={file.originalName}
+                                    />
+                                ))}
+                            </div>
+                        }
                     </div>
                 </div>
                 <div className={`${styles.end} ${isMe ? styles.reverseEnd : ''}`}>
