@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureList.module.css';
 import authStore from '../../stores/authStore';
-import * as gh from './github'; // GitHub 함수들을 불러옵니다.
 
 const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, lectures }) => {
     const [lecturePackageTitle, setLecturePackageTitle] = useState('');
@@ -61,25 +60,29 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
 
             console.log('Lectures to delete:', lecturesToDelete);
 
-            // GitHub에서 파일 삭제
-            const pathsToDelete = [];
-            for (const lecture of lecturesToDelete) {
-                // 썸네일 삭제
+            // GitHub에서 파일 삭제를 위해 경로 수집
+            const pathsToDelete = lecturesToDelete.flatMap(lecture => {
+                const paths = [];
                 if (lecture.lectureThumbnail) {
-                    pathsToDelete.push(`thumbnails/${lecture.lectureThumbnail}`);
+                    paths.push(`thumbnails/${lecture.lectureThumbnail}`);
                 }
-                // 동영상 삭제
                 if (lecture.streamUrl) {
                     const videoFileName = lecture.streamUrl.split('/').pop();
-                    pathsToDelete.push(`uploads/${videoFileName}`);
+                    paths.push(`uploads/${videoFileName}`);
                 }
+                return paths;
+            });
+
+            // 서버에서 강의 삭제 및 GitHub 파일 삭제 요청
+            const response = await axiosClient.delete("/lecture/delete", {
+                data: { lectureIds: Array.from(selectedLectures), files: pathsToDelete }
+            });
+
+            if (response.status === 200) {
+                console.log('Files and lectures deleted successfully');
+            } else {
+                console.error('Error deleting files and lectures:', response.statusText);
             }
-            await gh.fileDeleteMultiple(pathsToDelete); // 여러 파일 삭제 함수 호출
-
-            console.log('Deleting lectures from server');
-
-            // 서버에서 강의 삭제
-            await axiosClient.delete("/lecture/delete", { data: { lectureIds: Array.from(selectedLectures) } });
 
             fetchData(); // 강의 삭제 후 목록 새로고침
             setSelectedLectures(new Set());
