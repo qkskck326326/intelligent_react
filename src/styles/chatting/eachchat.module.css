@@ -26,10 +26,10 @@
     justify-content: center;
     align-items: center;
 }
-.eachPicture > svg{
+.eachPicture > img{
     width: 4rem;
     height: 4rem;
-
+    object-fit: scale-down;
 }
 .pin{
     position: absolute;
