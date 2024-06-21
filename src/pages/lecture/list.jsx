@@ -43,10 +43,12 @@ const ratingStyle = {
 
 const previewStyle = {
     width: '100%',
+    display: 'sticky',
     marginTop: '20px',
     display: 'flex',
     justifyContent: 'flex-start',
-    marginLeft: '-50px'
+    marginLeft: '-50px',
+    position: 'sticky'
 };
 
 const buttonStyle = {
