@@ -5,7 +5,7 @@ import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css'
 
 const LecturePackageDetail = () => {
     const router = useRouter();
-    const {lecturePackageId} = router.query;
+    const { lecturePackageId } = router.query;
 
     const [lecturePackage, setLecturePackage] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ const LecturePackageDetail = () => {
             console.log("lecturePackageId : ", lecturePackageId);
 
             try {
-                const response = await axiosClient.get('/packages/detail', {params: {lecturePackageId}});
+                const response = await axiosClient.get('/packages/detail', { params: { lecturePackageId } });
                 setLecturePackage(response.data);
 
                 const teacherNickname = response.data.nickname;
@@ -26,7 +26,7 @@ const LecturePackageDetail = () => {
                 // 작성자 프로필 가져오기
                 const profileResponse = await axiosClient.get(`/packages/profile?nickname=${teacherNickname}`);
                 const profile = profileResponse.data.profileImageUrl;
-                setProfile({nickname: teacherNickname, pictureUrl: profile});
+                setProfile({ nickname: teacherNickname, pictureUrl: profile });
 
                 console.log("profile : ", profile);
             } catch (err) {
@@ -49,8 +49,8 @@ const LecturePackageDetail = () => {
 
     useEffect(() => {
         if (lecturePackage) {
-            // oembed 태그를 iframe으로 변환하는 함수
-            const convertOembedToIframe = () => {
+            // oembed 태그와 video 태그를 iframe으로 변환하는 함수
+            const convertMediaToIframe = () => {
                 const contentDiv = document.getElementById('content');
                 if (!contentDiv) return;
 
@@ -66,9 +66,22 @@ const LecturePackageDetail = () => {
                     iframe.setAttribute('allowfullscreen', 'true');
                     oembed.parentNode.replaceChild(iframe, oembed);
                 }
+
+                const videoElements = contentDiv.getElementsByTagName('video');
+                for (const video of videoElements) {
+                    const url = video.getAttribute('src');
+                    const iframe = document.createElement('iframe');
+                    iframe.setAttribute('src', url);
+                    iframe.setAttribute('width', '560');
+                    iframe.setAttribute('height', '315');
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    iframe.setAttribute('allowfullscreen', 'true');
+                    video.parentNode.replaceChild(iframe, video);
+                }
             };
 
-            convertOembedToIframe();
+            convertMediaToIframe();
         }
     }, [lecturePackage]);
 
@@ -86,14 +99,13 @@ const LecturePackageDetail = () => {
         }
     };
 
-
     const handleEdit = async () => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/packages/detail`, {params: {lecturePackageId}});
+            const response = await axiosClient.get(`/packages/detail`, { params: { lecturePackageId } });
             router.push({
                 pathname: `/lecturePackage/edit/${lecturePackage.lecturePackageId}`,
-                query: {data: JSON.stringify(response.data)}
+                query: { data: JSON.stringify(response.data) }
             });
         } catch (error) {
             console.error('패키지 데이터를 가져오는 중 오류 발생:', error);
@@ -107,9 +119,8 @@ const LecturePackageDetail = () => {
         return new Intl.NumberFormat('ko-KR').format(price);
     };
 
-
     const getLectureLevel = (level) => {
-        switch(level) {
+        switch (level) {
             case 0:
                 return '입문';
             case 1:
@@ -121,28 +132,31 @@ const LecturePackageDetail = () => {
         }
     };
 
-
-
+    const handleApply = () => {
+        router.push({
+            pathname: '/payment',
+            query: { lecturePackageId }
+        });
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
     return (
         <div>
-
             <div className={styles.actions}>
                 <div className={styles.profile}>
-                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture}/>
+                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture} />
                     <p className={styles.nickname}>{profile.nickname}</p>
                 </div>
-                <p>
+                <p className={styles.threebtn}>
+                    <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>패키지 리스트로
+                        이동
+                    </button>
                     <button className={styles.actionButton}
                             onClick={handleEdit}>수정하기
                     </button>
                     <button className={styles.actionButton} onClick={handleDelete}>삭제하기</button>
-                    <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>패키지 리스트로
-                        이동
-                    </button>
                 </p>
             </div>
             <div className={styles.container}>
@@ -162,8 +176,8 @@ const LecturePackageDetail = () => {
                                 <div
                                     id="content"
                                     className={styles.content}
-                                    style={{backgroundColor: lecturePackage.backgroundColor}} // 배경색 적용
-                                    dangerouslySetInnerHTML={{__html: lecturePackage.content}}
+                                    style={{ backgroundColor: lecturePackage.backgroundColor }} // 배경색 적용
+                                    dangerouslySetInnerHTML={{ __html: lecturePackage.content }}
                                 />
                             </div>
                             <div className={styles.field}>
@@ -172,7 +186,8 @@ const LecturePackageDetail = () => {
                             </div>
                         </div>
                         <div className={styles.field}>
-                            <p className={styles.priceKind}>{lecturePackage.priceKind === 0 ? '월정액' : '평생소장'} &gt;&gt;&gt; {formatPrice(lecturePackage.price)} ₩</p>
+                            <p className={styles.priceKind}> 월정액 &gt;&gt;&gt; {formatPrice(lecturePackage.priceMonth)} ₩</p>
+                            <p className={styles.priceKind}> 평생소장 &gt;&gt;&gt; {formatPrice(lecturePackage.priceForever)} ₩</p>
                         </div>
                         <div className={styles.field}>
                             <label>해당 카테고리</label>
@@ -186,24 +201,20 @@ const LecturePackageDetail = () => {
                             <label>기술 스택</label>
                             <div className={styles.techStack}>
                                 {lecturePackage.techStackPath.split(',').map((tech, index) => (
-                                    <img key={index} src={tech} alt={`tech-${index}`}/>
+                                    <img key={index} src={tech} alt={`tech-${index}`} />
                                 ))}
                             </div>
                         </div>
-
                     </>
                 )}
                 <div className={styles.fixedBox}>
-
-                    지금바로 신청하세요!! <button className={styles.applyButton}>수강신청</button>
+                    지금바로 신청하세요!! <button className={styles.applyButton} onClick={handleApply}>수강신청</button>
                 </div>
                 <div className={styles.foot}>
-
                 </div>
             </div>
         </div>
     );
-
 };
 
 export default LecturePackageDetail;
