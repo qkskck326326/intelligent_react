@@ -190,3 +190,15 @@
         right: 2%
     }
 }
+
+.downloadButton{
+    all: unset;
+    position: fixed;
+    top: 3.8%;
+    right: 5%;
+    cursor: pointer;
+}
+.downloadIcon{
+    width: 2rem;
+    height: 2rem;
+}

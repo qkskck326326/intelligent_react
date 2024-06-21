@@ -51,6 +51,25 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
         setSlideIndex(newIndex);
     };
 
+    const downloadFile = async (fileURL) => {
+        try {
+            const response = await axiosClient.get(fileURL, {
+                responseType: 'blob' //이진 데이터 전용
+            });
+
+            const filename = fileURL.substring(fileURL.lastIndexOf('/') + 1);
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error(`파일 다운로드에 실패하였습니다. ${fileURL}:`, error);
+        }
+    };
 
     function handleAnnouncement(){
         onAnnouncementChange(message.messageId, message.roomId);
@@ -88,22 +107,30 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                         {images.length > 1 && <a className={styles.prev} onClick={() => plusSlides(-1)}>&#10094;</a>}
                         {images.length > 1 && <a className={styles.next} onClick={() => plusSlides(1)}>&#10095;</a>}
                         {images.map((src, index) => (
-                            <img
-                                key={index}
-                                className="modal-content"
-                                src={src}
-                                style={{ display: index === slideIndex ? 'block' : 'none' }}
-                            />
+                            <div key={index} style={{ display: index === slideIndex ? 'block' : 'none' }}>
+                                <img className="modal-content" src={src} />
+                                {index === slideIndex && (
+                                    <button className={styles.downloadButton} onClick={() => downloadFile(src, `image-${index + 1}.jpg`)}>
+                                        <svg className={styles.downloadIcon} xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 512 512">
+                                            <path
+                                                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"
+                                                fill='white'/>
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
                         ))}
                     </>
                 )}
+
             </div>
-            <div className={`${styles.bubbleWrapper} ${ isMe && styles.reverseBubbleWrapper}`}>
-                <div className={`${styles.eachBubble} ${ isMe && styles.reverseEachBubble}`}>
+            <div className={`${styles.bubbleWrapper} ${isMe && styles.reverseBubbleWrapper}`}>
+                <div className={`${styles.eachBubble} ${isMe && styles.reverseEachBubble}`}>
                     {/* TODO 강사일 경우 강사의 페이지 이동기능도 필요할듯? */}
-                    { !isMe &&
+                    {!isMe &&
                         <div className={styles.profile}>
-                            <img src={message.senderProfileImageUrl || ''} alt="Profile" />
+                            <img src={message.senderProfileImageUrl || ''} alt="Profile"/>
                         </div>
                     }
 
