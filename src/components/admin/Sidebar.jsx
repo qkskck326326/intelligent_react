@@ -19,6 +19,7 @@ const Sidebar = () => {
                 <li><Link href="/admin/board-management">게시판 관리</Link></li>
                 <li><Link href="/admin/qna-management">QnA관리</Link></li>
                 <li><Link href="/admin/testAI">AI코드채점</Link></li>
+                <li><Link href="/admin/reportList">김채림신고</Link></li>
                 <li><Link href="/admin/BannerManagement">배너관리</Link></li>
                 <li><Link href="/admin/test-page">테스트 페이지</Link></li>
                 {/* 새 페이지 링크 추가 */}
