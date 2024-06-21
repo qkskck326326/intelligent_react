@@ -31,7 +31,7 @@
 
 /* 드롭다운 토글 버튼 호버 시 스타일 */
 .dropdownToggle:hover {
-  background-color: #e4ff9b; /* 배경색 */
+  background-color: #9fdd87; /* 배경색 */
   color: rgb(110, 110, 110); /* 글씨 색상 유지 */
 }
 
@@ -91,6 +91,6 @@
 
 /* 모든 카테고리 항목 호버 시 스타일 */
 .allCategories:hover {
-  background-color: #b3d8ff; /* 배경색 */
+  background-color: #63b9a4; /* 배경색 */
   color: #212529; /* 글씨 색상 유지 */
 }

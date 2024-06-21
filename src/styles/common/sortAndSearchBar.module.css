@@ -5,13 +5,13 @@
     gap: 10px;
     width: 100%;
     max-width: 1000px;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
     justify-content: flex-end;
 
 }
 
 .dropdown {
-    border: 3px solid #54df90;
+    border: 3px solid #56caac;
     border-radius: 3px;
     padding: 5px 10px;
     background-color: #fff;
@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 5px solid #5ae89b;
+    border: 5px solid #8ccbbb;
     border-radius: 20px;
     padding: 5px 15px;
     width: 100%;
