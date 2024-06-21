@@ -1,7 +1,7 @@
 .postListContainer {
   padding: 20px;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 0 20px; /* 양쪽 여백을 줄이기 위해 max-width 대신 margin 값을 조정 */
   position: relative;
 }
 
@@ -106,7 +106,7 @@
 }
 
  .uploadButton {
-  margin-right: 300px;
+  margin-right: 10rem;
   position: fixed;
   bottom: 30%;
   right: 30px;

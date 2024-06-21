@@ -1,10 +1,10 @@
 import PaymentInformation from "../../components/payment/PaymentInformation";
 const Index = () => {
-  const lecturePackageId = "6";
+  const lecturePackageId = "7";
   return (
     <div>
       <h1>결제페이지</h1>
-      <PaymentInformation packageId={lecturePackageId} />
+      <PaymentInformation lecturePackageId={lecturePackageId} />
     </div>
   );
 };

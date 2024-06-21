@@ -1,42 +1,69 @@
 /* Index.module.css */
+.header {
+  width: 100%;
+  background-color: #ffffff; /* Adjust as needed */
+  display: flex;
+  justify-content: center; /* Center the header content horizontally */
+  align-items: center; /* Center the header content vertically */
+}
+
+.headerImageContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+}
+
+.headerImage {
+  width: 100%;
+  height: auto;
+  max-height: 400px; /* Reduce the height of the header image */
+  max-width: 1400px; /* Center the image with a maximum width */
+}
+
 .container {
-    display: flex;
-  }
+  display: flex;
+  justify-content: center; /* Align items in a row with space between them */
+  padding: 20px;
   
-  .mainContent {
-    margin-left: 0px;
-    margin-right: 230px; /* Adjust this value based on the width of your sidebar */
-    padding: 20px;
-    flex-grow: 0.8;
-  }
-  
-  .searchContainer {
-    display: flex;
-    align-items: center;
-    margin-bottom: 50px;
-  }
-  
-  .postListContainer {
-    width: 100%; /* Adjust the width to make it full width */
-  }
-  
-  .postItem {
-    margin-bottom: 20px;
-  }
-  
-  .postList {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%; /* Ensure the list takes the full width */
-  }
-  
-  .postItem {
-    background: #fff;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
-  
+}
+
+.mainContent {
+  flex: 1;
+  justify-content: center;
+}
+
+.popularPosts {
+  width: 500px; /* Set a fixed width for the popular posts */
+  margin-left: 160px;
+  justify-content: center;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.postListContainer {
+  width: 100%; /* Adjust the width to make it full width */
+}
+
+.postItem {
+  margin-bottom: 20px;
+}
+
+.postList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Ensure the list takes the full width */
+}
+
+.postItem {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
