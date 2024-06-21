@@ -5,14 +5,13 @@ import TimeAgo from '../../axiosApi/timeDifference.js'
 
 const EachChat = observer(({chat, onClick}) => {
 
-    useEffect(()=>{
-        console.log(chat)
-    },[])
+    const altImage = chat.users[0].profileImage;
+
     return(
         <div className={styles.eachChatContainer} onClick={onClick}>
             <div className={styles.pictureFrame}>
                 <div className={styles.eachPicture}>
-                    <img src={chat.users[1].profileImageUrl} alt="" onError={chat.users[0].profileImageUrl}/>
+                    <img src={chat.users[1].profileImageUrl} alt="" onError={altImage}/>
                 </div>
                 {chat.chatUser.isPinned === 1 &&
                     <svg className={styles.pin} xmlns="http://www.w3.org/2000/svg"

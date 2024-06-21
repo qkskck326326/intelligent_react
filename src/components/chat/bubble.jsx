@@ -76,7 +76,17 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     }
 
     const handleEachReport = () => {
-        onReport(index, isMe)
+
+        const reportItem = {
+            receiveNickname: message.senderId,
+            doNickname: AuthStore.getNickname(),
+            content: message.messageContent ? message.messageContent : message.files,
+            reportDate: new Date(),
+            reportType: 2,
+            contentId: message.roomId
+        }
+
+        console.log(reportItem)
     }
 
     const handleClickOutside = (event) => {
