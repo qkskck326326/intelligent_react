@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    user-select: none;
 }
 .bubbleContainer::-webkit-scrollbar {
     width: 10px;
@@ -66,7 +67,6 @@
 }
 .imgContainer{
     display: flex;
-    justify-content: space-between;
     gap: 0.25rem;
     flex-wrap: wrap;
 }
@@ -113,7 +113,7 @@
     text-align: center;
 }
 .settingDropDown2{
-    bottom: -50%;
+    bottom: -130%;
     right: -800%;
 }
 
@@ -125,4 +125,68 @@
 
 .settingDropdown li:hover{
     background-color: #E3E3E3;
+}
+
+.close{
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    font-size: 3rem;
+    color: white;
+    font-weight: 900;
+    cursor:pointer;
+    transition: transform 0.5s;
+}
+.close:hover{
+    transform: scale(110%);
+}
+.prev{
+    position: absolute;
+    top: 47%;
+    left: 2%;
+    font-size: 3rem;
+    color: white;
+    cursor:pointer;
+    padding: 1rem;
+}
+
+.prev:hover{
+    animation: prevmove 1s linear;
+}
+
+.next{
+    position: absolute;
+    top: 47%;
+    right: 2%;
+    font-size: 3rem;
+    color: white;
+    cursor:pointer;
+    padding: 1rem;
+}
+.next:hover{
+    animation: nextmove 1s linear;
+}
+
+@keyframes prevmove {
+    0%{
+        left: 2%
+    }
+    50%{
+        left: 1.5%
+    }
+    100%{
+        left: 2%
+    }
+}
+
+@keyframes nextmove {
+    0%{
+        right: 2%
+    }
+    50%{
+        right: 1.5%
+    }
+    100%{
+        right: 2%
+    }
 }
