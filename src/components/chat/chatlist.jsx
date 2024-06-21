@@ -45,11 +45,11 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
         setIsPlusClicked(!isPlusClicked)
     }
 
-    const handleEnteringChat = (chatroom, totalPeople) => {
+    const handleEnteringChat = (roomData) => {
 
         setIsAnimating(true);
         setTimeout(() => {
-            onNavigateToChat({...chatroom})
+            onNavigateToChat({...roomData})
             setIsAnimating(false);
             setIsPlusClicked(false);
         }, 500);
