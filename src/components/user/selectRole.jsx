@@ -15,7 +15,6 @@ const SelectRole = ({ setRole, nextPage }) => {
     return (
         
         <div className={styles.container}>
-            <h2>공사중입니다...</h2>
             <p className={styles.title}>InTelliClass 계정 생성</p>
             <div className={styles.card + " " + styles.student} onClick={() => { setRole('student'); nextPage(); }}>
                 <div className={styles.icon + " " + styles.studentIcon}></div>
