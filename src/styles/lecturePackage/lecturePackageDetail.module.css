@@ -1,5 +1,3 @@
-
-
 .container {
     display: flex;
     flex-direction: column;
@@ -19,46 +17,53 @@
     justify-content: space-between;
     width: 100%;
     max-width: 800px;
-    /*margin-bottom: 10px;*/
 }
 
 .infoItem {
     font-size: 1rem;
-
 }
 
 .actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-around;
     width: 100%;
     max-width: 100%;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap:800px;
+    /*margin-bottom: 10px;*/
     margin-top: 20px;
+    align-items:center;
 }
 
 .actionButton {
     font-size: 1rem;
     border: 1px solid #ccc;
     padding: 5px 10px;
+    margin-left:10px;
     background-color: #ffffff;
     cursor: pointer;
 }
 
-/*.yellowBox {*/
-/*    background-color: #fffae6;*/
-/*    padding: 20px;*/
-/*    border-radius: 8px;*/
-/*    max-width: 900px;*/
-/*    width: 100%;*/
-/*    margin-bottom: 20px;*/
-/*}*/
+.profile {
+    display: flex;
+    align-items: center;
+    /*margin-bottom: 5px;*/
+}
+
+.profilePicture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.nickname {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
 
 .redBox {
     display: flex;
     justify-content: center;
-    /*padding: 20px;*/
-    /*margin-bottom: 20px;*/
     width: 100%;
     overflow-y: visible;
 }
@@ -111,7 +116,7 @@
     padding: 5px 10px;
     background-color: #20c997;
     border-radius: 4px;
-    color:white;
+    color: white;
 }
 
 .thumbnail {
@@ -123,7 +128,6 @@
 .content {
     text-align: left;
     width: 100%;
-    /*border-radius: 0px;*/
 }
 
 .content table {
@@ -143,28 +147,26 @@
 .content {
     padding: 20px;
     border-radius: 0px;
-    width:800px;
-
+    width: 800px;
 }
 
 .content img {
-    width: 100%; /* 100% 너비로 설정하여 컨테이너에 맞게 조정 */
-    max-width: 300px; /* 최대 너비를 설정 */
-    height: auto; /* 높이를 자동으로 조정하여 비율 유지 */
+    width: 100%;
+    max-width: 300px;
+    height: auto;
 }
 
 .fixedBox {
     position: fixed;
     bottom: 0;
     width: 50%;
-    border:1px solid black;
+    border: 1px solid black;
     background-color: #ffffff;
     text-align: right;
     padding: 20px;
     box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.07);
     z-index: 1000;
-    margin-bottom:5px;
-
+    margin-bottom: 5px;
 }
 
 .applyButton {
@@ -177,6 +179,6 @@
     margin-right: 10px;
 }
 
-.foot{
+.foot {
     height: 70px;
 }

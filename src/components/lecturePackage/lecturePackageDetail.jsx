@@ -10,6 +10,7 @@ const LecturePackageDetail = () => {
     const [lecturePackage, setLecturePackage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [profile, setProfile] = useState({ nickname: '', pictureUrl: '' });
 
     useEffect(() => {
         const fetchLecturePackage = async () => {
@@ -19,12 +20,20 @@ const LecturePackageDetail = () => {
             try {
                 const response = await axiosClient.get('/packages/detail', {params: {lecturePackageId}});
                 setLecturePackage(response.data);
+
+                const teacherNickname = response.data.nickname;
+                console.log("teacher : ", teacherNickname)
+                // 작성자 프로필 가져오기
+                const profileResponse = await axiosClient.get(`/packages/profile?nickname=${teacherNickname}`);
+                const profile = profileResponse.data.profileImageUrl;
+                setProfile({nickname: teacherNickname, pictureUrl: profile});
+
+                console.log("profile : ", profile);
             } catch (err) {
                 setError(err);
             } finally {
                 setLoading(false);
             }
-
         };
 
         if (lecturePackageId) {
@@ -99,79 +108,101 @@ const LecturePackageDetail = () => {
     };
 
 
+    const getLectureLevel = (level) => {
+        switch(level) {
+            case 0:
+                return '입문';
+            case 1:
+                return '기본';
+            case 2:
+                return '심화';
+            default:
+                return '알 수 없음';
+        }
+    };
+
+
+
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
     return (
-    <div>
-    <div className={styles.actions}>
-        <button className={styles.actionButton}
-                onClick={handleEdit}>수정하기
-        </button>
-        <button className={styles.actionButton} onClick={handleDelete}>삭제하기</button>
-        <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>패키지 리스트로
-            이동
-        </button>
-    </div>
-    <div className={styles.container}>
-        {lecturePackage && (
-            <>
-                <h1 className={styles.title}>{lecturePackage.title}</h1>
-                <div className={styles.topInfo}>
-                    <div className={styles.infoItem}>
-                        <p>등록 날짜: {lecturePackage.registerDate}</p>
-                    </div>
-                    <div className={styles.infoItem}>
-                        <p>조회수: {lecturePackage.viewCount}</p>
-                    </div>
-                </div>
-                <div className={styles.yellowBox}>
-                    <div className={styles.redBox}>
-                        <div
-                            id="content"
-                            className={styles.content}
-                            style={{backgroundColor: lecturePackage.backgroundColor}} // 배경색 적용
-                            dangerouslySetInnerHTML={{__html: lecturePackage.content}}
-                        />
-                    </div>
-                    <div className={styles.field}>
-                        <p className={styles.level}><i
-                            className="fas fa-check"></i> {lecturePackage.packageLevel} 과정</p>
-                    </div>
-                </div>
-                <div className={styles.field}>
-                    <p className={styles.priceKind}>{lecturePackage.priceKind === 0 ? '월정액' : '평생소장'} &gt;&gt;&gt; {formatPrice(lecturePackage.price)} ₩</p>
-                </div>
-                <div className={styles.field}>
-                    <label>해당 카테고리</label>
-                    <div className={styles.categories}>
-                        {lecturePackage.subCategoryName.split(',').map((category, index) => (
-                            <span key={index} className={styles.category}>{category}</span>
-                        ))}
-                    </div>
-                </div>
-                <div className={styles.field}>
-                    <label>기술 스택</label>
-                    <div className={styles.techStack}>
-                        {lecturePackage.techStackPath.split(',').map((tech, index) => (
-                            <img key={index} src={tech} alt={`tech-${index}`}/>
-                        ))}
-                    </div>
-                </div>
+        <div>
 
-            </>
-        )}
-        <div className={styles.fixedBox}>
+            <div className={styles.actions}>
+                <div className={styles.profile}>
+                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture}/>
+                    <p className={styles.nickname}>{profile.nickname}</p>
+                </div>
+                <p>
+                    <button className={styles.actionButton}
+                            onClick={handleEdit}>수정하기
+                    </button>
+                    <button className={styles.actionButton} onClick={handleDelete}>삭제하기</button>
+                    <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>패키지 리스트로
+                        이동
+                    </button>
+                </p>
+            </div>
+            <div className={styles.container}>
+                {lecturePackage && (
+                    <>
+                        <h1 className={styles.title}>{lecturePackage.title}</h1>
+                        <div className={styles.topInfo}>
+                            <div className={styles.infoItem}>
+                                <p>등록 날짜: {lecturePackage.registerDate}</p>
+                            </div>
+                            <div className={styles.infoItem}>
+                                <p>조회수: {lecturePackage.viewCount}</p>
+                            </div>
+                        </div>
+                        <div className={styles.yellowBox}>
+                            <div className={styles.redBox}>
+                                <div
+                                    id="content"
+                                    className={styles.content}
+                                    style={{backgroundColor: lecturePackage.backgroundColor}} // 배경색 적용
+                                    dangerouslySetInnerHTML={{__html: lecturePackage.content}}
+                                />
+                            </div>
+                            <div className={styles.field}>
+                                <p className={styles.level}><i
+                                    className="fas fa-check"></i> {getLectureLevel(lecturePackage.packageLevel)} 과정</p>
+                            </div>
+                        </div>
+                        <div className={styles.field}>
+                            <p className={styles.priceKind}>{lecturePackage.priceKind === 0 ? '월정액' : '평생소장'} &gt;&gt;&gt; {formatPrice(lecturePackage.price)} ₩</p>
+                        </div>
+                        <div className={styles.field}>
+                            <label>해당 카테고리</label>
+                            <div className={styles.categories}>
+                                {lecturePackage.subCategoryName.split(',').map((category, index) => (
+                                    <span key={index} className={styles.category}>{category}</span>
+                                ))}
+                            </div>
+                        </div>
+                        <div className={styles.field}>
+                            <label>기술 스택</label>
+                            <div className={styles.techStack}>
+                                {lecturePackage.techStackPath.split(',').map((tech, index) => (
+                                    <img key={index} src={tech} alt={`tech-${index}`}/>
+                                ))}
+                            </div>
+                        </div>
 
-            지금바로 신청하세요!! <button className={styles.applyButton}>수강신청</button>
+                    </>
+                )}
+                <div className={styles.fixedBox}>
+
+                    지금바로 신청하세요!! <button className={styles.applyButton}>수강신청</button>
+                </div>
+                <div className={styles.foot}>
+
+                </div>
+            </div>
         </div>
-        <div className={styles.foot}>
-
-        </div>
-    </div>
-    </div>
-);
+    );
 
 };
 

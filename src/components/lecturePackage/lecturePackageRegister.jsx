@@ -159,17 +159,26 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                         type="radio"
                         id="beginner"
                         name="level"
-                        value="입문"
-                        checked={form.level === '입문'}
+                        value="0"
+                        checked={form.level === 0}
                         onChange={handleInputChange}
                     />
                     <label htmlFor="beginner">입문</label>
                     <input
                         type="radio"
+                        id="default"
+                        name="level"
+                        value="1"
+                        checked={form.level === 1}
+                        onChange={handleInputChange}
+                    />
+                    <label htmlFor="beginner">기본</label>
+                    <input
+                        type="radio"
                         id="advanced"
                         name="level"
-                        value="심화"
-                        checked={form.level === '심화'}
+                        value="2"
+                        checked={form.level === 2}
                         onChange={handleInputChange}
                     />
                     <label htmlFor="advanced">심화</label>
@@ -183,7 +192,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                     value={form.priceKind}
                     onChange={handleInputChange}
                 >
-                    <option value="">선택</option>
+                <option value="">선택</option>
                     <option value="0">월정액</option>
                     <option value="1">평생소장</option>
                 </select>

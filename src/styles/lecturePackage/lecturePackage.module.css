@@ -1,246 +1,306 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
 }
 
 .searchContainer {
-    width: 100%;
-    display: flex;
-    justify-content: space-between; /* 검색바와 버튼을 양 끝으로 정렬 */
-    align-items: center; /* 수직 중앙 정렬 */
-    /*margin-bottom: 10px;*/
-    gap: 10px; /* 요소 간 간격 조정 */
-    margin-bottom:10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* 검색바와 버튼을 양 끝으로 정렬 */
+  align-items: flex-end; /* 수직 중앙 정렬 */
+  /*margin-bottom: 10px;*/
+  gap: 10px; /* 요소 간 간격 조정 */
+  /*margin-bottom:5px;*/
 }
 
 .grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4개의 항목을 각 행에 표시합니다 */
-    gap: 16px;
-    width: 100%;
-    max-width: 1800px;
-    margin-top:10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4개의 항목을 각 행에 표시합니다 */
+  gap: 16px;
+  width: 100%;
+  max-width: 1800px;
+  margin-top: 10px;
 }
 
 .cardContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-    width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  width: 100%;
 }
 
 .card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .thumbnail {
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%; /* 16:9 비율 유지 */
-    position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 비율 유지 */
+  position: relative;
 }
 
 .thumbnail img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .details {
-    width: 100%;
-    padding: 8px 16px;
+  width: 100%;
+  padding: 8px 16px;
 }
 
 .title {
-    font-size: 1rem;
-    margin-bottom: 4px;
-    text-align: left; /* 제목 왼쪽 정렬 */
+  font-size: 1rem;
+  margin-bottom: 4px;
+  text-align: left; /* 제목 왼쪽 정렬 */
 }
 
 .rating {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* 별점 왼쪽 정렬 */
-    font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 별점 왼쪽 정렬 */
+  font-size: 1rem;
 }
 
 .star {
-    color: #ffd700; /* 별 색상 */
-    font-size: 1.5rem; /* 별 크기 */
-    margin-right: 1px;
+  color: #ffd700; /* 별 색상 */
+  font-size: 1.5rem; /* 별 크기 */
+  margin-right: 1px;
 }
 
 .halfStar {
-    position: relative;
-    display: inline-block;
-    width: 1.5rem; /* 별 크기와 동일 */
-    height: 1.5rem; /* 별 크기와 동일 */
-    overflow: hidden;
+  position: relative;
+  display: inline-block;
+  width: 1.5rem; /* 별 크기와 동일 */
+  height: 1.5rem; /* 별 크기와 동일 */
+  overflow: hidden;
 }
 
 .halfStar::before {
-    content: "⭐";
-    color: #ffd700;
-    position: absolute;
-    transform: scale(1.5); /* 별 크기 키우기 */
-    height: 100%;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    width: 50%; /* 절반만 표시 */
+  content: "⭐";
+  color: #ffd700;
+  position: absolute;
+  transform: scale(1.5); /* 별 크기 키우기 */
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 50%; /* 절반만 표시 */
 }
-
-
 
 .registerButton {
-    background-color: #5fbd87; /* 초록색 배경 */
-    color: white; /* 흰색 텍스트 */
-    border: none;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-right: 10px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    border-radius: 3px;
-    margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
+  background-color: #5fbd87; /* 초록색 배경 */
+  color: white; /* 흰색 텍스트 */
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
 }
 .actionButton {
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    background: none;
-    cursor: pointer;
-    border-radius: 12px;
-    background-color: #4CAF50; /* 초록색 배경 */
-    color: white; /* 흰색 텍스트 */
-    margin: 4px 2px;
-    display: inline-block;
-    text-align: center;
-    text-decoration: none;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  background: none;
+  cursor: pointer;
+  border-radius: 12px;
+  background-color: #4caf50; /* 초록색 배경 */
+  color: white; /* 흰색 텍스트 */
+  margin: 4px 2px;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
 }
 
 .actions {
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-    max-width: 900px;
-    gap: 10px;
-    margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 900px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .full-width {
-    width: 100%;
+  width: 100%;
 }
 
 .fixed-width {
-    width: calc(100% - 40px); /* Padding을 제외한 전체 너비 */
-    max-width: 1200px;
+  width: calc(100% - 40px); /* Padding을 제외한 전체 너비 */
+  max-width: 1200px;
 }
 
 .header {
-    width: 100%;
-    max-width: 1100px;
-    text-align: left; /* 제목을 왼쪽 정렬 */
+  width: 100%;
+  max-width: 1100px;
+  text-align: left; /* 제목을 왼쪽 정렬 */
 }
 
 .paginationWrapper {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-    margin: 16px 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 16px 0;
 }
 
-.prevButton, .nextButton {
-    width: 40px; /* 버튼의 너비 */
-    height: 40px; /* 버튼의 높이 */
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    position: relative;
+.prevButton,
+.nextButton {
+  width: 40px; /* 버튼의 너비 */
+  height: 40px; /* 버튼의 높이 */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
 }
 
-.prevButton::before, .nextButton::before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+.prevButton::before,
+.nextButton::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .prevButton::before {
-    border-width: 10px 15px 10px 0;
-    border-color: transparent #000 transparent transparent;
-    left: 10px;
+  border-width: 10px 15px 10px 0;
+  border-color: transparent #000 transparent transparent;
+  left: 10px;
 }
 
 .nextButton::before {
-    border-width: 10px 0 10px 15px;
-    border-color: transparent transparent transparent #000;
-    right: 10px;
+  border-width: 10px 0 10px 15px;
+  border-color: transparent transparent transparent #000;
+  right: 10px;
 }
 
-.prevButton:hover::before, .nextButton:hover::before {
-    border-color: transparent transparent transparent #45a049;
+.prevButton:hover::before,
+.nextButton:hover::before {
+  border-color: transparent transparent transparent #45a049;
 }
 
 .prevButton:disabled::before {
-    border-color: transparent #ddd transparent transparent;
+  border-color: transparent #ddd transparent transparent;
 }
 
 .nextButton:disabled::before {
-    border-color: transparent transparent transparent #ddd;
+  border-color: transparent transparent transparent #ddd;
 }
 
 .categoryHeader {
-    width: 100%;
-    text-align: left;
-    font-size: 1.5rem;
-    margin-bottom: 16px;
-    padding-left: 16px;
+  width: 100%;
+  text-align: left;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  padding-left: 16px;
 }
 
 /* 상위 카테고리별 패키지 크기 조정 */
 .upperCategoryGrid .card,
 .upperCategoryGrid .thumbnail,
 .upperCategoryGrid .details {
-    width: 100%;
+  width: 100%;
 }
 
 .upperCategoryGrid .thumbnail {
-    padding-bottom: 56.25%; /* 16:9 비율 유지 */
+  padding-bottom: 56.25%; /* 16:9 비율 유지 */
 }
 
 .upperCategoryGrid .details {
-    padding: 8px 16px;
+  padding: 8px 16px;
 }
 
 .horizontalLine {
-    width: 70%;
-    height: 1px;
-    background-color: rgba(204, 204, 204, 0.5); /* 회색 */
-    margin-top: 20px; /* 위로 약간의 여백을 추가 */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 1px;
+  background-color: rgba(204, 204, 204, 0.5); /* 회색 */
+  margin-top: 10px; /* 위로 약간의 여백을 추가 */
+  margin-bottom: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.horizontalLines {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(204, 204, 204, 0.5); /* 회색 */
+  margin-bottom: 20px; /* 위로 약간의 여백을 추가 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.banner {
+  width: 100%; /* 원하는 크기로 설정 */
+  height: auto; /* 높이는 자동으로 설정되어 비율 유지 */
+  box-shadow: 0 1px 5px rgb(0, 0, 0, 0.1);
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  margin-top: 8px;
+  justify-content: flex-end; /* 별점과 약간의 간격 */
+}
+
+.viewCount {
+  display: flex;
+  align-items: center;
+  /*margin-right: 8px;*/
+  color: gray;
+  width:30px;
+  height:30px;
+}
+
+.packageLevel {
+  display: flex;
+  align-items: center;
+  margin-left:15px;
+  color: #626262;
+}
+
+.levelIcon {
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.levelIcon span {
+  width: 8px;
+  height: 10px;
+  margin-right: 2px;
+}
+
+.active {
+  background-color: gray;
+}
+
+.inactive {
+  background-color: lightgray;
 }
