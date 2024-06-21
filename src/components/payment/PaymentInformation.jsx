@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
-import "./PaymentInformation.module.css";
+import styles from "./PaymentInformation.module.css";
 import authStore from "../../stores/authStore";
 import axios from "axios";
 
@@ -17,7 +17,8 @@ const PaymentInformation = ({ lecturePackageId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userEmail = authStore.getUserEmail();
+      const userEmail = localStorage.getItem("userEmail");
+      console.log("유저이메일 확인용: " + userEmail);
       if (!lecturePackageId) return;
       setLoading(true);
       setError(null);
@@ -28,11 +29,12 @@ const PaymentInformation = ({ lecturePackageId }) => {
         );
         setLecturePackage(packageResponse.data);
         setFinalPrice(packageResponse.data.price);
-
+        console.log(packageResponse.data);
         const couponsResponse = await axiosClient.get(
           `/payment/coupons/${userEmail}`
         );
         setCoupons(couponsResponse.data);
+        console.log(couponsResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error);
@@ -45,7 +47,10 @@ const PaymentInformation = ({ lecturePackageId }) => {
   }, [lecturePackageId]);
 
   const handleCouponChange = (e) => {
-    const selected = coupons.find((coupon) => coupon.id === e.target.value);
+    const selectedCouponId = e.target.value;
+    const selected = coupons.find(
+      (coupon) => coupon.id.toString() === selectedCouponId
+    );
     setSelectedCoupon(selected);
 
     if (selected) {
@@ -105,7 +110,7 @@ const PaymentInformation = ({ lecturePackageId }) => {
                 value="toss"
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
-              <img src="toss-logo.png" alt="toss" />
+              <img src="/images/toss.png" alt="toss" />
             </label>
             <label>
               <input
@@ -114,7 +119,7 @@ const PaymentInformation = ({ lecturePackageId }) => {
                 value="npay"
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
-              <img src="npay-logo.png" alt="NPay" />
+              <img src="/images/naverpay.png" alt="NPay" />
             </label>
             <label>
               <input
@@ -123,7 +128,7 @@ const PaymentInformation = ({ lecturePackageId }) => {
                 value="kakaopay"
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
-              <img src="kakaopay-logo.png" alt="KakaoPay" />
+              <img src="images/kakao.png" alt="KakaoPay" />
             </label>
           </div>
           <div className="coupon-selection">
@@ -133,7 +138,7 @@ const PaymentInformation = ({ lecturePackageId }) => {
                 <option value="">쿠폰 선택</option>
                 {coupons.map((coupon) => (
                   <option key={coupon.id} value={coupon.id}>
-                    {coupon.description} -{" "}
+                    {coupon.couponDescription} -{" "}
                     {coupon.discountAmount.toLocaleString()} 원 할인
                   </option>
                 ))}
