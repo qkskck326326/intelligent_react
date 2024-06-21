@@ -21,11 +21,15 @@
 .eachPicture{
     width: 100%;
     height: 100%;
-    border-radius: 1rem 1rem;
     overflow: hidden;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
-.eachPicture > img{
-    object-fit: scale-down;
+.eachPicture > svg{
+    width: 4rem;
+    height: 4rem;
+
 }
 .pin{
     position: absolute;
