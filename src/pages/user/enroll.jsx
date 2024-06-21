@@ -55,6 +55,7 @@ const Enroll = () => {
                 <h1>임시 회원가입 페이지</h1>
                 <SignUpForm />
                 <hr></hr>
+                <h2>공사중입니다...</h2>
                 {renderPage()}
             </div>
     );
