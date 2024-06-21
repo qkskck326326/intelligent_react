@@ -113,7 +113,9 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                 </div>
                 <div className={`${styles.end} ${isMe ? styles.reverseEnd : ''}`}>
                     <div className={styles.howManyRead}>
-                        {message.readCount}
+                        {message.messageContent !== '삭제된 메시지입니다.' &&
+                            message.readCount
+                        }
                     </div>
                     <div className={styles.time}>
                         {new Date(message.dateSent).toLocaleTimeString('ko-KR').slice(0, -3)}
