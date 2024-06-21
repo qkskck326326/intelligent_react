@@ -1,0 +1,103 @@
+.postEditContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+  }
+  
+  
+  .input,
+  .select,
+  .CKEditorComponent {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .input:focus,
+  .select:focus {
+    border-color: #007bff;
+  }
+  
+  .fileDropArea {
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
+  
+  .fileDropArea:hover {
+    border-color: #007bff;
+  }
+  
+  .fileInput {
+    display: none;
+  }
+  
+  .fileInputLabel {
+    cursor: pointer;
+    color: #007bff;
+  }
+  
+  .filePreviewContainer {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .filePreviewItem {
+    position: relative;
+    margin: 10px;
+  }
+  
+  .filePreview {
+    max-width: 100px;
+    max-height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .submitButton,
+  .cancelButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .submitButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .cancelButton {
+    background-color: #6c757d;
+    color: #fff;
+  }
+  
+  .cancelButton:hover {
+    background-color: #5a6268;
+  }
+  
