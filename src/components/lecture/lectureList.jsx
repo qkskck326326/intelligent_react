@@ -3,47 +3,7 @@ import Link from 'next/link';
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureList.module.css';
 import authStore from '../../stores/authStore';
-import axios from 'axios';
-
-const REPO_OWNER = 'rudalsdl';
-const REPO_NAME = 'lectureSave';
-
-const getSHAFromGitHub = async (filePath) => {
-    try {
-        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
-            },
-        });
-        return response.data.sha;
-    } catch (error) {
-        console.error(`Error getting SHA for ${filePath} from GitHub:`, error);
-        return null;
-    }
-};
-
-const deleteFileFromGitHub = async (filePath, sha) => {
-    try {
-        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
-        await axios.delete(url, {
-            headers: {
-                Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
-            },
-            data: {
-                message: `delete file ${filePath}`,
-                sha: sha,
-            },
-        });
-
-        console.log(`${filePath} deleted successfully from GitHub`);
-    } catch (error) {
-        console.error(`Error deleting ${filePath} from GitHub:`, error);
-        if (error.response) {
-            console.error('Response data:', error.response.data);
-        }
-    }
-};
+import * as gh from './github'; // GitHub 함수들을 불러옵니다.
 
 const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, lectures }) => {
     const [lecturePackageTitle, setLecturePackageTitle] = useState('');
@@ -95,37 +55,32 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
         try {
             setIsLoading(true);
             setIsDeleted(false); // 삭제 상태 초기화
-    
+
             // 강의 정보 가져오기
             const lecturesToDelete = lectures.filter(lecture => selectedLectures.has(lecture.lectureId));
-    
+
             console.log('Lectures to delete:', lecturesToDelete);
-    
+
             // GitHub에서 파일 삭제
+            const pathsToDelete = [];
             for (const lecture of lecturesToDelete) {
-                // 썸네일 SHA 값 가져오기
+                // 썸네일 삭제
                 if (lecture.lectureThumbnail) {
-                    const thumbnailSHA = await getSHAFromGitHub(`thumbnails/${lecture.lectureThumbnail}`);
-                    if (thumbnailSHA) {
-                        await deleteFileFromGitHub(`thumbnails/${lecture.lectureThumbnail}`, thumbnailSHA);
-                    }
+                    pathsToDelete.push(`thumbnails/${lecture.lectureThumbnail}`);
                 }
-    
-                // 영상 SHA 값 가져오기
+                // 동영상 삭제
                 if (lecture.streamUrl) {
                     const videoFileName = lecture.streamUrl.split('/').pop();
-                    const videoSHA = await getSHAFromGitHub(`uploads/${videoFileName}`);
-                    if (videoSHA) {
-                        await deleteFileFromGitHub(`uploads/${videoFileName}`, videoSHA);
-                    }
+                    pathsToDelete.push(`uploads/${videoFileName}`);
                 }
             }
-    
+            await gh.fileDeleteMultiple(pathsToDelete); // 여러 파일 삭제 함수 호출
+
             console.log('Deleting lectures from server');
-    
+
             // 서버에서 강의 삭제
             await axiosClient.delete("/lecture/delete", { data: { lectureIds: Array.from(selectedLectures) } });
-    
+
             fetchData(); // 강의 삭제 후 목록 새로고침
             setSelectedLectures(new Set());
             setDeletingMode(false);
@@ -136,7 +91,7 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
             console.error("Error deleting lectures:", err.response ? err.response.data : err.message);
             setIsLoading(false);
         }
-    };     
+    };
 
     const handleSelectLecture = (lectureId) => {
         setSelectedLectures(prevSelected => {

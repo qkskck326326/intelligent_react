@@ -8,12 +8,19 @@ const Transportext = ({ lectureId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [videoUrl, setVideoUrl] = useState('');
+    const [activeTab, setActiveTab] = useState('transcript'); // activeTab 상태 추가
 
     useEffect(() => {
         if (lectureId) {
             fetchVideoUrl(lectureId);
         }
     }, [lectureId]);
+
+    useEffect(() => {
+        if (videoUrl) {
+            fetchTranscript(videoUrl);
+        }
+    }, [videoUrl]);
 
     const fetchVideoUrl = async (lectureId) => {
         try {
@@ -26,12 +33,6 @@ const Transportext = ({ lectureId }) => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (videoUrl) {
-            fetchTranscript(videoUrl);
-        }
-    }, [videoUrl]);
 
     const fetchTranscript = async (videoUrl) => {
         try {
@@ -53,14 +54,32 @@ const Transportext = ({ lectureId }) => {
     return (
         <div className={styles.transcriptContainer}>
             <div className={styles.tabMenu}>
-                <button className={styles.tabButton}>텍스트</button>
-                <button className={styles.tabButton}>요약</button>
+                <button
+                    className={`${styles.tabButton} ${activeTab === 'transcript' ? styles.active : ''}`}
+                    onClick={() => setActiveTab('transcript')}
+                >
+                    텍스트
+                </button>
+                <button
+                    className={`${styles.tabButton} ${activeTab === 'summary' ? styles.active : ''}`}
+                    onClick={() => setActiveTab('summary')}
+                >
+                    요약
+                </button>
             </div>
             <div className={styles.content}>
-                <h2>Transcript</h2>
-                <pre className={styles.contentPre}>{transcript}</pre>
-                <h2>Summary</h2>
-                <pre className={styles.contentPre}>{summary}</pre>
+                {activeTab === 'transcript' && (
+                    <>
+                        <h2>Transcript</h2>
+                        <pre className={styles.contentPre} dangerouslySetInnerHTML={{ __html: transcript }}></pre>
+                    </>
+                )}
+                {activeTab === 'summary' && (
+                    <>
+                        <h2>Summary</h2>
+                        <pre className={styles.contentPre} dangerouslySetInnerHTML={{ __html: summary }}></pre>
+                    </>
+                )}
             </div>
         </div>
     );
