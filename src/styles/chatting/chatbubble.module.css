@@ -202,3 +202,20 @@
     width: 2rem;
     height: 2rem;
 }
+
+.fileContainer{
+    display: flex;
+    gap: 0.25rem;
+}
+.fileDetail{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.fileName{
+    width: 10rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    white-space: nowrap;
+}

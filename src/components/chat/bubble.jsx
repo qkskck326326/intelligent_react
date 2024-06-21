@@ -136,7 +136,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
 
                     <div className={styles.main}>
 
-                        { !isMe &&
+                        {!isMe &&
                             <div className={styles.nickname}>
                                 {
                                     option === 'gpt' ? '인텔리봇' : message.senderId
@@ -146,39 +146,53 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                         }
 
                         <div className={styles.content} ref={textRef}>
-                            {  ! deletion ?
+                            {!deletion ?
                                 message.messageContent ?
-                                 message.messageContent
-                                :
-                                <div className={styles.imgContainer}>
-                            {message.files.map((file, imgIndex) => (
-                                //TODO 그냥 땜빵만 해둠
+                                    message.messageContent
+                                    :
+                                    <div className={styles.imgContainer}>
+                                        {message.files.map((file, imgIndex) => (
+                                            //TODO 그냥 땜빵만 해둠
 
-                                message.messageType === 1 ?
-                                    <img
-                                        key={imgIndex}
-                                        className={styles.img}
-                                        onClick={() => handleImageClick(imgIndex)}
-                                        src={`http://localhost:8080${file.fileURL}`}
-                                        alt={file.originalName}
-                                    />
-                                    : message.messageType === 2 ?
-                                        <img
-                                            key={imgIndex}
-                                            className={styles.img}
-                                            src={`/images/defaultvideoicon.png`}
-                                            alt={file.originalName}
-                                        />
-                                        :
-                                        <img
-                                            key={imgIndex}
-                                            className={styles.img}
-                                            src={`/images/defaultfileicon.png`}
-                                            alt={file.originalName}
-                                        />
-                            ))}
-                        </div>
-                        : '삭제된 메시지입니다.'
+                                            message.messageType === 1 ?
+                                                <img
+                                                    key={imgIndex}
+                                                    className={styles.img}
+                                                    onClick={() => handleImageClick(imgIndex)}
+                                                    src={`http://localhost:8080${file.fileURL}`}
+                                                    alt={file.originalName}
+                                                />
+                                                : message.messageType === 2 ?
+                                                    <div className={styles.fileContainer}>
+                                                        <img
+                                                            key={imgIndex}
+                                                            className={styles.img}
+                                                            src={`/images/defaultvideoicon.png`}
+                                                            alt={file.originalName}
+                                                            onClick={() => downloadFile(file.fileURL)}
+                                                        />
+                                                        <div className={styles.fileDetail}>
+                                                            <div className={styles.fileName}>{file.originalName}</div>
+                                                            {(file.fileSize / 1048576.0).toFixed(2)} MB
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div className={styles.fileContainer}>
+                                                        <img
+                                                            key={imgIndex}
+                                                            className={styles.img}
+                                                            src={`/images/defaultfileicon.png`}
+                                                            alt={file.originalName}
+                                                            onClick={() => downloadFile(file.fileURL)}
+                                                        />
+                                                        <div className={styles.fileDetail}>
+                                                            <div className={styles.fileName}>{file.originalName}</div>
+                                                            {(file.fileSize / 1048576.0).toFixed(2)} MB
+                                                        </div>
+                                                    </div>
+                                        ))}
+                                    </div>
+                                : '삭제된 메시지입니다.'
                             }
                         </div>
                     </div>
@@ -192,22 +206,22 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                             {new Date(message.dateSent).toLocaleTimeString('ko-KR').slice(0, -3)}
                         </div>
                     </div>
-                    { (option !== 'gpt') && (message.messageContent !== '삭제된 메시지입니다․') &&
+                    {(option !== 'gpt') && (message.messageContent !== '삭제된 메시지입니다․') &&
 
                         <div
                             className={styles.eachSettings}
                             onClick={() => setIsEachSettingOn(!isEachSettingOn)}
-                            ref={eachSettingsRef} >
+                            ref={eachSettingsRef}>
 
-                            { !deletion &&
+                            {!deletion &&
                                 <svg xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 448 512">
-                                <path
-                                    d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"/>
+                                     viewBox="0 0 448 512">
+                                    <path
+                                        d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"/>
                                 </svg>
                             }
 
-                                <ul
+                            <ul
                                 className={`${styles.settingDropdown} ${!isEachSettingOn && commonStyles.hidden} ${isMe && styles.settingDropDown2}`}>
                                 {!isMe &&
                                     <li onClick={handleEachReport}>신고하기</li>
