@@ -97,6 +97,20 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             });
     }, []);
 
+    useEffect(() => {
+        console.log("Messages updated:", messages);
+    }, [messages]);
+
+    const handleUpdateMessage = (updatedMessage) => {
+        console.log('Updating message:', updatedMessage);
+        setMessages(prevMessages => {
+            const newMessages = prevMessages.map(
+                message => message.messageId === updatedMessage.messageId ? { ...message, ...updatedMessage } : message
+            );
+            console.log('New messages state:', newMessages);
+            return newMessages;
+        });
+    };
 
     const handleScroll = () => {
         const scrollTop = bubbleContainerRef.current.scrollTop;
@@ -238,6 +252,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 const { message, files } = response.data;
                 console.log(response.data);
                 setMessages((prevMessages) => [...prevMessages, { ...message, files }]);
+                setItems([]);
 
             } catch (error) {
                 console.error('Error uploading files:', error);
@@ -513,6 +528,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     messages={messages}
                     ref={bubbleContainerRef}
                     onScroll={handleScroll}
+                    onUpdateMessage={handleUpdateMessage}
                 />
             </div>
 

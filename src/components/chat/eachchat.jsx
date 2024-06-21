@@ -40,7 +40,11 @@ const EachChat = observer(({chat, onClick}) => {
                 </div>
                 {/*칸 맞추기위해서 빈브레일 들어가있음 */}
                 <div className={styles.message}>
-                    {chat.latestMessage?.messageContent}⠀
+                    {   chat.latestMessage?.messageContent ?
+                        chat.latestMessage?.messageContent
+                        :
+                        `미디어`
+                    }⠀
                 </div>
             </div>
             {chat.latestMessageTimestamp !== null ?
