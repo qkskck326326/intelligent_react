@@ -9,3 +9,17 @@
     font-size: 2em;
     margin-bottom: 20px;
 }
+
+.mypage {
+    display: flex;
+}
+
+.title {
+    margin-bottom: 20px;
+}
+
+.content {
+    margin-left: 20px;
+    padding: 20px;
+    flex: 1;
+}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import LecturePackageList from "../../components/lecturePackage/lecturePackageList";
-import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LecturePackageRegister from '../../components/lecturePackage/lecturePackageRegister';
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";

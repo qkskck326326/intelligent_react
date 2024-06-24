@@ -1,0 +1,32 @@
+.uploadButtonContainer {
+    position: fixed;
+    bottom: 30px; /* 화면 하단에서 30px 떨어지게 설정 */
+    left: 30px; /* 화면 왼쪽에서 30px 떨어지게 설정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.uploadButton {
+    background-color: #52c095;
+    color: white;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.uploadButton:hover {
+    background-color: #33ca90;
+}
+
+.icon {
+    color: white; /* 연필 아이콘 색상을 하얀색으로 설정 */
+    font-size: 30px; /* 아이콘 크기 설정 */
+}
