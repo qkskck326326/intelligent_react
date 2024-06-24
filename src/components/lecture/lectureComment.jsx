@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureComment.module.css';
+import authStore from '../../stores/authStore';
 
-const LectureComment = ({ lectureId, user }) => {
+const LectureComment = ({ lectureId }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -11,12 +12,21 @@ const LectureComment = ({ lectureId, user }) => {
     const [editContent, setEditContent] = useState("");
     const [replyCommentId, setReplyCommentId] = useState(null);
     const [replyContent, setReplyContent] = useState("");
+    const [userProfileImageUrl, setUserProfileImageUrl] = useState('');
 
     useEffect(() => {
         if (lectureId) {
             fetchComments();
         }
     }, [lectureId]);
+
+    useEffect(() => {
+        const fetchUserProfileImage = async () => {
+            const profileImageUrl = await authStore.getProfileImageUrl();
+            setUserProfileImageUrl(profileImageUrl);
+        };
+        fetchUserProfileImage();
+    }, []);
 
     const fetchComments = () => {
         axiosClient.get(`/lecture/comments/${lectureId}`)
@@ -35,12 +45,12 @@ const LectureComment = ({ lectureId, user }) => {
 
         axiosClient.post(`/lecture/comments`, {
             lectureId: lectureId,
-            nickname: user.nickname,
+            nickname: authStore.getNickname(),
             lectureCommentContent: newComment,
             parentCommentId: null
         })
         .then(response => {
-            setComments(prevComments => [...prevComments, response.data]); // 새로 추가된 댓글을 상태에 추가
+            setComments(prevComments => [...prevComments, response.data]);
             setNewComment("");
         })
         .catch(err => {
@@ -50,7 +60,7 @@ const LectureComment = ({ lectureId, user }) => {
 
     const handleEditSubmit = (commentId) => {
         if (!editContent.trim()) return;
-    
+
         axiosClient.put(`/lecture/comments/${commentId}`, {
             lectureCommentContent: editContent
         })
@@ -68,7 +78,6 @@ const LectureComment = ({ lectureId, user }) => {
             console.error(err);
         });
     };
-    
 
     const handleDeleteComment = (commentId) => {
         axiosClient.delete(`/lecture/comments/${commentId}`)
@@ -79,16 +88,15 @@ const LectureComment = ({ lectureId, user }) => {
                 console.error(err);
             });
     };
-    
 
     const handleReplySubmit = (commentId) => {
         if (!replyContent.trim()) return;
 
         axiosClient.post(`/lecture/comments`, {
             lectureId: lectureId,
-            nickname: user.nickname,
+            nickname: authStore.getNickname(),
             lectureCommentContent: replyContent,
-            parentCommentId: commentId // 대댓글은 parentCommentId를 설정
+            parentCommentId: commentId
         })
         .then(response => {
             fetchComments();
@@ -106,7 +114,11 @@ const LectureComment = ({ lectureId, user }) => {
     return (
         <div className={styles.commentsContainer}>
             <div className={styles.addCommentContainer}>
-                <img src={user.profileImageUrl} alt="Profile" className={styles.profileImage} />
+                {userProfileImageUrl ? (
+                    <img src={userProfileImageUrl} alt="Profile" className={styles.profileImage} />
+                ) : (
+                    <div className={styles.placeholderProfileImage} />
+                )}
                 <div className={styles.newComment}>
                     <input
                         type="text"
@@ -116,7 +128,7 @@ const LectureComment = ({ lectureId, user }) => {
                         className={styles.commentInput}
                     />
                     <button onClick={handleAddComment} className={styles.submitButton}>
-                        <img src="/send-icon.png" alt="Send" />
+                        <img src="/images/send-message.png" alt="Send" />
                     </button>
                 </div>
             </div>
@@ -124,9 +136,13 @@ const LectureComment = ({ lectureId, user }) => {
                 {comments.map(comment => (
                     <li key={comment.lectureCommentId} className={styles.commentItem}>
                         <div className={styles.commentHeader}>
-                            <img src={comment.profileImageUrl} alt="Profile" className={styles.profileImage} />
+                            {comment.profileImageUrl ? (
+                                <img src={comment.profileImageUrl} alt="Profile" className={styles.profileImage} />
+                            ) : (
+                                <div className={styles.placeholderProfileImage} />
+                            )}
                             <span className={styles.commentNickname}>{comment.nickname}</span>
-                            {user.nickname === comment.nickname ? (
+                            {authStore.getNickname() === comment.nickname ? (
                                 <div className={styles.commentActions}>
                                     <span className={styles.editButton} onClick={() => setEditCommentId(comment.lectureCommentId)}>수정</span>
                                     <span className={styles.deleteButton} onClick={() => handleDeleteComment(comment.lectureCommentId)}>X</span>
@@ -144,7 +160,7 @@ const LectureComment = ({ lectureId, user }) => {
                                     className={styles.editInput}
                                 />
                                 <button onClick={() => handleEditSubmit(comment.lectureCommentId)} className={styles.submitButton}>
-                                    <img src="/send-icon.png" alt="Send" />
+                                    <img src="/images/send-message.png" alt="Send" />
                                 </button>
                             </div>
                         ) : (
@@ -159,7 +175,7 @@ const LectureComment = ({ lectureId, user }) => {
                                     className={styles.replyInput}
                                 />
                                 <button onClick={() => handleReplySubmit(comment.lectureCommentId)} className={styles.submitButton}>
-                                    <img src="/send-icon.png" alt="Send" />
+                                    <img src="/images/send-message.png" alt="Send" />
                                 </button>
                             </div>
                         )}
