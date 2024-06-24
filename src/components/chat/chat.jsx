@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
+import {stompClient} from './websocketService';
 import {observer} from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
@@ -35,6 +36,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [messages, setMessages] = useState([]);
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
+
+
+
+    const stompClientRef = useRef(null);
+    const [isConnected, setIsConnected] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -91,7 +97,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             scrollToBottom();
         }
 
-    }, [page]);
+    }, [page, roomData.roomId]);
 
     useEffect(() => {
         axiosClient.get('/chat/chatuserdetail', {
@@ -109,6 +115,34 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             });
     }, []);
 
+    //웹소켓으로 추가
+    useEffect(() => {
+        const subscribeToRoom = () => {
+            if (stompClient && stompClient.connected) {
+                stompClient.subscribe(`/topic/room/${roomData.roomId}`, (message) => {
+                    console.log('Received message from WebSocket:', message.body);
+                    const newMessage = JSON.parse(message.body);
+                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                });
+            }
+        };
+
+        if (!stompClient.connected) {
+            stompClient.activate();
+            stompClient.onConnect = () => {
+                console.log('웹소켓 연결');
+                subscribeToRoom();
+            };
+        } else {
+            subscribeToRoom();
+        }
+
+        return () => {
+            if (stompClient) {
+                stompClient.unsubscribe();
+            }
+        };
+    }, [roomData.roomId]);
 
     const handleUpdateMessage = (updatedMessage) => {
         console.log('Updating message:', updatedMessage);
@@ -152,7 +186,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const handleForm2Submit = (event) => {
         event.preventDefault();
         console.log('Form 2 submitted');
-        // Your form 2 submission logic here
     };
 
     const handleKeyPress = (event) => {
@@ -186,9 +219,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         setAnnounceExpand(!announceExpand);
     }
 
-    const handleSearch = (event) => {
-        event.preventDefault();
-    }
+    // const handleSearch = (event) => {
+    //     event.preventDefault();
+    // }
 
     const handleMenuClick = () => {
         setIsMenuClicked(!isMenuClicked)
@@ -246,11 +279,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             });
 
             const url = `/chat/uploadfiles/${newMessage.roomId}/${newMessage.senderId}/${newMessage.messageType}/${newMessage.dateSent}/${newMessage.isAnnouncement}`;
-            console.log(url)
 
-            for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
+            // for (let pair of formData.entries()) {
+            //     console.log(pair[0], pair[1]);
+            // }
 
             try {
                 const response = await axiosClient.post(url, formData, {
@@ -259,9 +291,14 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     },
                 });
                 const { message, files } = response.data;
-                console.log(response.data);
+                // console.log(response.data);
                 setMessages((prevMessages) => [...prevMessages, { ...message, files }]);
                 setItems([]);
+
+                //추가
+                if (stompClient && stompClient.connected) {
+                    stompClient.publish({ destination: `/app/chat/${roomData.roomId}`, body: JSON.stringify(message) });
+                }
 
             } catch (error) {
                 console.error('Error uploading files:', error);
@@ -284,12 +321,19 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             try {
                 const response = await axiosClient.post('/chat/sendmessage', newMessage);
                 const savedMessage = response.data;
-                setMessages((prevMessages) => [...prevMessages, savedMessage]);
+                // setMessages((prevMessages) => [...prevMessages, savedMessage]);
                 setTextContent('');
                 setIsAtBottom(true);
+
+                if (stompClient && stompClient.connected) {
+                    stompClient.publish({ destination: `/app/chat/${roomData.roomId}`, body: JSON.stringify(savedMessage) });
+                }
+
             } catch (error) {
                 console.error('Error sending message:', error);
             }
+
+
         }
     };
 
@@ -314,7 +358,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             roomId: roomId
         })
             .then(response => {
-                setAnnounce(response.data.messageContent);
+                //this one is menually just setting the the returned content from the backend when I put in
+                //I actually it shouldn't work like this but just as soon as this happens re-render should appear? so that others will get the changes too?
+                // setAnnounce(response.data.messageContent);
                 setAnnounceExpand(false)
                 setIsAnnounceHidden(false)
             })
