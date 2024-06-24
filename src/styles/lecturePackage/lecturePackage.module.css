@@ -4,6 +4,40 @@
   align-items: center;
   width: 100%;
   padding: 20px;
+  position: relative; /* 위치 조정을 위해 추가 */
+}
+
+.uploadButtonContainer {
+  position: fixed;
+  bottom: 30px; /* 화면 하단에서 30px 떨어지게 설정 */
+  left: 30px; /* 화면 왼쪽에서 30px 떨어지게 설정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.uploadButton {
+  background-color: #52c095;
+  color: white;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.uploadButton:hover {
+  background-color: #33ca90;
+}
+
+.icon {
+  color: white; /* 연필 아이콘 색상을 하얀색으로 설정 */
+  font-size: 30px; /* 아이콘 크기 설정 */
 }
 
 .searchContainer {
@@ -11,9 +45,20 @@
   display: flex;
   justify-content: space-between; /* 검색바와 버튼을 양 끝으로 정렬 */
   align-items: flex-end; /* 수직 중앙 정렬 */
-  /*margin-bottom: 10px;*/
   gap: 10px; /* 요소 간 간격 조정 */
-  /*margin-bottom:5px;*/
+}
+
+.categoryContainer {
+  display: flex;
+  align-items: baseline;
+}
+
+.selectedSubCategoryName {
+  /*margin-left: 10px; !* 원하는 간격으로 조정 *!*/
+  font-size: 1.1rem; /* 폰트 크기 조정 */
+  color: #333; /* 텍스트 색상 조정 */
+  white-space: nowrap; /* 텍스트가 한 줄로 나오게 설정 */
+  font-weight:bold;
 }
 
 .grid {
@@ -71,6 +116,18 @@
   font-size: 1rem;
   margin-bottom: 4px;
   text-align: left; /* 제목 왼쪽 정렬 */
+  color:black;
+}
+
+.customLink {
+  color: black; /* 글자 색을 검정색으로 설정 */
+  text-decoration: none; /* 밑줄 제거 */
+  cursor: pointer; /* 링크처럼 보이도록 커서 변경 */
+}
+
+.customLink:hover {
+  color: black; /* 호버 시에도 글자 색을 검정색으로 유지 */
+  text-decoration: none; /* 호버 시에도 밑줄 제거 */
 }
 
 .rating {
@@ -78,49 +135,89 @@
   align-items: center;
   justify-content: flex-start; /* 별점 왼쪽 정렬 */
   font-size: 1rem;
+  min-height: 24px; /* 별점 영역의 최소 높이 설정 */
 }
 
 .star {
-  color: #ffd700; /* 별 색상 */
-  font-size: 1.5rem; /* 별 크기 */
+  width: 1.5rem;
+  height: 1.5rem;
+  clip-path: polygon(
+          50% 0%,
+          61% 35%,
+          98% 35%,
+          68% 57%,
+          79% 91%,
+          50% 70%,
+          21% 91%,
+          32% 57%,
+          2% 35%,
+          39% 35%
+  );
+  background-color: #ffd700; /* 별 색상 */
   margin-right: 1px;
 }
 
 .halfStar {
   position: relative;
   display: inline-block;
-  width: 1.5rem; /* 별 크기와 동일 */
-  height: 1.5rem; /* 별 크기와 동일 */
+  width: 1.5rem;
+  height: 1.5rem;
   overflow: hidden;
 }
 
 .halfStar::before {
-  content: "⭐";
-  color: #ffd700;
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #ffd700;
+  border: 1px solid black;
+  clip-path: polygon(
+          50% 0%,
+          61% 35%,
+          98% 35%,
+          68% 57%,
+          79% 91%,
+          50% 70%,
+          21% 91%,
+          32% 57%,
+          2% 35%,
+          39% 35%
+  );
   position: absolute;
-  transform: scale(1.5); /* 별 크기 키우기 */
-  height: 100%;
   top: 0;
   left: 0;
-  overflow: hidden;
-  width: 50%; /* 절반만 표시 */
 }
 
-.registerButton {
-  background-color: #5fbd87; /* 초록색 배경 */
-  color: white; /* 흰색 텍스트 */
-  border: none;
-  padding: 8px 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin-right: 10px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  border-radius: 3px;
-  margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
+.halfStar::after {
+  content: "";
+  width: 0.75rem; /* 반절 별의 절반을 가리기 위한 너비 */
+  height: 1.5rem;
+  background-color: white; /* 배경 색상과 동일하게 설정 */
+  position: absolute;
+  top: 0;
+  right: 0; /* 오른쪽을 가리도록 설정 */
 }
+
+.emptyStar {
+  width: 1.5rem;
+  height: 1.5rem;
+  clip-path: polygon(
+          50% 0%,
+          61% 35%,
+          98% 35%,
+          68% 57%,
+          79% 91%,
+          50% 70%,
+          21% 91%,
+          32% 57%,
+          2% 35%,
+          39% 35%
+  );
+  background-color: transparent;
+  border: 1px solid black; /* 별 테두리 */
+  margin-right: 1px;
+}
+
 .actionButton {
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -274,14 +371,14 @@
   align-items: center;
   /*margin-right: 8px;*/
   color: gray;
-  width:30px;
-  height:30px;
+  width: 30px;
+  height: 30px;
 }
 
 .packageLevel {
   display: flex;
   align-items: center;
-  margin-left:15px;
+  margin-left: 15px;
   color: #626262;
 }
 

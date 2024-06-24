@@ -1,0 +1,205 @@
+.container {
+    display: flex;
+    max-width: 600px;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.section {
+    background: #ffffff;
+    padding: 10px 30px;
+    box-shadow: 0 5px 5px rgba(0, 10, 60, 0.3);
+    border-radius: 3px;
+    margin-bottom:10px;
+}
+
+.formContainer {
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.educationList, .careerList {
+    margin-top: 20px;
+}
+
+.educationItem, .careerItem {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.educationHeader, .careerHeader {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.schoolName, .companyName {
+    margin-right: 20px;
+}
+
+.educationDates, .careerDates {
+    white-space: nowrap;
+    margin-right: 20px;
+}
+
+.wall {
+    opacity: 0.3;
+}
+
+.educationLevel, .careerDuration {
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #777;
+    white-space: nowrap;
+}
+
+.educationDetails, .careerDetails {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.addButton {
+    background: #ffffff;
+    color: #40ad9a;
+    font-size: 13px;
+    font-weight: bold;
+    border: 2px solid #55bfb0;
+    padding: 5px 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.addButton:hover {
+    background: #daffba;
+}
+
+.formHeader {
+    margin-bottom: 20px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.formLabel {
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.formSelect {
+    max-width: 400px;
+    padding: 8px;
+    border: 3px solid rgb(49, 186, 161, 0.4);
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.formInput {
+    padding: 8px;
+    border: 3px solid rgb(49, 186, 161, 0.4);
+    border-radius: 4px;
+    width: 120px;
+    margin-right: 15px;
+}
+
+.periods {
+    margin-top: 15px;
+    margin-right: 15px;
+}
+
+.period {
+    margin-top: 15px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.formRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+
+.bottonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top:10px;
+}
+
+.cancelBtn, .saveBtn {
+    width: 100px;
+    padding: 5px;
+    color: white;
+    background-color: #46c0c6;
+    border: none;
+    border-radius: 3px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+
+.cancelBtn:hover, .saveBtn:hover {
+    background: #0056b3;
+}
+
+.checkboxGroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+.inputContainer {
+    position: relative;
+}
+
+.inputContainer input[type="text"]::placeholder {
+    content: "합격년월";
+}
+
+.careerFormRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.careerFormInput {
+    padding: 8px;
+    border: 3px solid rgb(49, 186, 161, 0.4);
+    border-radius: 4px;
+    width: 150px;
+    max-width: 200px;
+    margin-bottom: 5px;
+}
+
+
+
+.workFormInput {
+    padding: 8px;
+    border: 3px solid rgb(49, 186, 161, 0.4);
+    border-radius: 4px;
+    width: 510px;
+    height: 50px;
+}
+
+.careerFormSelect {
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 200px;
+}

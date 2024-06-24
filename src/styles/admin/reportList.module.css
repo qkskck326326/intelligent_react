@@ -1,17 +1,50 @@
 .container {
-    padding: 20px;
+    display: flex;
+    /*padding: 20px;*/
+    height: 100vh;
+
+}
+
+
+.mainContent {
+    flex-grow: 1;
+    padding: 30px 10px;
+    margin-top:50px;
+    background-color: #f8f8f8;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+
+
+}
+
+.tableContent{
+    max-height: 600px; /* 고정된 높이 설정 */
+    overflow-y: scroll; /* 내용이 넘칠 때 세로 스크롤바 추가 */
+    width: 1200px;
+    margin-left:50px;
+
+
+
+
+
 }
 
 .title {
-    text-align: center;
+    margin-left:70px;
     margin-bottom: 20px;
 }
 
+
+
+
+
+
 .table {
-    width: 60%;
+    width: calc(100% - 20px); /* 오른쪽 여백을 고려한 테이블 넓이 설정 */
+    max-width: 1200px; /* Set a max width to control the table's width */
     border-collapse: collapse;
     margin: 0 auto;
     color: black;
+
 }
 
 .table th, .table td {
@@ -21,8 +54,9 @@
 }
 
 .table th {
-    background-color: #50ad95;
+    background-color: #c8c8c8;
     font-weight: bold;
+
 }
 
 .table tr:nth-child(even) {
@@ -33,8 +67,24 @@
     background-color: #f1f1f1;
 }
 
+
+.customLink {
+    color: black; /* 글자 색을 검정색으로 설정 */
+    text-decoration: none; /* 밑줄 제거 */
+    cursor: pointer; /* 링크처럼 보이도록 커서 변경 */
+}
+
+.customLink:hover {
+    color: black; /* 호버 시에도 글자 색을 검정색으로 유지 */
+    text-decoration: none; /* 호버 시에도 밑줄 제거 */
+}
+
+
+
+
+
 .approveButton {
-    background-color: #007bff;
+    background-color: #89c2ff;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -44,10 +94,46 @@
 }
 
 .deleteButton {
-    background-color: #dc3545;
+    background-color: #ff7684;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 3px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.confirmButton {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.cancelButton {
+    background-color: grey;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
 }

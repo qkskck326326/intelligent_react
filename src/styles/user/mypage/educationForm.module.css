@@ -1,0 +1,41 @@
+.formContainer {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 50px;
+}
+
+.formHeader {
+    margin-bottom: 20px;
+}
+
+.formGroup {
+    margin-bottom: 10px;
+}
+
+.formLabel {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.formInput, .formSelect {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.formButton {
+    margin-right: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.formButton:hover {
+    background: #0056b3;
+}

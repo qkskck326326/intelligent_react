@@ -1,0 +1,59 @@
+.sidebar {
+    background-color: #47cbb6; /* 새로운 배경색 */
+    padding: 20px;
+    border-radius: 3px;
+    height: 550px;
+    width: 200px;
+    text-align: center;
+    margin-top: 50px;
+    margin-left:50px;
+}
+
+.profilePicture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #e6e6e6; /* 동그라미 보더 추가 */
+}
+
+.nickname {
+    font-size: 1.3rem;
+    /*font-weight: bold;*/
+    /*margin-bottom: 20px;*/
+    color: white;
+    margin-top: 0;
+
+}
+
+.nav {
+    text-align: left; /* nav 요소를 왼쪽 정렬로 변경 */
+    margin-top: 40px;
+    margin-left: 20px;
+    padding-right: 20px;
+}
+
+.nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.nav li {
+    font-size: 1.2rem;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 5px;
+    /*border-bottom: 1px solid #cfd3db;*/
+}
+
+.nav li:hover {
+    text-decoration: underline;
+    /*background-color: #a3e8d9;*/
+}
+
+.content {
+    margin-top: 20px;
+    text-align: left;
+}

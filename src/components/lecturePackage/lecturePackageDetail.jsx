@@ -2,8 +2,11 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { axiosClient } from '../../axiosApi/axiosClient';
 import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css';
+import authStore from '../../stores/authStore';
+import { observer } from "mobx-react";
+import ProfileModal from "./profileModal";
 
-const LecturePackageDetail = () => {
+const LecturePackageDetail = observer(() => {
     const router = useRouter();
     const { lecturePackageId } = router.query;
 
@@ -11,19 +14,21 @@ const LecturePackageDetail = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [profile, setProfile] = useState({ nickname: '', pictureUrl: '' });
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchLecturePackage = async () => {
             setLoading(true);
             console.log("lecturePackageId : ", lecturePackageId);
+            console.log("nickname : ", authStore.getNickname());
 
             try {
                 const response = await axiosClient.get('/packages/detail', { params: { lecturePackageId } });
                 setLecturePackage(response.data);
+                console.log("datanickname : ", response.data.nickname);
 
                 const teacherNickname = response.data.nickname;
-                console.log("teacher : ", teacherNickname)
-                // 작성자 프로필 가져오기
+                console.log("teacher : ", teacherNickname);
                 const profileResponse = await axiosClient.get(`/packages/profile?nickname=${teacherNickname}`);
                 const profile = profileResponse.data.profileImageUrl;
                 setProfile({ nickname: teacherNickname, pictureUrl: profile });
@@ -37,19 +42,53 @@ const LecturePackageDetail = () => {
         };
 
         if (lecturePackageId) {
-            // 조회수 증가
-            axiosClient.put(`/packages/view/${lecturePackageId}`);
-            fetchLecturePackage();
-        }
-
-        if (lecturePackageId) {
             fetchLecturePackage();
         }
     }, [lecturePackageId]);
 
+
+
+    //조회수 처리 작성자인 경우 하루에 한번만 올릴 수 있음.
+    useEffect(() => {
+        const increaseViewCount = async (authorNickname) => {
+            const nickname = authStore.getNickname();
+            if (authorNickname && nickname) {
+                const encodedNickname = encodeURIComponent(nickname); // URL 인코딩
+                const viewCookieName = `packageViewed_${lecturePackageId}_${encodedNickname}`;
+                const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+                    const [name, value] = cookie.split('=');
+                    acc[name] = value;
+                    return acc;
+                }, {});
+
+                const isViewed = cookies[viewCookieName];
+                console.log(`isViewed: ${isViewed}, authorNickname: ${authorNickname}, nickname: ${nickname}`);
+
+                if (authorNickname === nickname) {
+                    // 작성자인 경우 하루에 한 번만 조회수 증가
+                    if (!isViewed) {
+                        document.cookie = `${viewCookieName}=true; path=/; max-age=${60 * 60 * 24}`;
+                        await axiosClient.put(`/packages/view/${lecturePackageId}`, null, { params: { nickname: encodedNickname } }); // URL 인코딩된 닉네임 전송
+                        console.log("View count increased for author.");
+                    } else {
+                        console.log("Author has already viewed this today.");
+                    }
+                } else {
+                    // 작성자가 아닌 경우 매번 조회수 증가
+                    await axiosClient.put(`/packages/view/${lecturePackageId}`, null, { params: { nickname: encodedNickname } }); // URL 인코딩된 닉네임 전송
+                    console.log("View count increased for non-author.");
+                }
+            }
+        };
+        if (lecturePackage) {
+            const authorNickname = lecturePackage.nickname;
+            increaseViewCount(authorNickname);
+        }
+    }, [lecturePackage]);
+
+
     useEffect(() => {
         if (lecturePackage) {
-            // oembed 태그와 video 태그를 iframe으로 변환하는 함수
             const convertMediaToIframe = () => {
                 const contentDiv = document.getElementById('content');
                 if (!contentDiv) return;
@@ -115,6 +154,7 @@ const LecturePackageDetail = () => {
         }
     };
 
+    //가격에 천단위로 , 써줌.
     const formatPrice = (price) => {
         return new Intl.NumberFormat('ko-KR').format(price);
     };
@@ -139,25 +179,61 @@ const LecturePackageDetail = () => {
         });
     };
 
+    const handleLectureList = () => {
+        router.push({
+            pathname: '/lecture',
+            query: { lecturePackageId }
+        });
+    };
+
+    const openProfileModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeProfileModal = () => {
+        setIsModalOpen(false);
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
+
+    const isAuthor = lecturePackage && authStore.getNickname() === lecturePackage.nickname;
 
     return (
         <div>
             <div className={styles.actions}>
-                <div className={styles.profile}>
-                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture} />
+                <div className={styles.profile} onClick={openProfileModal}>
+                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture}/>
                     <p className={styles.nickname}>{profile.nickname}</p>
                 </div>
-                <p className={styles.threebtn}>
-                    <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>패키지 리스트로
-                        이동
+                <div className={styles.threebtn}>
+                    <button className={styles.actionButton} onClick={() => router.push('/lecturePackage')}>
+                        패키지 리스트로 이동
                     </button>
-                    <button className={styles.actionButton}
-                            onClick={handleEdit}>수정하기
-                    </button>
-                    <button className={styles.actionButton} onClick={handleDelete}>삭제하기</button>
-                </p>
+                    {isAuthor && (
+                        <>
+                            <button className={styles.actionButton} onClick={handleLectureList}>
+                                강의 목록
+                            </button>
+                            <button className={styles.actionButton} onClick={handleEdit}>
+                                수정하기
+                            </button>
+                            <button className={styles.actionButton} onClick={handleDelete}>
+                                삭제하기
+                            </button>
+                        </>
+                    )}
+                    {authStore.checkIsAdmin() && !isAuthor && (
+                        <>
+                            <button className={styles.actionButton} onClick={handleLectureList}>
+                                강의 목록
+                            </button>
+                            <button className={styles.actionButton} onClick={handleDelete}>
+                                삭제하기
+                            </button>
+                        </>
+                    )}
+                </div>
             </div>
             <div className={styles.container}>
                 {lecturePackage && (
@@ -181,8 +257,7 @@ const LecturePackageDetail = () => {
                                 />
                             </div>
                             <div className={styles.field}>
-                                <p className={styles.level}><i
-                                    className="fas fa-check"></i> {getLectureLevel(lecturePackage.packageLevel)} 과정</p>
+                                <p className={styles.level}><i className="fas fa-check"></i> {getLectureLevel(lecturePackage.packageLevel)} 과정</p>
                             </div>
                         </div>
                         <div className={styles.field}>
@@ -213,8 +288,9 @@ const LecturePackageDetail = () => {
                 <div className={styles.foot}>
                 </div>
             </div>
+            {isModalOpen && <ProfileModal profile={profile} onClose={closeProfileModal} />}
         </div>
     );
-};
+});
 
 export default LecturePackageDetail;
