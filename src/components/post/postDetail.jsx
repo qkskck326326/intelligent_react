@@ -93,21 +93,28 @@ const PostDetail = observer(({ postId }) => {
     if (!commentContent || !authStore.isLoggedIn) return;
     const userEmail = authStore.getUserEmail();
     const provider = authStore.getProvider();
+    const nickname = authStore.getNickname(); // 추가: 닉네임 가져오기
+    const profileImageUrl = authStore.getProfileImageUrl(); // 추가: 프로필 이미지 URL 가져오기
     try {
-      await axiosClient.post(`/posts/${postId}/comments`, {
+      const response = await axiosClient.post(`/posts/${postId}/comments`, {
         content: commentContent,
         userEmail: userEmail,
         provider: provider,
       });
+      const newComment = {
+        id: response.data.commentId, // 서버에서 반환된 댓글 ID 사용
+        content: commentContent,
+        userEmail: userEmail,
+        provider: provider,
+        nickname: nickname, // 추가: 닉네임 추가
+        profileImageUrl: profileImageUrl, // 추가: 프로필 이미지 URL 추가
+        commentTime: new Date().toISOString(), // 추가: 현재 시간을 ISO 문자열로 추가
+      };
       setPost((prevPost) => ({
         ...prevPost,
-        comments: [
-          ...prevPost.comments,
-          { content: commentContent, userEmail, provider },
-        ],
+        comments: [...prevPost.comments, newComment],
       }));
       setCommentContent("");
-      window.location.reload();
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
@@ -468,7 +475,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
         contentId: comment.id,
       };
 
-      await axiosClient.post("/reports", reportDTO);
+      await axiosClient.post("/report", reportDTO);
       console.log(
         reportDTO.contentId +
           reportDTO.doNickname +

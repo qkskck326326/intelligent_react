@@ -9,6 +9,7 @@ const PaymentInformation = ({ lecturePackageId }) => {
   const [coupons, setCoupons] = useState([]);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [priceKind, setPriceKind] = useState("");
   const [agreement, setAgreement] = useState(false);
   const [finalPrice, setFinalPrice] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
@@ -18,7 +19,6 @@ const PaymentInformation = ({ lecturePackageId }) => {
   useEffect(() => {
     const fetchData = async () => {
       const userEmail = localStorage.getItem("userEmail");
-      console.log("유저이메일 확인용: " + userEmail);
       if (!lecturePackageId) return;
       setLoading(true);
       setError(null);
@@ -28,13 +28,11 @@ const PaymentInformation = ({ lecturePackageId }) => {
           `/payment/packages/${lecturePackageId}`
         );
         setLecturePackage(packageResponse.data);
-        setFinalPrice(packageResponse.data.price);
-        console.log(packageResponse.data);
+        setFinalPrice(packageResponse.data.priceMonth); // 기본 가격 설정
         const couponsResponse = await axiosClient.get(
           `/payment/coupons/${userEmail}`
         );
         setCoupons(couponsResponse.data);
-        console.log(couponsResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error);
@@ -54,84 +52,103 @@ const PaymentInformation = ({ lecturePackageId }) => {
     setSelectedCoupon(selected);
 
     if (selected) {
-      setFinalPrice(lecturePackage.price - selected.discountAmount);
+      setFinalPrice(
+        (priceKind === "0"
+          ? lecturePackage.priceMonth
+          : lecturePackage.priceForever) - selected.discountAmount
+      );
     } else {
-      setFinalPrice(lecturePackage.price);
+      setFinalPrice(
+        priceKind === "0"
+          ? lecturePackage.priceMonth
+          : lecturePackage.priceForever
+      );
     }
+  };
+
+  const handlePriceKindChange = (e) => {
+    const selectedPriceKind = e.target.value;
+    setPriceKind(selectedPriceKind);
+
+    const basePrice =
+      selectedPriceKind === "0"
+        ? lecturePackage.priceMonth
+        : lecturePackage.priceForever;
+    setFinalPrice(
+      basePrice - (selectedCoupon ? selectedCoupon.discountAmount : 0)
+    );
   };
 
   const handlePayment = async () => {
     const userEmail = authStore.getUserEmail();
-    const provider = authStore.getProvider();
     if (!agreement) {
       setShowPopup(true);
       return;
     }
-    const paymentData = {
-      amount: finalPrice,
-      orderId: `order_${Date.now()}`,
-      orderName: lecturePackage.title,
-      successUrl: "http://localhost:3000/payment/success",
-      failUrl: "http://localhost:3000/payment/fail",
-    };
-
     try {
+      const orderId = `order_${Date.now()}`;
+      const paymentData = {
+        amount: finalPrice,
+        orderId: orderId,
+        orderName: lecturePackage.title,
+        successUrl: `http://localhost:3000/payment/success?couponId=${
+          selectedCoupon ? selectedCoupon.id : ""
+        }&priceKind=${priceKind}&userEmail=${userEmail}&lecturePackageId=${lecturePackageId}`,
+        failUrl: "http://localhost:3000/payment/fail",
+        method: paymentMethod,
+      };
+
+      console.log("Payment Data:", paymentData);
+
       const response = await axios.post("/api/payment", paymentData);
-      const { checkout } = response.data;
-      window.location.href = checkout.url; // 결제 페이지로 리디렉션
+      console.log("Payment Response:", response.data);
+      const { paymentKey, checkout } = response.data;
+
+      // 결제 성공 페이지로 리디렉션
+      window.location.href = checkout.url;
     } catch (error) {
       console.error("Error processing payment:", error);
       alert("결제 중 오류가 발생했습니다.");
     }
-
-    console.log("결제 처리 로직 실행");
   };
 
   return (
-    <div className="payment-container">
+    <div className={styles.paymentContainer}>
       {loading && <p>Loading...</p>}
       {error && <p>Error loading data</p>}
       {lecturePackage && (
         <>
           <h2>결제</h2>
-          <div className="package-info">
-            <img src={lecturePackage.thumbnail} alt="패키지 썸네일" />
+          <div className={styles.packageInfo}>
+            <img src={lecturePackage.THUMBNAIL} alt="패키지 썸네일" />
             <div>
-              <h3>{lecturePackage.title}</h3>
-              <p>{lecturePackage.price.toLocaleString()} 원</p>
+              <h3>{lecturePackage.TITLE}</h3>
+              <p>{lecturePackage.CONTENT}</p>
             </div>
           </div>
-          <div className="payment-method">
-            <h4>결제 수단</h4>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="toss"
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              <img src="/images/toss.png" alt="toss" />
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="npay"
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              <img src="/images/naverpay.png" alt="NPay" />
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="kakaopay"
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              <img src="images/kakao.png" alt="KakaoPay" />
-            </label>
+          <div className={styles.priceKindSelection}>
+            <h4>결제 종류</h4>
+            <select onChange={handlePriceKindChange}>
+              <option value="">결제 종류 선택</option>
+              <option value="0">
+                월정액: {lecturePackage.priceMonth.toLocaleString()} 원
+              </option>
+              <option value="1">
+                평생소장: {lecturePackage.priceForever.toLocaleString()} 원
+              </option>
+            </select>
           </div>
-          <div className="coupon-selection">
+          <div className={styles.paymentMethod}>
+            <h4>결제 수단</h4>
+            <select onChange={(e) => setPaymentMethod(e.target.value)}>
+              <option value="">결제 수단 선택</option>
+              <option value="카드">카드 및 간편결제</option>
+              <option value="계좌이체">계좌이체</option>
+              <option value="가상계좌">가상계좌</option>
+              <option value="휴대폰">휴대폰</option>
+            </select>
+          </div>
+          <div className={styles.couponSelection}>
             <label>
               <span>쿠폰</span>
               <select onChange={handleCouponChange}>
@@ -145,10 +162,16 @@ const PaymentInformation = ({ lecturePackageId }) => {
               </select>
             </label>
           </div>
-          <div className="price-info">
+          <div className={styles.priceInfo}>
             <div>
               <span>기존 가격</span>
-              <span>{lecturePackage.price.toLocaleString()} 원</span>
+              <span>
+                {(priceKind === "0"
+                  ? lecturePackage.priceMonth
+                  : lecturePackage.priceForever
+                ).toLocaleString()}{" "}
+                원
+              </span>
             </div>
             <div>
               <span>할인 금액</span>
@@ -164,7 +187,7 @@ const PaymentInformation = ({ lecturePackageId }) => {
               <span>{finalPrice.toLocaleString()} 원</span>
             </div>
           </div>
-          <div className="agreement">
+          <div className={styles.agreement}>
             <label>
               <input
                 type="checkbox"
@@ -174,12 +197,12 @@ const PaymentInformation = ({ lecturePackageId }) => {
               결제사 정보 제공 동의
             </label>
           </div>
-          <button className="payment-button" onClick={handlePayment}>
+          <button className={styles.paymentButton} onClick={handlePayment}>
             결제하기
           </button>
           {showPopup && (
-            <div className="popup">
-              <div className="popup-content">
+            <div className={styles.popup}>
+              <div className={styles.popupContent}>
                 <p>결제사 정보 제공에 동의해야 합니다.</p>
                 <button onClick={() => setShowPopup(false)}>닫기</button>
               </div>
