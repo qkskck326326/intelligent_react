@@ -6,19 +6,28 @@ import UpperCategoryPackageList from "../components/main/upperCategoryPackageLis
 import styles from '../styles/common/HomePage.module.css';
 
 const HomePage = () => {
-    const [banner, setBanner] = useState({ imageUrl: '/images/banner.png', linkUrl: '#' });
+    const [banners, setBanners] = useState([]);
+    const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
     useEffect(() => {
-        fetchBannerImage();
+        fetchBanners();
     }, []);
 
-    const fetchBannerImage = async () => {
+    const fetchBanners = async () => {
         try {
-            const response = await axiosClient.get('/admins/banners/latest');
-            setBanner(response.data);
+            const response = await axiosClient.get('/admins/banners');
+            setBanners(response.data);
         } catch (error) {
-            console.error('Failed to fetch banner image:', error);
+            console.error('Failed to fetch banners:', error);
         }
+    };
+
+    const handleNextBanner = () => {
+        setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % banners.length);
+    };
+
+    const handlePrevBanner = () => {
+        setCurrentBannerIndex((prevIndex) => (prevIndex - 1 + banners.length) % banners.length);
     };
 
     const handleOpenTestAI = () => {
@@ -30,20 +39,28 @@ const HomePage = () => {
     };
 
     const handleBannerClick = () => {
-        if (banner.linkUrl) {
-            window.open(banner.linkUrl, '_blank');
+        if (banners[currentBannerIndex].linkUrl) {
+            window.open(banners[currentBannerIndex].linkUrl, '_blank');
         }
     };
 
     return (
         <div>
             <main>
-                <img
-                    src={banner.imageUrl}
-                    alt="Banner"
-                    style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
-                    onClick={handleBannerClick}
-                />
+                {banners.length > 0 && (
+                    <div className={styles.bannerContainer}>
+                        <button onClick={handlePrevBanner} className={`${styles.bannerButton} ${styles.left}`}>‹</button>
+                        <img
+                            src={banners[currentBannerIndex].imageUrl}
+                            alt="Banner"
+                            onClick={handleBannerClick}
+                        />
+                        <button onClick={handleNextBanner} className={`${styles.bannerButton} ${styles.right}`}>›</button>
+                        <div className={styles.paginationContainer}>
+                            <span>{currentBannerIndex + 1}/{banners.length}</span>
+                        </div>
+                    </div>
+                )}
                 <NavBar />
                 <UserInterestPackageList />
                 <UpperCategoryPackageList />

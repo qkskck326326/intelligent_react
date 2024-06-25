@@ -13,12 +13,53 @@
     font-weight: normal;
     font-style: normal;
 }
+/* HomePage.module.css */
 
-.fixedButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    padding: 10px 20px;
-    font-family: 'ELAND_Choice_M';
+.bannerContainer {
+    position: relative;
+    width: 100%;
+    height: 400px; /* 원하는 높이로 설정 */
+    overflow: hidden;
 }
+
+.bannerContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지 비율을 유지하면서 화면에 맞게 조정 */
+    object-position: center;
+}
+
+.bannerButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.bannerButton.left {
+    left: 10px;
+}
+
+.bannerButton.right {
+    right: 10px;
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    color: white;
+}
+
+.paginationContainer span {
+    margin: 0 5px;
+}
+

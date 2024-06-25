@@ -9,6 +9,7 @@ const UserManagement = () => {
     const [size] = useState(10); // 페이지당 항목 수
     const [totalPages, setTotalPages] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchValue, setSearchValue] = useState('');
     const [userType, setUserType] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -22,6 +23,7 @@ const UserManagement = () => {
                         page,
                         size,
                         searchQuery,
+                        searchValue,
                         userType,
                         startDate,
                         endDate
@@ -36,7 +38,7 @@ const UserManagement = () => {
         };
 
         fetchUsers();
-    }, [page, size, searchQuery, userType, startDate, endDate]);
+    }, [page, size, searchQuery, searchValue, userType, startDate, endDate]);
 
     const handleSearch = () => {
         setPage(0);
@@ -44,6 +46,7 @@ const UserManagement = () => {
 
     const handleReset = () => {
         setSearchQuery('');
+        setSearchValue('');
         setUserType('');
         setStartDate('');
         setEndDate('');
@@ -109,6 +112,15 @@ const UserManagement = () => {
                             <option value="phone">전화번호</option>
                             <option value="email">이메일</option>
                         </select>
+                        {searchQuery && (
+                            <input
+                                type="text"
+                                className={styles.filterInput}
+                                placeholder={`검색할 ${searchQuery} 입력`}
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                            />
+                        )}
                         <label>회원 구분</label>
                         <select
                             className={styles.filterSelect}
