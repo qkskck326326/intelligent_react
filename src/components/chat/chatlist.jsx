@@ -7,7 +7,7 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 
 /*
 * */
-const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, userId, userType }) => {
+const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, onNavigateToBot, userId, userType }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
     const [chatData, setChatData] = useState([])
@@ -132,7 +132,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                                 <p>1:1문의</p>
                             </div>
 
-                            <div className={styles.chatTypeItem} onClick={() => onNavigateToChat('gpt')}>
+                            <div className={styles.chatTypeItem} onClick={onNavigateToBot}>
                                 <svg className={styles.chatGPTIcon} xmlns="http://www.w3.org/2000/svg"
                                      viewBox="-0.17090198558635983 0.482230148717937 41.14235318283891 40.0339509076386">
                                     <path

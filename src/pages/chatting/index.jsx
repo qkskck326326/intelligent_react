@@ -7,6 +7,7 @@ import AddingFriends from '../../components/chat/addingfriends';
 import ActionModal from '../../components/chat/actionmodal';
 import Chat from '../../components/chat/chat'
 import {axiosClient} from "../../axiosApi/axiosClient";
+import Bot from "../../components/chat/chatbotcontainer";
 
 const ChatContainer = observer(() => {
 
@@ -69,6 +70,7 @@ const ChatContainer = observer(() => {
                     onNavigateToFriends={(option) => handleNavigation('AddingFriends', option)}
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}
                     onNavigateToChat={(roomData) => handleNavigation('Chat', '', '', roomData)}
+                    onNavigateToBot={() => handleNavigation('Bot')}
                     userId={userId}
                     userType={userType}
                 />
@@ -97,6 +99,14 @@ const ChatContainer = observer(() => {
                 <Chat
                     roomData={roomData}
                     option={option}
+                    isExpanding={isExpanding}
+                    onNavigateToList={() => handleNavigation('ChatList')}
+                    userId={userId}
+                    userType={userType}
+                />
+            )}
+            {activeComponent === 'Bot' && (
+                <Bot
                     isExpanding={isExpanding}
                     onNavigateToList={() => handleNavigation('ChatList')}
                     userId={userId}

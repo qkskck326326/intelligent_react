@@ -15,7 +15,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [currentRoomData, setCurrentRoomData] = useState(roomData);
     const [people, setPeople] = useState({});
     const [isPeopleOn, setIsPeopleOn] = useState(false);
-    const [activeForm, setActiveForm] = useState(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [announceExpand, setAnnounceExpand] = useState(false);
     const [isAnnounceHidden, setIsAnnounceHidden] = useState(false)
@@ -86,7 +85,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         return () => {
             document.removeEventListener('keypress', handleKeyPress);
         };
-    }, [activeForm]);
+    }, []);
 
     useEffect(() => {
 
@@ -190,23 +189,16 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         }
     };
 
-    const handleForm1Submit = (event) => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
         handleSubmit(event);
     };
 
-    const handleForm2Submit = (event) => {
-        event.preventDefault();
-        console.log('Form 2 submitted');
-    };
+
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
-            if (activeForm === 'form1') {
-                handleForm1Submit(event);
-            } else if (activeForm === 'form2') {
-                handleForm2Submit(event);
-            }
+            handleFormSubmit(event);
         }
     };
 
@@ -587,7 +579,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                         {
                             isAttachButtonClicked
                                 ?
-                                // ${isSearchButtonClicked && styles.attachContainerResized} 있었음
                                 <div className={`${styles.attachContainer}`}>
                                     <button className={styles.attachmentIcon} onClick={handleFileAttach}>
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -599,16 +590,13 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                                     </button>
                                 </div>
                                 :
-
                                 items.length === 0 ?
-                                    // ${isSearchButtonClicked && styles.textContentResized} 있었음
                                     <textarea
                                         name="textContent"
                                         id="textContent"
                                         placeholder='텍스트를 입력해주세요'
                                         className={`${styles.textContent}`}
                                         value={textContent}
-                                        onFocus={() => setActiveForm('form1')}
                                         onChange={(event)=> setTextContent(event.target.value)}></textarea>
                                     :
                                     <div className={styles.dummy}>사진 메시지 동시전송 불가로 만들어 둔 빈 박스입니다</div>
