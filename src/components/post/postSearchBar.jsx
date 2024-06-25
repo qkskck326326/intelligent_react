@@ -74,6 +74,12 @@ const PostSearch = ({ onSearch, onSelectCategory, onSortOrderChange }) => {
               <div
                 className={`${styles.dropdownMenu} ${styles.customGradient}`}
               >
+                <button
+                  className={`${styles.dropdownItem}`}
+                  onClick={() => onSelectCategory(null)}
+                >
+                  전체검색
+                </button>
                 {upperCategories.map((category) => (
                   <button
                     key={category.id}

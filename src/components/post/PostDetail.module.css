@@ -151,11 +151,13 @@
 }
 
 .comments ul {
+  
   list-style: none;
   padding: 0;
 }
 
 .comments li {
+  
   display: flex;
   align-items: flex-start;
   border-bottom: 1px solid #ddd;

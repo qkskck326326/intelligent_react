@@ -1,6 +1,10 @@
 import PaymentInformation from "../../components/payment/PaymentInformation";
+import { useRouter } from "next/router";
+
 const Index = () => {
-  const lecturePackageId = "7";
+  const router = useRouter();
+  const { lecturePackageId } = router.query;
+
   return (
     <div>
       <h1>결제페이지</h1>
