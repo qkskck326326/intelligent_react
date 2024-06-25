@@ -18,6 +18,9 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const [slideIndex, setSlideIndex] = useState(0);
     const [images, setImages] = useState([]);
 
+    useEffect(()=>{
+        console.log(message);
+    },[])
     useEffect(() => {
         if (isEachSettingOn) {
             document.addEventListener('click', handleClickOutside);

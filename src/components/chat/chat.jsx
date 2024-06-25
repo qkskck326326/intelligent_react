@@ -121,6 +121,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             if (stompClient && stompClient.connected) {
                 stompClient.subscribe(`/topic/room/${roomData.roomId}`, (message) => {
                     console.log('Received message from WebSocket:', message.body);
+                    console.log(message)
+                    console.log(message.headers)
+                    console.log(message.body)
                     const newMessage = JSON.parse(message.body);
                     setMessages((prevMessages) => [...prevMessages, newMessage]);
                 });
@@ -280,10 +283,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
             const url = `/chat/uploadfiles/${newMessage.roomId}/${newMessage.senderId}/${newMessage.messageType}/${newMessage.dateSent}/${newMessage.isAnnouncement}`;
 
-            // for (let pair of formData.entries()) {
-            //     console.log(pair[0], pair[1]);
-            // }
-
             try {
                 const response = await axiosClient.post(url, formData, {
                     headers: {
@@ -292,7 +291,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 });
                 const { message, files } = response.data;
                 // console.log(response.data);
-                setMessages((prevMessages) => [...prevMessages, { ...message, files }]);
+                // setMessages((prevMessages) => [...prevMessages, { ...message, files }]);
                 setItems([]);
 
                 //추가
