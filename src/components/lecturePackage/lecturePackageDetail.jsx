@@ -181,7 +181,7 @@ const LecturePackageDetail = observer(() => {
 
     const handleLectureList = () => {
         router.push({
-            pathname: '/lecture',
+            pathname: '/lecture/list',
             query: { lecturePackageId }
         });
     };

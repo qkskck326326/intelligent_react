@@ -29,7 +29,13 @@ const InsertRating = ({ lecturePackageId }) => {
             alert("별점을 이미 등록 하셨습니다.");
         }
     };
-    
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            handleRatingSubmit();
+        }
+    };
+
     return (
         <div className={styles.App}>
             <div className={styles.inlineContainer}>
@@ -53,7 +59,7 @@ const InsertRating = ({ lecturePackageId }) => {
                         );
                     })}
                 </div>
-                <button onClick={handleRatingSubmit} className={styles.submitButton}>등록</button>
+                <button onClick={handleRatingSubmit} className={styles.submitButton} onKeyPress={handleKeyPress}>등록</button>
             </div>
         </div>
     );
