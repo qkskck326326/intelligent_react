@@ -121,11 +121,24 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             if (stompClient && stompClient.connected) {
                 stompClient.subscribe(`/topic/room/${roomData.roomId}`, (message) => {
                     console.log('Received message from WebSocket:', message.body);
-                    console.log(message)
-                    console.log(message.headers)
-                    console.log(message.body)
                     const newMessage = JSON.parse(message.body);
-                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+                    if (newMessage.roomName) {
+                        setCurrentRoomData((prevState) => ({
+                            ...prevState,
+                            roomName: newMessage.roomName
+                        }));
+                    } else {
+                        if (newMessage.messageContent === '삭제된 메시지입니다․') {
+                            setMessages(prevMessages => {
+                                return prevMessages.map(
+                                    message => message.messageId === newMessage.messageId ? { ...message, ...newMessage } : message
+                                );
+                            });
+                        } else {
+                            setMessages((prevMessages) => [...prevMessages, newMessage]);
+                        }
+                    }
                 });
             }
         };
@@ -214,17 +227,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         }, 500);
     };
 
-    // const handleSearchButtonClick = () => {
-    //     setIsSearchButtonClicked(!isSearchButtonClicked)
-    // }
 
     const handleAnnounce = () => {
         setAnnounceExpand(!announceExpand);
     }
 
-    // const handleSearch = (event) => {
-    //     event.preventDefault();
-    // }
 
     const handleMenuClick = () => {
         setIsMenuClicked(!isMenuClicked)
@@ -290,8 +297,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     },
                 });
                 const { message, files } = response.data;
-                // console.log(response.data);
+                // TODO 여기서 바로 랜더링 하는게 아닌 웹소켓을 거쳐서 웹소켓이 랜더링 시켜야함
                 // setMessages((prevMessages) => [...prevMessages, { ...message, files }]);
+
                 setItems([]);
 
                 //추가
@@ -376,10 +384,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 roomName: roomName
             })
                 .then(response => {
-                    setCurrentRoomData(prevState => ({
-                        ...prevState,
-                        roomName: response.data.roomName
-                    }));
+
                 })
                 .catch(error => {
                     console.error('An error occurred!', error);

@@ -102,8 +102,9 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
         try{
             const response = await axiosClient.put(`/chat/delete/${message.messageId}`)
             const updatedMessage = await response.data;
-            console.log('Updated message from backend:', updatedMessage);
-            onUpdateMessage(updatedMessage);
+            // also this one needs to go through the websocket to handle it shouldn't be directly re-rendered here but through websocket
+            // console.log('Updated message from backend:', updatedMessage);
+            // onUpdateMessage(updatedMessage);
             setDeletion(true)
         } catch(error){
             console.error(error)
