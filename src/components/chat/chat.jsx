@@ -340,7 +340,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     }
 
     const handleAnnouncementChange = (messageId, roomId) => {
-        //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
+    //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
         axiosClient.put('/chat/announce', {
             messageId: messageId,
             roomId: roomId
@@ -480,7 +480,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                     <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
                             </button>
-                            {/*  메뉴 구성  */}
+                        {/*  메뉴 구성  */}
                             { isMenuClicked &&
                                 <ul className={styles.menuItems}>
                                     <li onClick={handlePin}>{userData.isPinned === 1 ? '핀해제' : '핀하기'}</li>
@@ -491,17 +491,17 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                             }
                             { isPeopleOn &&
                                 <ul className={styles.menuItems2}>
-                                    {people.map((person, index) => {
+                                {people.map((person, index) => {
 
-                                        return<li key={index} className={styles.people}>
+                                    return<li key={index} className={styles.people}>
                                             <img className={styles.peopleImg} src={person.profileImageUrl} alt=""/>
-                                            {person.nickname}
+                                        {person.nickname}
                                         </li>
 
                                     })
-                                    }
-                                    <li onClick={() => setIsPeopleOn(false)}>닫기</li>
-                                </ul>
+                                }
+                                <li onClick={() => setIsPeopleOn(false)}>닫기</li>
+                            </ul>
                             }
                         </>
                         :
@@ -573,13 +573,13 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
                         { (option !== 'gpt') &&
                             <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
-                                <svg
-                                    className={isAttachButtonClicked ? commonStyles.animateRotate : commonStyles.animateBack}
-                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                    <path
-                                        d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
-                                </svg>
-                            </button>
+                            <svg
+                                className={isAttachButtonClicked ? commonStyles.animateRotate : commonStyles.animateBack}
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path
+                                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+                            </svg>
+                        </button>
                         }
 
 
