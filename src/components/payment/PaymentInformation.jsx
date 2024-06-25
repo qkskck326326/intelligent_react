@@ -87,20 +87,38 @@ const PaymentInformation = ({ lecturePackageId }) => {
     }
     try {
       const orderId = `order_${Date.now()}`;
+
+      const paymentRequest = {
+        orderId: orderId,
+        amount: finalPrice,
+        userEmail: userEmail,
+        lecturePackageId: lecturePackageId,
+        paymentMethod: paymentMethod,
+        couponId: selectedCoupon ? selectedCoupon.id : null,
+        priceKind: priceKind,
+      };
+
+      // 세션에 결제 정보 저장
+      await axiosClient.post("/payment/request", paymentRequest, {
+        withCredentials: true,
+      });
+
+      console.log("Payment Request:", paymentRequest);
+
       const paymentData = {
         amount: finalPrice,
         orderId: orderId,
         orderName: lecturePackage.title,
-        successUrl: `http://localhost:3000/payment/success?couponId=${
-          selectedCoupon ? selectedCoupon.id : ""
-        }&priceKind=${priceKind}&userEmail=${userEmail}&lecturePackageId=${lecturePackageId}`,
+        successUrl: `http://localhost:3000/payment/success`,
         failUrl: "http://localhost:3000/payment/fail",
         method: paymentMethod,
       };
 
       console.log("Payment Data:", paymentData);
 
-      const response = await axios.post("/api/payment", paymentData);
+      const response = await axios.post("/api/payment", paymentData, {
+        withCredentials: true,
+      });
       console.log("Payment Response:", response.data);
       const { paymentKey, checkout } = response.data;
 
