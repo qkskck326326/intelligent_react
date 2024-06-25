@@ -22,7 +22,6 @@ const SelectRole = ({ setBasicInfo, nextPage }) => {
 
     return (
         <div className={styles.container}>
-            <p className={styles.title}>InTelliClass 계정 생성</p>
             <div className={styles.card + " " + styles.student} onClick={() => handleRoleSelection('student')}>
                 <div className={styles.icon + " " + styles.studentIcon}></div>
                 <p className={styles.cardName}>학 생</p>

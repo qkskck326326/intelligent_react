@@ -135,7 +135,7 @@
 .verifyButton.enabled,
 .verifyCodeButton.enabled,
 .checkButton.enabled {
-  background-color: green;
+  background-color: #28a745;
   color: white;
 }
 
@@ -167,6 +167,7 @@
   display: flex;
   justify-content: center;
   margin: 0 0 10px 0;
+  gap: 15px;
 }
 
 .prevButton,
@@ -182,11 +183,26 @@
 
 .prevButton {
   background-color: #ccc;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
 }
 
-.nextButton {
-  background-color: #28a745;
-  color: white;
+.navigationButton {
+	background-color: #28a745;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.navigationButton:hover {
+	background-color: #218838;
 }
 
 .tooltip {
