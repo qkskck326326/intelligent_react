@@ -26,9 +26,7 @@ const BannerManagement = () => {
     const handleSaveBanner = async () => {
         const formData = new FormData();
         formData.append('title', title);
-        if (imageFile) {
-            formData.append('imageFile', imageFile);
-        }
+        formData.append('imageFile', imageFile);
         formData.append('linkUrl', linkUrl);
 
         try {
