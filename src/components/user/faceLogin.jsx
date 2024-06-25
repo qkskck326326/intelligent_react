@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const FaceLogin = () => {
   const videoRef = useRef(null);
-  const [userId, setUserId] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [status, setStatus] = useState('');
   const [similarity, setSimilarity] = useState(null); // 유사도 상태 추가
   const [identifiedUser, setIdentifiedUser] = useState(''); // 인식된 사용자 ID 추가
@@ -41,7 +41,7 @@ const FaceLogin = () => {
   const handleRegister = () => {
     const image = captureImage();
     axios.post('http://localhost:5000/register', {
-      user_id: userId,
+      userEmail: userEmail,
       image: image,
     })
     .then(response => {
@@ -55,14 +55,14 @@ const FaceLogin = () => {
   const handleLogin = () => {
     const image = captureImage();
     axios.post('http://localhost:5000/login', {
-      user_id: userId, // 로그인 요청 시 ID 포함
+      userEmail: userEmail, // 로그인 요청 시 ID 포함
       image: image,
     })
     .then(response => {
       setStatus(response.data.message);
       if (response.data.similarity !== undefined) {
         setSimilarity(response.data.similarity); // 유사도 상태 업데이트
-        setIdentifiedUser(response.data.user_id); // 인식된 사용자 ID 업데이트
+        setIdentifiedUser(response.data.userEmail); // 인식된 사용자 ID 업데이트
       } else {
         setSimilarity(null); // 유사도가 없을 때 null로 설정
         setIdentifiedUser(''); // 인식된 사용자 ID 초기화
@@ -80,9 +80,9 @@ const FaceLogin = () => {
       <h1>Face Login</h1>
       <input
         type="text"
-        placeholder="Enter User ID"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
+        placeholder="Enter User Email"
+        value={userEmail}
+        onChange={(e) => setUserEmail(e.target.value)}
         style={{ margin: '5px 0' }}
       />
       <label style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>

@@ -132,26 +132,40 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
 
   const handleSendVerificationCode = async () => {
     const userEmail = basicInfo.userEmail;
-
+    const provider = 'intelliclass'; // provider 값을 적절히 설정하세요.
+  
     if (!validateEmail(userEmail)) {
       alert('유효한 이메일 주소를 입력하세요.');
       return;
     }
-
+  
     try {
-      const response = await axiosClient.post('/users/send-verification-code', null, {
+      // 이메일 중복 체크 요청
+      const checkEmailResponse = await axiosClient.get('/users/check-email', {
         params: {
           userEmail,
+          provider,
         },
       });
-
-      if (response.status === 200) {
-        setIsCodeSent(true);
-        setTimer(180); // 타이머를 3분으로 재설정
-        setReceivedCode(response.data.verificationCode); // 받은 인증코드 저장
-        alert('인증번호가 전송되었습니다.');
+  
+      if (checkEmailResponse.status === 200) {
+        // 이메일 중복되지 않음, 인증 코드 전송 요청
+        const response = await axiosClient.post('/users/send-verification-code', null, {
+          params: {
+            userEmail,
+          },
+        });
+  
+        if (response.status === 200) {
+          setIsCodeSent(true);
+          setTimer(180); // 타이머를 3분으로 재설정
+          setReceivedCode(response.data.verificationCode); // 받은 인증코드 저장
+          alert('인증번호가 전송되었습니다.');
+        } else {
+          alert('이메일 전송에 실패했습니다.');
+        }
       } else {
-        alert('이메일 전송에 실패했습니다.');
+        alert('이메일 중복 확인 중 오류가 발생했습니다.');
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
@@ -259,7 +273,6 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
 
   return (
     <div className={styles.container}>
-      <p className={styles.title}>InTelliClass 계정 생성</p>
       <div className={styles.form}>
         <div className={styles.formBody}>
           <div className={styles.imageSection}>
@@ -391,7 +404,7 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
         </div>
         <div className={styles.buttons}>
           <button onClick={prevPage} className={styles.prevButton}>이 전</button>
-          <button onClick={handleNextPage} className={styles.nextButton}>다 음</button>
+          <button onClick={handleNextPage} className={styles.navigationButton}>다 음</button>
         </div>
       </div>
     </div>

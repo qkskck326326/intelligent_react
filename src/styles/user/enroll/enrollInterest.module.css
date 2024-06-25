@@ -1,0 +1,95 @@
+.enrollInterestBigContainer {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+}
+
+.title {
+	display: block;
+	font-size: 2rem;
+	margin-block-start: 0.83em;
+	margin-block-end: 0.83em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	font-weight: bold;
+}
+
+.enrollInterestContainer {
+	display: inline-block; /* 자식 요소들의 너비에 맞게 부모 컨테이너 너비 자동 조정 */
+	margin: 0 auto;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: auto;
+	padding: 20px;
+}
+
+.categoryContainer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 15px;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	width: 500px;
+	/* margin: 0 auto; */
+	/* border: 1px solid black; */
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.categoryButton {
+	border: 2px solid #007bff;
+	background-color: white;
+	color: #007bff;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	text-align: center;
+}
+
+.categoryButton.selected {
+	background-color: #007bff;
+	color: white;
+}
+
+.categoryButton:hover {
+	background-color: #e0e0e0;
+}
+
+.buttonContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin-top: 20px;
+	gap: 15px;
+}
+
+.prevButton {
+  background-color: #ccc;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.navigationButton {
+	background-color: #28a745;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.navigationButton:hover {
+	background-color: #218838;
+}

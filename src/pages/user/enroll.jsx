@@ -1,3 +1,4 @@
+// Enroll.js
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import authStore from "../../stores/authStore";
@@ -7,7 +8,8 @@ import BasicInfo from '../../components/user/basicInfo';
 import EnrollInterest from '../../components/user/enrollInterest';  
 import EnrollTeacherExperience from '../../components/user/enrollTeacherExperience';  
 import EnrollFaceRegistration from '../../components/user/enrollFaceRegistration'; 
-
+import styles from '../../styles/user/enroll/enroll.module.css';
+import { axiosClient } from "../../axiosApi/axiosClient";
 
 const Enroll = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -20,6 +22,7 @@ const Enroll = () => {
     nickname: '',
     profileImageUrl: null,
     userType: null,
+    interests: [], // 추가된 부분
   });
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
@@ -51,10 +54,10 @@ const Enroll = () => {
         );
       case 2:
         return basicInfo.userType === 0 ? 
-          <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} /> : 
+          <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} /> : 
           <EnrollTeacherExperience nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} />;
       case 3:
-        return <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} />;
+        return <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} />;
       case 4:
         return <EnrollFaceRegistration prevPage={prevPage} basicInfo={basicInfo} />;
       default:
@@ -68,6 +71,9 @@ const Enroll = () => {
       <SignUpForm />
       <hr></hr>
       <h2>공사중입니다...</h2>
+      <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }}>
+        InTelliClass 계정 생성
+      </div>
       {renderPage()}
     </div>
   );
