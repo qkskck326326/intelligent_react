@@ -1,0 +1,80 @@
+.container {
+  width: 100%;
+  margin: 50px auto;
+  font-family: Noto Sans KR, sans-serif;
+  font-weight: bold;
+  font-size: 17px;
+  position: relative;
+}
+
+.questionTable {
+  width: 95%;
+  border-collapse: collapse;
+  margin: 0 auto 20px auto;
+}
+
+.questionTable th, .questionTable td {
+  border-top: 1px solid #00000081; /* 상단 테두리 */
+  border-bottom: 1px solid #00000081; /* 하단 테두리 */
+  padding: 16px;
+  text-align: center;
+}
+
+.questionTable th {
+  background-color: #70ff8dc2;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pagination button {
+  background-color: white;
+  border: 1px solid green;
+  color: green;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  color: #ccc;
+  border-color: #ccc;
+}
+
+.pagination .activePage {
+  font-weight: bold;
+  color: green;
+}
+
+.registerButtonContainer {
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+}
+
+.registerButton {
+  display: inline-block;
+  width: 150px;
+  height: 50px;
+  padding: 10px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 10px; /* 둥근 테두리 */
+  box-shadow: 5px 5px 1px 1px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.registerButton:hover {
+  background-color: darkgreen;
+}
