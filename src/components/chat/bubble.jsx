@@ -102,8 +102,8 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
         try{
             await axiosClient.put(`/chat/delete/${message.messageId}`)
             setDeletion(true)
-        } catch(error){
-            console.error(error)
+        } catch(e){
+            console.error(e)
         }
     }
 

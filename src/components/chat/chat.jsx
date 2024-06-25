@@ -40,7 +40,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     const stompClientRef = useRef(null);
     const [isConnected, setIsConnected] = useState(false);
-
+//todo
     const fetchData = async () => {
         try {
             const response = await axiosClient.get('/chat/chatdata', {
@@ -66,7 +66,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 setAnnounce(data.announcement.messageContent);
             }
         } catch (error) {
-            console.error('An error occurred!', error);
+            console.error('An error occurred', error);
         }
 
         try{
