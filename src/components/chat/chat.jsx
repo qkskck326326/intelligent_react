@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
+import {stompClient} from './websocketService';
 import {observer} from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
@@ -12,9 +13,11 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     const [currentRoomData, setCurrentRoomData] = useState(roomData);
+    const [people, setPeople] = useState({});
+    const [isPeopleOn, setIsPeopleOn] = useState(false);
     const [activeForm, setActiveForm] = useState(null);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
+    // const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
     const [announceExpand, setAnnounceExpand] = useState(false);
     const [isAnnounceHidden, setIsAnnounceHidden] = useState(false)
     const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -34,6 +37,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
 
+
+
+    const stompClientRef = useRef(null);
+    const [isConnected, setIsConnected] = useState(false);
+
     const fetchData = async () => {
         try {
             const response = await axiosClient.get('/chat/chatdata', {
@@ -45,7 +53,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             });
 
             const data = response.data;
-            console.log(data);
 
             if (data.messages) {
                 setMessages((prevMessages) => [...data.messages.reverse(), ...prevMessages]);
@@ -62,6 +69,16 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         } catch (error) {
             console.error('An error occurred!', error);
         }
+
+        try{
+            const response = await axiosClient.get(`/chat/people?roomId=${roomData.roomId}`)
+            const data = response.data;
+
+            setPeople(data);
+
+        } catch(error){
+            console.error('An error occurred!', error);
+        }
     };
 
     useEffect(() => {
@@ -75,11 +92,12 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     useEffect(() => {
 
         fetchData();
+
         if (isAtBottom) {
             scrollToBottom();
         }
 
-    }, [page]);
+    }, [page, roomData.roomId]);
 
     useEffect(() => {
         axiosClient.get('/chat/chatuserdetail', {
@@ -97,9 +115,34 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             });
     }, []);
 
+    //웹소켓으로 추가
     useEffect(() => {
-        console.log("Messages updated:", messages);
-    }, [messages]);
+        const subscribeToRoom = () => {
+            if (stompClient && stompClient.connected) {
+                stompClient.subscribe(`/topic/room/${roomData.roomId}`, (message) => {
+                    console.log('Received message from WebSocket:', message.body);
+                    const newMessage = JSON.parse(message.body);
+                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                });
+            }
+        };
+
+        if (!stompClient.connected) {
+            stompClient.activate();
+            stompClient.onConnect = () => {
+                console.log('웹소켓 연결');
+                subscribeToRoom();
+            };
+        } else {
+            subscribeToRoom();
+        }
+
+        return () => {
+            if (stompClient) {
+                stompClient.unsubscribe();
+            }
+        };
+    }, [roomData.roomId]);
 
     const handleUpdateMessage = (updatedMessage) => {
         console.log('Updating message:', updatedMessage);
@@ -143,7 +186,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const handleForm2Submit = (event) => {
         event.preventDefault();
         console.log('Form 2 submitted');
-        // Your form 2 submission logic here
     };
 
     const handleKeyPress = (event) => {
@@ -161,7 +203,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         setTimeout(() => {
             onNavigateToList();
             setIsAnimating(false);
-            setIsSearchButtonClicked(false);
+            // setIsSearchButtonClicked(false);
             setAnnounceExpand(false);
             setIsMenuClicked(false);
             setIsAttachButtonClicked(false);
@@ -169,17 +211,17 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         }, 500);
     };
 
-    const handleSearchButtonClick = () => {
-        setIsSearchButtonClicked(!isSearchButtonClicked)
-    }
+    // const handleSearchButtonClick = () => {
+    //     setIsSearchButtonClicked(!isSearchButtonClicked)
+    // }
 
     const handleAnnounce = () => {
         setAnnounceExpand(!announceExpand);
     }
 
-    const handleSearch = (event) => {
-        event.preventDefault();
-    }
+    // const handleSearch = (event) => {
+    //     event.preventDefault();
+    // }
 
     const handleMenuClick = () => {
         setIsMenuClicked(!isMenuClicked)
@@ -237,11 +279,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             });
 
             const url = `/chat/uploadfiles/${newMessage.roomId}/${newMessage.senderId}/${newMessage.messageType}/${newMessage.dateSent}/${newMessage.isAnnouncement}`;
-            console.log(url)
 
-            for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
+            // for (let pair of formData.entries()) {
+            //     console.log(pair[0], pair[1]);
+            // }
 
             try {
                 const response = await axiosClient.post(url, formData, {
@@ -250,9 +291,14 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     },
                 });
                 const { message, files } = response.data;
-                console.log(response.data);
+                // console.log(response.data);
                 setMessages((prevMessages) => [...prevMessages, { ...message, files }]);
                 setItems([]);
+
+                //추가
+                if (stompClient && stompClient.connected) {
+                    stompClient.publish({ destination: `/app/chat/${roomData.roomId}`, body: JSON.stringify(message) });
+                }
 
             } catch (error) {
                 console.error('Error uploading files:', error);
@@ -275,12 +321,19 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             try {
                 const response = await axiosClient.post('/chat/sendmessage', newMessage);
                 const savedMessage = response.data;
-                setMessages((prevMessages) => [...prevMessages, savedMessage]);
+                // setMessages((prevMessages) => [...prevMessages, savedMessage]);
                 setTextContent('');
                 setIsAtBottom(true);
+
+                if (stompClient && stompClient.connected) {
+                    stompClient.publish({ destination: `/app/chat/${roomData.roomId}`, body: JSON.stringify(savedMessage) });
+                }
+
             } catch (error) {
                 console.error('Error sending message:', error);
             }
+
+
         }
     };
 
@@ -305,7 +358,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             roomId: roomId
         })
             .then(response => {
-                setAnnounce(response.data.messageContent);
+                //this one is menually just setting the the returned content from the backend when I put in
+                //I actually it shouldn't work like this but just as soon as this happens re-render should appear? so that others will get the changes too?
+                // setAnnounce(response.data.messageContent);
                 setAnnounceExpand(false)
                 setIsAnnounceHidden(false)
             })
@@ -427,7 +482,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 </button>
                 <div className={styles.title}>
                     {
-                        (option !== 'gpt') ? `${currentRoomData.roomName}` : `인텔리봇`
+                        (option !== 'gpt') ? `${currentRoomData.roomName} ${people.length}` : `인텔리봇`
 
                     }
                 </div>
@@ -451,8 +506,23 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                                 <ul className={styles.menuItems}>
                                     <li onClick={handlePin}>{userData.isPinned === 1 ? '핀해제' : '핀하기'}</li>
                                     <li onClick={handleRoomTitleName}>방제목변경</li>
+                                    <li onClick={() => setIsPeopleOn(true)}>참가자확인</li>
                                     <li onClick={handleLeave}>채팅방나가기</li>
                                 </ul>
+                            }
+                            { isPeopleOn &&
+                                <ul className={styles.menuItems2}>
+                                {people.map((person, index) => {
+
+                                    return<li key={index} className={styles.people}>
+                                            <img className={styles.peopleImg} src={person.profileImageUrl} alt=""/>
+                                        {person.nickname}
+                                        </li>
+
+                                    })
+                                }
+                                <li onClick={() => setIsPeopleOn(false)}>닫기</li>
+                            </ul>
                             }
                         </>
                         :
@@ -461,23 +531,24 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
                 </div>
             </div>
-            { (isSearchButtonClicked) &&
-                <form className={`${styles.searchBar}`} onSubmit={handleSearch}>
-                    <input className={styles.searchBox}
-                           type="text"
-                            onFocus={()=> setActiveForm('form2')}/>
-                    <button className={styles.resetButton} type='reset'>
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 384 512">
-                            <path
-                                d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/>
-                        </svg>
-                    </button>
-                </form>
-            }
+            {/*{ (isSearchButtonClicked) &&*/}
+            {/*    <form className={`${styles.searchBar}`} onSubmit={handleSearch}>*/}
+            {/*        <input className={styles.searchBox}*/}
+            {/*               type="text"*/}
+            {/*                onFocus={()=> setActiveForm('form2')}/>*/}
+            {/*        <button className={styles.resetButton} type='reset'>*/}
+            {/*            <svg xmlns="http://www.w3.org/2000/svg"*/}
+            {/*                 viewBox="0 0 384 512">*/}
+            {/*                <path*/}
+            {/*                    d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/>*/}
+            {/*            </svg>*/}
+            {/*        </button>*/}
+            {/*    </form>*/}
+            {/*}*/}
 
             { (option !== 'gpt' && announce !== '' && !isAnnounceHidden) ?
-                <div className={`${styles.announceContainer} ${isSearchButtonClicked && styles.pushed}`}>
+                // ${isSearchButtonClicked && styles.pushed} 이거 있었음
+                <div className={`${styles.announceContainer}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
                              viewBox="0 0 512 512">
@@ -552,7 +623,8 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                         {
                             isAttachButtonClicked
                                 ?
-                                <div className={`${styles.attachContainer} ${isSearchButtonClicked && styles.attachContainerResized}`}>
+                                // ${isSearchButtonClicked && styles.attachContainerResized} 있었음
+                                <div className={`${styles.attachContainer}`}>
                                     <button className={styles.attachmentIcon} onClick={handleFileAttach}>
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 576 512">
@@ -565,11 +637,12 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                                 :
 
                                 items.length === 0 ?
+                                    // ${isSearchButtonClicked && styles.textContentResized} 있었음
                                     <textarea
                                         name="textContent"
                                         id="textContent"
                                         placeholder='텍스트를 입력해주세요'
-                                        className={`${styles.textContent} ${isSearchButtonClicked && styles.textContentResized}`}
+                                        className={`${styles.textContent}`}
                                         value={textContent}
                                         onFocus={() => setActiveForm('form1')}
                                         onChange={(event)=> setTextContent(event.target.value)}></textarea>

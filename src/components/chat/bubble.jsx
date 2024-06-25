@@ -7,8 +7,7 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Bubble = observer(({index, onAnnouncementChange, onReport, option, message, onUpdateMessage})=>{
 
-    const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId) //여기에 조건 바로 넣어서 쓰면 될 듯
-    const [isThereMedia, setIsThereMedia] = useState(false)
+    const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false);
     const [deletion, setDeletion] = useState(false);
     const eachSettingsRef = useRef();
@@ -76,7 +75,17 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     }
 
     const handleEachReport = () => {
-        onReport(index, isMe)
+
+        const reportItem = {
+            receiveNickname: message.senderId,
+            doNickname: AuthStore.getNickname(),
+            content: message.messageContent ? message.messageContent : message.files,
+            reportDate: new Date(),
+            reportType: 2,
+            contentId: message.roomId
+        }
+
+        console.log(reportItem)
     }
 
     const handleClickOutside = (event) => {

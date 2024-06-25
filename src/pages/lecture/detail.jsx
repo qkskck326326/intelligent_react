@@ -40,7 +40,7 @@ const LectureDetailPage = () => {
         <div style={containerStyle}>
             <div style={leftSideStyle}>
                 {lectureId ? <LectureDetail lectureId={lectureId} /> : <p>Loading...</p>}
-                {/* {lectureId ? <LectureComment lectureId={lectureId} /> : <p>Loading...</p>} */}
+                {lectureId ? <LectureComment lectureId={lectureId} /> : <p>Loading...</p>}
             </div>
             <div style={verticalLineStyle}></div>
             <div style={rightSideStyle}>

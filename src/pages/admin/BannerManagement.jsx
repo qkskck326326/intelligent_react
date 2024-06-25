@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/admin/Banner.module.css';
 import Sidebar from "../../components/admin/Sidebar";
-import {axiosClient} from "../../axiosApi/axiosClient";
 
 const BannerManagement = () => {
     const [banners, setBanners] = useState([]);
     const [title, setTitle] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    const [imageFile, setImageFile] = useState(null);
     const [linkUrl, setLinkUrl] = useState('');
     const [selectedBanner, setSelectedBanner] = useState(null);
 
@@ -17,7 +16,7 @@ const BannerManagement = () => {
 
     const fetchBanners = async () => {
         try {
-            const response = await axiosClient.get('http://localhost:8080/admins/banners');
+            const response = await axiosClient.get('/admins/banners');
             setBanners(response.data);
         } catch (error) {
             console.error('Error fetching banners:', error);
@@ -25,12 +24,26 @@ const BannerManagement = () => {
     };
 
     const handleSaveBanner = async () => {
-        const bannerData = { title, imageUrl, linkUrl };
+        const formData = new FormData();
+        formData.append('title', title);
+        if (imageFile) {
+            formData.append('imageFile', imageFile);
+        }
+        formData.append('linkUrl', linkUrl);
+
         try {
             if (selectedBanner) {
-                await axios.put(`http://localhost:8080/admins/banners/${selectedBanner.id}`, bannerData);
+                await axiosClient.put(`/admins/banners/${selectedBanner.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                });
             } else {
-                await axios.post('http://localhost:8080/admins/banners', bannerData);
+                await axiosClient.post('/admins/banners', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                });
             }
             fetchBanners();
             resetForm();
@@ -42,13 +55,13 @@ const BannerManagement = () => {
     const handleEditBanner = (banner) => {
         setSelectedBanner(banner);
         setTitle(banner.title);
-        setImageUrl(banner.imageUrl);
+        setImageFile(null);
         setLinkUrl(banner.linkUrl);
     };
 
     const handleDeleteBanner = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/admins/banners/${id}`);
+            await axiosClient.delete(`/admins/banners/${id}`);
             fetchBanners();
         } catch (error) {
             console.error('Error deleting banner:', error);
@@ -58,8 +71,12 @@ const BannerManagement = () => {
     const resetForm = () => {
         setSelectedBanner(null);
         setTitle('');
-        setImageUrl('');
+        setImageFile(null);
         setLinkUrl('');
+    };
+
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
     };
 
     return (
@@ -78,10 +95,8 @@ const BannerManagement = () => {
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     <input
-                        type="text"
-                        placeholder="이미지 URL"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
+                        type="file"
+                        onChange={handleImageChange}
                     />
                     <input
                         type="text"

@@ -32,7 +32,8 @@
     position: relative;
     cursor: pointer;
 }
-.menuItems{
+.menuItems,
+.menuItems2{
     text-align: center;
     cursor: pointer;
     list-style: none;
@@ -48,17 +49,25 @@
     z-index: 5;
     overflow: hidden;
 }
-.menuItems > li{
+.menuItems > li,
+.menuItems2 > li{
     padding: 0.5rem;
     border-bottom: 1px solid #E0E0E0;
 }
-.menuItems > li:hover{
+.menuItems > li:hover,
+.menuItems2 > li:hover{
     background-color: #f0f0f0;
 }
 
-.menuItems > li:last-child{
+.menuItems > li:last-child,
+.menuItems2 > li:last-child{
     border-bottom: 0;
 }
+.menuItems2{
+    max-height: 20rem;
+    overflow-y: auto;
+}
+
 .dummy{
     visibility: hidden;
 }
@@ -228,17 +237,21 @@
     height: 64%;
 }
 
-.textContent::-webkit-scrollbar {
+.textContent::-webkit-scrollbar,
+.menuItems2::-webkit-scrollbar{
     width: 7px;
 }
-.textContent::-webkit-scrollbar-track {
+.textContent::-webkit-scrollbar-track,
+.menuItems2::-webkit-scrollbar-track{
     background: #f1f1f1;
 }
-.textContent::-webkit-scrollbar-thumb {
+.textContent::-webkit-scrollbar-thumb,
+.menuItems2::-webkit-scrollbar-thumb{
     background: #888;
     border-radius: 5px;
 }
-.textContent::-webkit-scrollbar-thumb:hover {
+.textContent::-webkit-scrollbar-thumb:hover,
+.menuItems2::-webkit-scrollbar-thumb:hover{
     background: #555;
 }
 
@@ -280,7 +293,15 @@
 .chatBottom > *{
     padding: 0.5rem;
 }
-
+.people{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.peopleImg{
+    height: 3rem;
+    object-fit: scale-down;
+}
 
 
 

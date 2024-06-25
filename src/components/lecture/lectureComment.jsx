@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureComment.module.css';
+import authStore from '../../stores/authStore';
 
-const LectureComment = ({ lectureId, user }) => {
+const LectureComment = ({ lectureId }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -11,12 +12,27 @@ const LectureComment = ({ lectureId, user }) => {
     const [editContent, setEditContent] = useState("");
     const [replyCommentId, setReplyCommentId] = useState(null);
     const [replyContent, setReplyContent] = useState("");
+    const [userProfileImageUrl, setUserProfileImageUrl] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [visibleReplies, setVisibleReplies] = useState({});
 
     useEffect(() => {
         if (lectureId) {
             fetchComments();
         }
     }, [lectureId]);
+
+    useEffect(() => {
+        const fetchUserProfileImage = async () => {
+            const profileImageUrl = await authStore.getProfileImageUrl();
+            setUserProfileImageUrl(profileImageUrl);
+        };
+
+        const currentNickname = authStore.getNickname();
+        setNickname(currentNickname);
+
+        fetchUserProfileImage();
+    }, []);
 
     const fetchComments = () => {
         axiosClient.get(`/lecture/comments/${lectureId}`)
@@ -35,12 +51,12 @@ const LectureComment = ({ lectureId, user }) => {
 
         axiosClient.post(`/lecture/comments`, {
             lectureId: lectureId,
-            nickname: user.nickname,
+            nickname: authStore.getNickname(),
             lectureCommentContent: newComment,
             parentCommentId: null
         })
         .then(response => {
-            setComments(prevComments => [...prevComments, response.data]); // 새로 추가된 댓글을 상태에 추가
+            fetchComments();
             setNewComment("");
         })
         .catch(err => {
@@ -50,17 +66,12 @@ const LectureComment = ({ lectureId, user }) => {
 
     const handleEditSubmit = (commentId) => {
         if (!editContent.trim()) return;
-    
+
         axiosClient.put(`/lecture/comments/${commentId}`, {
             lectureCommentContent: editContent
         })
         .then(response => {
-            setComments(prevComments => prevComments.map(comment => {
-                if (comment.lectureCommentId === commentId) {
-                    return { ...comment, lectureCommentContent: editContent };
-                }
-                return comment;
-            }));
+            fetchComments();
             setEditCommentId(null);
             setEditContent('');
         })
@@ -68,27 +79,25 @@ const LectureComment = ({ lectureId, user }) => {
             console.error(err);
         });
     };
-    
 
     const handleDeleteComment = (commentId) => {
         axiosClient.delete(`/lecture/comments/${commentId}`)
             .then(response => {
-                setComments(prevComments => prevComments.filter(comment => comment.lectureCommentId !== commentId));
+                fetchComments();
             })
             .catch(err => {
                 console.error(err);
             });
     };
-    
 
     const handleReplySubmit = (commentId) => {
         if (!replyContent.trim()) return;
 
         axiosClient.post(`/lecture/comments`, {
             lectureId: lectureId,
-            nickname: user.nickname,
+            nickname: authStore.getNickname(),
             lectureCommentContent: replyContent,
-            parentCommentId: commentId // 대댓글은 parentCommentId를 설정
+            parentCommentId: commentId
         })
         .then(response => {
             fetchComments();
@@ -100,41 +109,62 @@ const LectureComment = ({ lectureId, user }) => {
         });
     };
 
+    const toggleReplyInput = (commentId) => {
+        setReplyCommentId(prevId => (prevId === commentId ? null : commentId));
+    };
+
+    const toggleEditInput = (commentId, content) => {
+        if (editCommentId === commentId) {
+            setEditCommentId(null);
+            setEditContent('');
+        } else {
+            setEditCommentId(commentId);
+            setEditContent(content);
+        }
+    };
+
+    const toggleRepliesVisibility = (commentId) => {
+        setVisibleReplies(prevState => ({
+            ...prevState,
+            [commentId]: !prevState[commentId]
+        }));
+    };
+
+    const handleKeyPress = (e, callback) => {
+        if (e.key === "Enter") {
+            callback();
+        }
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    return (
-        <div className={styles.commentsContainer}>
-            <div className={styles.addCommentContainer}>
-                <img src={user.profileImageUrl} alt="Profile" className={styles.profileImage} />
-                <div className={styles.newComment}>
-                    <input
-                        type="text"
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="댓글을 입력하세요"
-                        className={styles.commentInput}
-                    />
-                    <button onClick={handleAddComment} className={styles.submitButton}>
-                        <img src="/send-icon.png" alt="Send" />
-                    </button>
-                </div>
-            </div>
-            <ul className={styles.commentsList}>
-                {comments.map(comment => (
-                    <li key={comment.lectureCommentId} className={styles.commentItem}>
-                        <div className={styles.commentHeader}>
-                            <img src={comment.profileImageUrl} alt="Profile" className={styles.profileImage} />
-                            <span className={styles.commentNickname}>{comment.nickname}</span>
-                            {user.nickname === comment.nickname ? (
-                                <div className={styles.commentActions}>
-                                    <span className={styles.editButton} onClick={() => setEditCommentId(comment.lectureCommentId)}>수정</span>
+    const renderComment = (comment, isReply = false) => {
+        const hasReplies = comments.some(reply => reply.parentCommentId === comment.lectureCommentId);
+
+        return (
+            <li key={comment.lectureCommentId} className={isReply ? styles.replyItem : styles.commentItem}>
+                {comment.profileImageUrl ? (
+                    <img src={comment.profileImageUrl} alt="Profile" className={styles.profileImage} />
+                ) : (
+                    <div className={styles.placeholderProfileImage} />
+                )}
+                <div className={styles.commentContentWrapper}>
+                    <div className={styles.commentHeader}>
+                        <span className={styles.commentNickname}>{comment.nickname}</span>
+                        <div className={styles.commentActions}>
+                            {authStore.getNickname() === comment.nickname ? (
+                                <>
+                                    <span className={styles.editButton} onClick={() => toggleEditInput(comment.lectureCommentId, comment.lectureCommentContent)}>수정</span>
                                     <span className={styles.deleteButton} onClick={() => handleDeleteComment(comment.lectureCommentId)}>X</span>
-                                </div>
+                                </>
                             ) : (
-                                <span className={styles.replyButton} onClick={() => setReplyCommentId(comment.lectureCommentId)}>답글</span>
+                                <span className={styles.replyButton} onClick={() => toggleReplyInput(comment.lectureCommentId)}>답글</span>
                             )}
                         </div>
+                    </div>
+                    <div className={styles.commentContentContainer}>
+                        <hr className={styles.divider} />
                         {editCommentId === comment.lectureCommentId ? (
                             <div className={styles.editContainer}>
                                 <input
@@ -142,9 +172,10 @@ const LectureComment = ({ lectureId, user }) => {
                                     value={editContent}
                                     onChange={(e) => setEditContent(e.target.value)}
                                     className={styles.editInput}
+                                    onKeyPress={(e) => handleKeyPress(e, () => handleEditSubmit(comment.lectureCommentId))}
                                 />
                                 <button onClick={() => handleEditSubmit(comment.lectureCommentId)} className={styles.submitButton}>
-                                    <img src="/send-icon.png" alt="Send" />
+                                    <img src="/images/send-message.png" alt="Send" />
                                 </button>
                             </div>
                         ) : (
@@ -157,13 +188,55 @@ const LectureComment = ({ lectureId, user }) => {
                                     value={replyContent}
                                     onChange={(e) => setReplyContent(e.target.value)}
                                     className={styles.replyInput}
+                                    onKeyPress={(e) => handleKeyPress(e, () => handleReplySubmit(comment.lectureCommentId))}
                                 />
                                 <button onClick={() => handleReplySubmit(comment.lectureCommentId)} className={styles.submitButton}>
-                                    <img src="/send-icon.png" alt="Send" />
+                                    <img src="/images/send-message.png" alt="Send" />
                                 </button>
                             </div>
                         )}
-                    </li>
+                    </div>
+                </div>
+                {hasReplies && (
+                    <button onClick={() => toggleRepliesVisibility(comment.lectureCommentId)} className={styles.toggleRepliesButton}>
+                        {visibleReplies[comment.lectureCommentId] ? "△ 답글 감추기" : "▽ 답글 보기"}
+                    </button>
+                )}
+                {visibleReplies[comment.lectureCommentId] && comments.filter(reply => reply.parentCommentId === comment.lectureCommentId).map(reply => renderComment(reply, true))}
+            </li>
+        );
+    };
+
+    return (
+        <div className={styles.commentsContainer}>
+            <div className={styles.addCommentContainer}>
+                {userProfileImageUrl ? (
+                    <img src={userProfileImageUrl} alt="Profile" className={styles.profileImage} />
+                ) : (
+                    <div className={styles.placeholderProfileImage} />
+                )}
+                <div className={styles.newComment}>
+                    <span className={styles.commentNickname}>{nickname}</span>
+                    <hr className={styles.divider} />
+                    <div className={styles.commentInputContainer}>
+                        <input
+                            type="text"
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="댓글을 입력하세요"
+                            className={styles.commentInput}
+                        />
+                        <button onClick={handleAddComment} className={styles.submitButton}>
+                            <img src="/images/send-message.png" alt="Send" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ul className={styles.commentsList}>
+                {comments.filter(comment => !comment.parentCommentId).map(comment => (
+                    <>
+                        {renderComment(comment)}
+                    </>
                 ))}
             </ul>
         </div>

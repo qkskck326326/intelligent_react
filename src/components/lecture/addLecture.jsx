@@ -17,6 +17,7 @@ const AddLecture = () => {
     const [nickname, setNickname] = useState('');
     const [loadingThumbnail, setLoadingThumbnail] = useState(false);
     const [loadingVideo, setLoadingVideo] = useState(false);
+    const [hasUploaded, setHasUploaded] = useState(false); // 업로드 여부 상태 추가
     const imgRef = useRef();
     const router = useRouter();
 
@@ -26,6 +27,21 @@ const AddLecture = () => {
         setLecturePackageId(lecturePackageIdFromQuery);
         setNickname(currentNickname);
     }, [router.query]);
+
+    useEffect(() => {
+        const handleRouteChange = (url) => {
+            if (hasUploaded && !confirm('등록을 취소하시겠습니까?')) {
+                router.events.emit('routeChangeError');
+                throw 'routeChange aborted.';
+            }
+        };
+
+        router.events.on('routeChangeStart', handleRouteChange);
+
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChange);
+        };
+    }, [hasUploaded]);
 
     const REPO_OWNER = 'rudalsdl';
     const REPO_NAME = 'lectureSave';
@@ -54,42 +70,64 @@ const AddLecture = () => {
         await handleLectureRegister(lectureInput);
     };
 
-    const handleVideoUpload = async (videoFile) => {
-        if (!videoFile) {
-            alert('동영상 파일이 선택되지 않았습니다.');
-            return;
+    const handleUpload = async (file, path) => {
+        if (!file) {
+            throw new Error('파일이 선택되지 않았습니다.');
         }
 
-        setLoadingVideo(true);
-
-        try {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(videoFile);
+        const fileReader = new FileReader();
+        return new Promise((resolve, reject) => {
+            fileReader.readAsDataURL(file);
             fileReader.onloadend = async () => {
                 const base64File = fileReader.result.split(',')[1];
-                const fileName = videoFile.name;
+                const timestamp = new Date().getTime(); // 타임스탬프 추가
+                const fileName = `${timestamp}_${file.name}`;
 
-                const response = await axios.put(
-                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/uploads/${fileName}`,
-                    {
-                        message: `upload video ${fileName}`,
-                        content: base64File,
-                    },
-                    {
-                        headers: {
-                            Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
+                try {
+                    const response = await axios.put(
+                        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}/${fileName}`,
+                        {
+                            message: `upload ${path.slice(0, -1)} ${fileName}`,
+                            content: base64File,
                         },
-                    }
-                );
+                        {
+                            headers: {
+                                Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
+                            },
+                        }
+                    );
 
-                const fileUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/uploads/${fileName}`;
-                setStreamUrl(fileUrl);
-                alert('동영상이 성공적으로 업로드되었습니다.');
-                setLoadingVideo(false);
+                    const fileUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}/${fileName}`;
+                    setHasUploaded(true); // 업로드 성공 시 상태 업데이트
+                    resolve(fileUrl);
+                } catch (error) {
+                    reject(error);
+                }
             };
+        });
+    };
+
+    const handleUploadAll = async () => {
+        try {
+            setLoadingThumbnail(true);
+            setLoadingVideo(true);
+
+            const [thumbnailUrl, videoUrl] = await Promise.all([
+                handleUpload(imgFile, 'thumbnails'),
+                handleUpload(videoFile, 'uploads')
+            ]);
+
+            setLectureThumbnail(thumbnailUrl);
+            setStreamUrl(videoUrl);
+
+            alert('썸네일 및 영상이 성공적으로 업로드되었습니다.');
+
+            setLoadingThumbnail(false);
+            setLoadingVideo(false);
         } catch (error) {
-            console.error('동영상 업로드 중 오류 발생:', error);
-            alert('동영상 업로드 중 오류 발생: ' + (error.response?.data?.error || error.message));
+            console.error('업로드 중 오류 발생:', error);
+            alert('업로드 중 오류 발생: ' + (error.response?.data?.error || error.message));
+            setLoadingThumbnail(false);
             setLoadingVideo(false);
         }
     };
@@ -97,46 +135,6 @@ const AddLecture = () => {
     const handleVideoFileChange = (file) => {
         setVideoFile(file);
         setVideoPath(file.name);
-    };
-
-    const handleThumbnailUpload = async (thumbnailFile) => {
-        if (!thumbnailFile) {
-            alert('썸네일 파일이 선택되지 않았습니다.');
-            return;
-        }
-
-        setLoadingThumbnail(true);
-
-        try {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(thumbnailFile);
-            fileReader.onloadend = async () => {
-                const base64File = fileReader.result.split(',')[1];
-                const fileName = thumbnailFile.name;
-
-                const response = await axios.put(
-                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/thumbnails/${fileName}`,
-                    {
-                        message: `upload thumbnail ${fileName}`,
-                        content: base64File,
-                    },
-                    {
-                        headers: {
-                            Authorization: `token ${process.env.NEXT_PUBLIC_ADD_LECTURE_GITHUB_TOKEN}`,
-                        },
-                    }
-                );
-
-                const fileUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/thumbnails/${fileName}`;
-                setLectureThumbnail(fileUrl);
-                alert('썸네일이 성공적으로 업로드되었습니다.');
-                setLoadingThumbnail(false);
-            };
-        } catch (error) {
-            console.error('썸네일 업로드 중 오류 발생:', error);
-            alert('썸네일 업로드 중 오류 발생: ' + (error.response?.data?.error || error.message));
-            setLoadingThumbnail(false);
-        }
     };
 
     const handleThumbnailFileChange = (file) => {
@@ -189,20 +187,6 @@ const AddLecture = () => {
                             />
                             <label htmlFor="thumbnailFile" className={styles.customFileInput}>첨부파일</label>
                         </div>
-                        <button
-                            type="button"
-                            className={styles.uploadButton}
-                            onClick={() => handleThumbnailUpload(imgFile)}
-                            disabled={loadingThumbnail}
-                        >
-                            {loadingThumbnail ? (
-                                <div className={styles.loadingContainer}>
-                                    <div className={styles.loadingSpinner}></div>
-                                </div>
-                            ) : (
-                                '썸네일 업로드'
-                            )}
-                        </button>
                     </div>
                     <div className={styles.formGroup}>
                         <label htmlFor="videoPath" className={styles.label}>영상</label>
@@ -225,15 +209,15 @@ const AddLecture = () => {
                         <button
                             type="button"
                             className={styles.uploadButton}
-                            onClick={() => handleVideoUpload(videoFile)}
-                            disabled={loadingVideo}
+                            onClick={handleUploadAll}
+                            disabled={loadingThumbnail || loadingVideo}
                         >
-                            {loadingVideo ? (
+                            {loadingThumbnail || loadingVideo ? (
                                 <div className={styles.loadingContainer}>
                                     <div className={styles.loadingSpinner}></div>
                                 </div>
                             ) : (
-                                '영상 업로드'
+                                '썸네일 및 영상 업로드'
                             )}
                         </button>
                     </div>

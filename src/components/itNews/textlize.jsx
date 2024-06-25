@@ -16,7 +16,7 @@ export default function GetText() {
         setOriginalText(''); // 기존 텍스트 초기화
         setTranslatedText(''); // 번역 텍스트 초기화
         try {
-            const response = await axios.post('http://localhost:5000/getText', { url }, {
+            const response = await axios.post('http://192.168.0.93:5000/getText', { url }, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -49,8 +49,8 @@ export default function GetText() {
                 style={{ width: '550px' }}
             />
                 {isLoading && <div><div className="spinner-border text-primary mt-3" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div><p>변환중...</p></div>}
+                    <span className="visually-hidden">Loading....</span>
+                </div><p>변환중....</p></div>}
             </div>
             <button onClick={handleGetText} className="btn btn-primary mt-2">
                 변환하기

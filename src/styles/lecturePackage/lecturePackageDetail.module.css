@@ -6,6 +6,12 @@
     background-color: #f6f6f6;
 }
 
+.threebtn {
+    width:600px;
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+}
+
 .title {
     font-size: 2rem;
     margin-bottom: 10px;
@@ -25,13 +31,12 @@
 
 .actions {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between; /* 버튼들을 양쪽 끝으로 정렬 */
     width: 100%;
     max-width: 100%;
-    gap:800px;
-    /*margin-bottom: 10px;*/
+    gap: 10px; /* 버튼들 사이의 간격 조정 */
     margin-top: 20px;
-    align-items:center;
+    align-items: center;
 }
 
 .actionButton {
@@ -46,7 +51,6 @@
 .profile {
     display: flex;
     align-items: center;
-    /*margin-bottom: 5px;*/
 }
 
 .profilePicture {
@@ -59,6 +63,9 @@
 .nickname {
     font-size: 1.2rem;
     font-weight: bold;
+    width: 100px;
+    margin:0px;
+
 }
 
 .redBox {

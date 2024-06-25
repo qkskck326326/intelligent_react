@@ -6,23 +6,22 @@
 }
 
 .title {
-    display: block;
-    font-size: 2rem;
-    margin-block-start: 0.83em;
-    margin-block-end: 0.83em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    /* unicode-bidi: isolate; */
+  display: block;
+  font-size: 2rem;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  /* width: 800px; */
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 650px;
 }
 
 .formBody {
@@ -33,7 +32,6 @@
 .imageSection {
   flex: 1;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 20px;
@@ -43,6 +41,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.profileImageContainer {
+  position: relative;
 }
 
 .profileImage {
@@ -55,16 +57,19 @@
 }
 
 .fileUploadLabel {
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: url(/images/profileUploadIcon.png) no-repeat center;
+  background-size: cover;
+  background-color: #ffffff;
+  border-radius: 50%;
   cursor: pointer;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 10px
 }
 
-.imageUpload input {
+.fileInput {
   display: none;
 }
 
@@ -76,7 +81,7 @@
 }
 
 .input {
-  width: 55%;
+  width: 60%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -87,41 +92,91 @@
 .nicknameSection {
   display: flex;
   align-items: baseline;
-  /* margin-bottom: 10px; */
+}
+
+.codeSection {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  justify-content: space-around;
 }
 
 .verifyButton,
-.checkButton {
+.checkButton,
+.verifyCodeButton {
   margin-left: 10px;
   width: 80px;
   padding: 10px 5px 10px 5px;
-  background-color: #007bff;
   color: white;
   font-size: 0.6rem;
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  background-color: black;
+  background-color: #ccc;
   font-weight: bold;
   align-items: center;
   justify-items: center;
   text-align: center;
 }
 
+.verifyButton.disabled,
+.verifyCodeButton.disabled,
+.checkButton.disaled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.verifyCodeButton{
+  position: relative;
+  top: -6px;
+  left: -38px;
+}
+
+.verifyButton.enabled,
+.verifyCodeButton.enabled,
+.checkButton.enabled {
+  background-color: green;
+  color: white;
+}
+
+.codeSentMessage {
+  color: #007bff;
+  font-size: 0.8rem;
+  margin-top: -8px;
+  margin-bottom: -8px;
+  margin-left: 2px;
+}
+
+.timer {
+  /* display: flex; */
+  position: relative;
+  top: -4px;
+  left: -45px;
+  /* margin-left: 10px; */
+  font-size: 0.7rem;
+  color: black;
+  transition: color 1s ease;
+  margin: 0;
+}
+
+.redTimer {
+  color: red;
+}
+
 .buttons {
   display: flex;
-  justify-content: center; /* 중앙 정렬 */
-  margin: 0 0 10px 0; /* 상하 여백 추가 */
+  justify-content: center;
+  margin: 0 0 10px 0;
 }
 
 .prevButton,
 .nextButton {
-  width: auto; /* 너비를 자동으로 조정 */
+  width: auto;
   padding: 5px 30px 5px 30px;
   font-size: 0.8rem;
   border-radius: 3px;
   border: none;
-  margin: 0 10px; /* 버튼 간의 간격을 5px로 설정 */
+  margin: 0 10px;
   cursor: pointer;
 }
 
@@ -132,4 +187,52 @@
 .nextButton {
   background-color: #28a745;
   color: white;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 130px;
+  background-color: #ffffff;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 41%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  box-shadow: 0px 0px 10px 0px rgba(72, 72, 72, 0.5);
+  font-size: 0.75rem;
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 100%;
+  left: 45%;
+  margin-left: -5px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+}
+
+.tooltip .input:focus + .tooltiptext {
+  visibility: visible;
+  opacity: 100%;
+}
+
+.valid {
+  color: rgb(79, 164, 79);
+}
+
+.invalid {
+  color: rgb(241, 60, 60);
 }

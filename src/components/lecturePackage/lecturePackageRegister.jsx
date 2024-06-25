@@ -29,7 +29,8 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
         title: '',
         level: '',
         priceKind: '',
-        price: ''
+        priceMonth: '',
+        priceForever: ''
     });
 
     useEffect(() => {
@@ -39,7 +40,8 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                 title: packageData.title || '',
                 level: packageData.packageLevel || '',
                 priceKind: packageData.priceKind?.toString() || '',
-                price: packageData.price?.toString() || ''
+                priceMonth: packageData.price?.toString() || '',
+                priceForever: packageData.price?.toString() || ''
             });
             setEditorData(packageData.content || '');
             setThumbnailPreview(packageData.thumbnail || '');
@@ -113,7 +115,8 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             content: editorData,
             packageLevel: form.level,
             priceKind: parseInt(form.priceKind),
-            price: parseInt(form.price),
+            priceMonth: parseInt(form.priceMonth),
+            priceForever: parseInt(form.priceForever),
             thumbnail: thumbnailPreview,
             packageSubCategoryId: selectedCategories.map(category => category.id),
             packageTechStackId: selectedTechStacks.map(stack => stack.techStackId),
@@ -159,8 +162,8 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                         type="radio"
                         id="beginner"
                         name="level"
-                        value="0"
-                        checked={form.level === 0}
+                        value={0}
+                        checked={form.level === '0'}
                         onChange={handleInputChange}
                     />
                     <label htmlFor="beginner">입문</label>
@@ -168,17 +171,17 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                         type="radio"
                         id="default"
                         name="level"
-                        value="1"
-                        checked={form.level === 1}
+                        value={1}
+                        checked={form.level === '1'}
                         onChange={handleInputChange}
                     />
-                    <label htmlFor="beginner">기본</label>
+                    <label htmlFor="basic">기본</label>
                     <input
                         type="radio"
                         id="advanced"
                         name="level"
-                        value="2"
-                        checked={form.level === 2}
+                        value={2}
+                        checked={form.level === '2'}
                         onChange={handleInputChange}
                     />
                     <label htmlFor="advanced">심화</label>
@@ -192,19 +195,30 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                     value={form.priceKind}
                     onChange={handleInputChange}
                 >
-                <option value="">선택</option>
+                    <option value="">선택</option>
                     <option value="0">월정액</option>
                     <option value="1">평생소장</option>
                 </select>
-                <label htmlFor="price">패키지 금액</label>
-                <input
-                    id="price"
-                    name="price"
-                    type="text"
-                    value={form.price}
-                    onChange={handleInputChange}
-                    placeholder="금액을 입력하세요"
-                />
+                <div>
+                    <label htmlFor="price">월정액 금액</label>
+                    <input
+                        id="priceMonth"
+                        name="priceMonth"
+                        type="text"
+                        value={form.priceMonth}
+                        onChange={handleInputChange}
+                        placeholder="금액을 입력하세요"
+                    />
+                    <label htmlFor="price">평생소장 금액</label>
+                    <input
+                        id="priceForever"
+                        name="priceForever"
+                        type="text"
+                        value={form.priceForever}
+                        onChange={handleInputChange}
+                        placeholder="금액을 입력하세요"
+                    />
+                </div>
             </div>
             <button className={styles.categoryButton} onClick={handleCategoryClick}>강의 카테고리 선택</button>
             <div className={styles.selectedCategories}>
