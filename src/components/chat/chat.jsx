@@ -311,6 +311,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             };
 
             try {
+
+                console.log(`submit에서 출발한 메시지 형태 확인`);
+                console.log(newMessage);
+
                 await axiosClient.post('/chat/sendmessage', newMessage);
                 setTextContent('');
                 setIsAtBottom(true);
