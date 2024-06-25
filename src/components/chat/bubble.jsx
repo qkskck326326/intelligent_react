@@ -5,7 +5,7 @@ import AuthStore from "../../stores/authStore";
 import styles from '../../styles/chatting/chatbubble.module.css'
 import {axiosClient} from "../../axiosApi/axiosClient";
 
-const Bubble = observer(({index, onAnnouncementChange, onReport, option, message, onUpdateMessage})=>{
+const Bubble = observer(({index, onAnnouncementChange, onReport, option, message})=>{
 
     const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false);
@@ -18,6 +18,9 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const [slideIndex, setSlideIndex] = useState(0);
     const [images, setImages] = useState([]);
 
+    useEffect(()=>{
+        console.log(message);
+    },[])
     useEffect(() => {
         if (isEachSettingOn) {
             document.addEventListener('click', handleClickOutside);
@@ -97,10 +100,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const handleDelete = async () => {
         console.log(message.messageId)
         try{
-            const response = await axiosClient.put(`/chat/delete/${message.messageId}`)
-            const updatedMessage = await response.data;
-            console.log('Updated message from backend:', updatedMessage);
-            onUpdateMessage(updatedMessage);
+            await axiosClient.put(`/chat/delete/${message.messageId}`)
             setDeletion(true)
         } catch(error){
             console.error(error)
