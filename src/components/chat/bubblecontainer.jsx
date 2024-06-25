@@ -18,7 +18,6 @@ const BubbleContainer = forwardRef(({onAnnouncementChange, onReport, option, mes
                         option={option}
                         onAnnouncementChange={onAnnouncementChange}
                         onReport={onReport}
-                        onUpdateMessage={onUpdateMessage}
                     />
                 ))
             }
