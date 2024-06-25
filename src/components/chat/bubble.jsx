@@ -5,7 +5,7 @@ import AuthStore from "../../stores/authStore";
 import styles from '../../styles/chatting/chatbubble.module.css'
 import {axiosClient} from "../../axiosApi/axiosClient";
 
-const Bubble = observer(({index, onAnnouncementChange, onReport, option, message, onUpdateMessage})=>{
+const Bubble = observer(({index, onAnnouncementChange, onReport, option, message})=>{
 
     const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false);
@@ -100,11 +100,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const handleDelete = async () => {
         console.log(message.messageId)
         try{
-            const response = await axiosClient.put(`/chat/delete/${message.messageId}`)
-            const updatedMessage = await response.data;
-            // also this one needs to go through the websocket to handle it shouldn't be directly re-rendered here but through websocket
-            // console.log('Updated message from backend:', updatedMessage);
-            // onUpdateMessage(updatedMessage);
+            await axiosClient.put(`/chat/delete/${message.messageId}`)
             setDeletion(true)
         } catch(error){
             console.error(error)
