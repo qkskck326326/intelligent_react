@@ -77,7 +77,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
         onAnnouncementChange(message.messageId, message.roomId);
     }
 
-    const handleEachReport = () => {
+    const handleEachReport = async () => {
 
         const reportItem = {
             receiveNickname: message.senderId,
@@ -88,7 +88,14 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
             contentId: message.roomId
         }
 
-        console.log(reportItem)
+        try{
+            const response = await axiosClient.post('/reports', reportItem)
+            console.log(response.data)
+
+        } catch(error){
+            console.error(error)
+        }
+
     }
 
     const handleClickOutside = (event) => {

@@ -164,6 +164,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 stompClient.unsubscribe();
             }
         };
+
     }, [roomData.roomId]);
 
     const handleScroll = () => {
