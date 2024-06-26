@@ -10,9 +10,9 @@
 	flex-direction: column;
 	align-items: center;
 	border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: auto;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: auto;
 	padding: 20px;
 }
 
@@ -52,13 +52,14 @@
 }
 
 .videoContainer {
-	width: 400px;
-	height: 300px;
+	width: 600px;
+	height: 450px;
 	background-color: black;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	margin: 5px 0;
+	border-radius: 10px;
 }
 
 .videoContainerActive {
@@ -70,6 +71,7 @@
 	height: 100%;
 	transform: scaleX(-1);
 	display: none;
+	border-radius: 10px;
 }
 
 .videoActive {
@@ -93,13 +95,17 @@
 }
 
 .prevButton {
-  background-color: #ccc;
+	background-color: #ccc;
 	color: white;
 	border: none;
 	border-radius: 5px;
 	padding: 10px 20px;
 	font-size: 16px;
 	cursor: pointer;
+}
+
+.prevButton:hover {
+	background-color: #999;
 }
 
 .navigationButton {
@@ -114,4 +120,55 @@
 
 .navigationButton:hover {
 	background-color: #218838;
+}
+
+.inputContainer {
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	border: 1px solid #ccc;
+	border-radius: 16px;
+	padding: 5px;
+	width: 40%;
+}
+
+.emailInput {
+	flex: 1;
+	padding: 5px 10px 5px 10px;
+
+	border: none;
+	outline: none;
+	background-color: transparent;
+}
+
+.emailInput:focus {
+	background-color: transparent;
+}
+
+.emailInput:focus + .sendButton {
+	border-color: #333; /* 필요 시 sendButton의 스타일도 변경 가능 */
+}
+
+.emailInput:focus + .sendButton + .inputContainer {
+	border-color: #333;
+}
+
+.emailInput:focus {
+	outline: none;
+}
+
+.sendButton {
+	background: none;
+	border: none;
+	cursor: pointer;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 18px;
+}
+
+.sendIcon {
+	width: 20px;
+	height: 20px;
 }

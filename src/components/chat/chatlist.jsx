@@ -4,22 +4,26 @@ import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chatlist.module.css'
 import EachChat from '../../components/chat/eachchat.jsx';
 import {axiosClient} from "../../axiosApi/axiosClient";
+import authStore from "../../stores/authStore";
+import AuthStore from "../../stores/authStore";
 
 /*
 * */
 const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, onNavigateToBot, userId, userType }) => {
+
+    const [chatOrInq, setChatOrInq] = useState(true);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
     const [chatData, setChatData] = useState([])
 
-    //type 0은 학생 1은 강사 2는 관리자
-
-
     //TODO
     useEffect(() => {
+        authStore.checkIsAdmin() && setChatOrInq(false);
+
         axiosClient.get('/chat/chatlist', {
             params: {
-                userId: userId
+                userId: userId,
+                isChats: chatOrInq
             }
         })
             .then(response => {
@@ -29,7 +33,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
             .catch(error => {
                 console.error('An error occurred!', error);
             });
-    }, [userId]);
+    }, [userId, chatOrInq]);
 
 
     const handleClickBack = () => {
@@ -49,11 +53,44 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
 
         setIsAnimating(true);
         setTimeout(() => {
+            console.log(roomData);
             onNavigateToChat({...roomData})
             setIsAnimating(false);
             setIsPlusClicked(false);
         }, 500);
     }
+
+    const getAdmins = async () => {
+        try{
+            const response = await axiosClient.get('/chat/admins')
+            return [authStore.getNickname(), ...response.data]
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
+    const handleOneonOne = async () => {
+        try {
+            const names = await getAdmins(); // Await the result of getAdmins
+
+            console.log(names);
+
+            const response = await axiosClient.post('/chat/makechat/inquiries', {
+                names: names
+            });
+            onNavigateToChat(response.data);
+        } catch (error) {
+            console.error('An error occurred!', error);
+        }
+    }
+
+    const handleCategory = (boolean) => {
+        setChatOrInq(boolean)
+        //boolean이 true면 채팅을 보는 것
+        //boolean이 false면 문의를 보는 것
+
+    }
+
     return (
         <div
             className={`${commonStyles.chatServiceContainer} ${isAnimating && commonStyles.animateCollapse} ${isExpanding && commonStyles.animateExpand}`}>
@@ -65,15 +102,18 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                             d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
                     </svg>
                 </button>
-                <button className={styles.topButtons} onClick={handleTurning}>
-                    <svg
-                        className = {isPlusClicked ? `${commonStyles.animateRotate}` : `${commonStyles.animateBack}`}
-                        xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 448 512">
-                        <path
-                            d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
-                    </svg>
-                </button>
+                {
+                    userType !== 2 &&
+                    <button className={styles.topButtons} onClick={handleTurning}>
+                        <svg
+                            className={isPlusClicked ? `${commonStyles.animateRotate}` : `${commonStyles.animateBack}`}
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 448 512">
+                            <path
+                                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+                        </svg>
+                    </button>
+                }
             </div>
 
             { isPlusClicked &&
@@ -91,7 +131,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                             <p>강사문의</p>
                         </div>
 
-                        : userType === 1 ?
+                        : userType === 1 &&
                             <div className={styles.chatTypeItem} onClick={()=>{onNavigateToFriends('students')}}>
                                 <svg className={styles.student} xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 512 512">
@@ -99,15 +139,6 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                                         d="M160 96a96 96 0 1 1 192 0A96 96 0 1 1 160 96zm80 152V512l-48.4-24.2c-20.9-10.4-43.5-17-66.8-19.3l-96-9.6C12.5 457.2 0 443.5 0 427V224c0-17.7 14.3-32 32-32H62.3c63.6 0 125.6 19.6 177.7 56zm32 264V248c52.1-36.4 114.1-56 177.7-56H480c17.7 0 32 14.3 32 32V427c0 16.4-12.5 30.2-28.8 31.8l-96 9.6c-23.2 2.3-45.9 8.9-66.8 19.3L272 512z"/>
                                 </svg>
                                 <p>학생문의</p>
-                            </div>
-                            :
-                            <div className={styles.chatTypeItem} >
-                                <svg className={styles.chatTypeIcon} xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 640 512">
-                                    <path
-                                        d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/>
-                                </svg>
-                                <p>회원문의</p>
                             </div>
                     }
 
@@ -123,7 +154,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                                 <p>그룹채팅</p>
                             </div>
 
-                            <div className={styles.chatTypeItem} onClick={()=>{onNavigateToFriends('inquiries')}}>
+                            <div className={styles.chatTypeItem} onClick={handleOneonOne}>
                                 <svg className={styles.oneOnOne} xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 384 512">
                                     <path
@@ -148,14 +179,33 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                 </div>
 
             }
+            { !AuthStore.checkIsAdmin() &&
+                <div className={commonStyles.category}>
+                    <div className={`${commonStyles.subCategory} ${chatOrInq && commonStyles.active}`}
+                         onClick={() => {
+                             handleCategory(true)
+                         }}>
+                        채팅확인
+                    </div>
+                    <div className={`${commonStyles.subCategory} ${!chatOrInq && commonStyles.active}`}
+                         onClick={() => {
+                             handleCategory(false)
+                         }}>
+                        문의확인
+                    </div>
+                </div>
+            }
 
             <div className={commonStyles.chatServiceMain}>
                 { chatData.length > 0 ?
                     chatData.map((chatDatum) =>
-                        <EachChat key={chatDatum.chatroom.roomId} chat={chatDatum} onClick={() => handleEnteringChat(chatDatum.chatroom)} />
+                        <EachChat key={chatDatum.chatroom.roomId} chat={chatDatum} onClick={() => handleEnteringChat(chatDatum.chatroom)} isChat={chatOrInq} />
                     )
                     :
+                    userType !== 2 ?
                     <div className={commonStyles.chatEmpty}><p>아직 채팅이 없어요.</p><p>오른쪽 위 + 아이콘을 눌러서</p><p>채팅을 시작해보세요</p></div>
+                        :
+                        <div className={commonStyles.chatEmpty}><p>현재 들어온 문의가 없음</p></div>
                 }
             </div>
 

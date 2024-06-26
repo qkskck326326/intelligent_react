@@ -5,7 +5,7 @@ import AuthStore from "../../stores/authStore";
 import styles from '../../styles/chatting/chatbubble.module.css'
 import {axiosClient} from "../../axiosApi/axiosClient";
 
-const Bubble = observer(({index, onAnnouncementChange, onReport, option, message})=>{
+const Bubble = observer(({index, onAnnouncementChange, onReport, option, message, isThereAdmin})=>{
 
     const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false);
@@ -18,9 +18,9 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const [slideIndex, setSlideIndex] = useState(0);
     const [images, setImages] = useState([]);
 
-    useEffect(()=>{
-        console.log(message);
-    },[])
+    // useEffect(()=>{
+    //     console.log(isThereAdmin)
+    // },[])
     useEffect(() => {
         if (isEachSettingOn) {
             document.addEventListener('click', handleClickOutside);
@@ -229,7 +229,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                             onClick={() => setIsEachSettingOn(!isEachSettingOn)}
                             ref={eachSettingsRef}>
 
-                            {!deletion &&
+                            {(!deletion && !isThereAdmin) &&
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 448 512">
                                     <path

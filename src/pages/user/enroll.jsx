@@ -1,4 +1,3 @@
-// Enroll.js
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import authStore from "../../stores/authStore";
@@ -6,7 +5,7 @@ import SignUpForm from "../../components/user/signUp";
 import SelectRole from "../../components/user/selectRole";
 import BasicInfo from '../../components/user/basicInfo';
 import EnrollInterest from '../../components/user/enrollInterest';  
-import EnrollTeacherExperience from '../../components/user/enrollTeacherExperience';  
+import EnrollEducationExperience from '../../components/user/enrollEducationExperience';  
 import EnrollFaceRegistration from '../../components/user/enrollFaceRegistration'; 
 import styles from '../../styles/user/enroll/enroll.module.css';
 import { axiosClient } from "../../axiosApi/axiosClient";
@@ -20,11 +19,15 @@ const Enroll = () => {
     confirmUserPwd: '',
     phone: '',
     nickname: '',
-    profileImageUrl: null,
+    profileImageUrl: '',
     userType: null,
-    interests: [], // 추가된 부분
+    interests: [],
+    isNicknameChecked: false, 
   });
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+
+  const [educationExperience, setEducationExperience] = useState([]);
+  const [careerExperience, setCareerExperience] = useState([]);
 
   const nextPage = () => setCurrentPage(currentPage + 1);
   const prevPage = () => setCurrentPage(currentPage - 1);
@@ -35,6 +38,11 @@ const Enroll = () => {
     if (authStore.checkIsLoggedIn()) {
       router.push("/"); // 홈 페이지로 리디렉션
     }
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, []);
 
   const renderPage = () => {
@@ -43,38 +51,29 @@ const Enroll = () => {
         return <SelectRole setBasicInfo={setBasicInfo} nextPage={nextPage} />;
       case 1:
         return (
-          <BasicInfo
-            basicInfo={basicInfo}
-            setBasicInfo={setBasicInfo}
-            nextPage={nextPage}
-            prevPage={prevPage}
-            isEmailVerified={isEmailVerified}
-            setIsEmailVerified={setIsEmailVerified}
-          />
+          <BasicInfo basicInfo={basicInfo} setBasicInfo={setBasicInfo} nextPage={nextPage} prevPage={prevPage} isEmailVerified={isEmailVerified} setIsEmailVerified={setIsEmailVerified}/>
         );
       case 2:
         return basicInfo.userType === 0 ? 
-          <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} /> : 
-          <EnrollTeacherExperience nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} />;
+          <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} educationExperience={educationExperience} careerExperience={careerExperience}/> : 
+          <EnrollEducationExperience nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setEducationExperience={setEducationExperience} setCareerExperience={setCareerExperience} />;
       case 3:
-        return <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} />;
+        return <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} educationExperience={educationExperience} careerExperience={careerExperience} />;
       case 4:
-        return <EnrollFaceRegistration prevPage={prevPage} basicInfo={basicInfo} />;
+        return <EnrollFaceRegistration prevPage={prevPage} basicInfo={basicInfo} educationExperience={educationExperience} careerExperience={careerExperience} />;
       default:
         return <SelectRole setBasicInfo={setBasicInfo} nextPage={nextPage} />;
     }
   };
 
   return (
-    <div>
-      <h1>임시 회원가입 페이지</h1>
-      <SignUpForm />
-      <hr></hr>
-      <h2>공사중입니다...</h2>
-      <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }}>
-        InTelliClass 계정 생성
+    <div className={styles.center_div}>
+      <div className={styles.contentContainer}>
+        <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }}>
+          InTelliClass 계정 생성
+        </div>
+        {renderPage()}
       </div>
-      {renderPage()}
     </div>
   );
 };

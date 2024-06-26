@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { handleAxiosError } from '../../axiosApi/errorAxiosHandler';
 import { axiosClient } from '../../axiosApi/axiosClient';
@@ -17,6 +17,13 @@ const LoginForm = observer(() => {
     userPwd: '',
     provider: 'intelliclass', // provider 값을 설정합니다.
   });
+
+  useEffect(() => {
+    const { signupSuccess } = router.query;
+    if (signupSuccess) {
+      alert("회원가입이 성공적으로 완료되었습니다!");
+    }
+  }, [router.query]);
 
   // input의 값이 변경되면 작동될 이벤트 핸들러로 준비
   const handleInputChange = (e) => {
@@ -63,97 +70,81 @@ const LoginForm = observer(() => {
 
 
   return (
-		<div className={styles.center_div}>
-			<form className={styles.form} onSubmit={handleSubmit}>
-				<div className={styles.form_group}>
-        <h2>IntelliClass에 로그인 하세요</h2>
-					{/* <label htmlFor="userEmail">이메일</label> */}
-					<input
-						type="text"
-						id="userEmail"
-						name="userEmail"
-            placeholder="이메일 입력"
-						value={formData.userEmail}
-						onChange={handleInputChange}
-						required
-					/>
-				</div>
-				<div className={styles.form_group}>
-					{/* <label htmlFor="userPwd">비밀번호</label> */}
-					<input
-						type="password"
-						id="userPwd"
-						name="userPwd"
-            placeholder="비밀번호 입력"
-						value={formData.userPwd}
-						onChange={handleInputChange}
-						required
-					/>
-				</div>
-				<div className={styles.button_container}>
-					<button type="submit">로그인</button>
-				</div>
-			</form>
-			<div className={styles.signup_link}>
-				<p className={styles.signup_link}>
-					아직 회원이 아니신가요?{" "}
-					<Link href="/user/enroll">회원가입</Link>
-				</p>
-				<p className={styles.signup_link}>
-					비밀번호를 잊으셨나요?{" "}
-					<Link href="/user/resetPasswordPage">비밀번호 찾기</Link>
-				</p>
-			</div>
-			<div className={styles.buttons_face_and_social}>
-				<div
-					style={{
-						display: "flex",
-						alignItems: "center",
-						height: "50px",
-					}}
-				>
-					<Link href="/user/faceLoginPage" passHref>
-						<button
-							style={{
-								border: "none",
-								background: "none",
-								padding: "0",
-								cursor: "pointer",
-							}}
-						>
-							<div
-								style={{
-									display: "inline-flex",
-									alignItems: "center",
-									justifyContent: "center",
-									backgroundColor: "#80DAEB",
-									color: "black",
-									padding: "10px 20px",
-									borderRadius: "7px",
-									fontSize: "16px",
-									fontWeight: "bold",
-									textDecoration: "none",
-									border: "none",
-								}}
-							>
-								<span
-									style={{
-										marginRight: "5px",
-									}}
-								>
-									😊
-								</span>
-								얼굴로 시작하기
-							</div>
-						</button>
-					</Link>
-				</div>
-				<KakaoLogin/>
-				<NaverLogin/>
-				<GoogleLogin/>
-			</div>
+	<div className={styles.center_div}>
+	  <form className={styles.form} onSubmit={handleSubmit}>
+		<div className={styles.form_group}>
+		  <h2>IntelliClass에 로그인 하세요</h2>
+		  <input
+			type="text"
+			id="userEmail"
+			name="userEmail"
+			placeholder="이메일 입력"
+			value={formData.userEmail}
+			onChange={handleInputChange}
+			required
+		  />
 		</div>
-	);
+		<div className={styles.form_group}>
+		  <input
+			type="password"
+			id="userPwd"
+			name="userPwd"
+			placeholder="비밀번호 입력"
+			value={formData.userPwd}
+			onChange={handleInputChange}
+			required
+		  />
+		</div>
+		<div className={styles.button_container}>
+		  <button type="submit">로그인</button>
+		</div>
+	  </form>
+	  <div className={styles.signup_link}>
+		<p className={styles.signup_link}>
+		  아직 회원이 아니신가요? <Link href="/user/enroll">회원가입</Link>
+		</p>
+		<p className={styles.signup_link}>
+		  비밀번호를 잊으셨나요? <Link href="/user/resetPasswordPage">비밀번호 찾기</Link>
+		</p>
+	  </div>
+	  <div className={styles.buttons_face_and_social}>
+		<div style={{ display: "flex", alignItems: "center", height: "50px" }}>
+		  <Link href="/user/faceLoginPage" passHref>
+			<button
+			  style={{
+				border: "none",
+				background: "none",
+				padding: "0",
+				cursor: "pointer",
+			  }}
+			>
+			  <div
+				style={{
+				  display: "inline-flex",
+				  alignItems: "center",
+				  justifyContent: "center",
+				  backgroundColor: "#80DAEB",
+				  color: "black",
+				  padding: "10px 20px",
+				  borderRadius: "7px",
+				  fontSize: "16px",
+				  fontWeight: "bold",
+				  textDecoration: "none",
+				  border: "none",
+				}}
+			  >
+				<span style={{ marginRight: "5px" }}>😊</span>
+				얼굴로 시작하기
+			  </div>
+			</button>
+		  </Link>
+		</div>
+		<KakaoLogin />
+		<NaverLogin />
+		<GoogleLogin />
+	  </div>
+	</div>
+  );
 });
 
 export default LoginForm;

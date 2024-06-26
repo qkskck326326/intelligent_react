@@ -1,0 +1,141 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.detailContainer {
+    width: 900px; /* 더 넓게 설정 */
+    height: 450px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    font-family: Noto Sans KR, sans-serif;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.section {
+    width: 48%;
+}
+
+.verticalLine {
+    width: 1px;
+    background-color: #000;
+    height: 95%;
+    position: absolute;
+    left: 50%;
+    top: 11px;
+}
+
+.top {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: 5px 5px 3px #f2f2f2;
+}
+
+.header label {
+    flex: 1;
+    text-align: center;
+}
+
+.header label:first-child {
+    text-align: left;
+    margin-left: 15px;
+}
+
+.header label:last-child {
+    text-align: right;
+    margin-right: 15px;
+}
+
+.header span {
+    padding: 5px;
+}
+
+.contentContainer {
+    margin-bottom: 20px;
+}
+
+.contentContainer label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.questionContent {
+    width: 95%;
+    height: 270px;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-shadow: 5px 5px 3px #f2f2f2;
+    resize: none;
+    font-family: Noto Sans KR, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.answerContent {
+    width: 95%;
+    height: 315px;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-shadow: 5px 5px 3px #f2f2f2;
+    resize: none;
+    font-family: Noto Sans KR, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+}
+
+.closeButton {
+    background: #fff;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 30px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.submitButton {
+    background: #00aeff85;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    
+    margin-left: 15px;
+    padding: 10px 30px;
+    cursor: pointer;
+    border-radius: 5px;
+}

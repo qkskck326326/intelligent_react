@@ -22,8 +22,8 @@
 	align-items: center;
 	flex-direction: column;
 	border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	width: auto;
 	padding: 20px;
 }
@@ -71,13 +71,17 @@
 }
 
 .prevButton {
-  background-color: #ccc;
+	background-color: #ccc;
 	color: white;
 	border: none;
 	border-radius: 5px;
 	padding: 10px 20px;
 	font-size: 16px;
 	cursor: pointer;
+}
+
+.prevButton:hover {
+	background-color: #999;
 }
 
 .navigationButton {

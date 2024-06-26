@@ -17,20 +17,9 @@ const ChatContainer = observer(() => {
     const [option, setOption] = useState('')
     const [roomType, setRoomType] = useState('')
     const [roomData, setRoomData] = useState({})
-    const [totalCount, setTotalCount] = useState(0);
     const userType = authStore.checkIsAdmin() ? 2 : authStore.checkIsTeacher() ? 1 : 0
     const userId = authStore.getNickname();
 
-
-
-    const countTotal = () => {
-
-        return axiosClient.get('/chat/countunreadall', {
-            params: {
-                userId: userId
-            }
-        });
-    };
 
     const handleNavigation = (component, option ='', roomType='', roomData={}) => {
 
@@ -60,7 +49,6 @@ const ChatContainer = observer(() => {
                 isHidden={isIconHidden}
                 isExpanding={isExpanding}
                 onNavigate={() => handleNavigation('ChatList')}
-                onCountTotal={() => countTotal()}
                 userId={userId}
                 userType={userType}
             />
@@ -109,8 +97,6 @@ const ChatContainer = observer(() => {
                 <Bot
                     isExpanding={isExpanding}
                     onNavigateToList={() => handleNavigation('ChatList')}
-                    userId={userId}
-                    userType={userType}
                 />
             )}
         </>
