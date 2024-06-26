@@ -202,7 +202,10 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                         <EachChat key={chatDatum.chatroom.roomId} chat={chatDatum} onClick={() => handleEnteringChat(chatDatum.chatroom)} isChat={chatOrInq} />
                     )
                     :
+                    userType !== 2 ?
                     <div className={commonStyles.chatEmpty}><p>아직 채팅이 없어요.</p><p>오른쪽 위 + 아이콘을 눌러서</p><p>채팅을 시작해보세요</p></div>
+                        :
+                        <div className={commonStyles.chatEmpty}><p>현재 들어온 문의가 없음</p></div>
                 }
             </div>
 
