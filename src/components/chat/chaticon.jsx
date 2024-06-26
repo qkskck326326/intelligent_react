@@ -26,10 +26,8 @@ const ChatIcon = observer(({ isHidden, isExpanding, onNavigate, userId, userType
             // Call the function immediately
             getTotalUnreadCount();
 
-            // Set interval to call the function every 5 seconds
             const interval = setInterval(getTotalUnreadCount, 10000);
 
-            // Clear interval on component unmount or userId change
             return () => clearInterval(interval);
         }
     }, [userId]);
