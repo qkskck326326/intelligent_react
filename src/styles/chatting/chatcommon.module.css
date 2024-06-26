@@ -146,3 +146,23 @@
     text-align: center;
     font-size: 1.25rem;
 }
+.category{
+    display: flex;
+    border-bottom: 1px solid #e2e2e2;
+    cursor: pointer;
+}
+.subCategory{
+    flex-grow: 1;
+    text-align: center;
+    transition: all 0.1s linear;
+    border-right: 1px solid #e2e2e2;
+}
+.subCategory:last-child{
+    border-right: none;
+}
+.subCategory:hover{
+    font-weight: 900;
+}
+.active{
+    font-weight: 900;
+}

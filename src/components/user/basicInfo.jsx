@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import styles from '../../styles/user/enroll/basicInfo.module.css';
 import { axiosClient } from "../../axiosApi/axiosClient";
 
@@ -13,7 +14,8 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
   const [timer, setTimer] = useState(180); // 3분
   const [intervalId, setIntervalId] = useState(null);
   const [isNicknameValid, setIsNicknameValid] = useState(false);
-  const [checkedNickname, setCheckedNickname] = useState('');
+
+  const router = useRouter();
 
   const userNameRef = useRef();
   const userEmailRef = useRef();
@@ -35,16 +37,22 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
   }, [basicInfo.profileImageUrl]);
 
   useEffect(() => {
-    if (isCodeSent && timer > 0) {
+    if (isCodeSent) {
       const id = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+        setTimer(prevTimer => prevTimer - 1);
       }, 1000);
       setIntervalId(id);
-    } else if (timer === 0) {
-      clearInterval(intervalId);
     }
     return () => clearInterval(intervalId);
-  }, [isCodeSent, timer]);
+  }, [isCodeSent]);
+
+  useEffect(() => {
+    if (timer === 0) {
+      clearInterval(intervalId);
+      alert('이메일 인증 시간이 만료되었습니다.');
+      router.push("/user/login");
+    }
+  }, [timer, intervalId, router]);
 
   useEffect(() => {
     setIsNicknameValid(basicInfo.nickname.length >= 2);
@@ -78,7 +86,8 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
     } else {
       setBasicInfo(prevState => ({
         ...prevState,
-        [name]: value
+        [name]: value,
+        isNicknameChecked: name === 'nickname' ? false : prevState.isNicknameChecked
       }));
     }
   };
@@ -208,12 +217,15 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
       });
 
       if (response.status === 200) {
-        alert(response.data); // "사용 가능한 닉네임입니다."
-        setCheckedNickname(nickname); // 중복 확인된 닉네임을 저장
+        alert('사용 가능한 닉네임입니다.');
+        setBasicInfo(prevState => ({
+          ...prevState,
+          isNicknameChecked: true
+        }));
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        alert(error.response.data); // "닉네임 중복입니다."
+        alert('닉네임 중복입니다.');
       } else {
         alert('닉네임 중복 확인 중 오류가 발생했습니다.');
       }
@@ -261,7 +273,7 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
       nicknameRef.current.focus();
       return;
     }
-    if (basicInfo.nickname !== checkedNickname) {
+    if (!basicInfo.isNicknameChecked) {
       alert('닉네임 중복체크를 완료하지 않았습니다.');
       nicknameRef.current.focus();
       return;
@@ -303,7 +315,7 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
                 value={basicInfo.userEmail}
                 onChange={handleChange}
                 className={styles.input}
-                maxLength="25"
+                maxLength="30"
                 readOnly={basicInfo.emailReadOnly}
                 ref={userEmailRef}
               />
@@ -318,7 +330,6 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
                 </button>
               )}
             </div>
-            {isCodeSent && <p className={styles.codeSentMessage}>인증번호가 전송되었습니다.</p>}
             {isCodeSent && (
               <div className={styles.codeSection}>
                 <input

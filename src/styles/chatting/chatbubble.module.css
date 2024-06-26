@@ -219,3 +219,7 @@
     overflow-wrap: break-word;
     white-space: nowrap;
 }
+.anchor{
+    all:unset;
+    border: 1px solid black
+}

@@ -1,0 +1,326 @@
+.container {
+	display: flex;
+	max-width: 630px;
+	flex-direction: column;
+	gap: 20px;
+	margin-top: 50px;
+	width: 630px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+}
+
+.section {
+	background: #ffffff;
+	padding: 10px 30px;
+	box-shadow: 0 5px 5px rgba(0, 10, 60, 0.3);
+	border-radius: 3px;
+	margin-bottom: 10px;
+}
+
+.formContainer {
+	border-radius: 8px;
+	margin-top: 20px;
+}
+
+.educationList,
+.careerList {
+	margin-top: 20px;
+}
+
+.educationItem,
+.careerItem {
+	border-bottom: 1px solid #ddd;
+	padding: 10px 0;
+}
+
+.educationHeader,
+.careerHeader {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-wrap: nowrap;
+}
+
+.schoolName,
+.companyName {
+	margin-right: 20px;
+}
+
+.educationDates,
+.careerDates {
+	white-space: nowrap;
+	margin-right: 20px;
+}
+
+.wall {
+	opacity: 0.3;
+}
+
+.educationLevel,
+.careerDuration {
+	font-weight: normal;
+	font-size: 0.9em;
+	color: #777;
+	white-space: nowrap;
+}
+
+.educationDetails,
+.careerDetails {
+	margin-top: 5px;
+	display: flex;
+	/*justify-content: space-between;*/
+	font-size: 0.9em;
+	color: #555;
+}
+
+.addButton1 {
+	background: #ffffff;
+	color: #40ad9a;
+	font-size: 13px;
+	font-weight: bold;
+	border: 2px solid #55bfb0;
+	padding: 5px 10px;
+	border-radius: 30px;
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+.addButton2 {
+	background: #ffffff;
+	color: #40ad9a;
+	font-size: 13px;
+	font-weight: bold;
+	border: 2px solid #55bfb0;
+	padding: 5px 10px;
+	border-radius: 30px;
+	cursor: pointer;
+	margin-left: 15px;
+}
+
+.addButton1 .addButton2:hover {
+	background: #daffba;
+}
+
+.formHeader {
+	margin-bottom: 20px;
+}
+
+.formGroup {
+	display: flex;
+	flex-direction: column;
+}
+
+.formLabel {
+	margin-bottom: 5px;
+	margin-top: 10px;
+}
+
+.formSelect {
+	max-width: 400px;
+	padding: 8px;
+	border: 3px solid rgb(49, 186, 161, 0.4);
+	border-radius: 4px;
+	margin-right: 10px;
+	color: rgba(0, 0, 0, 0.7);
+}
+
+.formInput {
+	padding: 8px;
+	border: 3px solid rgb(49, 186, 161, 0.4);
+	border-radius: 4px;
+	width: 120px;
+	margin-right: 15px;
+}
+
+.periods {
+	margin-top: 15px;
+	margin-right: 15px;
+}
+
+.period {
+	margin-top: 15px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.formRow {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+.bottonGroup {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.cancelBtn,
+.saveBtn {
+	width: 100px;
+	padding: 5px;
+	color: white;
+	background-color: #46c0c6;
+	border: none;
+	border-radius: 3px;
+	font-weight: bold;
+	cursor: pointer;
+	margin-top: 20px;
+}
+
+.cancelBtn:hover,
+.saveBtn:hover {
+	background: #0056b3;
+}
+
+.checkboxGroup {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-left: 10px;
+}
+
+.inputContainer {
+	position: relative;
+}
+
+.inputContainer input[type="text"]::placeholder {
+	content: "합격년월";
+}
+
+.careerFormRow {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 10px;
+}
+
+.careerFormInput {
+	padding: 8px;
+	border: 3px solid rgb(49, 186, 161, 0.4);
+	border-radius: 4px;
+	width: 150px;
+	max-width: 200px;
+	margin-bottom: 5px;
+}
+
+.workFormInput {
+	padding: 8px;
+	border: 3px solid rgb(49, 186, 161, 0.4);
+	border-radius: 4px;
+	width: 510px;
+	height: 50px;
+}
+
+.careerFormSelect {
+	padding: 8px;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	width: 100%;
+	max-width: 200px;
+}
+
+.icons {
+	margin-left: auto;
+	display: flex;
+	gap: 10px;
+	font-size: 1.2em;
+	cursor: pointer;
+}
+
+.icons i {
+	color: #555;
+}
+
+.icons i:hover {
+	color: #000;
+}
+
+.errorMessage {
+	font-size: 13px;
+	color: red;
+}
+
+.position {
+	opacity: 70%;
+}
+
+.horizontalLine {
+	width: 100%;
+	height: 2px;
+	background-color: rgba(21, 111, 96, 0.3); /* 회색 */
+	margin-top: 10px; /* 위로 약간의 여백을 추가 */
+	margin-bottom: 20px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.h3Font {
+	margin-bottom: 0;
+}
+
+.headerRight {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.totalCareer {
+	font-size: 13px;
+	font-weight: bold;
+	color: #40ad9a;
+	margin-left: auto;
+	align-self: center;
+}
+
+/* 태석 추가 */
+.buttons {
+	display: flex;
+	justify-content: center;
+	margin: 0 0 10px 0;
+	gap: 15px;
+}
+
+.prevButton,
+.nextButton {
+	width: auto;
+	padding: 5px 30px 5px 30px;
+	font-size: 0.8rem;
+	border-radius: 3px;
+	border: none;
+	margin: 0 10px;
+	cursor: pointer;
+}
+
+.prevButton {
+	background-color: #ccc;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.prevButton:hover {
+	background-color: #999;
+}
+
+.navigationButton {
+	background-color: #28a745;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.navigationButton:hover {
+	background-color: #218838;
+}

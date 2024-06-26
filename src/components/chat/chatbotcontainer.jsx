@@ -9,7 +9,6 @@ import BotBubble from "./chatbotbubble";
 
 const Bot = observer(({ isExpanding, onNavigateToList}) => {
 
-
     const [isAnimating, setIsAnimating] = useState(false);
     const [textContent, setTextContent] = useState('');
     const [messages, setMessages] = useState([])
@@ -38,7 +37,7 @@ const Bot = observer(({ isExpanding, onNavigateToList}) => {
                     content: prompt // 사용자가 입력한 메시지
                 }, ],
                 temperature: 0.8, // 모델의 출력 다양성
-                max_tokens: 1024, // 응답받을 메시지 최대 토큰(단어) 수 설정
+                max_tokens: 256, // 응답받을 메시지 최대 토큰(단어) 수 설정
                 top_p: 1, // 토큰 샘플링 확률을 설정
                 frequency_penalty: 0.5, // 일반적으로 나오지 않는 단어를 억제하는 정도
                 presence_penalty: 0.5, // 동일한 단어나 구문이 반복되는 것을 억제하는 정도
@@ -59,7 +58,7 @@ const Bot = observer(({ isExpanding, onNavigateToList}) => {
             console.error('OpenAI API 호출 중 오류 발생:', error);
             const responseMessage = {
                 userId: 'gpt',
-                message: 'OpenAI API 호출 중 오류 발생'
+                message: `<a href='http://localhost:3000'>여기</a>에서 메인 페이지로 돌아갈 수 있습니다.`
             };
             setMessages((prevMessages) => [...prevMessages, responseMessage])
         }

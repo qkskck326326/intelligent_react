@@ -1,0 +1,21 @@
+.cartItem img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+  }
+  
+  .details {
+    display: inline-block;
+    vertical-align: top;
+  }
+  
+  .details h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .details p {
+    margin: 0;
+    color: #2c2c2c;
+  }
+  

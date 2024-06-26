@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureComment.module.css';
 import authStore from '../../stores/authStore';
-import UserProfileModal from './UserProfileModal'; // 사용자 프로필 모달 컴포넌트 추가
+import UserProfileModal from './userProfileModal'; // 사용자 프로필 모달 컴포넌트 추가
 
 const LectureComment = ({ lectureId }) => {
     const [comments, setComments] = useState([]);
@@ -17,6 +17,9 @@ const LectureComment = ({ lectureId }) => {
     const [nickname, setNickname] = useState('');
     const [visibleReplies, setVisibleReplies] = useState({});
     const [selectedUser, setSelectedUser] = useState(null); // 선택된 사용자 정보 저장
+    const [selectedUserEducation, setSelectedUserEducation] = useState([]);
+    const [selectedUserCareer, setSelectedUserCareer] = useState([]);
+    const [selectedUserCertificates, setSelectedUserCertificates] = useState([]);
 
     useEffect(() => {
         if (lectureId) {
@@ -144,9 +147,18 @@ const LectureComment = ({ lectureId }) => {
     };
 
     const handleProfileClick = (nickname) => {
+        console.log("Fetching profile for nickname:", nickname); // 로그 추가
         axiosClient.get(`/lecture/profile/${nickname}`)
             .then(response => {
-                setSelectedUser(response.data);
+                const { profileImageUrl, nickname, registerTime, userType, educationList, careerList, certificateList } = response.data;
+                console.log("Profile data fetched:", response.data); // 로그 추가
+                setSelectedUser({ profileImageUrl, nickname, registerTime, userType });
+                setSelectedUserEducation(educationList);
+                setSelectedUserCareer(careerList);
+                setSelectedUserCertificates(certificateList);
+                console.log("Education list:", educationList); // 로그 추가
+                console.log("Career list:", careerList); // 로그 추가
+                console.log("Certificate list:", certificateList); // 로그 추가
             })
             .catch(err => {
                 console.error("Error fetching user profile:", err);
@@ -155,6 +167,9 @@ const LectureComment = ({ lectureId }) => {
 
     const closeUserProfileModal = () => {
         setSelectedUser(null);
+        setSelectedUserEducation([]);
+        setSelectedUserCareer([]);
+        setSelectedUserCertificates([]);
     };
 
     if (loading) return <p>Loading...</p>;
@@ -269,7 +284,13 @@ const LectureComment = ({ lectureId }) => {
             </ul>
 
             {selectedUser && (
-                <UserProfileModal user={selectedUser} onClose={closeUserProfileModal} />
+                <UserProfileModal 
+                    user={selectedUser} 
+                    education={selectedUserEducation}
+                    career={selectedUserCareer}
+                    certificates={selectedUserCertificates}
+                    onClose={closeUserProfileModal} 
+                />
             )}
         </div>
     );

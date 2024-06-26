@@ -40,14 +40,21 @@ const GoogleLoginPopup = () => {
                     authStore.setProfileImageUrl(res.data.profileImageUrl);
                 }
 
-                if (isLogin) {
+                // 팝업 창 닫기
+                window.close();
+
+                // 부모 창에 알림 띄우기
+                setTimeout(() => {
+                    if (isLogin) {
                     window.opener.location.href = '/'; // 부모 창을 메인 페이지로 이동
-                } else {
+                    } else {
+                    window.opener.alert("회원가입이 성공적으로 완료되었습니다!");
                     window.opener.location.href = '/user/login'; // 부모 창을 로그인 페이지로 유지
-                }
-                window.close(); // 팝업 창 닫기
+                    }
+                }, 1);
+
             } catch (error) {
-                console.error('구글 로그인 실패:', error);
+                console.error('구글 로그인 실패! ', error);
             }
         };
 
