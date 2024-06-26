@@ -14,6 +14,8 @@ const BotBubble = observer(({message})=>{
         console.log();
     },[])
 
+    const containsHTML = /<\/?[a-z][\s\S]*>/i.test(message.message);
+
     return (
         <>
             <div className={`${styles.bubbleWrapper} ${isMe && styles.reverseBubbleWrapper}`}>
@@ -34,7 +36,11 @@ const BotBubble = observer(({message})=>{
                         }
 
                         <div className={styles.content} ref={textRef}>
-                            {message.message}
+                            {containsHTML ? (
+                                <div dangerouslySetInnerHTML={{ __html: message.message }} />
+                            ) : (
+                                message.message
+                            )}
                         </div>
                     </div>
                     <div className={`${styles.end} ${isMe && styles.reverseEnd}`}>

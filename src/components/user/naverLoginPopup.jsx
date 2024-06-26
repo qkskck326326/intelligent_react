@@ -44,16 +44,22 @@ const NaverLoginPopup = () => {
             authStore.setProvider(response.data.provider);
             authStore.setProfileImageUrl(response.data.profileImageUrl);
           }
+          // 팝업 창 닫기
+          window.close();
 
-          if (isLogin) {
-            window.opener.location.href = '/'; // 부모 창을 메인 페이지로 이동
-          } else {
-            window.opener.location.href = '/user/login'; // 부모 창을 로그인 페이지로 유지
-          }
-          window.close(); // 팝업 창 닫기
+          // 부모 창에 알림 띄우기
+          setTimeout(() => {
+            if (isLogin) {
+              window.opener.location.href = '/'; // 부모 창을 메인 페이지로 이동
+            } else {
+              window.opener.alert("회원가입이 성공적으로 완료되었습니다!");
+              window.opener.location.href = '/user/login'; // 부모 창을 로그인 페이지로 유지
+            }
+          }, 1);
+
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('네이버 로그인 실패! ', error);
         });
     }
   }, []);

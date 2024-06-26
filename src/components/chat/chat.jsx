@@ -12,6 +12,7 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
+    const [isThereAdmin, setIsThereAdmin] = useState(roomData.roomType === 'inquiries');
     const [currentRoomData, setCurrentRoomData] = useState(roomData);
     const [people, setPeople] = useState({});
     const [isPeopleOn, setIsPeopleOn] = useState(false);
@@ -37,10 +38,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
 
 
-    const stompClientRef = useRef(null);
-    const [isConnected, setIsConnected] = useState(false);
+    // const stompClientRef = useRef(null);
+    // const [isConnected, setIsConnected] = useState(false);
 //todo
     const fetchData = async () => {
+        console.log(roomData.roomType)
         try {
             const response = await axiosClient.get('/chat/chatdata', {
                 params: {
@@ -453,58 +455,49 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     </svg>
                 </button>
                 <div className={styles.title}>
-                    {
-                        (option !== 'gpt') ? `${currentRoomData.roomName} ${people.length}` : `인텔리봇`
-
+                    {currentRoomData.roomName} { roomData.roomType !== 'inquiries' &&
+                        people.length
                     }
                 </div>
-                {/*단체챗만 나옴*/}
                 <div className={styles.chatSubTop}>
-                    {/*챗지피티는 아무버튼도 업다 */}
-                    { (option !== 'gpt') ?
-                        <>
-                            {/*<button className={`${styles.topButtons} ${styles.search}`} onClick={handleSearchButtonClick}>*/}
-                            {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>*/}
-                            {/*</button>*/}
-                            <button
-                                className={styles.topButtons}
-                                onClick={handleMenuClick}
-                                ref={menuRef} >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                    <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
-                            </button>
-                        {/*  메뉴 구성  */}
-                            { isMenuClicked &&
-                                <ul className={styles.menuItems}>
+                    <button
+                        className={styles.topButtons}
+                        onClick={handleMenuClick}
+                        ref={menuRef} >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+                    </button>
+
+                    { isMenuClicked &&
+                        <ul className={styles.menuItems}>
+                            { roomData.roomType !== 'inquiries' &&
+                                <>
                                     <li onClick={handlePin}>{userData.isPinned === 1 ? '핀해제' : '핀하기'}</li>
                                     <li onClick={handleRoomTitleName}>방제목변경</li>
                                     <li onClick={() => setIsPeopleOn(true)}>참가자확인</li>
-                                    <li onClick={handleLeave}>채팅방나가기</li>
-                                </ul>
+                                </>
                             }
-                            { isPeopleOn &&
-                                <ul className={styles.menuItems2}>
-                                {people.map((person, index) => {
-
-                                    return<li key={index} className={styles.people}>
-                                            <img className={styles.peopleImg} src={person.profileImageUrl} alt=""/>
-                                        {person.nickname}
-                                        </li>
-
-                                    })
-                                }
-                                <li onClick={() => setIsPeopleOn(false)}>닫기</li>
-                            </ul>
-                            }
-                        </>
-                        :
-                        <div className={styles.dummy}>더미</div>
+                            <li onClick={handleLeave}>채팅방나가기</li>
+                        </ul>
                     }
+                    { isPeopleOn &&
+                        <ul className={styles.menuItems2}>
+                        {people.map((person, index) => {
 
+                            return<li key={index} className={styles.people}>
+                                    <img className={styles.peopleImg} src={person.profileImageUrl} alt=""/>
+                                {person.nickname}
+                                </li>
+
+                            })
+                        }
+                        <li onClick={() => setIsPeopleOn(false)}>닫기</li>
+                    </ul>
+                    }
                 </div>
             </div>
 
-            { (option !== 'gpt' && announce !== '' && !isAnnounceHidden) ?
+            { (announce !== '' && !isAnnounceHidden) ?
                 <div className={`${styles.announceContainer}`}>
                     <span className={styles.horn}>
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -556,6 +549,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     messages={messages}
                     ref={bubbleContainerRef}
                     onScroll={handleScroll}
+                    isThereAdmin={isThereAdmin}
                 />
             </div>
 

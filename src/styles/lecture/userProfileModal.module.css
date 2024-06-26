@@ -17,6 +17,10 @@
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: relative;
+    display: flex;
+    align-items: flex-start;
+    width: 500px;
+    height: 370px;
 }
 
 .closeButton {
@@ -26,8 +30,59 @@
     cursor: pointer;
 }
 
+.profileContainer {
+    display: flex;
+}
+
+.profileImageContainer {
+    flex: 0 0 auto;
+    margin: 50px;
+    margin-right: 70px;
+    margin-top: 135px;
+}
+
 .profileImage {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+}
+
+.profileDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.tooltipContainer {
+    margin-top: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.tooltipLabel {
+    cursor: pointer;
+    font-weight: bold;
+    position: relative;
+}
+
+.tooltipContent {
+    visibility: hidden;
+    width: 300px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    left: 110%; /* Position to the right of the label */
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: -150px; /* Adjust as needed to position away from the label */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltipContainer:hover .tooltipContent {
+    visibility: visible;
+    opacity: 1;
 }
