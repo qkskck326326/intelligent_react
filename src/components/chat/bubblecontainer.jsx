@@ -10,10 +10,10 @@ const BubbleContainer = forwardRef(({onAnnouncementChange, onReport, option, mes
     return (
         <div ref={ref} className={styles.bubbleContainer} onScroll={onScroll}>
             {
-                messages.map((message, index) => (
+                messages.map((message, idx) => (
                     <Bubble
                         key={message.messageId}
-                        index={index}
+                        index={idx}
                         message={message}
                         option={option}
                         onAnnouncementChange={onAnnouncementChange}

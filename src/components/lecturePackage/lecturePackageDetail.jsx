@@ -173,6 +173,7 @@ const LecturePackageDetail = observer(() => {
     };
 
     const handleApply = () => {
+        console.log("lecturePackageIdaaaa : ", lecturePackageId);
         router.push({
             pathname: '/payment',
             query: { lecturePackageId }
@@ -181,7 +182,7 @@ const LecturePackageDetail = observer(() => {
 
     const handleLectureList = () => {
         router.push({
-            pathname: '/lecture',
+            pathname: '/lecture/list',
             query: { lecturePackageId }
         });
     };

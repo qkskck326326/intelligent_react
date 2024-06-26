@@ -150,11 +150,17 @@
     color: #007bff;
     font-size: 18px;
     cursor: pointer;
-    margin-left: 80px;
-    margin-bottom: 20px;
-    align-self: flex-start;
+    margin-top: 10px;
+    align-self: flex-start; /* 왼쪽 정렬을 위해 추가 */
 }
 
 .toggleRepliesButton:hover {
     text-decoration: underline;
 }
+
+.repliesList {
+    list-style-type: none;
+    padding-left: 0px; /* 답글 들여쓰기 */
+    margin-top: 10px;
+}
+

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureComment.module.css';
 import authStore from '../../stores/authStore';
+import UserProfileModal from './UserProfileModal'; // 사용자 프로필 모달 컴포넌트 추가
 
 const LectureComment = ({ lectureId }) => {
     const [comments, setComments] = useState([]);
@@ -15,6 +16,7 @@ const LectureComment = ({ lectureId }) => {
     const [userProfileImageUrl, setUserProfileImageUrl] = useState('');
     const [nickname, setNickname] = useState('');
     const [visibleReplies, setVisibleReplies] = useState({});
+    const [selectedUser, setSelectedUser] = useState(null); // 선택된 사용자 정보 저장
 
     useEffect(() => {
         if (lectureId) {
@@ -66,9 +68,9 @@ const LectureComment = ({ lectureId }) => {
 
     const handleEditSubmit = (commentId) => {
         if (!editContent.trim()) return;
-
+    
         axiosClient.put(`/lecture/comments/${commentId}`, {
-            lectureCommentContent: editContent
+            lectureCommentContent: editContent // 문자열 그대로 저장
         })
         .then(response => {
             fetchComments();
@@ -123,6 +125,11 @@ const LectureComment = ({ lectureId }) => {
         }
     };
 
+    const handleEditClick = (commentId, content) => {
+        setEditCommentId(commentId);
+        setEditContent(content.lectureCommentContent || content); // 수정된 부분
+    };
+
     const toggleRepliesVisibility = (commentId) => {
         setVisibleReplies(prevState => ({
             ...prevState,
@@ -136,6 +143,20 @@ const LectureComment = ({ lectureId }) => {
         }
     };
 
+    const handleProfileClick = (nickname) => {
+        axiosClient.get(`/lecture/profile/${nickname}`)
+            .then(response => {
+                setSelectedUser(response.data);
+            })
+            .catch(err => {
+                console.error("Error fetching user profile:", err);
+            });
+    };
+
+    const closeUserProfileModal = () => {
+        setSelectedUser(null);
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
@@ -145,9 +166,9 @@ const LectureComment = ({ lectureId }) => {
         return (
             <li key={comment.lectureCommentId} className={isReply ? styles.replyItem : styles.commentItem}>
                 {comment.profileImageUrl ? (
-                    <img src={comment.profileImageUrl} alt="Profile" className={styles.profileImage} />
+                    <img src={comment.profileImageUrl} alt="Profile" className={styles.profileImage} onClick={() => handleProfileClick(comment.nickname)} />
                 ) : (
-                    <div className={styles.placeholderProfileImage} />
+                    <div className={styles.placeholderProfileImage} onClick={() => handleProfileClick(comment.nickname)} />
                 )}
                 <div className={styles.commentContentWrapper}>
                     <div className={styles.commentHeader}>
@@ -195,14 +216,19 @@ const LectureComment = ({ lectureId }) => {
                                 </button>
                             </div>
                         )}
+                        {hasReplies && (
+                            <button onClick={() => toggleRepliesVisibility(comment.lectureCommentId)} className={styles.toggleRepliesButton}>
+                                {visibleReplies[comment.lectureCommentId] ? "△ 답글 감추기" : "▽ 답글 보기"}
+                            </button>
+                        )}
+                         {visibleReplies[comment.lectureCommentId] && (
+                    <ul className={styles.repliesList}>
+                        {comments.filter(reply => reply.parentCommentId === comment.lectureCommentId).map(reply => renderComment(reply, true))}
+                    </ul>
+                )}
                     </div>
                 </div>
-                {hasReplies && (
-                    <button onClick={() => toggleRepliesVisibility(comment.lectureCommentId)} className={styles.toggleRepliesButton}>
-                        {visibleReplies[comment.lectureCommentId] ? "△ 답글 감추기" : "▽ 답글 보기"}
-                    </button>
-                )}
-                {visibleReplies[comment.lectureCommentId] && comments.filter(reply => reply.parentCommentId === comment.lectureCommentId).map(reply => renderComment(reply, true))}
+                
             </li>
         );
     };
@@ -225,6 +251,7 @@ const LectureComment = ({ lectureId }) => {
                             onChange={(e) => setNewComment(e.target.value)}
                             placeholder="댓글을 입력하세요"
                             className={styles.commentInput}
+                            onKeyPress={(e) => handleKeyPress(e, handleAddComment)}
                         />
                         <button onClick={handleAddComment} className={styles.submitButton}>
                             <img src="/images/send-message.png" alt="Send" />
@@ -232,6 +259,7 @@ const LectureComment = ({ lectureId }) => {
                     </div>
                 </div>
             </div>
+
             <ul className={styles.commentsList}>
                 {comments.filter(comment => !comment.parentCommentId).map(comment => (
                     <>
@@ -239,6 +267,10 @@ const LectureComment = ({ lectureId }) => {
                     </>
                 ))}
             </ul>
+
+            {selectedUser && (
+                <UserProfileModal user={selectedUser} onClose={closeUserProfileModal} />
+            )}
         </div>
     );
 };

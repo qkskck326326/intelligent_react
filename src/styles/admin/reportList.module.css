@@ -34,7 +34,23 @@
 }
 
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*margin-bottom: 20px;*/
+}
 
+.filterDropdown {
+    padding: 5px;
+    border-radius: 3px;
+    border: 2px solid #ddd;
+    margin-right:30px;
+}
+
+.drop{
+    border-radius: 3px;
+}
 
 
 
@@ -70,7 +86,7 @@
 
 .customLink {
     color: black; /* 글자 색을 검정색으로 설정 */
-    text-decoration: none; /* 밑줄 제거 */
+    text-decoration: none;/* 밑줄 제거 */
     cursor: pointer; /* 링크처럼 보이도록 커서 변경 */
 }
 

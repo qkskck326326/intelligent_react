@@ -58,7 +58,7 @@ const Dashboard = () => {
                     <h1 className={styles.title}>대시보드</h1>
                     <div className={styles.cards}>
                         <div className={styles.card}>
-                            <h2>방문자 현황</h2>
+                            <h2>사이트 현황</h2>
                             <ResponsiveContainer width="100%" height={300}>
                                 <LineChart
                                     data={registrationStats}
