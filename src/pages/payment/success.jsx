@@ -6,15 +6,7 @@ import authStore from "../../stores/authStore";
 
 const Success = () => {
   const router = useRouter();
-  const {
-    paymentKey,
-    amount,
-    orderId,
-    // couponId,
-    // priceKind,
-    // userEmail,
-    // lecturePackageId,
-  } = router.query;
+  const { paymentKey, amount, orderId } = router.query;
   const [orderInfo, setOrderInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,17 +15,15 @@ const Success = () => {
     const approvePayment = async () => {
       try {
         // 세션에서 임시 결제 정보 가져오기
-        const Sesstionresponse = await axiosClient.get(
-          "/payment/session-info",
-          {
-            withCredentials: true,
-          }
-        );
-        const sessionInfo = Sesstionresponse.data;
+        const sessionResponse = await axiosClient.get("/payment/session-info", {
+          withCredentials: true,
+        });
+        const sessionInfo = sessionResponse.data;
         console.log("세션에서 가져온 오더아이디" + sessionInfo.orderId);
         console.log("세션에서 가져온 amount" + sessionInfo.amount);
         console.log("토스에서 받아온 orderId:" + orderId);
         console.log("토스에서 받아온 amount:" + amount);
+
         // 세션 정보와 리다이렉트 URL 정보 비교
         if (
           sessionInfo.orderId !== orderId ||
@@ -55,16 +45,20 @@ const Success = () => {
 
         if (response.data.paymentStatus.status === "DONE") {
           // DB 저장 API 호출
-          await savePaymentInfo({
-            userEmail: sessionInfo.userEmail,
-            provider: authStore.getProvider(),
-            lecturePackageId: sessionInfo.lecturePackageId,
-            paymentType: response.data.paymentStatus.method,
-            couponId: sessionInfo.couponId || null,
-            finalPrice: amount,
-            lecturePackageKindPrice: sessionInfo.priceKind,
-            paymentConfirmation: "Y",
-          });
+          await savePaymentInfo(
+            sessionInfo.items,
+            sessionInfo.userEmail,
+            sessionInfo.provider,
+            orderId,
+            response.data.paymentStatus.method,
+            sessionInfo.couponId // 쿠폰 ID 추가
+          );
+
+          // 사용한 쿠폰과 장바구니 아이템 삭제
+          await clearUsedCouponsAndCartItems(
+            sessionInfo.couponId,
+            sessionInfo.items
+          );
 
           // 세션 정보 제거
           await axiosClient.post("/payment/clear-session", {
@@ -90,14 +84,51 @@ const Success = () => {
       }
     };
 
-    const savePaymentInfo = async (paymentInfo) => {
+    const savePaymentInfo = async (
+      items,
+      userEmail,
+      provider,
+      orderId,
+      paymentType,
+      couponId // 쿠폰 ID 매개변수 추가
+    ) => {
       try {
-        await axiosClient.post("/payment/savePayment", paymentInfo);
+        for (const item of items) {
+          const paymentInfo = {
+            userEmail,
+            provider,
+            lecturePackageId: item.lecturePackageId,
+            paymentType,
+            couponId, // 쿠폰 ID 추가
+            finalPrice: item.price,
+            orderId,
+            paymentConfirmation: "Y",
+          };
+          console.log(paymentInfo);
+          await axiosClient.post("/payment/savePayment", paymentInfo);
+        }
         console.log("Payment information saved successfully");
       } catch (error) {
         console.error("Error saving payment information:", error);
       }
     };
+
+    const clearUsedCouponsAndCartItems = async (couponId, items) => {
+      try {
+        const ids = items.map((item) => item.lecturePackageId);
+        await axiosClient.delete("/cart", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: ids,
+          withCredentials: true,
+        });
+        console.log("Cart items deleted successfully");
+      } catch (error) {
+        console.error("Error clearing used coupons and cart items:", error);
+      }
+    };
+
     if (paymentKey && amount && orderId) {
       approvePayment();
     }
