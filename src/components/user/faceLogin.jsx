@@ -1,5 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
+import styles from "../../styles/user/enroll/enrollFaceRegistration.module.css";
+import { useRouter } from "next/router";
+import { axiosClient } from "../../axiosApi/axiosClient";
+import authStore from '../../stores/authStore';
 
 const FaceLogin = () => {
   const videoRef = useRef(null);
@@ -8,6 +12,17 @@ const FaceLogin = () => {
   const [similarity, setSimilarity] = useState(null); // 유사도 상태 추가
   const [identifiedUser, setIdentifiedUser] = useState(''); // 인식된 사용자 ID 추가
   const [webcamActive, setWebcamActive] = useState(false); // 웹캠 활성화 상태 추가
+  const router = useRouter();
+
+  useEffect(() => {
+    // 페이지가 마운트될 때 body에 overflow: hidden; 적용
+    document.body.style.overflow = 'hidden';
+    
+    // 페이지가 언마운트될 때 원래 상태로 복구
+    return () => {
+        document.body.style.overflow = '';
+    };
+  }, []);
 
   const toggleWebcam = () => {
     if (!webcamActive) {
@@ -38,91 +53,108 @@ const FaceLogin = () => {
     return canvas.toDataURL('image/png').split(',')[1];
   };
 
-  const handleRegister = () => {
+  const handleLogin = async () => {
     const image = captureImage();
-    axios.post('http://localhost:5000/register', {
-      userEmail: userEmail,
-      image: image,
-    })
-    .then(response => {
-      setStatus(response.data.message);
-    })
-    .catch(error => {
-      setStatus('Registration failed.');
-    });
-  };
+    try {
+      const response = await axios.post('http://localhost:5000/login', {
+        userEmail: userEmail, 
+        image: image,
+      });
 
-  const handleLogin = () => {
-    const image = captureImage();
-    axios.post('http://localhost:5000/login', {
-      userEmail: userEmail, // 로그인 요청 시 ID 포함
-      image: image,
-    })
-    .then(response => {
       setStatus(response.data.message);
       if (response.data.similarity !== undefined) {
+        console.log("유사도 : ", response.data.similarity);
         setSimilarity(response.data.similarity); // 유사도 상태 업데이트
         setIdentifiedUser(response.data.userEmail); // 인식된 사용자 ID 업데이트
+
+        try {
+          const res = await axiosClient.post('/face', null, {
+            params: {
+              userEmail: response.data.userEmail,
+              provider: 'intelliclass'
+            }
+          });
+
+          const token = res.headers['authorization'] || res.headers['Authorization'];
+
+          if (token) {
+            const access = token.split(' ')[1];
+            window.localStorage.setItem("token", access);
+            window.localStorage.setItem("refresh", res.data.refresh);
+            window.localStorage.setItem("isStudent", res.data.isStudent);
+            window.localStorage.setItem("isTeacher", res.data.isTeacher);
+            window.localStorage.setItem("isAdmin", res.data.isAdmin);
+            window.localStorage.setItem("nickname", res.data.nickname);
+            window.localStorage.setItem("userEmail", res.data.userEmail);
+            window.localStorage.setItem("provider", res.data.provider);
+            window.localStorage.setItem("profileImageUrl", res.data.profileImageUrl);
+
+            authStore.setIsLoggedIn(true);
+            authStore.setIsStudent(res.data.isStudent);
+            authStore.setIsTeacher(res.data.isTeacher);
+            authStore.setIsAdmin(res.data.isAdmin);
+            authStore.setNickname(res.data.nickname);
+            authStore.setUserEmail(res.data.userEmail);
+            authStore.setProvider(res.data.provider);
+            authStore.setProfileImageUrl(res.data.profileImageUrl);
+
+            setStatus('JWT 토큰 발급 성공');
+            router.push('/'); 
+          }
+        } catch (tokenError) {
+          setStatus('JWT 토큰 발급 실패');
+        }
       } else {
         setSimilarity(null); // 유사도가 없을 때 null로 설정
         setIdentifiedUser(''); // 인식된 사용자 ID 초기화
       }
-    })
-    .catch(error => {
+    } catch (error) {
       setStatus('Login failed.');
       setSimilarity(null); // 로그인 실패 시 유사도 초기화
       setIdentifiedUser(''); // 로그인 실패 시 인식된 사용자 ID 초기화
-    });
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>      
-      <h1>Face Login</h1>
-      <input
-        type="text"
-        placeholder="Enter User Email"
-        value={userEmail}
-        onChange={(e) => setUserEmail(e.target.value)}
-        style={{ margin: '5px 0' }}
-      />
-      <label style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
-        <span>CAMERA</span>
-        <div onClick={toggleWebcam} style={{
-          width: '40px',
-          height: '20px',
-          background: webcamActive ? 'green' : 'gray',
-          borderRadius: '10px',
-          marginLeft: '10px',
-          position: 'relative',
-          cursor: 'pointer'
-        }}>
-          <div style={{
-            width: '18px',
-            height: '18px',
-            background: 'white',
-            borderRadius: '50%',
-            position: 'absolute',
-            top: '1px',
-            left: webcamActive ? '20px' : '2px',
-            transition: 'left 0.2s'
-          }}></div>
+    <div className={styles.enrollFaceBigContainer}>
+      <div className={styles.container}>
+        <label className={styles.label}>
+          <span>CAMERA</span>
+          <div
+            onClick={toggleWebcam}
+            className={`${styles.toggleButton} ${webcamActive ? styles.toggleButtonActive : ""}`}
+          >
+            <div
+              className={`${styles.toggleKnob} ${webcamActive ? styles.toggleKnobActive : ""}`}
+            ></div>
+          </div>
+        </label>
+        <div className={`${styles.videoContainer} ${webcamActive ? styles.videoContainerActive : ""}`}>
+          <video ref={videoRef} className={`${styles.video} ${webcamActive ? styles.videoActive : ""}`}></video>
         </div>
-      </label>
-      <div style={{ width: '400px', height: '300px', backgroundColor: webcamActive ? 'transparent' : 'black', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '5px 0' }}>
-        <video ref={videoRef} style={{ width: '100%', height: '100%', transform: 'scaleX(-1)', display: webcamActive ? 'block' : 'none' }}></video>
-      </div>
-      <div style={{ margin: '10px 0' }}>
-        <button onClick={handleRegister} style={{ margin: '0 10px' }}>얼굴 등록</button>
-        <button onClick={handleLogin}>로그인</button>
-      </div>
-      <div style={{ margin: '10px 0' }}>
-        <h2>Status: {status}</h2>
-        {similarity !== null && !isNaN(similarity) && (
-          <>
-            <h2>Similarity: {similarity.toFixed(4)}</h2>
-            <h2>Identified User: {identifiedUser}</h2>
-          </>
-        )}
+        
+        <div className={styles.inputContainer}>
+          <input
+            type="email"
+            name="userEmail"
+            placeholder="이메일을 입력하세요"
+            id="emailInput"
+            className={styles.emailInput}
+            value={userEmail}
+            maxLength="30"
+            onChange={(e) => setUserEmail(e.target.value)}
+            onKeyPress={handleKeyPress} // 엔터 키 이벤트 추가
+          />
+          <button className={styles.sendButton} onClick={handleLogin}>
+           ⮕
+          </button>
+        </div>
       </div>
     </div>
   );

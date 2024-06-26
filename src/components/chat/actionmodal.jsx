@@ -26,6 +26,7 @@ const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigat
             names: names
         })
             .then(response => {
+                console.log(response)
                 onNavigateToChat(response.data);
             })
             .catch(error => {
