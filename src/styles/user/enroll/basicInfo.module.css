@@ -1,194 +1,208 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
 }
 
 .title {
-  display: block;
-  font-size: 2rem;
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  font-weight: bold;
+	display: block;
+	font-size: 2rem;
+	margin-block-start: 0.83em;
+	margin-block-end: 0.83em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	font-weight: bold;
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 650px;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 600px;
 }
 
 .formBody {
-  display: flex;
-  flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
 .imageSection {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
 }
 
 .imageUpload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .profileImageContainer {
-  position: relative;
+	position: relative;
 }
 
 .profileImage {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-  object-fit: cover;
-  border: 2px solid #ccc;
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	margin-bottom: 10px;
+	object-fit: cover;
+	border: 2px solid #ccc;
 }
 
 .fileUploadLabel {
-  position: absolute;
-  bottom: 20px;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  background: url(/images/profileUploadIcon.png) no-repeat center;
-  background-size: cover;
-  background-color: #ffffff;
-  border-radius: 50%;
-  cursor: pointer;
+	position: absolute;
+	bottom: 20px;
+	right: 0;
+	width: 40px;
+	height: 40px;
+	background: url(/images/profileUploadIcon.png) no-repeat center;
+	background-size: cover;
+	background-color: #ffffff;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: transform 0.3s ease;
+}
+
+.fileUploadLabel:hover {
+	transform: scale(1.1);
 }
 
 .fileInput {
-  display: none;
+	display: none;
 }
 
 .inputSection {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
 }
 
 .input {
-  width: 60%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+	width: 60%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
 
 .emailSection,
 .nicknameSection {
-  display: flex;
-  align-items: baseline;
+	display: flex;
+	align-items: baseline;
 }
 
 .codeSection {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-  justify-content: space-around;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
 }
 
 .verifyButton,
 .checkButton,
 .verifyCodeButton {
-  margin-left: 10px;
-  width: 80px;
-  padding: 10px 5px 10px 5px;
-  color: white;
-  font-size: 0.6rem;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  background-color: #ccc;
-  font-weight: bold;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
+	margin-left: 10px;
+	width: 80px;
+	padding: 10px 5px 10px 5px;
+	color: white;
+	font-size: 0.6rem;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	background-color: #ccc;
+	font-weight: bold;
+	align-items: center;
+	justify-items: center;
+	text-align: center;
 }
 
 .verifyButton.disabled,
 .verifyCodeButton.disabled,
 .checkButton.disaled {
-  background-color: #ccc;
-  cursor: not-allowed;
+	background-color: #ccc;
+	/* cursor: not-allowed; */
 }
 
-.verifyCodeButton{
-  position: relative;
-  top: -6px;
-  left: -38px;
+.verifyCodeButton {
+	position: relative;
+	top: -6px;
+	left: -27px;
 }
 
 .verifyButton.enabled,
 .verifyCodeButton.enabled,
 .checkButton.enabled {
-  background-color: #28a745;
-  color: white;
+	background-color: #28a745;
+	color: white;
+}
+
+.verifyButton.enabled:hover,
+.verifyCodeButton.enabled:hover,
+.checkButton.enabled:hover {
+	background-color: #218838;
 }
 
 .codeSentMessage {
-  color: #007bff;
-  font-size: 0.8rem;
-  margin-top: -8px;
-  margin-bottom: -8px;
-  margin-left: 2px;
+	color: #007bff;
+	font-size: 0.8rem;
+	margin-top: -8px;
+	margin-bottom: -8px;
+	margin-left: 2px;
 }
 
 .timer {
-  /* display: flex; */
-  position: relative;
-  top: -4px;
-  left: -45px;
-  /* margin-left: 10px; */
-  font-size: 0.7rem;
-  color: black;
-  transition: color 1s ease;
-  margin: 0;
+	/* display: flex; */
+	position: relative;
+	top: -4px;
+	left: -45px;
+	/* margin-left: 10px; */
+	font-size: 0.7rem;
+	color: black;
+	transition: color 1s ease;
+	margin: 0;
 }
 
 .redTimer {
-  color: red;
+	color: red;
 }
 
 .buttons {
-  display: flex;
-  justify-content: center;
-  margin: 0 0 10px 0;
-  gap: 15px;
+	display: flex;
+	justify-content: center;
+	margin: 0 0 10px 0;
+	gap: 15px;
 }
 
 .prevButton,
 .nextButton {
-  width: auto;
-  padding: 5px 30px 5px 30px;
-  font-size: 0.8rem;
-  border-radius: 3px;
-  border: none;
-  margin: 0 10px;
-  cursor: pointer;
+	width: auto;
+	padding: 5px 30px 5px 30px;
+	font-size: 0.8rem;
+	border-radius: 3px;
+	border: none;
+	margin: 0 10px;
+	cursor: pointer;
 }
 
 .prevButton {
-  background-color: #ccc;
+	background-color: #ccc;
 	color: white;
 	border: none;
 	border-radius: 5px;
 	padding: 10px 20px;
 	font-size: 16px;
 	cursor: pointer;
+}
+
+.prevButton:hover {
+	background-color: #999;
 }
 
 .navigationButton {
@@ -206,49 +220,49 @@
 }
 
 .tooltip {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .tooltip .tooltiptext {
-  visibility: hidden;
-  width: 130px;
-  background-color: #ffffff;
-  color: #000;
-  text-align: left;
-  border-radius: 6px;
-  padding: 10px;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 41%;
-  margin-left: -100px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  box-shadow: 0px 0px 10px 0px rgba(72, 72, 72, 0.5);
-  font-size: 0.75rem;
+	visibility: hidden;
+	width: 130px;
+	background-color: #ffffff;
+	color: #000;
+	text-align: left;
+	border-radius: 6px;
+	padding: 10px;
+	position: absolute;
+	z-index: 1;
+	bottom: 125%;
+	left: 41%;
+	margin-left: -100px;
+	opacity: 0;
+	transition: opacity 0.3s;
+	box-shadow: 0px 0px 10px 0px rgba(72, 72, 72, 0.5);
+	font-size: 0.75rem;
 }
 
 .tooltip .tooltiptext::after {
-  content: " ";
-  position: absolute;
-  top: 100%;
-  left: 45%;
-  margin-left: -5px;
-  border-width: 10px;
-  border-style: solid;
-  border-color: #ffffff transparent transparent transparent;
+	content: " ";
+	position: absolute;
+	top: 100%;
+	left: 45%;
+	margin-left: -5px;
+	border-width: 10px;
+	border-style: solid;
+	border-color: #ffffff transparent transparent transparent;
 }
 
 .tooltip .input:focus + .tooltiptext {
-  visibility: visible;
-  opacity: 100%;
+	visibility: visible;
+	opacity: 80%;
 }
 
 .valid {
-  color: rgb(79, 164, 79);
+	color: rgb(79, 164, 79);
 }
 
 .invalid {
-  color: rgb(241, 60, 60);
+	color: rgb(241, 60, 60);
 }

@@ -3,16 +3,14 @@
     font-size: 18px;
 }
 
-.commentItem {
+.commentItem,
+.replyItem {
     display: flex;
     align-items: flex-start;
     margin-bottom: 15px;
 }
 
 .replyItem {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 15px;
     margin-left: 40px;
 }
 
@@ -163,4 +161,3 @@
     padding-left: 0px; /* 답글 들여쓰기 */
     margin-top: 10px;
 }
-

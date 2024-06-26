@@ -1,10 +1,16 @@
 import FaceLogin from "../../components/user/faceLogin";
+import styles from '../../styles/user/enroll/enroll.module.css';
 
 const FaceLoginPage = () => {
     return (
-        <div>
-            {/* <LoginForm/> */}
-            <FaceLogin/>
+        <div className={styles.center_div}>
+            <div className={styles.contentContainer}>
+                <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }}>
+                    얼굴로 로그인
+                </div>
+                {/* <LoginForm/> */}
+                <FaceLogin/>
+            </div>
         </div>
     );
 };
