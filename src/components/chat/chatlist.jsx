@@ -4,10 +4,12 @@ import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chatlist.module.css'
 import EachChat from '../../components/chat/eachchat.jsx';
 import {axiosClient} from "../../axiosApi/axiosClient";
+import authStore from "../../stores/authStore";
 
 /*
 * */
-const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, onNavigateToBot, userId, userType }) => {
+const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, onNavigateToBot, onNavigateToOneonOne, userId, userType }) => {
+
     const [isAnimating, setIsAnimating] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
     const [chatData, setChatData] = useState([])
@@ -49,11 +51,39 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
 
         setIsAnimating(true);
         setTimeout(() => {
+            console.log(roomData);
             onNavigateToChat({...roomData})
             setIsAnimating(false);
             setIsPlusClicked(false);
         }, 500);
     }
+
+    const getAdmins = async () => {
+        try{
+            const response = await axiosClient.get('/chat/admins')
+            return [authStore.getNickname(), ...response.data]
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
+    const handleOneonOne = async () => {
+        try {
+            const names = await getAdmins(); // Await the result of getAdmins
+
+            console.log(names);
+
+            const response = await axiosClient.post('/chat/makechat/inquiries', {
+                names: names
+            });
+
+            console.log(response);
+            onNavigateToChat(response.data);
+        } catch (error) {
+            console.error('An error occurred!', error);
+        }
+    }
+
     return (
         <div
             className={`${commonStyles.chatServiceContainer} ${isAnimating && commonStyles.animateCollapse} ${isExpanding && commonStyles.animateExpand}`}>
@@ -123,7 +153,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                                 <p>그룹채팅</p>
                             </div>
 
-                            <div className={styles.chatTypeItem} onClick={()=>{onNavigateToFriends('inquiries')}}>
+                            <div className={styles.chatTypeItem} onClick={handleOneonOne}>
                                 <svg className={styles.oneOnOne} xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 384 512">
                                     <path

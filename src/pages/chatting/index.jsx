@@ -71,6 +71,7 @@ const ChatContainer = observer(() => {
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}
                     onNavigateToChat={(roomData) => handleNavigation('Chat', '', '', roomData)}
                     onNavigateToBot={() => handleNavigation('Bot')}
+                    onNavigateToOneonOne={() => handleNavigation('Chat', '', '', roomData)}
                     userId={userId}
                     userType={userType}
                 />
@@ -109,8 +110,6 @@ const ChatContainer = observer(() => {
                 <Bot
                     isExpanding={isExpanding}
                     onNavigateToList={() => handleNavigation('ChatList')}
-                    userId={userId}
-                    userType={userType}
                 />
             )}
         </>
