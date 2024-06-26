@@ -1,0 +1,52 @@
+.cartPage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+
+    padding: 20px;
+  }
+  
+  .cartContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .cartItems {
+    flex: 2;
+  }
+  
+  .cartTable {
+    width: 100%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    table-layout: auto; /* 테이블 레이아웃을 auto로 설정 */
+  }
+  
+  .cartTable th,
+  .cartTable td {
+    border: 1px solid #dddddd;
+    padding: 4px;
+    white-space: nowrap; /* 셀 내용이 줄바꿈되지 않도록 설정 */
+  }
+  
+  .cartTable th {
+    background-color: #27c898;
+    text-align: left;
+    border-radius: 0px; /* border-radius 제거 */
+  }
+  
+  .paymentBox {
+    flex: 1;
+    max-width: 300px; /* 결제박스의 최대 너비를 줄임 */
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin-left: 10px; /* 테이블과 결제박스 사이의 공백을 줄임 */
+    border-radius: 10px;
+  }
+  
+  .agreement {
+    margin: 20px 0;
+  }
+  
