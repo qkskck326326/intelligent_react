@@ -2,7 +2,7 @@ import React, {forwardRef, useEffect} from 'react';
 import Bubble from './bubble.jsx'
 import styles from '../../styles/chatting/chatbubble.module.css'
 
-const BubbleContainer = forwardRef(({onAnnouncementChange, onReport, option, messages, onScroll, onUpdateMessage}, ref)=>{
+const BubbleContainer = forwardRef(({onAnnouncementChange, onReport, option, messages, onScroll, onUpdateMessage, isThereAdmin}, ref)=>{
 
     useEffect(()=>{
         console.log(messages)
@@ -18,6 +18,7 @@ const BubbleContainer = forwardRef(({onAnnouncementChange, onReport, option, mes
                         option={option}
                         onAnnouncementChange={onAnnouncementChange}
                         onReport={onReport}
+                        isThereAdmin={isThereAdmin}
                     />
                 ))
             }

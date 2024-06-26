@@ -71,7 +71,6 @@ const ChatContainer = observer(() => {
                     onNavigateToIcon={() => handleNavigation('ChatIcon')}
                     onNavigateToChat={(roomData) => handleNavigation('Chat', '', '', roomData)}
                     onNavigateToBot={() => handleNavigation('Bot')}
-                    onNavigateToOneonOne={() => handleNavigation('Chat', '', '', roomData)}
                     userId={userId}
                     userType={userType}
                 />
