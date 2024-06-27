@@ -1,16 +1,24 @@
 import ResetPassword from "../../components/user/resetPassword";
-import styles from "../../styles/user/mypage/mypage.module.css";
+import React, { useEffect } from 'react';
+// import styles from "../../styles/user/mypage/mypage.module.css";
 import { observer } from "mobx-react";
-import authStore from "../../stores/authStore";
 
-const ResetPasswordPage = observer(() => {
+const ResetPasswordPage = () => {
+  useEffect(() => {
+    // 페이지가 마운트될 때 body에 overflow: hidden; 적용
+    document.body.style.overflow = 'hidden';
+    
+    // 페이지가 언마운트될 때 원래 상태로 복구
+    return () => {
+        document.body.style.overflow = '';
+    };
+}, []);
+
     return (
-    <div className={styles.title}>
-      <h1>임시 비밀번호 찾기 페이지</h1>
-      
+    <div>
         <ResetPassword/>
     </div>
     );
-});
+};
 
 export default ResetPasswordPage;
