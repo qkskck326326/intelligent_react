@@ -14,16 +14,6 @@ const FaceLogin = () => {
   const [webcamActive, setWebcamActive] = useState(false); // 웹캠 활성화 상태 추가
   const router = useRouter();
 
-  useEffect(() => {
-    // 페이지가 마운트될 때 body에 overflow: hidden; 적용
-    document.body.style.overflow = 'hidden';
-    
-    // 페이지가 언마운트될 때 원래 상태로 복구
-    return () => {
-        document.body.style.overflow = '';
-    };
-  }, []);
-
   const toggleWebcam = () => {
     if (!webcamActive) {
       navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
