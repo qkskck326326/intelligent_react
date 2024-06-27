@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { axiosClient } from "../axiosApi/axiosClient";
 import NavBar from "../components/common/NavBar";
 import UserInterestPackageList from "../components/main/userInterestPakcageList";
-import UpperCategoryPackageList from "../components/main/upperCategoryPackageList";
+import UpperCategoryPackageList from "../components/main/UpperCategoryPackageList";
 import styles from '../styles/common/HomePage.module.css';
 
 const HomePage = () => {
@@ -11,6 +11,7 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchBanners();
+        recordVisit();
     }, []);
 
     const fetchBanners = async () => {
@@ -19,6 +20,19 @@ const HomePage = () => {
             setBanners(response.data);
         } catch (error) {
             console.error('Failed to fetch banners:', error);
+        }
+    };
+
+    const recordVisit = async () => {
+        try {
+            const userEmail = localStorage.getItem('userEmail'); // 사용자의 이메일을 로컬 스토리지에서 가져옴
+            if (userEmail) {
+                await axiosClient.post('/admins/record-visit', null, {
+                    params: { userEmail }
+                });
+            }
+        } catch (error) {
+            console.error('Failed to record visit:', error);
         }
     };
 
@@ -53,6 +67,7 @@ const HomePage = () => {
                         <img
                             src={banners[currentBannerIndex].imageUrl}
                             alt="Banner"
+                            style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
                             onClick={handleBannerClick}
                         />
                         <button onClick={handleNextBanner} className={`${styles.bannerButton} ${styles.right}`}>›</button>
@@ -62,8 +77,8 @@ const HomePage = () => {
                     </div>
                 )}
                 <NavBar />
-                <UserInterestPackageList />
-                <UpperCategoryPackageList />
+                {/*<UserInterestPackageList />*/}
+                {/*<UpperCategoryPackageList />*/}
                 <div
                     className={styles.fixedButton}
                     onClick={handleOpenTestAI}
