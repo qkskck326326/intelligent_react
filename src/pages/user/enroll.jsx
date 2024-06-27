@@ -38,11 +38,11 @@ const Enroll = () => {
     if (authStore.checkIsLoggedIn()) {
       router.push("/"); // 홈 페이지로 리디렉션
     }
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
 
-    return () => {
-      document.body.style.overflow = '';
-    };
+    // return () => {
+    //   document.body.style.overflow = '';
+    // };
   }, []);
 
   const renderPage = () => {
@@ -56,7 +56,7 @@ const Enroll = () => {
       case 2:
         return basicInfo.userType === 0 ? 
           <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} educationExperience={educationExperience} careerExperience={careerExperience}/> : 
-          <EnrollEducationExperience nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setEducationExperience={setEducationExperience} setCareerExperience={setCareerExperience} />;
+          <EnrollEducationExperience nextPage={nextPage} prevPage={prevPage} educationExperience={educationExperience} careerExperience={careerExperience} setEducationExperience={setEducationExperience} setCareerExperience={setCareerExperience} />;
       case 3:
         return <EnrollInterest nextPage={nextPage} prevPage={prevPage} basicInfo={basicInfo} setBasicInfo={setBasicInfo} educationExperience={educationExperience} careerExperience={careerExperience} />;
       case 4:

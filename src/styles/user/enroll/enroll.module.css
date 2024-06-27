@@ -1,23 +1,25 @@
 .center_div {
 	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	height: 100vh;
-	background-color: #f7f7f7;
-	flex-direction: column;
-	align-items: center;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh; /* 최소 높이를 화면 전체 높이로 설정 */
+    background-color: #f7f7f7;
+    flex-direction: column;
+    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    padding-top: 70px;
+    padding-bottom: 20px;
 }
 
 .contentContainer {
-	margin-top: 60px;
 	display: flex;
-	align-items: center;
-	background-color: #ffffff;
-	flex-direction: column;
-	border-radius: 10px;
-	padding: 20px;
-	/* border: 1px solid #ccc;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    align-items: center;
+    background-color: #ffffff;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 660px; /* 최대 너비를 설정 */
 }
 
 .title {

@@ -9,6 +9,7 @@
 	border-radius: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	padding: 20px;
+    min-height: 100%; /* 컨테이너가 내용에 따라 늘어나도록 설정 */
 }
 
 .section {
