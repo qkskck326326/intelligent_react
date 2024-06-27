@@ -3,6 +3,8 @@ import { axiosClient } from '../../axiosApi/axiosClient';
 import SiteSaveModal from "./siteSaveModal";
 import { Button, Pagination } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import TextlizeYoutube from "./textlize";
+import axios from "axios";
 
 const BoardList = () => {
     const [page, setPage] = useState(0);
@@ -75,13 +77,19 @@ const BoardList = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
+    const doCrowling = () => {
+        axios.get("http://localhost:5000/crowling")
+    }
+
     return (
         <div className="container">
             <h1>Board List</h1>
             <Button variant="primary" onClick={handleShow} className="mb-3">
                 작성하기
             </Button>
-            <SiteSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave} initialData={currentData}/>
+            <button onClick={doCrowling}>크롤링 요청</button>
+            <SiteSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave}
+                           initialData={currentData}/>
             <table className="table">
                 <thead>
                 <tr>
@@ -92,7 +100,7 @@ const BoardList = () => {
                     <th scope="col">Video Element</th>
                     <th scope="col">Title Element</th>
                     <th scope="col">Context Element</th>
-                    <th scope="col">수정 / 삭제</th>
+                    <th scope="col" style={{width: '140px'}}> 수정 / 삭제</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -106,7 +114,8 @@ const BoardList = () => {
                         <td>{item.titleElement}</td>
                         <td>{item.contextElement}</td>
                         <td>
-                            <button onClick={() => handleEdit(item)}>수정</button> &nbsp;
+                            <button onClick={() => handleEdit(item)}>수정</button>
+                            &nbsp;
                             {/*<button onClick={() => handleDelete(item)}>삭제</button>*/}
                         </td>
                     </tr>
@@ -114,15 +123,15 @@ const BoardList = () => {
                 </tbody>
             </table>
             <Pagination style={{justifyContent: 'center'}}>
-                <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
-                <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+                <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0}/>
+                <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0}/>
                 {[...Array(Math.max(totalPages, 1))].map((_, i) => (
                     <Pagination.Item key={i} active={i === page} onClick={() => handlePageChange(i)}>
                         {i + 1}
                     </Pagination.Item>
                 ))}
-                <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
-                <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
+                <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1}/>
+                <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1}/>
             </Pagination>
         </div>
     );

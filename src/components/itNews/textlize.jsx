@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {axiosClient} from "../../axiosApi/axiosClient";
 
-export default function GetText() {
+export default function TextlizeYoutube() {
     const [url, setUrl] = useState('');
     const [originalText, setOriginalText] = useState('');
     const [translatedText, setTranslatedText] = useState('');
@@ -16,7 +16,7 @@ export default function GetText() {
         setOriginalText(''); // 기존 텍스트 초기화
         setTranslatedText(''); // 번역 텍스트 초기화
         try {
-            const response = await axios.post('http://192.168.0.93:5000/getText', { url }, {
+            const response = await axios.post('http://localhost:5000/getText', { url }, {
                 headers: {
                     'Content-Type': 'application/json'
                 },

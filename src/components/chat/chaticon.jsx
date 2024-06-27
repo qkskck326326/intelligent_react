@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import styles from '../../styles/chatting/chaticon.module.css'
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import {axiosClient} from "../../axiosApi/axiosClient";
+import webSocketService from "./WebSocketService";
 
 const ChatIcon = observer(({ isHidden, isExpanding, onNavigate, userId, userType}) => {
 
@@ -11,26 +12,31 @@ const ChatIcon = observer(({ isHidden, isExpanding, onNavigate, userId, userType
     const [isAnimating, setIsAnimating] = useState(false);
 
     useEffect(() => {
-
-        if (userId) {
-            async function getTotalUnreadCount() {
-                try {
-                    const response = await axiosClient.get(`/chat/countunreadall?userId=${userId}`);
-                    console.log(response.data);
+        const fetchUnreadCount = () => {
+            axiosClient.get(`/chat/countunreadall?userId=${userId}`)
+                .then(response => {
                     setTotalCount(response.data);
-                } catch (error) {
+                })
+                .catch(error => {
                     console.error('Error fetching total unread count:', error);
-                }
-            }
+                });
+        };
 
-            // Call the function immediately
-            getTotalUnreadCount();
-
-            const interval = setInterval(getTotalUnreadCount, 10000);
-
-            return () => clearInterval(interval);
+        if (!isHidden && userId) {
+            fetchUnreadCount();
         }
-    }, [userId]);
+
+        const handleIncomingMessage = (message) => {
+            fetchUnreadCount(); // Re-fetch the unread count to update
+        };
+
+        webSocketService.connect();
+        webSocketService.subscribe(`/topic/update`, handleIncomingMessage);
+
+        return () => {
+            webSocketService.disconnect();
+        };
+    }, [isHidden, userId]);
 
     const handleClick = () => {
         setIsAnimating(true);

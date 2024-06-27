@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import { getRelativeTime } from "./timeUtils";
 import styles from "./PopularPosts.module.css";
-<a href="https://www.flaticon.com/kr/free-icons/" title="지휘대 아이콘">
-  지휘대 아이콘 제작자: Freepik - Flaticon
-</a>;
 
 const PopularPosts = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     axiosClient
-      .get("posts/top10") // 게시물 수를 top10으로 변경
+      .get("posts/top10")
       .then((response) => {
         setPosts(response.data);
       })
@@ -44,22 +41,42 @@ const PopularPosts = () => {
         />
       </div>
       <ul className={styles.popularPostsList}>
-        {posts.map((post, index) => (
-          <li key={post.id} className={styles.popularPostItem}>
-            <div className={getRankClass(index)}>{index + 1}</div>
-            <a href={`/post/${post.id}`} className={styles.popularPostLink}>
-              {post.title}
-            </a>
-            <span className={styles.popularPostComments}>
-              댓글 {post.commentCount}
-            </span>
-            <div>
-              <small className={styles.popularPostTime}>
-                {getRelativeTime(post.postTime)}
-              </small>
-            </div>
-          </li>
-        ))}
+        <div className={styles.popularPostColumn}>
+          {posts.slice(0, 5).map((post, index) => (
+            <li key={post.id} className={styles.popularPostItem}>
+              <div className={getRankClass(index)}>{index + 1}</div>
+              <a href={`/post/${post.id}`} className={styles.popularPostLink}>
+                {post.title}
+              </a>
+              <span className={styles.popularPostComments}>
+                댓글 {post.commentCount}
+              </span>
+              <div>
+                <small className={styles.popularPostTime}>
+                  {getRelativeTime(post.postTime)}
+                </small>
+              </div>
+            </li>
+          ))}
+        </div>
+        <div className={styles.popularPostColumn}>
+          {posts.slice(5, 10).map((post, index) => (
+            <li key={post.id} className={styles.popularPostItem}>
+              <div className={getRankClass(index + 5)}>{index + 6}</div>
+              <a href={`/post/${post.id}`} className={styles.popularPostLink}>
+                {post.title}
+              </a>
+              <span className={styles.popularPostComments}>
+                댓글 {post.commentCount}
+              </span>
+              <div>
+                <small className={styles.popularPostTime}>
+                  {getRelativeTime(post.postTime)}
+                </small>
+              </div>
+            </li>
+          ))}
+        </div>
       </ul>
     </div>
   );

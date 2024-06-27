@@ -116,14 +116,15 @@ const Success = () => {
     const clearUsedCouponsAndCartItems = async (couponId, items) => {
       try {
         const ids = items.map((item) => item.lecturePackageId);
-        await axiosClient.delete("/cart", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          data: ids,
-          withCredentials: true,
+        const userEmail = authStore.getUserEmail();
+        const provider = authStore.getProvider();
+        console.log("삭제할 패키지 아이디:", ids); // 디버깅 로그
+        const response = await axiosClient.post("/cart/delete", {
+          userEmail: userEmail,
+          ids: ids,
+          provider: provider,
         });
-        console.log("Cart items deleted successfully");
+        console.log("Cart items deleted successfully", response); // 디버깅 로그
       } catch (error) {
         console.error("Error clearing used coupons and cart items:", error);
       }
@@ -148,6 +149,12 @@ const Success = () => {
             <p>주문 번호: {orderInfo.orderId}</p>
             <p>결제 금액: {parseFloat(orderInfo.amount).toLocaleString()} 원</p>
             <p>결제 상태: {orderInfo.paymentStatus.status}</p>
+            <button onClick={() => router.push("/user/mypage")}>
+              내 수강 목록으로 이동
+            </button>
+            <button onClick={() => router.push("/lecturePackage")}>
+              패키지 목록으로 이동
+            </button>
           </div>
         </>
       )}

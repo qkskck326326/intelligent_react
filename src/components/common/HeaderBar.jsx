@@ -5,9 +5,11 @@ import authStore from "../../stores/authStore";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import { handleAxiosError } from "../../axiosApi/errorAxiosHandler";
 import styles from "../../styles/header.module.css"; // CSS 모듈을 import
+import Notification from "../notification/notification";
 
 const HeaderBar = observer(() => {
   const [isClient, setIsClient] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -79,6 +81,10 @@ const HeaderBar = observer(() => {
       <Nav className={styles["right-nav"]}>
         {authStore.isLoggedIn ? (
           <>
+          <img src="/images/notificationBell.png" alt="Notification Bell" className={styles.notificationBell} 
+              onClick={() => setShowNotifications(!showNotifications)} 
+            />
+            {showNotifications && <Notification />}
             <Nav.Link onClick={handleLogout} className={styles["nav-link"]}>
               로그아웃
             </Nav.Link>

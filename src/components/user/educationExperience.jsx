@@ -4,6 +4,7 @@ import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 import { LuPencilLine } from "react-icons/lu";
+import { differenceInMonths, parseISO } from 'date-fns';
 
 const EducationExperience = observer(() => {
     const [showEducationForm, setShowEducationForm] = useState(false);
@@ -33,6 +34,7 @@ const EducationExperience = observer(() => {
     const [editCareerId, setEditCareerId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [totalCareer, setTotalCareer] = useState("");
     const dateInputRef = useRef(null);
     const nickname = authStore.getNickname();
 
@@ -52,6 +54,15 @@ const EducationExperience = observer(() => {
                 const response = await axiosClient.get('/careers', { params: { nickname: nickname } });
                 setCareers(response.data);
                 console.log("career : ", response.data);
+
+                // 경력 총계 계산
+                const totalMonths = response.data.reduce((total, career) => {
+                    const start = parseISO(career.startDate);
+                    const end = parseISO(career.endDate);
+                    return total + differenceInMonths(end, start);
+                }, 0);
+
+                setTotalCareer(totalMonths);
             } catch (error) {
                 console.error("Error fetching career data:", error);
             }
@@ -60,7 +71,6 @@ const EducationExperience = observer(() => {
         fetchEducationData();
         fetchCareerData();
     }, [nickname]);
-
 
     //저장
     const handleEducationSubmit = async (e) => {
@@ -74,12 +84,12 @@ const EducationExperience = observer(() => {
             return;
         }
 
-        if ((educationLevel === "highSchool" || educationLevel === "lowSchool")  && !homeAndTransfer && (!schoolName || !major || !educationStatus || !entryDate || !graduationDate)) {
+        if ((educationLevel === "highSchool" || educationLevel === "middleSchool")  && !homeAndTransfer && (!schoolName || !major || !educationStatus || !entryDate || !graduationDate)) {
             setErrorMessage("모든 필수 입력 값을 입력해 주세요.");
             return;
         }
 
-        if ((educationLevel === "highSchool" || educationLevel === "lowSchool") && homeAndTransfer === "homeSchool" && !passDate) {
+        if ((educationLevel === "highSchool" || educationLevel === "middleSchool") && homeAndTransfer === "homeSchool" && !passDate) {
             setErrorMessage("합격년월을 입력해 주세요.");
             return;
         }
@@ -127,6 +137,15 @@ const EducationExperience = observer(() => {
             setShowCareerForm(false);
             const response = await axiosClient.get('/careers', { params: { nickname: nickname } });
             setCareers(response.data);
+
+            // 경력 총계 재계산
+            const totalMonths = response.data.reduce((total, career) => {
+                const start = parseISO(career.startDate);
+                const end = parseISO(career.endDate);
+                return total + differenceInMonths(end, start);
+            }, 0);
+            setTotalCareer(totalMonths);
+
             setEditCareerId(null);
             setIsEditing(false);
         } catch (error) {
@@ -187,6 +206,15 @@ const EducationExperience = observer(() => {
                 await axiosClient.delete(`/careers/${careerId}`);
                 const updatedCareers = careers.filter(career => career.careerId !== careerId);
                 setCareers(updatedCareers);
+
+                // 경력 총계 재계산
+                const totalMonths = updatedCareers.reduce((total, career) => {
+                    const start = parseISO(career.startDate);
+                    const end = parseISO(career.endDate);
+                    return total + differenceInMonths(end, start);
+                }, 0);
+                setTotalCareer(totalMonths);
+
             } catch (error) {
                 console.error("Error deleting career:", error);
             }
@@ -246,7 +274,7 @@ const EducationExperience = observer(() => {
             <div className={styles.section}>
                 <h3 className={styles.h3Font}>
                     학력 {!showEducationForm &&
-                    <button className={styles.addButton} onClick={toggleEducationForm}>+ 추가</button>}
+                    <button className={styles.addButton1} onClick={toggleEducationForm}>+ 추가</button>}
                 </h3>
                 <div className={styles.horizontalLine}></div>
                 {!showEducationForm && (
@@ -289,11 +317,11 @@ const EducationExperience = observer(() => {
                                         value={educationForm.educationLevel}
                                         onChange={(e) => handleInputChange(e, setEducationForm)}>
                                     <option value="">학력 구분 선택 *</option>
-                                    <option value="lowSchool">중학교 졸업</option>
+                                    <option value="middleSchool">중학교 졸업</option>
                                     <option value="highSchool">고등학교 졸업</option>
                                     <option value="university">대학 ◎ 대학원이상 졸업</option>
                                 </select>
-                                {(educationForm.educationLevel === "highSchool" || educationForm.educationLevel === "lowSchool") && (
+                                {(educationForm.educationLevel === "highSchool" || educationForm.educationLevel === "middleSchool") && (
                                     <>
                                         <select className={styles.formSelect} name="homeAndTransfer"
                                                 value={educationForm.homeAndTransfer}
@@ -323,7 +351,7 @@ const EducationExperience = observer(() => {
                                 )}
                             </div>
 
-                            {(educationForm.educationLevel === "highSchool" || educationForm.educationLevel === "lowSchool") && educationForm.homeAndTransfer !== "homeSchool" && (
+                            {(educationForm.educationLevel === "highSchool" || educationForm.educationLevel === "middleSchool") && educationForm.homeAndTransfer !== "homeSchool" && (
                                 <div className={styles.formRow}>
                                     <div className={styles.formGroup}>
                                         <label className={styles.formLabel}></label>
@@ -408,9 +436,9 @@ const EducationExperience = observer(() => {
                                             onChange={(e) => handleInputChange(e, setEducationForm)}
                                         >
                                             <option value="">대학 구분 *</option>
-                                            <option value="undergraduate">학사</option>
-                                            <option value="graduate">석사</option>
-                                            <option value="phd">박사</option>
+                                            <option value="학사">학사</option>
+                                            <option value="석사">석사</option>
+                                            <option value="박사">박사</option>
                                         </select>
                                     </div>
                                     <div className={styles.formGroup}>
@@ -444,8 +472,13 @@ const EducationExperience = observer(() => {
                                             onChange={(e) => handleInputChange(e, setEducationForm)}
                                         >
                                             <option value="">졸업여부 *</option>
-                                            <option value="graduated">졸업</option>
-                                            <option value="notGraduated">미졸업</option>
+                                            <option value="졸업">졸업</option>
+                                            <option value="졸업예정">졸업예정</option>
+                                            <option value="중퇴">중퇴</option>
+                                            <option value="재학중">재학중</option>
+                                            <option value="휴학중">휴학중</option>
+                                            <option value="수료">수료</option>
+                                            <option value="자퇴">자퇴</option>
                                         </select>
                                     </div>
                                     <div className={styles.formGroup}>
@@ -490,14 +523,24 @@ const EducationExperience = observer(() => {
                 )}
             </div>
             <div className={styles.section}>
-                <h3 className={styles.h3Font}>경력 {!showCareerForm &&
-                    <button className={styles.addButton} onClick={toggleCareerForm}>+ 추가</button>}</h3>
+                <h3 className={styles.h3Font}>
+                    <div className={styles.headerRight}>
+                        <span>경력</span>
+                        {!showCareerForm && (
+                            <>
+                                <button className={styles.addButton2} onClick={toggleCareerForm}>+ 추가</button>
+                                <span className={styles.totalCareer}>경력 총계: {totalCareer}개월</span>
+                            </>
+                        )}
+                    </div>
+                </h3>
+
                 <div className={styles.horizontalLine}></div>
                 {!showCareerForm && (
                     <div className={styles.careerList}>
                         {careers.map((career) => (
                             <div key={career.id} className={styles.careerItem}>
-                                <div className={styles.careerHeader}>
+                            <div className={styles.careerHeader}>
                                     <span>{career.institutionName}</span>
                                     <span className={styles.wall}>|</span>
                                     <span className={styles.careerDates}>
@@ -513,7 +556,6 @@ const EducationExperience = observer(() => {
                                 </div>
                                 <div className={styles.careerDetails}>
                                     <span>{career.department}</span>
-
                                 </div>
                             </div>
                         ))}

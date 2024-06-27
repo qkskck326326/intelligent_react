@@ -1,0 +1,60 @@
+.settingsContainer {
+    padding: 20px;
+}
+
+.settingItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 45px; /* 간격 조정 */
+    font-size: 20px; /* 폰트 크기 조정 */
+}
+
+.settingItem span {
+    flex: 1;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* 버튼 너비 조정 */
+    height: 28px; /* 버튼 높이 조정 */
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 28px; /* 높이에 맞춰 변경 */
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px; /* 너비 조정 */
+    width: 22px; /* 높이 조정 */
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #52c095;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px); /* 너비에 맞춰 조정 */
+}

@@ -1,11 +1,10 @@
-/* styles/myCertificate.module.css */
 .container {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 800px;
-  height: 560px;
+  height: 600px;
   margin: 20px auto;
   display: flex;
   flex-direction: column;
@@ -127,12 +126,10 @@
   background-color: #f2f2f2;
 }
 
-/*.deleteButton {*/
-/*  padding: 5px 10px;*/
-/*  background-color: red;*/
-/*  color: white;*/
-/*  border: none;*/
-/*  cursor: pointer;*/
-/*  border-radius: 5px;*/
-/*}*/
-
+.table td button {
+  margin-right: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}

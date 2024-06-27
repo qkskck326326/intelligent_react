@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {stompClient} from './websocketService';
+// import {stompClient} from './websocketService';
+import webSocketService from "./WebSocketService";
 import {observer} from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
@@ -35,11 +36,8 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [messages, setMessages] = useState([]);
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
+    // const isChatRoomActive = useRef(true);
 
-
-
-    // const stompClientRef = useRef(null);
-    // const [isConnected, setIsConnected] = useState(false);
 //todo
     const fetchData = async () => {
         console.log(roomData.roomType)
@@ -97,6 +95,13 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             scrollToBottom();
         }
 
+        // // isChatRoomActive.current = true;
+        //
+        // return () => {
+        //     // Set the chat room as inactive when the component unmounts
+        //     // isChatRoomActive.current = false;
+        // };
+
     }, [page, roomData.roomId]);
 
     useEffect(() => {
@@ -119,54 +124,59 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     //웹소켓으로 추가
     //랜더링은 얘가 함
     useEffect(() => {
-        const subscribeToRoom = () => {
-            if (stompClient && stompClient.connected) {
-                stompClient.subscribe(`/topic/room/${roomData.roomId}`, (message) => {
-                    console.log('Received message from WebSocket:', message.body);
-                    const newMessage = JSON.parse(message.body);
+        const handleNewMessage = async (message) => {
+            console.log('Received message from WebSocket:', message.body);
+            const newMessage = JSON.parse(message.body);
+            console.log(newMessage)
 
-                    if (newMessage.announcement) {
-                        setAnnounce(newMessage.messageContent);
-                        return;
-                    }
+            if (newMessage.announcement) {
+                setAnnounce(newMessage.messageContent);
+                return;
+            }
 
-                    if (newMessage.roomName) {
-                        setCurrentRoomData((prevState) => ({
-                            ...prevState,
-                            roomName: newMessage.roomName
-                        }));
-                    } else {
-                        if (newMessage.messageContent === '삭제된 메시지입니다․') {
-                            setMessages(prevMessages => {
-                                return prevMessages.map(
-                                    message => message.messageId === newMessage.messageId ? { ...message, ...newMessage } : message
-                                );
-                            });
-                        } else {
-                            setMessages((prevMessages) => [...prevMessages, newMessage]);
-                        }
-                    }
-                });
+            if (newMessage.roomName) {
+                setCurrentRoomData((prevState) => ({
+                    ...prevState,
+                    roomName: newMessage.roomName
+                }));
+            } else {
+                if (newMessage.messageContent === '삭제된 메시지입니다․') {
+                    setMessages(prevMessages => {
+                        return prevMessages.map(
+                            message => message.messageId === newMessage.messageId ? { ...message, ...newMessage } : message
+                        );
+                    });
+                } else {
+                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+                    // if (isChatRoomActive.current) {
+                    //     await markMessageAsRead(AuthStore.getNickname(), newMessage.roomId, newMessage.messageId);
+                    // }
+                }
             }
         };
 
-        if (!stompClient.connected) {
-            stompClient.activate();
-            stompClient.onConnect = () => {
-                console.log('웹소켓 연결');
-                subscribeToRoom();
-            };
-        } else {
-            subscribeToRoom();
-        }
+        const topic = `/topic/room/${roomData.roomId}`;
+        webSocketService.connect();
+        webSocketService.subscribe(topic, handleNewMessage);
 
         return () => {
-            if (stompClient) {
-                stompClient.unsubscribe();
-            }
+            webSocketService.disconnect();
         };
-
     }, [roomData.roomId]);
+
+    // const markMessageAsRead = async (senderId, roomId, messageId) => {
+    //     try {
+    //         const response = await axiosClient.post('/chat/markread', {
+    //             senderId,
+    //             roomId,
+    //             messageId
+    //         });
+    //         console.log('Message marked as read:', response.data);
+    //     } catch (error) {
+    //         console.error('Error marking message as read:', error);
+    //     }
+    // };
 
     const handleScroll = () => {
         const scrollTop = bubbleContainerRef.current.scrollTop;
@@ -213,6 +223,8 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             setIsMenuClicked(false);
             setIsAttachButtonClicked(false);
             setModalOn(false)
+            // isChatRoomActive.current = false;
+
         }, 500);
     };
 

@@ -3,6 +3,7 @@ import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureComment.module.css';
 import authStore from '../../stores/authStore';
 import UserProfileModal from './userProfileModal'; // 사용자 프로필 모달 컴포넌트 추가
+import { AiOutlineWarning } from "react-icons/ai"; // 신고 아이콘 추가
 
 const LectureComment = ({ lectureId }) => {
     const [comments, setComments] = useState([]);
@@ -20,6 +21,9 @@ const LectureComment = ({ lectureId }) => {
     const [selectedUserEducation, setSelectedUserEducation] = useState([]);
     const [selectedUserCareer, setSelectedUserCareer] = useState([]);
     const [selectedUserCertificates, setSelectedUserCertificates] = useState([]);
+    const [isReportPopupOpen, setIsReportPopupOpen] = useState(false); // 신고 팝업 상태 추가
+    const [reportContent, setReportContent] = useState(""); // 신고 내용 상태 추가
+    const [reportCommentId, setReportCommentId] = useState(null); // 신고할 댓글 ID 상태 추가
 
     useEffect(() => {
         if (lectureId) {
@@ -147,22 +151,45 @@ const LectureComment = ({ lectureId }) => {
     };
 
     const handleProfileClick = (nickname) => {
-        console.log("Fetching profile for nickname:", nickname); // 로그 추가
+        
         axiosClient.get(`/lecture/profile/${nickname}`)
             .then(response => {
                 const { profileImageUrl, nickname, registerTime, userType, educationList, careerList, certificateList } = response.data;
-                console.log("Profile data fetched:", response.data); // 로그 추가
                 setSelectedUser({ profileImageUrl, nickname, registerTime, userType });
                 setSelectedUserEducation(educationList);
                 setSelectedUserCareer(careerList);
                 setSelectedUserCertificates(certificateList);
-                console.log("Education list:", educationList); // 로그 추가
-                console.log("Career list:", careerList); // 로그 추가
-                console.log("Certificate list:", certificateList); // 로그 추가
             })
             .catch(err => {
                 console.error("Error fetching user profile:", err);
             });
+    };
+
+    const openReportPopup = (commentId) => {
+        setReportCommentId(commentId);
+        setIsReportPopupOpen(true);
+    };
+
+    const closeReportPopup = () => {
+        setIsReportPopupOpen(false);
+    };
+
+    const handleReportSubmit = async () => {
+        try {
+            const reportDTO = {
+                receiveNickname: comments.find(comment => comment.lectureCommentId === reportCommentId).nickname,
+                doNickname: authStore.getNickname(),
+                content: reportContent,
+                reportType: 3,
+                contentId: reportCommentId,
+            };
+
+            await axiosClient.post("/reports", reportDTO);
+            closeReportPopup();
+            alert("신고가 접수되었습니다.");
+        } catch (error) {
+            console.error("신고 중 오류 발생:", error);
+        }
     };
 
     const closeUserProfileModal = () => {
@@ -177,6 +204,7 @@ const LectureComment = ({ lectureId }) => {
 
     const renderComment = (comment, isReply = false) => {
         const hasReplies = comments.some(reply => reply.parentCommentId === comment.lectureCommentId);
+        const isCurrentUser = authStore.getNickname() === comment.nickname;
 
         return (
             <li key={comment.lectureCommentId} className={isReply ? styles.replyItem : styles.commentItem}>
@@ -189,13 +217,18 @@ const LectureComment = ({ lectureId }) => {
                     <div className={styles.commentHeader}>
                         <span className={styles.commentNickname}>{comment.nickname}</span>
                         <div className={styles.commentActions}>
-                            {authStore.getNickname() === comment.nickname ? (
+                            {isCurrentUser ? (
                                 <>
                                     <span className={styles.editButton} onClick={() => toggleEditInput(comment.lectureCommentId, comment.lectureCommentContent)}>수정</span>
                                     <span className={styles.deleteButton} onClick={() => handleDeleteComment(comment.lectureCommentId)}>X</span>
                                 </>
                             ) : (
-                                <span className={styles.replyButton} onClick={() => toggleReplyInput(comment.lectureCommentId)}>답글</span>
+                                <>
+                                    <button className={styles.reportButton} onClick={() => openReportPopup(comment.lectureCommentId)}>
+                                        <AiOutlineWarning size={25} />
+                                    </button>
+                                    <span className={styles.replyButton} onClick={() => toggleReplyInput(comment.lectureCommentId)}>답글</span>
+                                </>
                             )}
                         </div>
                     </div>
@@ -291,6 +324,31 @@ const LectureComment = ({ lectureId }) => {
                     certificates={selectedUserCertificates}
                     onClose={closeUserProfileModal} 
                 />
+            )}
+
+            {isReportPopupOpen && (
+                <div className={styles.reportPopup}>
+                    <div className={styles.popupContent}>
+                        <h2>유저 신고</h2>
+                        <input
+                            type="text"
+                            value={reportContent}
+                            onChange={(e) => setReportContent(e.target.value)}
+                            placeholder="유저 신고 사유를 작성해주세요."
+                        />
+                        <br></br>
+                        <button
+                            onClick={handleReportSubmit}
+                            className={styles.submitButton}
+                        >
+                            제출
+                        </button>
+                        <br></br>
+                        <button onClick={closeReportPopup} className={styles.cancelButton}>
+                            취소
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );

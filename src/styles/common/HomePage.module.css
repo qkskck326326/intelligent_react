@@ -13,7 +13,7 @@
     font-weight: normal;
     font-style: normal;
 }
-/* HomePage.module.css */
+
 
 .bannerContainer {
     position: relative;
@@ -63,3 +63,9 @@
     margin: 0 5px;
 }
 
+.fixedButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+}

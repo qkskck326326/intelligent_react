@@ -1,25 +1,31 @@
+
+
+/* .allContainer {
+  background-color: rgb(245, 245, 245);
+} */
+
 .postDetailContainer {
-  max-width: 900px;
+  max-width: 800px; /* 최대 너비를 줄임 */
   margin: 20px auto;
-  padding: 20px;
+  padding: 15px; /* 패딩을 줄임 */
   background-color: #ffffff;
-  border-radius: 8px;
   position: relative;
+  /* border: solid 30px #52c095; */
 }
 
 .postHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* 마진을 줄임 */
 }
 
 .postAvatar img {
-  width: 50px;
-  height: 50px;
+  width: 40px; /* 크기를 줄임 */
+  height: 40px; /* 크기를 줄임 */
   border-radius: 50%;
   background-color: #ffffff;
-  margin-right: 15px;
+  margin-right: 10px; /* 마진을 줄임 */
 }
 
 .postMeta {
@@ -28,7 +34,7 @@
 
 .postNickname {
   display: block;
-  font-size: 1.2em;
+  font-size: 1em; /* 폰트 크기를 줄임 */
   font-weight: bold;
   color: #333;
 }
@@ -36,35 +42,35 @@
 .postCategory {
   background: #52c095;
   color: white;
-  padding: 2px 8px;
+  padding: 2px 6px; /* 패딩을 줄임 */
   border-radius: 12px;
-  font-size: 0.9em;
+  font-size: 0.8em; /* 폰트 크기를 줄임 */
 }
 
 .postTime {
-  font-size: 0.9em;
+  font-size: 0.8em; /* 폰트 크기를 줄임 */
   color: #999;
   margin-right: 10px;
 }
 
 .postTitle {
-  font-size: 2em;
-  margin: 20px 0;
+  font-size: 1.5em; /* 폰트 크기를 줄임 */
+  margin: 15px 0; /* 마진을 줄임 */
   color: #333;
 }
 
 .postContent {
-  font-size: 1.2em;
-  line-height: 1.6;
-  margin-bottom: 20px;
+  font-size: 1em; /* 폰트 크기를 줄임 */
+  line-height: 1.4; /* 줄 간격을 줄임 */
+  margin-bottom: 15px; /* 마진을 줄임 */
   color: #444;
 }
 
 .postStats {
   display: flex;
   justify-content: space-between;
-  font-size: 1em;
-  margin-bottom: 20px;
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
+  margin-bottom: 15px; /* 마진을 줄임 */
   color: #666;
 }
 
@@ -76,12 +82,12 @@
 }
 
 .dropdownMenu {
-  width: 250%;
+  width: 200%; /* 너비를 줄임 */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   position: absolute;
-  top: 40px;
+  top: 30px; /* 위치를 조정 */
   right: 0;
   background-color: white;
   border: 1px solid #ddd;
@@ -91,7 +97,7 @@
 }
 
 .dropdownMenuItem {
-  padding: 10px 15px;
+  padding: 8px 12px; /* 패딩을 줄임 */
   cursor: pointer;
   color: #333;
   transition: background-color 0.3s ease;
@@ -99,7 +105,7 @@
 }
 
 .commentForm {
-  margin-top: 20px;
+  margin-top: 15px; /* 마진을 줄임 */
   display: flex;
   flex-direction: column;
 }
@@ -111,17 +117,17 @@
 
 .inputContainer input {
   width: 80%;
-  height: 40px;
-  padding: 10px;
-  padding-right: 80px; /* 버튼 공간 확보 */
-  font-size: 1em;
+  height: 35px; /* 높이를 줄임 */
+  padding: 8px; /* 패딩을 줄임 */
+  padding-right: 60px; /* 버튼 공간 확보 */
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box; /* padding 포함하여 크기 계산 */
 }
 
 .submitCommentButton {
-  margin-right: 180px;
+  margin-right: 150px; /* 마진을 줄임 */
   position: absolute;
   right: 0; /* 여백 없이 오른쪽에 붙이기 */
   top: 0;
@@ -129,8 +135,8 @@
   background-color: #52c095;
   color: white;
   border: none;
-  padding: 10px 15px;
-  font-size: 1em;
+  padding: 8px 12px; /* 패딩을 줄임 */
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
   border-radius: 0 5px 5px 0; /* 오른쪽 모서리만 둥글게 */
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -140,35 +146,32 @@
   background-color: #3f8a71;
 }
 
-
 .comments {
-  margin-top: 20px;
+  margin-top: 15px; /* 마진을 줄임 */
 }
 
 .comments h2 {
-  font-size: 1.5em;
+  font-size: 1.3em; /* 폰트 크기를 줄임 */
   margin-bottom: 10px;
 }
 
 .comments ul {
-  
   list-style: none;
   padding: 0;
 }
 
 .comments li {
-  
   display: flex;
   align-items: flex-start;
   border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+  padding: 8px 0; /* 패딩을 줄임 */
 }
 
 .comments li img {
-  width: 40px;
-  height: 40px;
+  width: 35px; /* 크기를 줄임 */
+  height: 35px; /* 크기를 줄임 */
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 8px; /* 마진을 줄임 */
 }
 
 .commentContent {
@@ -183,24 +186,24 @@
 }
 
 .commentHeader span {
-  font-size: 1em;
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
   font-weight: bold;
   color: #333;
   margin-right: 10px;
 }
 
 .commentHeader time {
-  font-size: 0.8em;
+  font-size: 0.8em; /* 폰트 크기를 줄임 */
   color: #999;
 }
 
 .commentText {
-  font-size: 0.9em;
+  font-size: 0.8em; /* 폰트 크기를 줄임 */
   color: #555;
 }
 
 .files {
-  margin-top: 20px;
+  margin-top: 15px; /* 마진을 줄임 */
 }
 
 .files ul {
@@ -209,7 +212,7 @@
 }
 
 .files li {
-  margin-bottom: 10px;
+  margin-bottom: 8px; /* 마진을 줄임 */
 }
 
 .files img {
@@ -227,17 +230,17 @@
 .editComment input {
   width: 100%;
   max-width: 600px; /* 원하는 최대 너비로 조정 */
-  padding: 10px;
-  font-size: 1em;
+  padding: 8px; /* 패딩을 줄임 */
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 8px; /* 마진을 줄임 */
   resize: vertical;
 }
 
 .buttonContainer {
   display: flex;
-  gap: 10px; /* 버튼 간격 조절 */
+  gap: 8px; /* 버튼 간격을 줄임 */
   justify-content: flex-end; /* 버튼들을 오른쪽으로 정렬 */
 }
 
@@ -245,8 +248,8 @@
   background-color: #52c095;
   color: white;
   border: none;
-  padding: 10px 15px;
-  font-size: 1em;
+  padding: 8px 12px; /* 패딩을 줄임 */
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -276,7 +279,7 @@
 }
 
 .commentDropdownMenuItem {
-  padding: 10px 15px;
+  padding: 8px 12px; /* 패딩을 줄임 */
   margin-right: 15px;
   cursor: pointer;
   color: #333;
@@ -305,7 +308,7 @@
   top: 50%;
   left: 50%;
   width: 90%;
-  max-width: 500px;
+  max-width: 450px; /* 최대 너비를 줄임 */
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -321,18 +324,18 @@
 
 .popupContent h2 {
   margin-top: 0;
-  font-size: 1.5em;
+  font-size: 1.3em; /* 폰트 크기를 줄임 */
   color: #333;
 }
 
 .popupContent input {
   width: 100%;
-  height: 100px;
-  padding: 10px;
-  margin: 10px 0;
+  height: 80px; /* 높이를 줄임 */
+  padding: 8px; /* 패딩을 줄임 */
+  margin: 8px 0; /* 마진을 줄임 */
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 1em;
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
 }
 
 .popupContent .submitButton,
@@ -340,12 +343,12 @@
   background-color: #52c095;
   color: white;
   border: none;
-  padding: 10px 15px;
-  font-size: 1em;
+  padding: 8px 12px; /* 패딩을 줄임 */
+  font-size: 0.9em; /* 폰트 크기를 줄임 */
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 10px;
+  margin-top: 8px; /* 마진을 줄임 */
 }
 
 .popupContent .cancelButton {

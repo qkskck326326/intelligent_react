@@ -3,7 +3,6 @@ import {observer} from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
 import bubbleStyles from '../../styles/chatting/chatbubble.module.css'
-import {axiosClient} from "../../axiosApi/axiosClient";
 import BotBubble from "./chatbotbubble";
 
 
