@@ -1,19 +1,16 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {observer} from "mobx-react";
 import styles from '../../styles/chatting/eachchat.module.css';
 import TimeAgo from '../../axiosApi/timeDifference.js'
 
 const EachChat = observer(({chat, onClick, isChat}) => {
 
-    // const altImage = chat.users[0].profileImageUrl;
-    useEffect(()=>{
-        console.log(chat.users[1])
-    })
+
     return(
         <div className={styles.eachChatContainer} onClick={onClick}>
             <div className={styles.pictureFrame}>
                 <div className={styles.eachPicture}>
-                    <img src={chat.users[1].profileImageUrl} alt="" />
+                    <img src={chat.users[0].profileImageUrl} alt="" />
                 </div>
                 {chat.chatUser.isPinned === 1 &&
                     <svg className={styles.pin} xmlns="http://www.w3.org/2000/svg"
