@@ -36,6 +36,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [messages, setMessages] = useState([]);
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
+    // const isChatRoomActive = useRef(true);
 
 //todo
     const fetchData = async () => {
@@ -94,6 +95,13 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             scrollToBottom();
         }
 
+        // // isChatRoomActive.current = true;
+        //
+        // return () => {
+        //     // Set the chat room as inactive when the component unmounts
+        //     // isChatRoomActive.current = false;
+        // };
+
     }, [page, roomData.roomId]);
 
     useEffect(() => {
@@ -116,9 +124,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     //웹소켓으로 추가
     //랜더링은 얘가 함
     useEffect(() => {
-        const handleNewMessage = (message) => {
+        const handleNewMessage = async (message) => {
             console.log('Received message from WebSocket:', message.body);
             const newMessage = JSON.parse(message.body);
+            console.log(newMessage)
 
             if (newMessage.announcement) {
                 setAnnounce(newMessage.messageContent);
@@ -139,6 +148,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     });
                 } else {
                     setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+                    // if (isChatRoomActive.current) {
+                    //     await markMessageAsRead(AuthStore.getNickname(), newMessage.roomId, newMessage.messageId);
+                    // }
                 }
             }
         };
@@ -151,6 +164,19 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             webSocketService.disconnect();
         };
     }, [roomData.roomId]);
+
+    // const markMessageAsRead = async (senderId, roomId, messageId) => {
+    //     try {
+    //         const response = await axiosClient.post('/chat/markread', {
+    //             senderId,
+    //             roomId,
+    //             messageId
+    //         });
+    //         console.log('Message marked as read:', response.data);
+    //     } catch (error) {
+    //         console.error('Error marking message as read:', error);
+    //     }
+    // };
 
     const handleScroll = () => {
         const scrollTop = bubbleContainerRef.current.scrollTop;
@@ -197,6 +223,8 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             setIsMenuClicked(false);
             setIsAttachButtonClicked(false);
             setModalOn(false)
+            // isChatRoomActive.current = false;
+
         }, 500);
     };
 
