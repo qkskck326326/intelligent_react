@@ -66,7 +66,9 @@ const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
                             onChange={handleChange}
                             required
                         />
+                        <button>테스트</button>
                     </Form.Group>
+                    <button>테스트</button>
                     <Form.Group>
                         <Form.Label>Site Name</Form.Label>
                         <Form.Control
@@ -96,6 +98,7 @@ const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
                             onChange={handleChange}
                             required
                         />
+                        <button>테스트</button>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Context Element</Form.Label>
@@ -106,12 +109,17 @@ const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
                             onChange={handleChange}
                             required
                         />
+                        <button>테스트</button>
                         <br/>
                     </Form.Group>
                     <Button variant="primary" type="submit">
                         저장
                     </Button>
                 </Form>
+                <div>
+
+
+                </div>
             </Modal.Body>
         </Modal>
     );
