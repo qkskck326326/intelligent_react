@@ -23,6 +23,7 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubCategoryName, setSelectedSubCategoryName] = useState(""); // 선택된 서브카테고리명 상태 추가
 
+
   const ITEMS_PER_PAGE = 16;
 
   const fetchLecturePackages = async (
@@ -59,6 +60,9 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
     }
   };
 
+
+
+
   useEffect(() => {
     fetchLecturePackages(
         currentPage,
@@ -68,7 +72,13 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
         selectedCategory,
         searchCriteria
     );
-  }, [currentPage, sortCriteria, selectedCategory]);
+    console.log("currentPage :", currentPage)
+    console.log("ITEMS_PER_PAGE :",ITEMS_PER_PAGE)
+    console.log("sortCriteria :",sortCriteria)
+    console.log("searchTerm :",searchTerm)
+    console.log("selectedCategory :",selectedCategory)
+    console.log("searchCriteria :",searchCriteria)
+  }, [currentPage, sortCriteria, selectedCategory, searchCriteria]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -89,6 +99,7 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
   const handleSelectCategory = (category) => {
     setSelectedCategory(category);
     setSelectedSubCategoryName(category ? category.name : ""); // 서브카테고리명 상태 업데이트
+
     setCurrentPage(1);
     fetchLecturePackages(
         1,

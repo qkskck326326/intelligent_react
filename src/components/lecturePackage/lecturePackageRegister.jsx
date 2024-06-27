@@ -28,8 +28,6 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
     const [form, setForm] = useState({
         title: '',
         level: '',
-        priceKind: '',
-        priceMonth: '',
         priceForever: ''
     });
 
@@ -39,9 +37,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             setForm({
                 title: packageData.title || '',
                 level: packageData.packageLevel || '',
-                priceKind: packageData.priceKind?.toString() || '',
-                priceMonth: packageData.price?.toString() || '',
-                priceForever: packageData.price?.toString() || ''
+                priceForever: packageData.priceForever?.toString() || ''
             });
             setEditorData(packageData.content || '');
             setThumbnailPreview(packageData.thumbnail || '');
@@ -114,8 +110,6 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             title: form.title,
             content: editorData,
             packageLevel: form.level,
-            priceKind: parseInt(form.priceKind),
-            priceMonth: parseInt(form.priceMonth),
             priceForever: parseInt(form.priceForever),
             thumbnail: thumbnailPreview,
             packageSubCategoryId: selectedCategories.map(category => category.id),
@@ -188,31 +182,11 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                 </div>
             </div>
             <div className={styles.formSection}>
-                <label htmlFor="priceKind">가격 종류</label>
-                <select
-                    id="priceKind"
-                    name="priceKind"
-                    value={form.priceKind}
-                    onChange={handleInputChange}
-                >
-                    <option value="">선택</option>
-                    <option value="0">월정액</option>
-                    <option value="1">평생소장</option>
-                </select>
                 <div>
-                    <label htmlFor="price">월정액 금액</label>
+                    <label htmlFor="priceForever">평생소장 금액</label>
                     <input
-                        id="priceMonth"
-                        name="priceMonth"
-                        type="text"
-                        value={form.priceMonth}
-                        onChange={handleInputChange}
-                        placeholder="금액을 입력하세요"
-                    />
-                    <label htmlFor="price">평생소장 금액</label>
-                    <input
-                        id="priceForever"
-                        name="priceForever"
+                        id="price"
+                        name="price"
                         type="text"
                         value={form.priceForever}
                         onChange={handleInputChange}
