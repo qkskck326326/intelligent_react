@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "../../styles/user/enroll/enrollEducationExperience.module.css";
 import { LuPencilLine } from "react-icons/lu";
 import { differenceInMonths, parseISO } from 'date-fns';
 
-const EnrollEducationExperience = ({ nextPage, prevPage, setEducationExperience, setCareerExperience }) => {
+const EnrollEducationExperience = ({ nextPage, prevPage, educationExperience, careerExperience, setEducationExperience, setCareerExperience }) => {
     const [showEducationForm, setShowEducationForm] = useState(false);
     const [showCareerForm, setShowCareerForm] = useState(false);
     const [educationForm, setEducationForm] = useState({
@@ -33,6 +33,21 @@ const EnrollEducationExperience = ({ nextPage, prevPage, setEducationExperience,
     const [errorMessage, setErrorMessage] = useState("");
     const [totalCareer, setTotalCareer] = useState("");
     const dateInputRef = useRef(null);
+
+    useEffect(() => {
+        setEducations(educationExperience);
+        setCareers(careerExperience);
+    }, [educationExperience, careerExperience]);
+
+    useEffect(() => {
+        // 경력 총계 재계산
+        const totalMonths = careers.reduce((total, career) => {
+            const start = parseISO(career.startDate);
+            const end = parseISO(career.endDate);
+            return total + differenceInMonths(end, start);
+        }, 0);
+        setTotalCareer(totalMonths);
+    }, [careers]);
 
     const handleEducationSubmit = (e) => {
         e.preventDefault();
@@ -243,7 +258,6 @@ const EnrollEducationExperience = ({ nextPage, prevPage, setEducationExperience,
                                     {education.homeAndTransfer !== "homeSchool" && (
                                         <>
                                             <span>{education.major}</span>
-                                            {/*<span>{education.location}</span>*/}
                                         </>
                                     )}
                                 </div>
@@ -456,8 +470,7 @@ const EnrollEducationExperience = ({ nextPage, prevPage, setEducationExperience,
                             )}
 
                             <div className={styles.bottonGroup}>
-                                <button type="button" className={styles.cancelBtn} onClick={toggleEducationForm}>취소
-                                </button>
+                                <button type="button" className={styles.cancelBtn} onClick={toggleEducationForm}>취소</button>
                                 <button type="submit" className={styles.saveBtn}>{isEditing ? "수정" : "저장"}</button>
                             </div>
                         </form>
@@ -476,13 +489,12 @@ const EnrollEducationExperience = ({ nextPage, prevPage, setEducationExperience,
                         )}
                     </div>
                 </h3>
-
                 <div className={styles.horizontalLine}></div>
                 {!showCareerForm && (
                     <div className={styles.careerList}>
                         {careers.map((career) => (
                             <div key={career.id} className={styles.careerItem}>
-                            <div className={styles.careerHeader}>
+                                <div className={styles.careerHeader}>
                                     <span>{career.institutionName}</span>
                                     <span className={styles.wall}>|</span>
                                     <span className={styles.careerDates}>
@@ -587,8 +599,7 @@ const EnrollEducationExperience = ({ nextPage, prevPage, setEducationExperience,
                             </div>
 
                             <div className={styles.bottonGroup}>
-                                <button type="button" className={styles.cancelBtn} onClick={toggleCareerForm}>취소
-                                </button>
+                                <button type="button" className={styles.cancelBtn} onClick={toggleCareerForm}>취소</button>
                                 <button type="submit" className={styles.saveBtn}>{isEditing ? "수정" : "저장"}</button>
                             </div>
                         </form>
