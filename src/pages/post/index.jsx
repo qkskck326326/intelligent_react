@@ -14,7 +14,7 @@ const Index = () => {
 
   return (
     <div>
-      <header className={styles.header}>
+      {/* <header className={styles.header}>
         <div className={styles.headerImageContainer}>
           <img
             src="/images/postMain4.png"
@@ -22,17 +22,17 @@ const Index = () => {
             className={styles.headerImage}
           />
         </div>
-      </header>
+      </header> */}
       <div className={styles.container}>
         <div className={styles.popularPosts}>
           <PopularPosts />
         </div>
-        <div className={styles.mainContent}>
-          <PostList
-            selectedCategory={selectedCategory}
-            onSelectCategory={handleSelectCategory}
-          />
-        </div>
+        {/* <div className={styles.mainContent}> */}
+        <PostList
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleSelectCategory}
+        />
+        {/* </div> */}
       </div>
     </div>
   );

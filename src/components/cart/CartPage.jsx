@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CartItem from "./cartItem";
+import CartItem from "./CartItem";
 import styles from "./CartPage.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import axios from "axios";
@@ -60,19 +60,39 @@ const CartPage = () => {
     });
   };
 
+  // const handleDeleteSelected = async () => {
+  //   try {
+  //     const response = await axiosClient.post("/cart/delete", {
+  //       ids: Array.from(selectedItems)
+  //     });
+  //     console.log("Delete response:", response); // 디버깅 로그
+  //     setCartItems((prev) =>
+  //       prev.filter((item) => !selectedItems.has(item.lecturePackageId))
+  //     );
+  //     setSelectedItems(new Set());
+  //   } catch (error) {
+  //     console.error("Error deleting items:", error); // 디버깅 로그
+  //     setError(error.message);
+  //   }
+  // };
   const handleDeleteSelected = async () => {
     try {
-      await axiosClient.delete("/cart", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: Array.from(selectedItems),
+      const idsArray = Array.from(selectedItems);
+      const userEmail = authStore.getUserEmail();
+      const provider = authStore.getProvider();
+      console.log("삭제할 패키지아이디", idsArray); // 디버깅 로그
+      const response = await axiosClient.post("/cart/delete", {
+        ids: idsArray,
+        userEmail: userEmail,
+        provider: provider,
       });
+      console.log("Delete response:", response); // 디버깅 로그
       setCartItems((prev) =>
         prev.filter((item) => !selectedItems.has(item.lecturePackageId))
       );
       setSelectedItems(new Set());
     } catch (error) {
+      console.error("Error deleting items:", error); // 디버깅 로그
       setError(error.message);
     }
   };
@@ -133,7 +153,6 @@ const CartPage = () => {
         couponId: selectedCoupon ? selectedCoupon.id : null,
       };
 
-      // 세션에 결제 정보 저장
       await axiosClient.post("/payment/request", paymentRequest, {
         withCredentials: true,
       });
@@ -142,7 +161,7 @@ const CartPage = () => {
         amount: totalAmount,
         orderId: orderId,
         orderName: "Cart Payment",
-        successUrl: `http://localhost:3000/payment/success`,
+        successUrl: "http://localhost:3000/payment/success",
         failUrl: "http://localhost:3000/payment/fail",
       };
 
@@ -165,42 +184,40 @@ const CartPage = () => {
 
   return (
     <div className={styles.cartPage}>
-      <h2>{authStore.getNickname()}님의 장바구니목록</h2>
       <div className={styles.cartContainer}>
         <div className={styles.cartItems}>
-          <table className={styles.cartTable}>
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={allSelected}
-                    onChange={() => handleSelectAll(!allSelected)}
-                  />
-                  전체선택 {cartItems.length}/{cartItems.length}
-                </th>
-                <th>상품명</th>
-                <th>가격</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cartItems.length === 0 ? (
-                <tr>
-                  <td colSpan="5">아직 장바구니에 추가한 패키지가 없습니다.</td>
-                </tr>
-              ) : (
-                cartItems.map((item) => (
-                  <CartItem
-                    key={item.lecturePackageId}
-                    item={item}
-                    onSelect={handleSelect}
-                    isSelected={selectedItems.has(item.lecturePackageId)}
-                  />
-                ))
-              )}
-            </tbody>
-          </table>
+          <h2>{authStore.getNickname()}님의 장바구니 목록</h2>
+          <div className={styles.cartHeader}>
+            <br />
+            <div>
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={() => handleSelectAll(!allSelected)}
+              />
+              전체선택 {cartItems.length}/{cartItems.length}
+            </div>
+            <div>상품명</div>
+            <div>가격</div>
+          </div>
+          <div className={styles.cartBody}>
+            {cartItems.length === 0 ? (
+              <div className={styles.emptyCart}>
+                아직 장바구니에 추가한 패키지가 없습니다.
+              </div>
+            ) : (
+              cartItems.map((item) => (
+                <CartItem
+                  key={item.lecturePackageId}
+                  item={item}
+                  onSelect={handleSelect}
+                  isSelected={selectedItems.has(item.lecturePackageId)}
+                />
+              ))
+            )}
+          </div>
           <button
+            className={styles.deleteButton}
             onClick={handleDeleteSelected}
             disabled={selectedItems.size === 0}
           >
@@ -239,7 +256,6 @@ const CartPage = () => {
           </div>
           <p>할인 금액: {getDiscountAmount().toLocaleString()}원</p>
           <p>총 결제 금액: {getTotalPrice().toLocaleString()}원</p>
-
           <div className={styles.agreement}>
             <label>
               <input
