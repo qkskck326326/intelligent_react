@@ -4,35 +4,48 @@ import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chatlist.module.css'
 import EachChat from '../../components/chat/eachchat.jsx';
 import {axiosClient} from "../../axiosApi/axiosClient";
-import authStore from "../../stores/authStore";
 import AuthStore from "../../stores/authStore";
+import webSocketService from "./WebSocketService";
 
 /*
 * */
 const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, onNavigateToChat, onNavigateToBot, userId, userType }) => {
 
-    const [chatOrInq, setChatOrInq] = useState(true);
+    const [chatOrInq, setChatOrInq] = useState((userType !== 2));
     const [isAnimating, setIsAnimating] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
     const [chatData, setChatData] = useState([])
 
-    //TODO
     useEffect(() => {
-        authStore.checkIsAdmin() && setChatOrInq(false);
-
-        axiosClient.get('/chat/chatlist', {
-            params: {
-                userId: userId,
-                isChats: chatOrInq
-            }
-        })
-            .then(response => {
-                console.log(response.data);
-                setChatData(response.data);
+        const fetchChatList = () => {
+            axiosClient.get('/chat/chatlist', {
+                params: {
+                    userId: userId,
+                    isChats: chatOrInq
+                }
             })
-            .catch(error => {
-                console.error('An error occurred!', error);
-            });
+                .then(response => {
+                    console.log(response.data)
+                    setChatData(response.data);
+                })
+                .catch(error => {
+                    console.error('An error occurred!', error);
+                });
+        };
+
+        fetchChatList();
+
+        const handleIncomingMessage = (message) => {
+            console.log(message);
+            fetchChatList();
+        };
+
+        webSocketService.connect();
+        webSocketService.subscribe(`/topic/update`, handleIncomingMessage);
+
+        return () => {
+            webSocketService.disconnect();
+        };
     }, [userId, chatOrInq]);
 
 
@@ -63,7 +76,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
     const getAdmins = async () => {
         try{
             const response = await axiosClient.get('/chat/admins')
-            return [authStore.getNickname(), ...response.data]
+            return [AuthStore.getNickname(), ...response.data]
         }
         catch(error){
             console.error(error);
