@@ -28,7 +28,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
     const [form, setForm] = useState({
         title: '',
         level: '',
-        price: ''
+        priceForever: ''
     });
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             setForm({
                 title: packageData.title || '',
                 level: packageData.packageLevel || '',
-                price: packageData.price?.toString() || ''
+                priceForever: packageData.priceForever?.toString() || ''
             });
             setEditorData(packageData.content || '');
             setThumbnailPreview(packageData.thumbnail || '');
@@ -110,7 +110,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             title: form.title,
             content: editorData,
             packageLevel: form.level,
-            price: parseInt(form.price),
+            priceForever: parseInt(form.priceForever),
             thumbnail: thumbnailPreview,
             packageSubCategoryId: selectedCategories.map(category => category.id),
             packageTechStackId: selectedTechStacks.map(stack => stack.techStackId),
@@ -183,12 +183,12 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             </div>
             <div className={styles.formSection}>
                 <div>
-                    <label htmlFor="price">평생소장 금액</label>
+                    <label htmlFor="priceForever">평생소장 금액</label>
                     <input
                         id="price"
                         name="price"
                         type="text"
-                        value={form.price}
+                        value={form.priceForever}
                         onChange={handleInputChange}
                         placeholder="금액을 입력하세요"
                     />

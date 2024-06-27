@@ -155,8 +155,8 @@ const LecturePackageDetail = observer(() => {
     };
 
     //가격에 천단위로 , 써줌.
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('ko-KR').format(price);
+    const formatPrice = (priceForever) => {
+        return new Intl.NumberFormat('ko-KR').format(priceForever);
     };
 
     const getLectureLevel = (level) => {
@@ -296,7 +296,7 @@ const LecturePackageDetail = observer(() => {
                             </div>
                         </div>
                         <div className={styles.field}>
-                            <p className={styles.priceKind}> 평생소장 &gt;&gt;&gt; {formatPrice(lecturePackage.price)} ₩</p>
+                            <p className={styles.priceKind}> 평생소장 &gt;&gt;&gt; {formatPrice(lecturePackage.priceForever)} ₩</p>
                         </div>
                         <div className={styles.field}>
                             <label>해당 카테고리</label>
