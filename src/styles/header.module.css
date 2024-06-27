@@ -41,3 +41,8 @@
     align-items: center; /* 네비게이션 링크 수직 중앙 정렬 */
     margin-left: auto; /* 오른쪽 정렬을 위한 마진 조정 */
 }
+
+.notificationBell {
+    cursor: pointer;
+    margin-right: 20px;
+  }
