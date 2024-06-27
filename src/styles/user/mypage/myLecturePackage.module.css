@@ -1,0 +1,45 @@
+.container {
+    padding: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.cardContainer {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: auto;
+}
+
+.details {
+    padding: 10px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.rating {
+    color: #f39c12;
+    margin-bottom: 5px;
+}
+
+.info {
+    color: #555;
+}

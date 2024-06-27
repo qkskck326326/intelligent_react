@@ -1,34 +1,114 @@
+/* lectureDetail.module.css */
 .lectureDetailContainer {
-    padding: 20px;
+  padding: 20px;
 }
 
 .header {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
 .lectureTitle {
-    font-size: 2em;
-    margin-bottom: 10px;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.lectureInfoContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .lectureInfo {
-    font-size: 1.2em;
-    color: #555;
+  font-size: 1.2em;
+  color: #555;
+  flex-grow: 1;
 }
 
 .videoContainer {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .video {
-    width: 100%;
-    max-width: 1200px;
-    border-radius: 10px;
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 10px;
 }
 
 .lectureContent {
-    font-size: 1.1em;
-    color: #333;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.reportButton {
+  background: none;
+  border: none;
+  color: #d9534f;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.reportButton:hover {
+  color: #c9302c;
+}
+
+.reportPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 500px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.popupContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.popupContent h2 {
+  margin-top: 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.popupContent input {
+  width: 96%;
+  height: 100px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.popupContent .submitButton,
+.popupContent .cancelButton {
+  background-color: #52c095;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.popupContent .cancelButton {
+  background-color: #6c757d;
+}
+
+.popupContent .submitButton:hover {
+  background-color: #3f8a71;
+}
+
+.popupContent .cancelButton:hover {
+  background-color: #5a6268;
 }
