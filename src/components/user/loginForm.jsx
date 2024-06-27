@@ -73,7 +73,7 @@ const LoginForm = observer(() => {
 	<div className={styles.center_div}>
 	  <form className={styles.form} onSubmit={handleSubmit}>
 		<div className={styles.form_group}>
-		  <h2>IntelliClass에 로그인 하세요</h2>
+		  <h2>InTelliClass에 로그인 하세요</h2>
 		  <input
 			type="text"
 			id="userEmail"
