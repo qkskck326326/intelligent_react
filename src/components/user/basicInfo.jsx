@@ -142,12 +142,12 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
   const handleSendVerificationCode = async () => {
     const userEmail = basicInfo.userEmail;
     const provider = 'intelliclass'; // provider 값을 적절히 설정하세요.
-  
+
     if (!validateEmail(userEmail)) {
       alert('유효한 이메일 주소를 입력하세요.');
       return;
     }
-  
+
     try {
       // 이메일 중복 체크 요청
       const checkEmailResponse = await axiosClient.get('/users/check-email', {
@@ -156,7 +156,7 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
           provider,
         },
       });
-  
+
       if (checkEmailResponse.status === 200) {
         // 이메일 중복되지 않음, 인증 코드 전송 요청
         const response = await axiosClient.post('/users/send-verification-code', null, {
@@ -164,7 +164,7 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
             userEmail,
           },
         });
-  
+
         if (response.status === 200) {
           setIsCodeSent(true);
           setTimer(180); // 타이머를 3분으로 재설정
@@ -366,9 +366,9 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
                 ref={userPwdRef}
               />
               <div className={styles.tooltiptext}>
-                <p className={passwordValidation.minLength ? styles.valid : styles.invalid}>✔ 8자 이상</p>
-                <p className={passwordValidation.hasUpperCase ? styles.valid : styles.invalid}>✖ 대소문자</p>
-                <p className={passwordValidation.hasNumber ? styles.valid : styles.invalid}>✔ 숫자 한 개 이상</p>
+                <p className={passwordValidation.minLength ? styles.valid : styles.invalid}>{passwordValidation.minLength ? '✔' : '✖'} 8자 이상</p>
+                <p className={passwordValidation.hasUpperCase ? styles.valid : styles.invalid}>{passwordValidation.hasUpperCase ? '✔' : '✖'} 대문자 한 개 이상</p>
+                <p className={passwordValidation.hasNumber ? styles.valid : styles.invalid}>{passwordValidation.hasNumber ? '✔' : '✖'} 숫자 한 개 이상</p>
               </div>
             </div>
             <input

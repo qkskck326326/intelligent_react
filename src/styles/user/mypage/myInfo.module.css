@@ -1,0 +1,156 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-top: 4rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 600px;
+}
+
+.formBody {
+    display: flex;
+    flex-direction: row;
+}
+
+.imageSection {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.imageUpload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profileImageContainer {
+    position: relative;
+}
+
+.profileImage {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+.fileUploadLabel {
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    background: url(/images/profileUploadIcon.png) no-repeat center;
+    background-size: cover;
+    background-color: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.fileUploadLabel:hover {
+    transform: scale(1.1);
+}
+
+.fileInput {
+    display: none;
+}
+
+.inputSection {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.input {
+    width: 60%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.nicknameSection {
+    display: flex;
+    align-items: center;
+}
+
+.checkButton {
+    margin-left: 10px;
+    padding: 10px;
+    color: white;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+.checkButton.enabled {
+    background-color: #28a745;
+}
+
+.checkButton.disabled {
+    background-color: #ccc;
+}
+
+.checkButton.enabled:hover {
+    background-color: #218838;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 10px 0;
+    gap: 15px;
+}
+
+.prevButton,
+.navigationButton {
+    width: auto;
+    padding: 5px 30px;
+    font-size: 0.8rem;
+    border-radius: 3px;
+    border: none;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.prevButton {
+    background-color: #ccc;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.prevButton:hover {
+    background-color: #999;
+}
+
+.navigationButton {
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.navigationButton:hover {
+    background-color: #218838;
+}
