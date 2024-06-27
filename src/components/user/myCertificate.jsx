@@ -12,6 +12,7 @@ const MyCertificate = observer(() => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [editData, setEditData] = useState(null);
 
   const ITEMS_PER_PAGE = 10; // 페이지당 보이는 데이터 개수
 
@@ -80,6 +81,36 @@ const MyCertificate = observer(() => {
     }
   };
 
+  const handleAdd = () => {
+    setEditData(null); // Reset editData
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (certificate) => {
+    setEditData(certificate);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdate = async (updatedCertificate) => {
+    const nickname = authStore.getNickname();
+
+    try {
+      console.log("Updating certificate:", updatedCertificate);
+      const res = await axiosClient.put('/certificates', updatedCertificate);
+      if (res.status === 200 || res.status === 201) {
+        fetchCertificates(nickname);
+        setIsModalOpen(false);
+        setEditData(null);
+
+
+      } else {
+        console.error("Failed to update certificate");
+      }
+    } catch (error) {
+      console.error("Error updating certificate", error);
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -89,7 +120,7 @@ const MyCertificate = observer(() => {
           <span className={styles.title}>자격증</span>
           <button
               className={styles["add-button"]}
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleAdd}
           >
             + 추가
           </button>
@@ -113,7 +144,8 @@ const MyCertificate = observer(() => {
                   <td>{item.passDate}</td>
                   <td>{item.issuePlace}</td>
                   <td>
-                    <button  onClick={() => handleDelete(item.certificateNumber)}>🗑️</button>
+                    <button onClick={() => handleEdit(item)}>✏️</button>
+                    <button onClick={() => handleDelete(item.certificateNumber)}>🗑️</button>
                   </td>
                 </tr>
             ))}
@@ -127,8 +159,9 @@ const MyCertificate = observer(() => {
         />
         {isModalOpen && (
             <CertificateAddModal
-                onSave={handleSave}
+                onSave={editData ? handleUpdate : handleSave}
                 onClose={() => setIsModalOpen(false)}
+                editData={editData}
             />
         )}
       </div>
