@@ -38,7 +38,7 @@ const Mypage = observer(() => {
                 return <LectureManagement />;
             // 다른 컴포넌트들도 여기 추가
             default:
-                return <div>메뉴를 선택해주세요.</div>;
+                return <MyInfo />;
         }
     };
 
