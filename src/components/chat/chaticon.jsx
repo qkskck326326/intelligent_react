@@ -12,7 +12,7 @@ const ChatIcon = observer(({ isHidden, isExpanding, onNavigate, userId, userType
 
     useEffect(() => {
 
-        if (userId) {
+        if (!isHidden && userId) {
             async function getTotalUnreadCount() {
                 try {
                     const response = await axiosClient.get(`/chat/countunreadall?userId=${userId}`);
@@ -26,11 +26,11 @@ const ChatIcon = observer(({ isHidden, isExpanding, onNavigate, userId, userType
             // Call the function immediately
             getTotalUnreadCount();
 
-            const interval = setInterval(getTotalUnreadCount, 10000);
+            const interval = setInterval(getTotalUnreadCount, 5000);
 
             return () => clearInterval(interval);
         }
-    }, [userId]);
+    }, [isHidden, userId]);
 
     const handleClick = () => {
         setIsAnimating(true);

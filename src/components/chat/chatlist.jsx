@@ -20,19 +20,29 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
     useEffect(() => {
         authStore.checkIsAdmin() && setChatOrInq(false);
 
-        axiosClient.get('/chat/chatlist', {
-            params: {
-                userId: userId,
-                isChats: chatOrInq
-            }
-        })
-            .then(response => {
-                console.log(response.data);
-                setChatData(response.data);
+        const fetchingChatList = () => {
+            axiosClient.get('/chat/chatlist', {
+                params: {
+                    userId: userId,
+                    isChats: chatOrInq
+                }
             })
-            .catch(error => {
-                console.error('An error occurred!', error);
-            });
+                .then(response => {
+                    console.log(response.data);
+                    setChatData(response.data);
+                })
+                .catch(error => {
+                    console.error('An error occurred!', error);
+                });
+        }
+
+        fetchingChatList();
+
+        const interval = setInterval(fetchingChatList, 5000);
+
+        return () => clearInterval(interval);
+
+
     }, [userId, chatOrInq]);
 
 
