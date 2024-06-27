@@ -1,7 +1,8 @@
 .postListContainer {
   padding: 20px;
-  max-width: 900px;
-  margin: 0 20px; /* 양쪽 여백을 줄이기 위해 max-width 대신 margin 값을 조정 */
+  max-width: 900px; /* 최대 너비를 1200px로 확장 */
+  width: 100%; /* 너비를 100%로 설정 */
+  margin: 0 auto; /* 중앙 정렬을 위해 변경 */
   position: relative;
 }
 
@@ -28,14 +29,16 @@
   list-style-type: none;
   padding: 0;
   position: relative;
+  
 }
 
 .postItem {
   /* background: #ffffff; */
-  /* border: 0.8px solid #e3e3e3; */
+  border: 0.8px solid #e3e3e3;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 15px;
+  /* background-color: #f9f9f9; */
 }
 
 .postHeader {

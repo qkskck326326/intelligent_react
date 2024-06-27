@@ -1,103 +1,109 @@
 .popularPostsContainer {
-    margin-top: 40px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    margin-left: 70px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-  }
-  
-  .popularPostsContainer h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .header h2 {
-    font-size: 24px;
-    color: #333;
-    margin-left: 20px;
-    margin-right: 10px;
-  }
-  
-  .rankImage {
-    margin-left: 20px;
-    width: 50px;
-    height: 50px;
-  }
+  margin-top: 40px;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 0 auto; /* 가운데 정렬을 위해 변경 */
+  width: 50%;
+}
 
-  .popularPostsList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .popularPostItem {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    margin-bottom: 10px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    /* border: rgb(237, 237, 237) solid 1px; */
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-    transition: transform 0.2s ease;
-  }
-  
-  .popularPostItem:hover {
-    transform: translateY(-3px);
-  }
-  
-  .rankIcon {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    margin-right: 15px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    color: rgb(52, 52, 52);
-    font-weight: bold;
-  }
-  
-  .rankIcon1 {
-    background-color: #FFD700; /* 금색 */
-  }
-  
-  .rankIcon2 {
-    background-color: #d7d7d7; /* 은색 */
-  }
-  
-  .rankIcon3 {
-    background-color: #c97d32; /* 동색 */
-  }
-  
-  
-  .popularPostLink {
-    text-decoration: none;
-    color: #121212;
-    font-weight: bold;
-  }
-  
-  .popularPostLink:hover {
-    text-decoration: underline;
-  }
-  
-  .popularPostComments {
-    margin-left: 10px;
-    color: #1c86f1;
-  }
-  
-  .popularPostTime {
-    color: #888;
-    font-size: 12px;
-    margin-left: 12px;
-  }
-  
+.popularPostsContainer h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 24px;
+  color: #333;
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
+.rankImage {
+  margin-left: 20px;
+  width: 50px;
+  height: 50px;
+}
+
+.popularPostsList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.popularPostColumn {
+  width: 48%; /* 두 컬럼이 맞도록 설정 */
+  display: flex;
+  flex-direction: column;
+}
+
+.popularPostItem {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+  flex: 1;
+}
+
+.popularPostItem:hover {
+  transform: translateY(-3px);
+}
+
+.rankIcon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: rgb(52, 52, 52);
+  font-weight: bold;
+}
+
+.rankIcon1 {
+  background-color: #FFD700; /* Gold */
+}
+
+.rankIcon2 {
+  background-color: #d7d7d7; /* Silver */
+}
+
+.rankIcon3 {
+  background-color: #c97d32; /* Bronze */
+}
+
+.popularPostLink {
+  text-decoration: none;
+  color: #121212;
+  font-weight: bold;
+  flex: 1; /* 글 길이에 따라 넓이 자동 조정 */
+}
+
+.popularPostLink:hover {
+  text-decoration: underline;
+}
+
+.popularPostComments {
+  margin-left: 10px;
+  color: #1c86f1;
+}
+
+.popularPostTime {
+  color: #888;
+  font-size: 12px;
+  margin-left: 12px;
+}

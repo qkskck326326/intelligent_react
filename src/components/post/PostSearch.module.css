@@ -5,7 +5,7 @@
   margin: 20px 0;
   padding: 10px;
   border-radius: 8px;
-  background-color: #ffffff;
+  /* background-color: #76d3bc; */
 }
 
 .categoryToggle {
@@ -24,7 +24,7 @@
 
 .dropdownToggle {
   padding: 10px 20px;
-  border: 1px solid #ced4da;
+  border: 1px solid #e1e1e1;
   border-radius: 25px;
   background-color: #ffffff;
   color: #6e6e6e;

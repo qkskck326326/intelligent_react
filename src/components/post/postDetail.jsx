@@ -335,95 +335,102 @@ const PostDetail = observer(({ postId }) => {
   }
 
   return (
-    <div className={styles.postDetailContainer}>
-      <div className={styles.postHeader}>
-        <div className={styles.postAvatar}>
-          <img src={post.profileImageUrl} alt={post.nickname} />
-        </div>
-        <div className={styles.postMeta}>
-          <span className={styles.postNickname}>{post.nickname}</span>
-          <span className={styles.postCategory}>{post.categoryName}</span>
-        </div>
-
-        <div className={styles.postTime}>{getRelativeTime(post.postTime)}</div>
-        {isOwner() && (
-          <div className={styles.dropdownIcon} onClick={toggleDropdown}>
-            <AiOutlineMore size={25} />
-            {dropdownOpen && (
-              <div className={styles.dropdownMenu}>
-                <div
-                  className={styles.dropdownMenuItem}
-                  onClick={() => setIsEditing(true)}
-                >
-                  수정
-                </div>
-                <div
-                  className={styles.dropdownMenuItem}
-                  onClick={handleDeleteClick}
-                >
-                  삭제
-                </div>
-              </div>
-            )}
+    <div className={styles.allContainer}>
+      <div className={styles.postDetailContainer}>
+        <div className={styles.postHeader}>
+          <div className={styles.postAvatar}>
+            <img src={post.profileImageUrl} alt={post.nickname} />
           </div>
-        )}
-        {!isOwner() && (
-          <button className={styles.reportButton} onClick={openReportPopup}>
-            <AiOutlineWarning size={25} />
-          </button>
-        )}
-      </div>
-      <div className={styles.postStats}>
-        <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
-          {liked ? <AiFillLike size={25} /> : <AiOutlineLike size={25} />}{" "}
-          {post.likeCount}
-        </span>
-        <span>조회수: {post.viewCount}</span>
-      </div>
-      <h1 className={styles.postTitle}>{post.title}</h1>
-      {renderContent()}
-      {renderFiles()}
-      {renderComments()}
+          <div className={styles.postMeta}>
+            <span className={styles.postNickname}>{post.nickname}</span>
+            <span className={styles.postCategory}>{post.categoryName}</span>
+          </div>
 
-      <div className={styles.commentForm}>
-        <div className={styles.inputContainer}>
-          <input
-            type="text"
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-            placeholder="댓글을 작성하세요"
-          />
-          <button
-            onClick={handleCommentSubmit}
-            className={styles.submitCommentButton}
-          >
-            <LuSend />
-          </button>
+          <div className={styles.postTime}>
+            {getRelativeTime(post.postTime)}
+          </div>
+          {isOwner() && (
+            <div className={styles.dropdownIcon} onClick={toggleDropdown}>
+              <AiOutlineMore size={25} />
+              {dropdownOpen && (
+                <div className={styles.dropdownMenu}>
+                  <div
+                    className={styles.dropdownMenuItem}
+                    onClick={() => setIsEditing(true)}
+                  >
+                    수정
+                  </div>
+                  <div
+                    className={styles.dropdownMenuItem}
+                    onClick={handleDeleteClick}
+                  >
+                    삭제
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {!isOwner() && (
+            <button className={styles.reportButton} onClick={openReportPopup}>
+              <AiOutlineWarning size={25} />
+            </button>
+          )}
         </div>
-      </div>
+        <div className={styles.postStats}>
+          <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
+            {liked ? <AiFillLike size={25} /> : <AiOutlineLike size={25} />}{" "}
+            {post.likeCount}
+          </span>
+          <span>조회수: {post.viewCount}</span>
+        </div>
+        <h1 className={styles.postTitle}>{post.title}</h1>
+        {renderContent()}
+        {renderFiles()}
+        {renderComments()}
 
-      {isReportPopupOpen && (
-        <div className={styles.reportPopup}>
-          <div className={styles.popupContent}>
-            <h2>게시물 신고</h2>
+        <div className={styles.commentForm}>
+          <div className={styles.inputContainer}>
             <input
               type="text"
-              value={reportContent}
-              onChange={(e) => setReportContent(e.target.value)}
-              placeholder="게시물 신고 사유를 작성해주세요."
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              placeholder="댓글을 작성하세요"
             />
             <button
-              onClick={handleReportSubmit}
-              className={styles.submitButton}
+              onClick={handleCommentSubmit}
+              className={styles.submitCommentButton}
             >
-              제출
-            </button>
-            <button onClick={closeReportPopup} className={styles.cancelButton}>
-              취소
+              <LuSend />
             </button>
           </div>
         </div>
-      )}
+
+        {isReportPopupOpen && (
+          <div className={styles.reportPopup}>
+            <div className={styles.popupContent}>
+              <h2>게시물 신고</h2>
+              <input
+                type="text"
+                value={reportContent}
+                onChange={(e) => setReportContent(e.target.value)}
+                placeholder="게시물 신고 사유를 작성해주세요."
+              />
+              <button
+                onClick={handleReportSubmit}
+                className={styles.submitButton}
+              >
+                제출
+              </button>
+              <button
+                onClick={closeReportPopup}
+                className={styles.cancelButton}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 });
