@@ -10,6 +10,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
     const [textContent, setTextContent] = useState('');
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState('');
+    //async로 인해서 실행안될 수 있으므로 ref사용해서 실행 즉시 바로 실행시킴
     const isTypingRef = useRef(false);
     const chatContainerRef = useRef(null);
     const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
@@ -19,12 +20,13 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
         document.addEventListener('keydown', handleF5Press);
         document.addEventListener('click', handleLinkClick);
 
+        //언마운트시 삭제됨
         return () => {
             document.removeEventListener('keypress', handleKeyPress);
             document.removeEventListener('keydown', handleF5Press);
             document.removeEventListener('click', handleLinkClick);
         };
-    }, []);
+    }, []);//리스너가 여러개여야 할 필요없으니 실행될 때 단 한번 실행시킴
 
     useLayoutEffect(() => {
         scrollToBottom();
