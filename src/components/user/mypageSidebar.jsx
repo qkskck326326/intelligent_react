@@ -21,13 +21,17 @@ const MypageSidebar = observer(({ setSelectedComponent }) => {
             <p className={styles.nickname}>'{authStore.nickname}' 님</p>
             <nav className={styles.nav}>
                 <ul>
-                    <li onClick={() => handleMenuClick('myAttendance')}>출석 관리</li>
                     <li onClick={() => handleMenuClick('myInfo')}>회원 정보 수정</li>
+                    <li onClick={() => handleMenuClick('myAttendance')}>출석 관리</li>
                     <li onClick={() => handleMenuClick('myLecture')}>수강 관리</li>
                     <li onClick={() => handleMenuClick('paymentManagement')}>결제 관리</li>
                     <li onClick={() => handleMenuClick('certificates')}>자격증 관리</li>
-                    <li onClick={() => handleMenuClick('lectureManagement')}>강좌 관리</li>
-                    <li onClick={() => handleMenuClick('educationExperience')}>학력/경력 관리</li>
+                    {authStore.checkIsTeacher() && (
+                        <>
+                            <li onClick={() => handleMenuClick('lectureManagement')}>강좌 관리</li>
+                            <li onClick={() => handleMenuClick('educationExperience')}>학력/경력 관리</li>
+                        </>
+                    )}
                 </ul>
             </nav>
         </div>
