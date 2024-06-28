@@ -28,7 +28,8 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
     const [form, setForm] = useState({
         title: '',
         level: '',
-        priceForever: ''
+        priceForever: '',
+        averageClassLength: ''
     });
 
     useEffect(() => {
@@ -37,7 +38,8 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             setForm({
                 title: packageData.title || '',
                 level: packageData.packageLevel || '',
-                priceForever: packageData.priceForever?.toString() || ''
+                priceForever: packageData.priceForever?.toString() || '',
+                averageClassLength: packageData.averageClassLength || ''
             });
             setEditorData(packageData.content || '');
             setThumbnailPreview(packageData.thumbnail || '');
@@ -109,6 +111,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
             nickname: nickname,
             title: form.title,
             content: editorData,
+            averageClassLength: form.averageClassLength,
             packageLevel: form.level,
             priceForever: parseInt(form.priceForever),
             thumbnail: thumbnailPreview,
@@ -185,12 +188,25 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                 <div>
                     <label htmlFor="priceForever">평생소장 금액</label>
                     <input
-                        id="price"
-                        name="price"
+                        id="priceForever"
+                        name="priceForever"
                         type="text"
                         value={form.priceForever}
                         onChange={handleInputChange}
                         placeholder="금액을 입력하세요"
+                    />
+                </div>
+            </div>
+            <div  className={styles.formSection}>
+                <div>
+                    <label htmlFor="averageClassLength">평균 수강기한</label>
+                    <input
+                        id="averageClassLength"
+                        name="averageClassLength"
+                        type="text"
+                        value={form.averageClassLength}
+                        onChange={handleInputChange}
+                        placeholder="평균 수강기한"
                     />
                 </div>
             </div>

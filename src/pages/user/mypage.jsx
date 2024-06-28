@@ -8,9 +8,12 @@ import MyAttendance from "../../components/user/myAttendance";
 import MyInfo from "../../components/user/myInfo";
 import MyLecture from "../../components/user/myLecture";
 import LectureManagement from "../../components/user/lectureManagement";
+import PaymentHistoryManagement from "../payment/PaymentHistoryManagement";
 
 import styles from "../../styles/user/mypage/mypage.module.css";
 import MypageSidebar from "../../components/user/mypageSidebar";
+import MyLecturePackage from "../../components/user/lectureManagement";
+import MyLecturePackageLike from "../../components/user/myLecturePackageLike";
 
 const Mypage = observer(() => {
     const router = useRouter();
@@ -36,6 +39,10 @@ const Mypage = observer(() => {
                 return <MyLecture />;
             case "lectureManagement":
                 return <LectureManagement />;
+            case "paymentManagement":
+                return <PaymentHistoryManagement />;
+            case "like":
+                return <MyLecturePackageLike />;
             // 다른 컴포넌트들도 여기 추가
             default:
                 return <div>메뉴를 선택해주세요.</div>;
