@@ -1,8 +1,8 @@
 .postListContainer {
   padding: 20px;
-  max-width: 900px; /* 최대 너비를 1200px로 확장 */
-  width: 100%; /* 너비를 100%로 설정 */
-  margin: 0 auto; /* 중앙 정렬을 위해 변경 */
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
   position: relative;
 }
 
@@ -29,16 +29,17 @@
   list-style-type: none;
   padding: 0;
   position: relative;
-  
 }
 
 .postItem {
-  /* background: #ffffff; */
   border: 0.8px solid #e3e3e3;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 15px;
-  /* background-color: #f9f9f9; */
+}
+
+.postItem:hover {
+  background-color: #f6f6f6;
 }
 
 .postHeader {
@@ -108,7 +109,7 @@
   gap: 5px;
 }
 
- .uploadButton {
+.uploadButton {
   margin-right: 10rem;
   position: fixed;
   bottom: 30%;
@@ -128,7 +129,7 @@
 
 .uploadButton:hover {
   background-color: #33ca90;
-} 
+}
 
 .pagination {
   display: flex;
@@ -159,6 +160,7 @@
 .pagination .active button {
   background-color: #ffffff;
   border: solid 2px #52c095;
+  border-radius: 10px;
   color: black;
   cursor: default;
 }
@@ -167,5 +169,42 @@
   background-color: #52c095;
   border: #52c095 solid 2px;
   border-radius: 10px;
-  
+}
+
+.filterButtons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filterButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  margin: 0 10px;
+  background-color: #f3f3f3;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.filterButton:hover {
+  background-color: #52c095;
+  color: white;
+}
+
+.active {
+  background-color: #52c095 !important;
+  color: white !important;
+}
+
+
+.bookmarkIcon {
+  cursor: pointer;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }

@@ -21,6 +21,19 @@ const InsertPost = observer(() => {
   const provider = authStore.getProvider();
 
   useEffect(() => {
+    const isLoggedIn = authStore.checkIsLoggedIn();
+
+    if (!isLoggedIn) {
+      const userConfirmed = window.confirm(
+        "로그인이 필요한 콘텐츠입니다. 로그인하시겠습니까?"
+      );
+
+      if (userConfirmed) {
+        router.push("/user/login");
+      } else {
+        router.push("/post");
+      }
+    }
     axiosClient
       .get("/categories/sub")
       .then((response) => {

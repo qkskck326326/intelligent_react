@@ -30,6 +30,19 @@ const PostDetail = observer(({ postId }) => {
   const [reportContent, setReportContent] = useState("");
 
   useEffect(() => {
+    const isLoggedIn = authStore.checkIsLoggedIn();
+
+    if (!isLoggedIn) {
+      const userConfirmed = window.confirm(
+        "로그인이 필요한 콘텐츠입니다. 로그인하시겠습니까?"
+      );
+
+      if (userConfirmed) {
+        router.push("/user/login");
+      } else {
+        router.push("/post");
+      }
+    }
     const fetchPost = async () => {
       if (!postId) return;
       setLoading(true);
@@ -238,6 +251,7 @@ const PostDetail = observer(({ postId }) => {
               onUpdate={handleEditCommentSubmit}
               onDelete={handleDeleteComment}
               onReport={handleReportSubmit}
+              isAdmin={authStore.checkIsAdmin()}
             />
           ))}
         </ul>
@@ -349,7 +363,7 @@ const PostDetail = observer(({ postId }) => {
           <div className={styles.postTime}>
             {getRelativeTime(post.postTime)}
           </div>
-          {isOwner() && (
+          {(isOwner() || authStore.checkIsAdmin()) && (
             <div className={styles.dropdownIcon} onClick={toggleDropdown}>
               <AiOutlineMore size={25} />
               {dropdownOpen && (
@@ -370,7 +384,7 @@ const PostDetail = observer(({ postId }) => {
               )}
             </div>
           )}
-          {!isOwner() && (
+          {!isOwner() && !authStore.checkIsAdmin() && (
             <button className={styles.reportButton} onClick={openReportPopup}>
               <AiOutlineWarning size={25} />
             </button>
@@ -435,7 +449,7 @@ const PostDetail = observer(({ postId }) => {
   );
 });
 
-const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
+const CommentItem = ({ comment, onUpdate, onDelete, onReport, isAdmin }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedContent, setUpdatedContent] = useState(comment.content);
@@ -482,7 +496,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
         contentId: comment.id,
       };
 
-      await axiosClient.post("/report", reportDTO);
+      await axiosClient.post("/reports", reportDTO);
       console.log(
         reportDTO.contentId +
           reportDTO.doNickname +
@@ -503,7 +517,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
         <div className={styles.commentHeader}>
           <span>{comment.nickname}</span>
           <time>{getRelativeTime(comment.commentTime)}</time>
-          {isCommentOwner() && (
+          {(isCommentOwner() || isAdmin) && (
             <div className={styles.commentDropdown}>
               <AiOutlineMore
                 size={20}
@@ -530,7 +544,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
               )}
             </div>
           )}
-          {!isCommentOwner() && (
+          {!isCommentOwner() && !isAdmin && (
             <button className={styles.reportButton} onClick={openReportPopup}>
               <AiOutlineWarning size={20} />
             </button>
@@ -543,7 +557,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
               value={updatedContent}
               onChange={(e) => setUpdatedContent(e.target.value)}
             />
-            <div class={styles.buttonContainer}>
+            <div className={styles.buttonContainer}>
               <button onClick={handleUpdate}>저장</button>
               <button onClick={handleCancel}>취소</button>
             </div>

@@ -4,7 +4,14 @@ import DOMPurify from "dompurify";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "./PostList.module.css";
 import { TbEyeSearch } from "react-icons/tb";
-import { AiOutlineLike, AiOutlineComment } from "react-icons/ai";
+import {
+  AiOutlineLike,
+  AiOutlineComment,
+  AiOutlineStar,
+  AiFillStar,
+} from "react-icons/ai";
+import { FaRegListAlt } from "react-icons/fa";
+import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"; // 기존 import에서 추가
 import PostSearch from "../../components/post/postSearchBar";
 import LoginPopup from "../../components/post/LoginPopup";
 import authStore from "../../stores/authStore";
@@ -22,6 +29,10 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [sortOrder, setSortOrder] = useState("latest");
+  const [filter, setFilter] = useState(""); // 추가: 필터 상태
+  const [bookmarkedPosts, setBookmarkedPosts] = useState(new Set()); // 북마크된 게시물 상태 추가
+  const [myPostsCount, setMyPostsCount] = useState(0); // 내 게시글 수 상태 추가
+  const [bookmarkCount, setBookmarkCount] = useState(0); // 북마크 수 상태 추가
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -45,11 +56,59 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                 sort: sortOrder,
               },
             })
+          : filter === "myPosts"
+          ? await axiosClient.get("/posts/myPosts", {
+              params: {
+                userEmail: authStore.getUserEmail(),
+                provider: authStore.getProvider(),
+                page: page,
+                size: size,
+                sort: sortOrder,
+              },
+            })
+          : filter === "bookmarks"
+          ? await axiosClient.get("/posts/bookmarks", {
+              params: {
+                userEmail: authStore.getUserEmail(),
+                provider: authStore.getProvider(),
+                page: page,
+                size: size,
+                sort: sortOrder,
+              },
+            })
           : await axiosClient.get("/posts/list", {
               params: { page: page, size: size, sort: sortOrder },
             });
         setPosts(res.data.content || []);
         setTotalPages(res.data.totalPages || 0);
+        // 내 게시글 수 업데이트
+        if (!filter || filter === "myPosts") {
+          const myPostsRes = await axiosClient.get("/posts/myPosts", {
+            params: {
+              userEmail: authStore.getUserEmail(),
+              provider: authStore.getProvider(),
+              page: 0,
+              size: 1000,
+              sort: "latest",
+            },
+          });
+          setMyPostsCount(myPostsRes.data.totalElements || 0);
+        }
+        // 북마크 상태 업데이트
+        const bookmarkRes = await axiosClient.get("/posts/bookmarks", {
+          params: {
+            userEmail: authStore.getUserEmail(),
+            provider: authStore.getProvider(),
+            page: 0,
+            size: 1000,
+            sort: "latest",
+          },
+        });
+        const bookmarkedIds = new Set(
+          bookmarkRes.data.content.map((post) => post.id)
+        );
+        setBookmarkedPosts(bookmarkedIds);
+        setBookmarkCount(bookmarkRes.data.totalElements || 0); // 북마크 수 업데이트
       } catch (error) {
         console.error("게시물 로드 중 오류 발생:", error);
       } finally {
@@ -58,7 +117,7 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
     };
 
     fetchPosts();
-  }, [page, size, searchQuery, selectedCategory, sortOrder]);
+  }, [page, size, searchQuery, selectedCategory, sortOrder, filter]); // 추가: 필터 의존성 추가
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
@@ -90,8 +149,76 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
     setPage(0);
   };
 
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setPage(0);
+  };
+
+  const handleBookmarkClick = async (postId) => {
+    if (!authStore.checkIsLoggedIn()) {
+      setShowPopup(true);
+      return;
+    }
+    try {
+      if (bookmarkedPosts.has(postId)) {
+        await axiosClient.delete("/posts/bookmark", {
+          data: {
+            postId,
+            userEmail: authStore.getUserEmail(),
+            provider: authStore.getProvider(),
+          },
+        });
+        setBookmarkedPosts((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(postId);
+          return newSet;
+        });
+        setBookmarkCount((prev) => prev - 1); // 북마크 수 감소
+      } else {
+        await axiosClient.post("/posts/bookmark", {
+          postId,
+          userEmail: authStore.getUserEmail(),
+          provider: authStore.getProvider(),
+        });
+        setBookmarkedPosts((prev) => new Set(prev).add(postId));
+        setBookmarkCount((prev) => prev + 1); // 북마크 수 증가
+      }
+    } catch (error) {
+      console.error("북마크 처리 중 오류 발생:", error);
+    }
+  };
+
   return (
     <div className={styles.postListContainer}>
+      <div className={styles.filterButtons}>
+        <div
+          className={`${styles.filterButton} ${
+            filter === "" ? styles.active : ""
+          }`}
+          onClick={() => handleFilterChange("")}
+        >
+          <FaRegListAlt size={25} />
+          <span>전체 게시글</span>
+        </div>
+        <div
+          className={`${styles.filterButton} ${
+            filter === "myPosts" ? styles.active : ""
+          }`}
+          onClick={() => handleFilterChange("myPosts")}
+        >
+          <FaRegListAlt size={25} />
+          <span>내 게시글 {myPostsCount}</span>
+        </div>
+        <div
+          className={`${styles.filterButton} ${
+            filter === "bookmarks" ? styles.active : ""
+          }`}
+          onClick={() => handleFilterChange("bookmarks")}
+        >
+          <BsBookmark size={25} />
+          <span>북마크 {bookmarkCount}</span>
+        </div>
+      </div>
       <PostSearch
         onSearch={handleSearch}
         onSelectCategory={handleCategorySelect}
@@ -103,30 +230,41 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
         <ul className={styles.postList}>
           {posts.map((post) => (
             <li key={post.id} className={styles.postItem}>
-              <Link href={`/post/${post.id}`} passHref>
-                <div
-                  className={styles.postLink}
-                  onClick={(e) => handlePostClick(e, post.id)}
-                >
-                  <div className={styles.postHeader}>
-                    <div className={styles.postAvatar}>
-                      <img
-                        src={post.profileImageUrl}
-                        className={styles.profileImage}
-                      />
-                    </div>
-                    <div className={styles.postMeta}>
-                      <span className={styles.postNickname}>
-                        {post.nickname}
-                      </span>
-                      <span className={styles.postCategory}>
-                        {post.categoryName}
-                      </span>
-                    </div>
-                    <div className={styles.postTime}>
-                      {getRelativeTime(post.postTime)}
-                    </div>
+              <div
+                className={styles.postLink}
+                onClick={(e) => handlePostClick(e, post.id)}
+              >
+                <div className={styles.postHeader}>
+                  <div className={styles.postAvatar}>
+                    <img
+                      src={post.profileImageUrl}
+                      className={styles.profileImage}
+                    />
                   </div>
+                  <div className={styles.postMeta}>
+                    <span className={styles.postNickname}>{post.nickname}</span>
+                    <span className={styles.postCategory}>
+                      {post.categoryName}
+                    </span>
+                  </div>
+                  <div className={styles.postTime}>
+                    {getRelativeTime(post.postTime)}
+                  </div>
+                  <div
+                    className={styles.bookmarkIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleBookmarkClick(post.id);
+                    }}
+                  >
+                    {bookmarkedPosts.has(post.id) ? (
+                      <BsFillBookmarkFill size={25} color="gold" />
+                    ) : (
+                      <BsBookmark size={25} />
+                    )}
+                  </div>
+                </div>
+                <Link href={`/post/${post.id}`} passHref>
                   <h5 className={styles.postTitle}>{post.title}</h5>
                   <p
                     className={styles.postSnippet}
@@ -134,21 +272,21 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                       __html: DOMPurify.sanitize(post.contentSnippet),
                     }}
                   ></p>
-                  <div className={styles.postFooter}>
-                    <div className={styles.postStats}>
-                      <span>
-                        <AiOutlineLike size={25} /> {post.likeCount}
-                      </span>
-                      <span>
-                        <AiOutlineComment size={25} /> {post.commentCount}
-                      </span>
-                      <span>
-                        <TbEyeSearch size={25} /> {post.viewCount}
-                      </span>
-                    </div>
+                </Link>
+                <div className={styles.postFooter}>
+                  <div className={styles.postStats}>
+                    <span>
+                      <AiOutlineLike size={25} /> {post.likeCount}
+                    </span>
+                    <span>
+                      <AiOutlineComment size={25} /> {post.commentCount}
+                    </span>
+                    <span>
+                      <TbEyeSearch size={25} /> {post.viewCount}
+                    </span>
                   </div>
                 </div>
-              </Link>
+              </div>
             </li>
           ))}
         </ul>
