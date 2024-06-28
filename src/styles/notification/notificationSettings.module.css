@@ -1,13 +1,18 @@
 .settingsContainer {
     padding: 20px;
+    padding-bottom: 0px;
 }
 
 .settingItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 45px; /* 간격 조정 */
+    margin-bottom: 42px; /* 간격 조정 */
     font-size: 20px; /* 폰트 크기 조정 */
+}
+
+.settingItem:last-child {
+    margin-bottom: 10px; /* 마지막 항목 간격 */
 }
 
 .settingItem span {
