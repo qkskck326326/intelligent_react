@@ -67,7 +67,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer 여기에 api코드 바로쓰면 Github 올라가므로 쓰지말고 .env에 작성`
+                'Authorization': `Bearer `
             },
             body: JSON.stringify({
                 model: 'gpt-3.5-turbo',
@@ -178,7 +178,9 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
                     {messages.map((message, index) => (
                         <BotBubble key={index} message={message} />
                     ))}
-                    {isTyping && <BotBubble message={{ userId: 'gpt', message: currentMessage }} />}
+                    {isTyping && currentMessage && (
+                        <BotBubble message={{ userId: 'gpt', message: currentMessage }} />
+                    )}
                 </div>
             </div>
 
