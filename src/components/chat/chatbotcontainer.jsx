@@ -10,7 +10,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
     const [textContent, setTextContent] = useState('');
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
+    const isTypingRef = useRef(false);
     const chatContainerRef = useRef(null);
     const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
 
@@ -28,7 +28,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
 
     useLayoutEffect(() => {
         scrollToBottom();
-    }, [messages, isTyping]);
+    }, [messages, currentMessage]);
 
     const scrollToBottom = () => {
         if (chatContainerRef.current) {
@@ -61,8 +61,8 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
     };
 
     async function fetchAIResponse(prompt) {
-        setIsTyping(true);
-        setCurrentMessage(''); // Clear current message before fetching
+        isTypingRef.current = true;
+        setCurrentMessage(''); //
         const requestOptions = {
             method: 'POST',
             headers: {
@@ -98,6 +98,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
     }
 
     const simulateTyping = (text) => {
+        // 어째서인지 첫번째 글자가 잘려서 강제로 글자 하나 추가함
         text = ' ' + text;
         let index = 0;
         const interval = setInterval(() => {
@@ -105,7 +106,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
             index++;
             if (index === text.length) {
                 clearInterval(interval);
-                setIsTyping(false);
+                isTypingRef.current = false;
                 const responseMessage = {
                     message: text
                 };
@@ -120,7 +121,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
     };
 
     const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && !isTyping) {
+        if (event.key === 'Enter' && !isTypingRef.current) {
             handleFormSubmit(event);
         }
     };
@@ -178,7 +179,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
                     {messages.map((message, index) => (
                         <BotBubble key={index} message={message} />
                     ))}
-                    {isTyping && currentMessage && (
+                    {isTypingRef.current && currentMessage && (
                         <BotBubble message={{ userId: 'gpt', message: currentMessage }} />
                     )}
                 </div>
@@ -193,7 +194,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
                     value={textContent}
                     onChange={(event) => setTextContent(event.target.value)}
                 ></textarea>
-                {!isTyping ? (
+                {!isTypingRef.current ? (
                     <button className={styles.send} type="submit">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path
