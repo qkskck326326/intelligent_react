@@ -26,8 +26,8 @@
 
 .chaticonNotification{
     position: absolute;
-    top: -1rem;
-    right: -1rem;
+    bottom: 65%;
+    left: 65%;
     height: 1.25rem;
     padding: 0.25rem;
     min-width: 1.25rem;
