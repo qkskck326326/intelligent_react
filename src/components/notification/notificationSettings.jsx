@@ -38,7 +38,7 @@ const NotificationSettings = () => {
         <div className={styles.settingsContainer}>
             {settings.map(setting => (
                 <div key={setting.notificationType} className={styles.settingItem}>
-                    <span>{setting.notificationType === 1 ? "본인 댓글의 답글" : 
+                    <span>{setting.notificationType === 1 ? "강의 댓글의 답글" : 
                           setting.notificationType === 2 ? "QnA 질문에 답변" : 
                           setting.notificationType === 3 ? "공지사항" : 
                           setting.notificationType === 4 ? "본인 게시물 좋아요" : 

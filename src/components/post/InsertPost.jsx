@@ -15,12 +15,27 @@ const InsertPost = observer(() => {
   const [subCategories, setSubCategories] = useState([]);
   const [content, setContent] = useState("");
   const [files, setFiles] = useState([]); // files 상태 변수 선언
+  const [tagInput, setTagInput] = useState(""); // 태그 입력 상태 변수
+  const [tags, setTags] = useState([]); // 태그 리스트 상태 변수
   const router = useRouter();
 
   const userEmail = authStore.getUserEmail();
   const provider = authStore.getProvider();
 
   useEffect(() => {
+    const isLoggedIn = authStore.checkIsLoggedIn();
+
+    if (!isLoggedIn) {
+      const userConfirmed = window.confirm(
+        "로그인이 필요한 콘텐츠입니다. 로그인하시겠습니까?"
+      );
+
+      if (userConfirmed) {
+        router.push("/user/login");
+      } else {
+        router.push("/post");
+      }
+    }
     axiosClient
       .get("/categories/sub")
       .then((response) => {
@@ -42,6 +57,20 @@ const InsertPost = observer(() => {
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
   };
 
+  const handleTagInputKeyPress = (e) => {
+    if (e.key === "Enter" && tagInput.trim().length > 0 && tags.length < 5) {
+      const newTag = tagInput.trim();
+      if (!tags.includes(newTag) && newTag.length <= 10) {
+        setTags([...tags, newTag]);
+        setTagInput("");
+      }
+    }
+  };
+
+  const handleTagRemove = (index) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async () => {
     try {
       const postDTO = {
@@ -50,6 +79,7 @@ const InsertPost = observer(() => {
         userEmail,
         provider,
         subCategoryId,
+        tags, // 태그 추가
       };
 
       const postResponse = await axiosClient.post("/posts/insert", postDTO);
@@ -93,7 +123,7 @@ const InsertPost = observer(() => {
 
   return (
     <div className={styles.postInsertContainer}>
-      <h1>글을 작성해보세요</h1>
+      <h1>게시글을 작성해보세요</h1>
       <br />
       <div className={styles.formGroup}>
         <label htmlFor="title">제목</label>
@@ -124,6 +154,33 @@ const InsertPost = observer(() => {
       <div className={styles.formGroup}>
         <label htmlFor="content">내용</label>
         <CKEditorComponent data={content} onChange={setContent} />
+      </div>
+      <div className={styles.formGroup}>
+        <label htmlFor="tags">
+          태그 (최대 5개, 각 10자 이내로 입력해주세요.)
+        </label>
+        <input
+          type="text"
+          id="tags"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          onKeyPress={handleTagInputKeyPress}
+          className={styles.input}
+          placeholder="태그를 입력하고 엔터를 누르세요"
+        />
+        <div className={styles.tagContainer}>
+          {tags.map((tag, index) => (
+            <div key={index} className={styles.tagItem}>
+              {tag}
+              <span
+                className={styles.tagRemove}
+                onClick={() => handleTagRemove(index)}
+              >
+                &times;
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
       <div
         className={styles.fileDropArea}

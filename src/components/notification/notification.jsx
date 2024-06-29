@@ -62,31 +62,33 @@ const Notification = () => {
                     <img src="/images/settingsIcon.png" alt="Settings" className={styles.settingsIcon} />
                 </button>
             </div>
-            {showSettings ? (
-                <NotificationSettings />
-            ) : (
-                <>
-                    {notifications.length > 0 ? (
-                        notifications.map((notification) => (
-                            <div key={notification.notificationId} className={styles.notificationItem}>
-                                <div 
-                                    className={styles.notificationContent}
-                                    onClick={() => handleNotificationClick(notification.notificationLink)}
-                                >
-                                    {notification.notificationContent}
+            <div className={styles.notificationContentWrapper}>
+                {showSettings ? (
+                    <NotificationSettings />
+                ) : (
+                    <>
+                        {notifications.length > 0 ? (
+                            notifications.map((notification) => (
+                                <div key={notification.notificationId} className={styles.notificationItem}>
+                                    <div 
+                                        className={styles.notificationContent}
+                                        onClick={() => handleNotificationClick(notification.notificationLink)}
+                                    >
+                                        {notification.notificationContent}
+                                    </div>
+                                    <button onClick={() => handleDelete(notification.notificationId)} className={styles.deleteButton}>
+                                        X
+                                    </button>
                                 </div>
-                                <button onClick={() => handleDelete(notification.notificationId)} className={styles.deleteButton}>
-                                    X
-                                </button>
+                            ))
+                        ) : (
+                            <div className={styles.noNotifications}>
+                                <p>알림이 없습니다.</p>
                             </div>
-                        ))
-                    ) : (
-                        <div className={styles.noNotifications}>
-                            <p>알림이 없습니다.</p>
-                        </div>
-                    )}
-                </>
-            )}
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 };

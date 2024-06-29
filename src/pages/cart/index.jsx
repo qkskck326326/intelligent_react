@@ -1,9 +1,13 @@
 import CartPage from "../../components/cart/cartPage";
+import styles from "../../components/cart/CartIndex.module.css";
 
 const Index = () => {
   return (
     <div>
-      <h1>이곳에서 강의를 구매해보세요!</h1>
+      <div className={styles.header}>
+        <h1>IntelliClass 에서 강의를 구매해보세요!</h1>
+      </div>
+
       <CartPage />
     </div>
   );

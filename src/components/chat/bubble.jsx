@@ -5,11 +5,10 @@ import AuthStore from "../../stores/authStore";
 import styles from '../../styles/chatting/chatbubble.module.css'
 import {axiosClient} from "../../axiosApi/axiosClient";
 
-const Bubble = observer(({index, onAnnouncementChange, onReport, option, message, isThereAdmin})=>{
+const Bubble = observer(({index, onAnnouncementChange, option, message, isThereAdmin})=>{
 
     const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false);
-    const [deletion, setDeletion] = useState(false);
     const eachSettingsRef = useRef();
     const textRef = useRef();
 
@@ -18,9 +17,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const [slideIndex, setSlideIndex] = useState(0);
     const [images, setImages] = useState([]);
 
-    // useEffect(()=>{
-    //     console.log(isThereAdmin)
-    // },[])
+    //isEachSettingOn 설정 모달창이 켜져있을 때 다른 클릭을 잡아내는 글로벌 클릭 핸들러 추가
     useEffect(() => {
         if (isEachSettingOn) {
             document.addEventListener('click', handleClickOutside);
@@ -34,8 +31,11 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     }, [isEachSettingOn]);
 
     const handleImageClick = (imgIndex) => {
+        //이미지가 클릭될 때 백엔드로 가서 이미지 가져오는 메소드 작동시켜 모든 이미지 들고 옴
         setImages(message.files.map(file => `http://localhost:8080${file.fileURL}`));
+        //눌린 이미지의 인덱스를 설정함
         setSlideIndex(imgIndex);
+        //모달 킴
         setIsModalOpen(true);
     };
 
@@ -46,8 +46,10 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     const plusSlides = (n) => {
         let newIndex = slideIndex + n;
         if (newIndex >= images.length) {
+            //마지막 이미지에서 다음버튼 누르면 처음 이미지로 돌아감
             newIndex = 0;
         } else if (newIndex < 0) {
+            //처음 이미지에서 이전버튼 누르면 제일 마지막 이미지로 감
             newIndex = images.length - 1;
         }
         setSlideIndex(newIndex);
@@ -58,7 +60,8 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
             const response = await axiosClient.get(fileURL, {
                 responseType: 'blob' //이진 데이터 전용
             });
-
+            //response 이렇게 생김
+            //{data: Blob, status: 200, statusText: '', headers: AxiosHeaders, config: {…}, …}
             const filename = fileURL.substring(fileURL.lastIndexOf('/') + 1);
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -79,6 +82,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
 
     const handleEachReport = async () => {
 
+        //신고형식에 맞게 객체 생성해서 전송
         const reportItem = {
             receiveNickname: message.senderId,
             doNickname: AuthStore.getNickname(),
@@ -89,8 +93,9 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
         }
 
         try{
-            const response = await axiosClient.post('/reports', reportItem)
-            console.log(response.data)
+            await axiosClient.post('/reports', reportItem)
+            // const response = await axiosClient.post('/reports', reportItem)
+            // console.log(response.data)
 
         } catch(error){
             console.error(error)
@@ -98,6 +103,7 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
 
     }
 
+    //이벤트를 확인 해 눌린버튼을 감지해 모달을 지울지 아닐 지 결정
     const handleClickOutside = (event) => {
         if (eachSettingsRef.current && !eachSettingsRef.current.contains(event.target)) {
             setIsEachSettingOn(false);
@@ -105,12 +111,10 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
     };
 
     const handleDelete = async () => {
-        console.log(message.messageId)
         try{
             await axiosClient.put(`/chat/delete/${message.messageId}`)
-            setDeletion(true)
-        } catch(e){
-            console.error(e)
+        } catch(error){
+            console.error(error)
         }
     }
 
@@ -154,15 +158,12 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
 
                         {!isMe &&
                             <div className={styles.nickname}>
-                                {
-                                    option === 'gpt' ? '인텔리봇' : message.senderId
-                                }
-
+                                {message.senderId}
                             </div>
                         }
 
                         <div className={styles.content} ref={textRef}>
-                            {!deletion ?
+                            {
                                 message.messageContent ?
                                     message.messageContent
                                     :
@@ -208,7 +209,6 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                                                     </div>
                                         ))}
                                     </div>
-                                : '삭제된 메시지입니다.'
                             }
                         </div>
                     </div>
@@ -217,14 +217,14 @@ const Bubble = observer(({index, onAnnouncementChange, onReport, option, message
                             {new Date(message.dateSent).toLocaleTimeString('ko-KR').slice(0, -3)}
                         </div>
                     </div>
-                    {(option !== 'gpt') && (message.messageContent !== '삭제된 메시지입니다․') &&
+                    {message.messageContent !== '삭제된 메시지입니다․' &&
 
                         <div
                             className={styles.eachSettings}
                             onClick={() => setIsEachSettingOn(!isEachSettingOn)}
                             ref={eachSettingsRef}>
 
-                            {(!deletion && !isThereAdmin) &&
+                            {!isThereAdmin &&
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 448 512">
                                     <path

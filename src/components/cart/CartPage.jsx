@@ -4,6 +4,7 @@ import styles from "./CartPage.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import axios from "axios";
 import authStore from "../../stores/authStore";
+import { useRouter } from "next/router"; // Import useRouter
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -13,8 +14,22 @@ const CartPage = () => {
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [agreement, setAgreement] = useState(false);
+  const router = useRouter(); // Define router
 
   useEffect(() => {
+    const isLoggedIn = authStore.checkIsLoggedIn();
+
+    if (!isLoggedIn) {
+      const userConfirmed = window.confirm(
+        "로그인이 필요한 콘텐츠입니다. 로그인하시겠습니까?"
+      );
+
+      if (userConfirmed) {
+        router.push("/user/login");
+      } else {
+        router.push("/");
+      }
+    }
     const userEmail = localStorage.getItem("userEmail");
     const provider = localStorage.getItem("provider");
     console.log(
@@ -195,7 +210,7 @@ const CartPage = () => {
                 checked={allSelected}
                 onChange={() => handleSelectAll(!allSelected)}
               />
-              전체선택 {cartItems.length}/{cartItems.length}
+              전체선택 {selectedItems.size}/{cartItems.length}
             </div>
             <div>상품명</div>
             <div>가격</div>
@@ -204,6 +219,11 @@ const CartPage = () => {
             {cartItems.length === 0 ? (
               <div className={styles.emptyCart}>
                 아직 장바구니에 추가한 패키지가 없습니다.
+                <div className={styles.movePackageBtn}>
+                  <button onClick={() => router.push("/lecturePackage")}>
+                    패키지 둘러보기
+                  </button>
+                </div>
               </div>
             ) : (
               cartItems.map((item) => (
