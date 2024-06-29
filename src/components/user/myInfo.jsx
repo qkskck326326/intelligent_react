@@ -3,8 +3,10 @@ import { useRouter } from "next/router";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import { axiosClient } from '../../axiosApi/axiosClient';
-import styles from '../../styles/user/enroll/basicInfo.module.css';
 import AWS from "aws-sdk";
+import ChangePasswordModal from "./changePasswordModal"; // 모달 컴포넌트 import
+import WithdrawalReasonModal from "./withdrawalReasonModal"; // 탈퇴 모달 컴포넌트 import
+import styles from '../../styles/user/mypage/myInfo.module.css';
 
 AWS.config.update({
     accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID_TAESEOK,
@@ -19,17 +21,20 @@ const MyInfo = observer(() => {
     const [userData, setUserData] = useState({
         userName: '',
         userEmail: '',
-        userPwd: '',
-        confirmUserPwd: '',
         phone: '',
         nickname: '',
         profileImageUrl: ''
     });
 
-    const [isNicknameValid, setIsNicknameValid] = useState(true);
-    const [previewImageUrl, setPreviewImageUrl] = useState("/path/to/default-profile-image.png");
+    const [previewImageUrl, setPreviewImageUrl] = useState("/images/defaultProfile.png");
+    const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+    const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false);
+    const [provider, setProvider] = useState("");
 
     useEffect(() => {
+        const provider = localStorage.getItem("provider");
+        setProvider(provider);
+
         if (!authStore.checkIsLoggedIn()) {
             router.push("/user/login"); // 로그인 페이지로 리디렉션
         } else {
@@ -47,14 +52,15 @@ const MyInfo = observer(() => {
             });
 
             const data = response.data;
-            setUserData({
-                userName: data.userName,
-                userEmail: data.userEmail,
-                phone: data.phone,
-                nickname: data.nickname,
-                profileImageUrl: data.profileImageUrl || "/path/to/default-profile-image.png"
-            });
-            setPreviewImageUrl(data.profileImageUrl || "/path/to/default-profile-image.png");
+            setUserData(prevState => ({
+                ...prevState,
+                userName: data.userName || '',
+                userEmail: data.userEmail || '',
+                phone: formatPhoneNumber(data.phone || ''),
+                nickname: data.nickname || '',
+                profileImageUrl: data.profileImageUrl || "/images/defaultProfile.png"
+            }));
+            setPreviewImageUrl(data.profileImageUrl || "/images/defaultProfile.png");
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
@@ -62,14 +68,33 @@ const MyInfo = observer(() => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
 
-        if (name === 'nickname') {
-            setIsNicknameValid(value.length >= 2);
+        if (name === 'phone') {
+            const onlyNums = value.replace(/[^0-9]/g, '');
+            setUserData(prevState => ({
+                ...prevState,
+                [name]: formatPhoneNumber(onlyNums)
+            }));
+        } else {
+            setUserData(prevState => ({
+                ...prevState,
+                [name]: value || ''
+            }));
         }
+    };
+
+    const formatPhoneNumber = (phone) => {
+        const cleaned = ('' + phone).replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+        if (match) {
+          return `${match[1]}-${match[2]}-${match[3]}`;
+        }
+        return phone;
+    };
+
+    const isValidPhoneNumber = (phone) => {
+        const phoneRegex = /^\d{3}-\d{4}-\d{4}$/;
+        return phoneRegex.test(phone);
     };
 
     const handleImageChange = (e) => {
@@ -82,27 +107,6 @@ const MyInfo = observer(() => {
             setPreviewImageUrl(URL.createObjectURL(file));
         } else {
             alert('이미지 파일만 업로드할 수 있습니다.');
-        }
-    };
-
-    const handleCheckNickname = async () => {
-        if (userData.nickname.length < 2) {
-            alert('닉네임은 최소 2자 이상이어야 합니다.');
-            return;
-        }
-        try {
-            const response = await axiosClient.get('/users/check-nickname', {
-                params: { nickname: userData.nickname }
-            });
-            if (response.status === 200) {
-                alert('사용 가능한 닉네임입니다.');
-            }
-        } catch (error) {
-            if (error.response && error.response.status === 409) {
-                alert('닉네임 중복입니다.');
-            } else {
-                alert('닉네임 중복 확인 중 오류가 발생했습니다.');
-            }
         }
     };
 
@@ -124,6 +128,11 @@ const MyInfo = observer(() => {
     };
 
     const handleUpdateProfile = async () => {
+        if (!isValidPhoneNumber(userData.phone)) {
+            alert("휴대폰 번호를 확인하세요.");
+            return;
+        }
+
         let profileImageUrl = userData.profileImageUrl;
         if (userData.profileImageUrl instanceof File) {
             profileImageUrl = await uploadImageToS3(userData.profileImageUrl);
@@ -135,15 +144,6 @@ const MyInfo = observer(() => {
             profileImageUrl: profileImageUrl
         };
 
-        // 비밀번호가 입력된 경우에만 포함시키기
-        if (userData.userPwd && userData.confirmUserPwd) {
-            if (userData.userPwd !== userData.confirmUserPwd) {
-                alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-                return;
-            }
-            updateData.userPwd = userData.userPwd;
-        }
-
         try {
             await axiosClient.put(`/users/update-profile`, {
                 userEmail: localStorage.getItem("userEmail"),
@@ -151,8 +151,10 @@ const MyInfo = observer(() => {
                 ...updateData
             });
 
+            localStorage.setItem("profileImageUrl", profileImageUrl);
+            authStore.setProfileImageUrl(profileImageUrl);
+
             alert('프로필이 성공적으로 업데이트되었습니다.');
-            router.push("/user/login");
         } catch (error) {
             console.error("Error updating profile:", error);
             alert("프로필 업데이트 중 오류가 발생했습니다.");
@@ -161,7 +163,12 @@ const MyInfo = observer(() => {
 
     return (
         <div className={styles.container}>
+          <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={() => setIsChangePasswordModalOpen(false)} />
+          <WithdrawalReasonModal isOpen={isWithdrawalModalOpen} onClose={() => setIsWithdrawalModalOpen(false)} />
           <div className={styles.form}>
+            <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }}>
+                회원 정보 수정
+            </div>
             <div className={styles.formBody}>
               <div className={styles.imageSection}>
                 <div className={styles.imageUpload}>
@@ -173,76 +180,71 @@ const MyInfo = observer(() => {
                 </div>
               </div>
               <div className={styles.inputSection}>
-                <input
-                  type="text"
-                  name="userName"
-                  placeholder="이름"
-                  value={userData.userName}
-                  onChange={handleChange}
-                  className={styles.input}
-                  maxLength="20"
-                  readOnly
-                />
-                <input
-                  type="text"
-                  name="userEmail"
-                  placeholder="이메일"
-                  value={userData.userEmail}
-                  className={styles.input}
-                  maxLength="30"
-                  readOnly
-                />
-                <input
-                  type="password"
-                  name="userPwd"
-                  placeholder="새 비밀번호"
-                  value={userData.userPwd}
-                  onChange={handleChange}
-                  className={styles.input}
-                  maxLength="20"
-                />
-                <input
-                  type="password"
-                  name="confirmUserPwd"
-                  placeholder="비밀번호 확인"
-                  value={userData.confirmUserPwd}
-                  onChange={handleChange}
-                  className={styles.input}
-                  maxLength="20"
-                />
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder="연락처"
-                  value={userData.phone}
-                  onChange={handleChange}
-                  className={styles.input}
-                  maxLength="13"
-                />
-                <div className={styles.nicknameSection}>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="userName" className={styles.label}>이름</label>
                   <input
                     type="text"
+                    id="userName"
+                    name="userName"
+                    placeholder="이름"
+                    value={userData.userName}
+                    onChange={handleChange}
+                    className={styles.input}
+                    maxLength="20"
+                    readOnly
+                  />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="userEmail" className={styles.label}>이메일</label>
+                  <input
+                    type="text"
+                    id="userEmail"
+                    name="userEmail"
+                    placeholder="이메일"
+                    value={userData.userEmail}
+                    className={styles.input}
+                    maxLength="30"
+                    readOnly
+                  />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="nickname" className={styles.label}>닉네임</label>
+                  <input
+                    type="text"
+                    id="nickname"
                     name="nickname"
                     placeholder="닉네임"
                     value={userData.nickname}
                     onChange={handleChange}
                     className={styles.input}
                     maxLength="15"
+                    readOnly
                   />
-                  <button
-                    type="button"
-                    className={`${styles.checkButton} ${isNicknameValid ? styles.enabled : styles.disabled}`}
-                    onClick={handleCheckNickname}
-                    disabled={!isNicknameValid}
-                  >
-                    중복 체크
-                  </button>
+                </div>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="phone" className={styles.label}>연락처</label>
+                  <input
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    placeholder="연락처"
+                    value={userData.phone}
+                    onChange={handleChange}
+                    className={styles.input}
+                    maxLength="13"
+                  />
                 </div>
               </div>
             </div>
             <div className={styles.buttons}>
-              <button onClick={() => router.push("/user/login")} className={styles.prevButton}>취소</button>
               <button onClick={handleUpdateProfile} className={styles.navigationButton}>수정</button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '10px 20px', width: '100%' }}>
+                {provider === "intelliclass" && (
+                  <button onClick={() => setIsChangePasswordModalOpen(true)} style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'none', cursor: 'pointer', marginBottom: '10px', background: 'none', border: 'none' }}>비밀번호 변경</button>
+                )}
+                <button onClick={() => setIsWithdrawalModalOpen(true)} style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'none', cursor: 'pointer', marginBottom: '10px', background: 'none', border: 'none' }}>회원탈퇴</button>
+                {/* <a href="/user/delete" style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'none', cursor: 'pointer' }}>회원탈퇴</a> */}
             </div>
           </div>
         </div>

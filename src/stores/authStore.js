@@ -88,7 +88,12 @@ class AuthStore {
     // 프로필 이미지는 로그인후에 변경이 가능하므로 부트로 요청을 보내서 다시 set
     async fetchProfileImageUrl() {
         try {
-            const response = await axiosClient.get(`/users/${this.userEmail}/${this.provider}`);
+            const response = await axiosClient.get(`/users`, {
+                params: {
+                    userEmail: localStorage.getItem("userEmail"),
+                    provider: localStorage.getItem("provider")
+                }
+            });
             this.setProfileImageUrl(response.data.profileImageUrl);
             return response.data.profileImageUrl;
         } catch (error) {
@@ -97,10 +102,8 @@ class AuthStore {
     }
 
     getProfileImageUrl() {
-        if (!this.profileImageUrl) {
-            return this.fetchProfileImageUrl();
-        }
-        return this.profileImageUrl;
+        
+        return this.fetchProfileImageUrl();
     }
 
 
