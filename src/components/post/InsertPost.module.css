@@ -7,8 +7,10 @@
   border-radius: 8px;
 }
 
+
+
 .postInsertContainer h1 {
-  text-align: center;
+  text-align: left;
   color: #333;
   margin-bottom: 20px;
   font-size: 2em;
@@ -142,3 +144,25 @@
   background-color: #5a6268;
   box-shadow: 0 4px 12px rgba(90, 98, 104, 0.3);
 }
+.tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tagItem {
+  background-color: #eeeeee;
+  border-radius: 10px;
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+}
+
+.tagRemove {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #ff0000;
+}
+
+
