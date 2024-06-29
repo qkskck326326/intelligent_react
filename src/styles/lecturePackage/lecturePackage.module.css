@@ -119,15 +119,16 @@
   color:black;
 }
 
+
 .customLink {
-  color: black; /* 글자 색을 검정색으로 설정 */
-  text-decoration: none; /* 밑줄 제거 */
-  cursor: pointer; /* 링크처럼 보이도록 커서 변경 */
+  color: black !important; /* 글자 색을 검정색으로 설정 */
+  text-decoration: none !important; /* 밑줄 제거 */
+  cursor: pointer !important; /* 링크처럼 보이도록 커서 변경 */
 }
 
 .customLink:hover {
-  color: black; /* 호버 시에도 글자 색을 검정색으로 유지 */
-  text-decoration: none; /* 호버 시에도 밑줄 제거 */
+  color: black !important; /* 호버 시에도 글자 색을 검정색으로 유지 */
+  text-decoration: none !important; /* 호버 시에도 밑줄 제거 */
 }
 
 .rating {

@@ -36,9 +36,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const [messages, setMessages] = useState([]);
     const bubbleContainerRef = useRef();
     const menuRef = useRef();
-    // const isChatRoomActive = useRef(true);
 
-//todo
     const fetchData = async () => {
         console.log(roomData.roomType)
         try {
@@ -95,13 +93,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             scrollToBottom();
         }
 
-        // // isChatRoomActive.current = true;
-        //
-        // return () => {
-        //     // Set the chat room as inactive when the component unmounts
-        //     // isChatRoomActive.current = false;
-        // };
-
     }, [page, roomData.roomId]);
 
     useEffect(() => {
@@ -148,10 +139,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     });
                 } else {
                     setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-                    // if (isChatRoomActive.current) {
-                    //     await markMessageAsRead(AuthStore.getNickname(), newMessage.roomId, newMessage.messageId);
-                    // }
                 }
             }
         };
@@ -164,19 +151,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             webSocketService.disconnect();
         };
     }, [roomData.roomId]);
-
-    // const markMessageAsRead = async (senderId, roomId, messageId) => {
-    //     try {
-    //         const response = await axiosClient.post('/chat/markread', {
-    //             senderId,
-    //             roomId,
-    //             messageId
-    //         });
-    //         console.log('Message marked as read:', response.data);
-    //     } catch (error) {
-    //         console.error('Error marking message as read:', error);
-    //     }
-    // };
 
     const handleScroll = () => {
         const scrollTop = bubbleContainerRef.current.scrollTop;
@@ -207,7 +181,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     };
 
 
-
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             handleFormSubmit(event);
@@ -223,7 +196,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             setIsMenuClicked(false);
             setIsAttachButtonClicked(false);
             setModalOn(false)
-            // isChatRoomActive.current = false;
 
         }, 500);
     };
@@ -347,7 +319,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     }
 
     const handleAnnouncementChange = (messageId, roomId) => {
-    //TODO 아래에서 받은 정보를 여기서 백엔드와 fetch 처리 하고 리랜더링 작업
         axiosClient.put('/chat/announce', {
             messageId: messageId,
             roomId: roomId
@@ -376,6 +347,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     }
 
+    //핀 변경 로직
     const handlePin = () => {
         const isPinned = (userData.isPinned === 0 ? 1 : 0)
         //TODO
@@ -385,6 +357,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             isPinned: isPinned
         })
             .then(response => {
+                //ChatUserEntity 리턴받아 설정
                 setUserData(response.data);
             })
             .catch(error => {
@@ -408,11 +381,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             });
 
     }
-
-    const handleReport = (index, isMe) => {
-        console.log(index, isMe)
-    }
-
+    
     const handleFileChange = (event) => {
 
         const newFiles = Array.from(event.target.files);
@@ -557,7 +526,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 <BubbleContainer
                     option={option}
                     onAnnouncementChange={handleAnnouncementChange}
-                    onReport={handleReport}
                     messages={messages}
                     ref={bubbleContainerRef}
                     onScroll={handleScroll}
@@ -570,8 +538,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 {
                     <>
 
-                        { (option !== 'gpt') &&
-                            <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
+                        <button className={`${styles.attachButton}`} onClick={handleAttachButtonClick}>
                             <svg
                                 className={isAttachButtonClicked ? commonStyles.animateRotate : commonStyles.animateBack}
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -579,8 +546,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                                     d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
                             </svg>
                         </button>
-                        }
-
 
                         {
                             isAttachButtonClicked
