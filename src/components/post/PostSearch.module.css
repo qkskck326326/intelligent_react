@@ -1,3 +1,4 @@
+/* PostSearch.module.css */
 .searchForm {
   display: flex;
   flex-wrap: wrap;
@@ -5,7 +6,6 @@
   margin: 20px 0;
   padding: 10px;
   border-radius: 8px;
-  /* background-color: #76d3bc; */
 }
 
 .categoryToggle {
@@ -31,7 +31,6 @@
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .dropdownToggle:focus {
@@ -129,4 +128,64 @@
   outline: none;
   border-color: #25b69b;
   box-shadow: 0 0 5px rgba(37, 182, 155, 0.3);
+}
+
+.searchTypeToggle {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.toggleSwitch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  margin-left: 10px;
+}
+
+.toggleSwitch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #25b69b;
+}
+
+input:checked + .slider:before {
+  transform: translateX(30px);
+}
+
+.toggleLabels {
+  display: flex;
+  justify-content: space-between;
+  width: 100px;
+  margin-left: 10px;
+}
+
+.toggleLabels span {
+  font-size: 14px;
 }

@@ -11,14 +11,15 @@ import {
   AiFillStar,
 } from "react-icons/ai";
 import { FaRegListAlt } from "react-icons/fa";
-import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"; // 기존 import에서 추가
-import PostSearch from "../../components/post/postSearchBar";
+import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
+import PostSearch from "../../components/post/PostSearchBar";
 import LoginPopup from "../../components/post/LoginPopup";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react-lite";
 import UploadButton from "../../components/post/PostUploadBtn";
 import { getRelativeTime } from "../../components/post/timeUtils";
 import "./LoginPopup.module.css";
+import { IoHeartSharp } from "react-icons/io5";
 
 const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [posts, setPosts] = useState([]);
@@ -27,6 +28,7 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [size, setSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchType, setSearchType] = useState("titleContent");
   const [showPopup, setShowPopup] = useState(false);
   const [sortOrder, setSortOrder] = useState("latest");
   const [filter, setFilter] = useState(""); // 추가: 필터 상태
@@ -39,14 +41,23 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
       setLoading(true);
       try {
         const res = searchQuery
-          ? await axiosClient.get("/posts/searchTitleOrContent", {
-              params: {
-                keyword: searchQuery,
-                page: page,
-                size: size,
-                sort: sortOrder,
-              },
-            })
+          ? searchType === "titleContent"
+            ? await axiosClient.get("/posts/searchTitleOrContent", {
+                params: {
+                  keyword: searchQuery,
+                  page: page,
+                  size: size,
+                  sort: sortOrder,
+                },
+              })
+            : await axiosClient.get("/posts/searchByTag", {
+                params: {
+                  tag: searchQuery,
+                  page: page,
+                  size: size,
+                  sort: sortOrder,
+                },
+              })
           : selectedCategory
           ? await axiosClient.get("/posts/searchlistByCategory", {
               params: {
@@ -117,7 +128,15 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
     };
 
     fetchPosts();
-  }, [page, size, searchQuery, selectedCategory, sortOrder, filter]); // 추가: 필터 의존성 추가
+  }, [
+    page,
+    size,
+    searchQuery,
+    selectedCategory,
+    sortOrder,
+    filter,
+    searchType,
+  ]); // 추가: searchType 의존성 추가
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
@@ -134,8 +153,9 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
     setShowPopup(true);
   };
 
-  const handleSearch = (query) => {
+  const handleSearch = (query, type) => {
     setSearchQuery(query);
+    setSearchType(type);
     setPage(0);
   };
 
@@ -147,6 +167,13 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const handleSortOrderChange = (e) => {
     setSortOrder(e.target.value);
     setPage(0);
+  };
+
+  const isOwner = () => {
+    return (
+      authStore.getUserEmail() === posts?.userEmail &&
+      authStore.getProvider() === posts?.provider
+    );
   };
 
   const handleFilterChange = (newFilter) => {
@@ -260,11 +287,19 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                     {bookmarkedPosts.has(post.id) ? (
                       <BsFillBookmarkFill size={25} color="gold" />
                     ) : (
-                      <BsBookmark size={25} />
+                      <BsBookmark size={25} color="#686868" />
                     )}
                   </div>
                 </div>
                 <Link href={`/post/${post.id}`} passHref>
+                  <div className={styles.tagContainer}>
+                    {post.tags.map((tag, index) => (
+                      <div key={index} className={styles.tagItem}>
+                        {tag}
+                      </div>
+                    ))}
+                  </div>
+
                   <h5 className={styles.postTitle}>{post.title}</h5>
                   <p
                     className={styles.postSnippet}
@@ -276,13 +311,15 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                 <div className={styles.postFooter}>
                   <div className={styles.postStats}>
                     <span>
-                      <AiOutlineLike size={25} /> {post.likeCount}
+                      <IoHeartSharp size={25} color="red" />
+                      {post.likeCount}
                     </span>
                     <span>
-                      <AiOutlineComment size={25} /> {post.commentCount}
+                      <AiOutlineComment size={25} color="#1c86f1" />{" "}
+                      {post.commentCount}
                     </span>
                     <span>
-                      <TbEyeSearch size={25} /> {post.viewCount}
+                      <TbEyeSearch size={25} color="#686868" /> {post.viewCount}
                     </span>
                   </div>
                 </div>
