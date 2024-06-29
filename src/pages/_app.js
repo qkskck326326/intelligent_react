@@ -4,15 +4,17 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Container, ThemeProvider } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import HeaderBar from "../components/common/HeaderBar";
+import {observer} from 'mobx-react'
 import '../styles/style.css';
 import authStore from "../stores/authStore";
+import ChatContainer from "./chatting";
 // import '/public/ckeditor5/sample/styles.css'; // CKEditor 스타일 포함
 
 const queryClient = new QueryClient();
 
-const App = ({ Component, pageProps }) => {
+const App = observer (({ Component, pageProps }) => {
   const router = useRouter();
-
+  console.log(authStore.getNickname());
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
@@ -46,9 +48,12 @@ const App = ({ Component, pageProps }) => {
           <Container>
             <Component {...pageProps} />
           </Container>
+          { authStore.isLoggedIn &&
+            <ChatContainer/>
+          }
         </ThemeProvider>
       </QueryClientProvider>
   );
-};
+});
 
 export default App;

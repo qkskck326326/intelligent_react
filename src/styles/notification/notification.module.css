@@ -39,6 +39,12 @@
     height: 24px;
 }
 
+.notificationContentWrapper {
+    flex: 1;
+    overflow-y: auto; /* 스크롤바 추가 */
+    padding: 10px;
+}
+
 .notificationItem {
     padding: 10px;
     border-bottom: 1px solid #eee;
@@ -88,4 +94,20 @@
 
 .settingsButton.rotating {
     animation: rotate 1s linear infinite;
+}
+
+.notificationPopup::-webkit-scrollbar {
+    width: 10px;
+}
+
+.notificationPopup::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.notificationPopup::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.notificationPopup::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

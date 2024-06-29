@@ -24,6 +24,9 @@ const Index = () => {
         </div>
       </header> */}
       <div className={styles.container}>
+        <div className={styles.header}>
+          <h1>공유게시판</h1>
+        </div>
         <div className={styles.popularPosts}>
           <PopularPosts />
         </div>
