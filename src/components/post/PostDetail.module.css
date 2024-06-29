@@ -52,6 +52,31 @@
   color: #999;
   margin-right: 10px;
 }
+.tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tagItem {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+}
+
+.filePreview img {
+  max-width: 100%;
+  height: auto;
+}
+.bookmarkIcon {
+  cursor: pointer;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
 
 .postTitle {
   font-size: 1.5em; /* 폰트 크기를 줄임 */

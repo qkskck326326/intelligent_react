@@ -281,15 +281,34 @@
     width: 2rem;
 }
 .attachButton,
-.send{
+.send,
+.loader{
     all:unset;
     flex-shrink: 0;
     cursor: pointer;
 }
+.loader{
+    cursor: unset;
+}
 .attachButton > svg,
-.send > svg{
+.send > svg,
+.loader > svg{
     width: 1.5rem;
 }
+
+.loader > svg {
+    animation: loaderSpinning 0.85s infinite ease-in-out;
+}
+
+@keyframes loaderSpinning {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .chatBottom > *{
     padding: 0.5rem;
 }

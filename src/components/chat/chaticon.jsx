@@ -27,7 +27,7 @@ const ChatIcon = observer(({ isHidden, isExpanding, onNavigate, userId, userType
         }
 
         const handleIncomingMessage = (message) => {
-            fetchUnreadCount(); // Re-fetch the unread count to update
+            fetchUnreadCount();
         };
 
         webSocketService.connect();

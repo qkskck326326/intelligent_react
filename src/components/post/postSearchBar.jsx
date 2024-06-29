@@ -9,6 +9,7 @@ const PostSearch = ({ onSearch, onSelectCategory, onSortOrderChange }) => {
   const [subCategories, setSubCategories] = useState([]);
   const [selectedUpperCategory, setSelectedUpperCategory] = useState(null);
   const [isUpperCategoryVisible, setIsUpperCategoryVisible] = useState(false);
+  const [searchType, setSearchType] = useState("titleContent");
 
   useEffect(() => {
     axiosClient
@@ -42,7 +43,7 @@ const PostSearch = ({ onSearch, onSelectCategory, onSortOrderChange }) => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    onSearch(searchQuery);
+    onSearch(searchQuery, searchType);
   };
 
   const handleUpperCategoryClick = (category) => {
@@ -51,6 +52,13 @@ const PostSearch = ({ onSearch, onSelectCategory, onSortOrderChange }) => {
     } else {
       setSelectedUpperCategory(category);
     }
+  };
+
+  const handleSearchTypeChange = () => {
+    setSearchType((prevType) =>
+      prevType === "titleContent" ? "tags" : "titleContent"
+    );
+    setSearchQuery(""); // Reset search query when type changes
   };
 
   return (
@@ -125,17 +133,34 @@ const PostSearch = ({ onSearch, onSelectCategory, onSortOrderChange }) => {
         <option value="likes">좋아요 순</option>
         <option value="comments">댓글 순</option>
       </select>
+
       <div className={styles.searchInputContainer}>
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearchChange}
-          placeholder="제목+내용으로 검색해보세요"
+          onKeyPress={(e) => e.key === "Enter" && handleSearchSubmit(e)}
+          placeholder={
+            searchType === "titleContent"
+              ? "제목+내용으로 검색해보세요"
+              : "태그로 검색해보세요"
+          }
           className={styles.searchInput}
         />
-        <button type="submit" className={styles.searchButton}>
+        <div className={styles.searchTypeToggle}>
+          {/* <div className={styles.toggleLabels}>
+            <span>제목+내용</span>
+            <span>태그</span>
+          </div> */}
+
+          <label className={styles.toggleSwitch}>
+            <input type="checkbox" onChange={handleSearchTypeChange} />
+            <span className={styles.slider}></span>
+          </label>
+        </div>
+        {/* <button type="submit" className={styles.searchButton}>
           <IoIosSearch />
-        </button>
+        </button> */}
       </div>
     </form>
   );
