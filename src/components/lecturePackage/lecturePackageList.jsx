@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useRouter} from 'next/router';
 import { Pagination } from "react-bootstrap";
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
@@ -11,6 +12,7 @@ import authStore from "../../stores/authStore";
 import UploadButton from "../lecturePackage/uploadButton";
 
 const LecturePackageList = observer(({ onRegisterClick }) => {
+  const router = useRouter();
   const [lecturePackages, setLecturePackages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -22,6 +24,9 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
   const [searchCriteria, setSearchCriteria] = useState("title");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubCategoryName, setSelectedSubCategoryName] = useState(""); // 선택된 서브카테고리명 상태 추가
+  const [payments, setPayments] = useState([]);
+  const userEmail = authStore.getUserEmail();
+  const provider = authStore.getProvider();
 
 
   const ITEMS_PER_PAGE = 16;
@@ -52,6 +57,11 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
       setLecturePackages(responseData.content);
       setTotalPages(responseData.totalPages);
       setTotalItems(responseData.totalElements); // 전체 아이템 수 설정
+
+      const responsePayment = await axiosClient.get("/payment/confirmation", {params});
+      const responsePaymentData = responsePayment.data
+      setPayments(responsePaymentData);
+
     } catch (err) {
       setError(err);
       console.error("강의 패키지를 가져오지 못했습니다:", err);
@@ -59,6 +69,8 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
       setLoading(false);
     }
   };
+
+
 
 
 
@@ -158,6 +170,26 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
     );
   };
 
+  //결제한 패키지이면 강의 목록으로 이동.
+  const handleLectureList = (lecturePackageId) => {
+    router.push({
+      pathname: '/lecture/list',
+      query: {lecturePackageId}
+    });
+  };
+
+  //재목 클릭 시 결제한 패키지인지 확인
+  const isUserPackage = (lecturePackageId) => {
+    return payments.some(
+        (payment) =>
+            payment.userEmail === userEmail &&
+            payment.provider === provider &&
+            payment.lecturePackageId === lecturePackageId &&
+            payment.paymentConfirmation === "Y"
+    );
+  };
+
+
   return (
       <div className={styles.container}>
         <img
@@ -200,10 +232,20 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
                     </div>
                   </div>
                   <div className={styles.details}>
-                    <div className={styles.title}>
-                      <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
-                        <span className={styles.customLink}>{lecture.title}</span>
-                      </Link>
+
+                    <div className={styles.title}> {/*결제한 패키지면 강의목록으로 이동*/}
+                      {isUserPackage(lecture.lecturePackageId) ? (
+                          <span
+                              className={styles.customLink}
+                              onClick={() => handleLectureList(lecture.lecturePackageId)}
+                          >
+                            {lecture.title}
+                          </span>
+                      ) : (
+                          <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
+                            <span className={styles.customLink}>{lecture.title}</span>
+                          </Link>
+                      )}
                     </div>
                     <div className={styles.rating}>
                       {"별점 "}
@@ -236,13 +278,13 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
 
         <div className={styles.paginationContainer}>
           <Pagination className={styles.paginationWrapper}>
-            <Pagination.First onClick={() => handlePageChange(1)} />
+            <Pagination.First onClick={() => handlePageChange(1)}/>
             <Pagination.Prev
                 onClick={() =>
                     handlePageChange(currentPage > 1 ? currentPage - 1 : 1)
                 }
             />
-            {Array.from({ length: totalPages }, (_, i) => (
+            {Array.from({length: totalPages}, (_, i) => (
                 <Pagination.Item
                     key={i + 1}
                     active={i + 1 === currentPage}

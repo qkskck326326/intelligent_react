@@ -66,34 +66,37 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
 
         setIsAnimating(true);
         setTimeout(() => {
-            console.log(roomData);
+            // console.log(roomData);
             onNavigateToChat({...roomData})
             setIsAnimating(false);
             setIsPlusClicked(false);
         }, 500);
     }
 
+
     const getAdmins = async () => {
         try{
             const response = await axiosClient.get('/chat/admins')
+            //관리자 닉네임 가져옴
             return [AuthStore.getNickname(), ...response.data]
         }
         catch(error){
             console.error(error);
         }
     }
+
+    //1:1문의버튼 클릭시
     const handleOneonOne = async () => {
         try {
-            const names = await getAdmins(); // Await the result of getAdmins
-
-            console.log(names);
+            //이게 무조건 실행되서 가져와야만 함 await으로 Promise 리턴되기 까지 기다림
+            const names = await getAdmins();
 
             const response = await axiosClient.post('/chat/makechat/inquiries', {
-                names: names
+                names
             });
             onNavigateToChat(response.data);
         } catch (error) {
-            console.error('An error occurred!', error);
+            console.error('문제발생이긔', error);
         }
     }
 
@@ -101,7 +104,6 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
         setChatOrInq(boolean)
         //boolean이 true면 채팅을 보는 것
         //boolean이 false면 문의를 보는 것
-
     }
 
     return (
@@ -130,7 +132,6 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
             </div>
 
             { isPlusClicked &&
-
 
                 <div className={styles.chatType}>
 
@@ -188,7 +189,6 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                         </>
                     }
 
-
                 </div>
 
             }
@@ -221,7 +221,6 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                         <div className={commonStyles.chatEmpty}><p>현재 들어온 문의가 없음</p></div>
                 }
             </div>
-
 
         </div>
     );

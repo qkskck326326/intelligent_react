@@ -1,9 +1,11 @@
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: #f6f6f6;
+    background-color: #f8f8f8;
+    /*width: 1000px;*/
 }
 
 .threebtn {
@@ -69,6 +71,7 @@
 }
 
 .redBox {
+
     display: flex;
     justify-content: center;
     width: 100%;
@@ -80,27 +83,33 @@
 }
 
 .level {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: red;
+    font-size: 0.8rem;
+    color: #2d2d2d;
     margin-bottom: 20px;
     text-align: center;
 }
 
-.priceKind {
-    background-color: #a499ff;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
+.levelText{
+    font-size: 0.8em;
+    color: #949494;
+
+
 }
+
+/*.priceKind {*/
+/*    background-color: #a499ff;*/
+/*    color: white;*/
+/*    padding: 10px;*/
+/*    border-radius: 4px;*/
+/*    text-align: center;*/
+/*    font-size: 1.5rem;*/
+/*    font-weight: bold;*/
+/*    margin-bottom: 20px;*/
+/*}*/
 
 .field {
-    margin-bottom: 20px;
-    text-align: center;
+    margin-top: 5px;
+
 }
 
 .field label {
@@ -115,8 +124,13 @@
     flex-wrap: wrap;
 }
 
-.category, .techStack img {
+.category {
     margin: 5px;
+}
+.techStack img{
+    margin: 5px;
+    width: 40px;
+    height: 40px;
 }
 
 .category {
@@ -154,7 +168,8 @@
 .content {
     padding: 20px;
     border-radius: 0px;
-    width: 800px;
+    width: 700px;
+
 }
 
 .content img {
@@ -163,29 +178,157 @@
     height: auto;
 }
 
+.applyBox {
+    position: fixed;
+}
+
+
+
 .fixedBox {
     position: fixed;
-    bottom: 0;
-    width: 50%;
-    border: 1px solid black;
+    top: 38%;
+    /*right: 4%;*/
+    left: 74.8%;
+    width: 300px;
+    height: 430px;
+    border: 1px solid #e6e6e6;
     background-color: #ffffff;
-    text-align: right;
-    padding: 20px;
-    box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.07);
+    text-align: left;
+    padding: 0 30px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.07);
     z-index: 1000;
     margin-bottom: 5px;
+
 }
+
 
 .applyButton {
-    background-color: #00c7b7;
-    color: white;
-    border: none;
+    background-color: #ffffff;
+    color: #16c8b9;
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 5px;
-    margin-right: 10px;
+    border-radius: 2px;
+    border: 4px solid #16c6b8;
+    width: 100%;
+    height: 13%;
+    font-size: 1.2em;
+    font-weight: bold;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.07);
+    margin-bottom:5px;
 }
 
-.foot {
-    height: 70px;
+.applyButton:hover{
+    background-color: #0098f6;
+    color: #ffffff;
+    border: 4px solid #ffffff;
+    box-shadow:inset 0 2px 3px rgba(61, 73, 96, 0.3);
+    text-shadow:0 2px 3px rgba(61, 73, 96, 0.3);
 }
+
+.price {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.discount{
+    font-size: 0.8em;
+    color: #ff5b5b;
+}
+.applyTextContaner{
+    align-items: center;
+}
+
+.applyText {
+    /*position: fixed;*/
+    /*bottom: 62%;*/
+    /*right: 4%;*/
+    /*left: 74.8%;*/
+    width: 200px;
+    /*height: 5%;*/
+    margin-top:10px;
+    margin-bottom:20px;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ff7b7b;
+    border-radius: 30px;
+    padding: 10px;
+    color: white;
+    font-size: 0.8em;
+
+
+
+}
+
+@media (max-width: 1200px) {
+    .fixedBox {
+        left: auto;
+        right: 4%;
+        width: 30%;
+    }
+
+    /*.applyText {*/
+    /*    left: auto;*/
+    /*    right: 4%;*/
+    /*    width: 35%;*/
+    /*}*/
+}
+
+
+
+.horizontalLine {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(204, 204, 204, 0.5); /* 회색 */
+    margin-top: 10px; /* 위로 약간의 여백을 추가 */
+    margin-bottom: 25px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+.viewCountContainer {
+    display: flex;
+    align-items: center;
+}
+
+.viewCountIcon {
+    width: 30px;
+    height: 30px;
+    margin-top: 5px;
+    opacity: 50%;
+}
+
+.viewCountText {
+    font-size: 15px;
+    padding-top: 7px;
+}
+
+.shareButton {
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    background-color: #f8f8f8;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    color: gray;
+}
+
+.shareButton img {
+    margin-right: 5px;
+    width: 15px;
+    height: 15px;
+    opacity: 50%;
+}
+.shareText{
+    color: black;
+}
+
+
+
+
+

@@ -13,6 +13,7 @@ import {
 } from "react-icons/ai";
 import { AiOutlineComment } from "react-icons/ai";
 import { LuSend } from "react-icons/lu";
+import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"; // 기존 import에서 추가
 
 import { getRelativeTime } from "../../components/post/timeUtils";
 import EditPost from "./EditPost";
@@ -28,8 +29,22 @@ const PostDetail = observer(({ postId }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isReportPopupOpen, setIsReportPopupOpen] = useState(false);
   const [reportContent, setReportContent] = useState("");
+  const [bookmarkedPosts, setBookmarkedPosts] = useState(new Set()); // 북마크된 게시물 상태 추가
 
   useEffect(() => {
+    const isLoggedIn = authStore.checkIsLoggedIn();
+
+    if (!isLoggedIn) {
+      const userConfirmed = window.confirm(
+        "로그인이 필요한 콘텐츠입니다. 로그인하시겠습니까?"
+      );
+
+      if (userConfirmed) {
+        router.push("/user/login");
+      } else {
+        router.push("/post");
+      }
+    }
     const fetchPost = async () => {
       if (!postId) return;
       setLoading(true);
@@ -219,6 +234,39 @@ const PostDetail = observer(({ postId }) => {
       console.error("Error deleting comment:", error);
     }
   };
+  const handleBookmarkClick = async (postId) => {
+    if (!authStore.checkIsLoggedIn()) {
+      setShowPopup(true);
+      return;
+    }
+    try {
+      if (bookmarkedPosts.has(postId)) {
+        await axiosClient.delete("/posts/bookmark", {
+          data: {
+            postId,
+            userEmail: authStore.getUserEmail(),
+            provider: authStore.getProvider(),
+          },
+        });
+        setBookmarkedPosts((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(postId);
+          return newSet;
+        });
+        setBookmarkCount((prev) => prev - 1); // 북마크 수 감소
+      } else {
+        await axiosClient.post("/posts/bookmark", {
+          postId,
+          userEmail: authStore.getUserEmail(),
+          provider: authStore.getProvider(),
+        });
+        setBookmarkedPosts((prev) => new Set(prev).add(postId));
+        setBookmarkCount((prev) => prev + 1); // 북마크 수 증가
+      }
+    } catch (error) {
+      console.error("북마크 처리 중 오류 발생:", error);
+    }
+  };
 
   const renderComments = () => {
     if (!post.comments || post.comments.length === 0) {
@@ -238,6 +286,7 @@ const PostDetail = observer(({ postId }) => {
               onUpdate={handleEditCommentSubmit}
               onDelete={handleDeleteComment}
               onReport={handleReportSubmit}
+              isAdmin={authStore.checkIsAdmin()}
             />
           ))}
         </ul>
@@ -315,8 +364,8 @@ const PostDetail = observer(({ postId }) => {
         "allow",
         "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       );
-      iframe.setAttribute("width", "800");
-      iframe.setAttribute("height", "500");
+      iframe.setAttribute("width", "600");
+      iframe.setAttribute("height", "400");
 
       element.parentNode.replaceChild(iframe, element);
     });
@@ -349,7 +398,20 @@ const PostDetail = observer(({ postId }) => {
           <div className={styles.postTime}>
             {getRelativeTime(post.postTime)}
           </div>
-          {isOwner() && (
+          <div
+            className={styles.bookmarkIcon}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleBookmarkClick(post.id);
+            }}
+          >
+            {bookmarkedPosts.has(post.id) ? (
+              <BsFillBookmarkFill size={25} color="gold" />
+            ) : (
+              <BsBookmark size={25} />
+            )}
+          </div>
+          {(isOwner() || authStore.checkIsAdmin()) && (
             <div className={styles.dropdownIcon} onClick={toggleDropdown}>
               <AiOutlineMore size={25} />
               {dropdownOpen && (
@@ -370,7 +432,7 @@ const PostDetail = observer(({ postId }) => {
               )}
             </div>
           )}
-          {!isOwner() && (
+          {!isOwner() && !authStore.checkIsAdmin() && (
             <button className={styles.reportButton} onClick={openReportPopup}>
               <AiOutlineWarning size={25} />
             </button>
@@ -382,6 +444,13 @@ const PostDetail = observer(({ postId }) => {
             {post.likeCount}
           </span>
           <span>조회수: {post.viewCount}</span>
+        </div>
+        <div className={styles.tagContainer}>
+          {post.tags.map((tag, index) => (
+            <div key={index} className={styles.tagItem}>
+              {tag}
+            </div>
+          ))}
         </div>
         <h1 className={styles.postTitle}>{post.title}</h1>
         {renderContent()}
@@ -435,7 +504,7 @@ const PostDetail = observer(({ postId }) => {
   );
 });
 
-const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
+const CommentItem = ({ comment, onUpdate, onDelete, onReport, isAdmin }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedContent, setUpdatedContent] = useState(comment.content);
@@ -482,7 +551,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
         contentId: comment.id,
       };
 
-      await axiosClient.post("/report", reportDTO);
+      await axiosClient.post("/reports", reportDTO);
       console.log(
         reportDTO.contentId +
           reportDTO.doNickname +
@@ -503,7 +572,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
         <div className={styles.commentHeader}>
           <span>{comment.nickname}</span>
           <time>{getRelativeTime(comment.commentTime)}</time>
-          {isCommentOwner() && (
+          {(isCommentOwner() || isAdmin) && (
             <div className={styles.commentDropdown}>
               <AiOutlineMore
                 size={20}
@@ -530,7 +599,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
               )}
             </div>
           )}
-          {!isCommentOwner() && (
+          {!isCommentOwner() && !isAdmin && (
             <button className={styles.reportButton} onClick={openReportPopup}>
               <AiOutlineWarning size={20} />
             </button>
@@ -543,7 +612,7 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport }) => {
               value={updatedContent}
               onChange={(e) => setUpdatedContent(e.target.value)}
             />
-            <div class={styles.buttonContainer}>
+            <div className={styles.buttonContainer}>
               <button onClick={handleUpdate}>저장</button>
               <button onClick={handleCancel}>취소</button>
             </div>
