@@ -5,7 +5,6 @@ import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 import dynamic from "next/dynamic";
-import PostDetail from "./postDetail";
 
 const CKEditorComponent = dynamic(() => import("./CKEditorComponent"), {
   ssr: false,
@@ -18,6 +17,8 @@ const EditPost = observer(({ postId, setIsEditing }) => {
   const [content, setContent] = useState("");
   const [files, setFiles] = useState([]); // files 상태 변수 선언
   const [existingFiles, setExistingFiles] = useState([]); // 기존 파일 상태 변수 선언
+  const [tagInput, setTagInput] = useState(""); // 태그 입력 상태 변수
+  const [tags, setTags] = useState([]); // 태그 리스트 상태 변수
   const router = useRouter();
 
   const userEmail = authStore.getUserEmail();
@@ -38,6 +39,7 @@ const EditPost = observer(({ postId, setIsEditing }) => {
         setSubCategoryId(post.subCategoryId);
         setContent(post.content);
         setExistingFiles(post.files);
+        setTags(post.tags); // 태그 초기화
       } catch (error) {
         console.error("Error fetching post:", error);
       }
@@ -67,6 +69,20 @@ const EditPost = observer(({ postId, setIsEditing }) => {
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
   };
 
+  const handleTagInputKeyPress = (e) => {
+    if (e.key === "Enter" && tagInput.trim().length > 0 && tags.length < 5) {
+      const newTag = tagInput.trim();
+      if (!tags.includes(newTag) && newTag.length <= 10) {
+        setTags([...tags, newTag]);
+        setTagInput("");
+      }
+    }
+  };
+
+  const handleTagRemove = (index) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async () => {
     try {
       const postDTO = {
@@ -75,6 +91,7 @@ const EditPost = observer(({ postId, setIsEditing }) => {
         userEmail,
         provider,
         subCategoryId,
+        tags, // 태그 추가
       };
 
       await axiosClient.put(`/posts/update/${postId}`, postDTO, {
@@ -172,6 +189,31 @@ const EditPost = observer(({ postId, setIsEditing }) => {
       <div className={styles.formGroup}>
         <label htmlFor="content">내용</label>
         <CKEditorComponent data={content} onChange={setContent} />
+      </div>
+      <div className={styles.formGroup}>
+        <label htmlFor="tags">태그 (최대 5개, 각 10자 이내)</label>
+        <input
+          type="text"
+          id="tags"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          onKeyPress={handleTagInputKeyPress}
+          className={styles.input}
+          placeholder="태그를 입력하고 엔터를 누르세요"
+        />
+        <div className={styles.tagContainer}>
+          {tags.map((tag, index) => (
+            <div key={index} className={styles.tagItem}>
+              {tag}
+              <span
+                className={styles.tagRemove}
+                onClick={() => handleTagRemove(index)}
+              >
+                &times;
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
       <div
         className={styles.fileDropArea}
