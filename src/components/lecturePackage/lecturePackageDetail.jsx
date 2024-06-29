@@ -187,44 +187,43 @@ const LecturePackageDetail = observer(() => {
         const userEmail = authStore.getUserEmail();
         const provider = authStore.getProvider();
         console.log("lecturePackageId: ", lecturePackageId);
-
+    
         try {
-            const response = await axiosClient.post(
-                `/cart/add/${userEmail}/${provider}/${lecturePackageId}`
+          const response = await axiosClient.post(
+            `/cart/add/${userEmail}/${provider}/${lecturePackageId}`
+          );
+          if (response.status === 200) {
+            const userConfirmed = window.confirm(
+              "장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?"
             );
-            if (response.status === 200) {
-                const userConfirmed = window.confirm(
-                    "장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?"
-                );
-                if (userConfirmed) {
-                    router.push("/cart"); // 장바구니 페이지로 이동
-                }
-            } else if (response.status === 409) {
-                // 409 Conflict 상태 코드 확인
-                const userConfirmed = window.confirm(
-                    "이미 장바구니에 추가하셨습니다. 장바구니 페이지로 이동하시겠습니까?"
-                );
-                if (userConfirmed) {
-                    router.push("/cart"); // 장바구니 페이지로 이동
-                }
-            } else {
-                alert("장바구니에 추가하는 중 오류가 발생했습니다.");
+            if (userConfirmed) {
+              router.push("/cart"); // 장바구니 페이지로 이동
             }
+          } else if (response.status === 409) {
+            // 409 Conflict 상태 코드 확인
+            const userConfirmed = window.confirm(
+              "이미 장바구니에 추가하셨습니다. 장바구니 페이지로 이동하시겠습니까?"
+            );
+            if (userConfirmed) {
+              router.push("/cart"); // 장바구니 페이지로 이동
+            }
+          } else {
+            alert("장바구니에 추가하는 중 오류가 발생했습니다.");
+          }
         } catch (error) {
-            console.error("Error adding package to cart:", error);
-            if (error.response && error.response.status === 409) {
-                const userConfirmed = window.confirm(
-                    "이미 장바구니에 추가하셨습니다. 장바구니 페이지로 이동하시겠습니까?"
-                );
-                if (userConfirmed) {
-                    router.push("/cart"); // 장바구니 페이지로 이동
-                }
-            } else {
-                alert("장바구니에 추가하는 중 오류가 발생했습니다.");
+          console.error("Error adding package to cart:", error);
+          if (error.response && error.response.status === 409) {
+            const userConfirmed = window.confirm(
+              "이미 장바구니에 추가하셨습니다. 장바구니 페이지로 이동하시겠습니까?"
+            );
+            if (userConfirmed) {
+              router.push("/cart"); // 장바구니 페이지로 이동
             }
+          } else {
+            alert("장바구니에 추가하는 중 오류가 발생했습니다.");
+          }
         }
-    };
-
+      };
     const handleLectureList = () => {
         router.push({
             pathname: '/lecture/list',
