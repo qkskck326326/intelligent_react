@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { axiosClient } from '../../axiosApi/axiosClient';
 import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css';
 import authStore from '../../stores/authStore';
@@ -15,6 +15,8 @@ const LecturePackageDetail = observer(() => {
     const [error, setError] = useState(null);
     const [profile, setProfile] = useState({ nickname: '', pictureUrl: '' });
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [lectureCount, setLectureCount] = useState(null);
+    const [isInCart, setIsInCart] = useState(false); // 장바구니에 있는지 여부를 나타내는 상태 추가
 
     useEffect(() => {
         const fetchLecturePackage = async () => {
@@ -25,7 +27,19 @@ const LecturePackageDetail = observer(() => {
             try {
                 const response = await axiosClient.get('/packages/detail', { params: { lecturePackageId } });
                 setLecturePackage(response.data);
+                console.log("lecturePackage : ", response.data);
                 console.log("datanickname : ", response.data.nickname);
+                // 특정 패키지의 강의 수
+                const responseCount = await axiosClient.get('/packages/lecturecount', { params: { lecturePackageId } });
+                setLectureCount(responseCount.data);
+
+                // 장바구니에 있는지 확인
+                const userEmail = authStore.getUserEmail();
+                const provider = authStore.getProvider();
+                const responseCart = await axiosClient.get('/cart/check', { params: { userEmail, provider, lecturePackageId } });
+                setIsInCart(responseCart.data.inCart);
+
+                console.log("responseCount : ", responseCount.data);
 
                 const teacherNickname = response.data.nickname;
                 console.log("teacher : ", teacherNickname);
@@ -46,9 +60,7 @@ const LecturePackageDetail = observer(() => {
         }
     }, [lecturePackageId]);
 
-
-
-    //조회수 처리 작성자인 경우 하루에 한번만 올릴 수 있음.
+    // 조회수 처리 작성자인 경우 하루에 한번만 올릴 수 있음.
     useEffect(() => {
         const increaseViewCount = async (authorNickname) => {
             const nickname = authStore.getNickname();
@@ -85,7 +97,6 @@ const LecturePackageDetail = observer(() => {
             increaseViewCount(authorNickname);
         }
     }, [lecturePackage]);
-
 
     useEffect(() => {
         if (lecturePackage) {
@@ -154,7 +165,7 @@ const LecturePackageDetail = observer(() => {
         }
     };
 
-    //가격에 천단위로 , 써줌.
+    // 가격에 천단위로 , 써줌.
     const formatPrice = (priceForever) => {
         return new Intl.NumberFormat('ko-KR').format(priceForever);
     };
@@ -221,6 +232,15 @@ const LecturePackageDetail = observer(() => {
         });
     };
 
+    const handleShare = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            alert('페이지 링크가 복사되었습니다.');
+        }).catch((err) => {
+            console.error('복사 중 오류 발생:', err);
+        });
+    };
+
     const openProfileModal = () => {
         setIsModalOpen(true);
     };
@@ -235,10 +255,10 @@ const LecturePackageDetail = observer(() => {
     const isAuthor = lecturePackage && authStore.getNickname() === lecturePackage.nickname;
 
     return (
-        <div>
+        <div className={styles.bodys}>
             <div className={styles.actions}>
                 <div className={styles.profile} onClick={() => openProfileModal()}>
-                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture}/>
+                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture} />
                     <p className={styles.nickname}>{profile.nickname}</p>
                 </div>
                 <div className={styles.threebtn}>
@@ -278,11 +298,8 @@ const LecturePackageDetail = observer(() => {
                             <div className={styles.infoItem}>
                                 <p>등록 날짜: {lecturePackage.registerDate}</p>
                             </div>
-                            <div className={styles.infoItem}>
-                                <p>조회수: {lecturePackage.viewCount}</p>
-                            </div>
                         </div>
-                        <div className={styles.yellowBox}>
+                        <div>
                             <div className={styles.redBox}>
                                 <div
                                     id="content"
@@ -291,15 +308,9 @@ const LecturePackageDetail = observer(() => {
                                     dangerouslySetInnerHTML={{ __html: lecturePackage.content }}
                                 />
                             </div>
-                            <div className={styles.field}>
-                                <p className={styles.level}><i className="fas fa-check"></i> {getLectureLevel(lecturePackage.packageLevel)} 과정</p>
-                            </div>
                         </div>
                         <div className={styles.field}>
-                            <p className={styles.priceKind}> 평생소장 &gt;&gt;&gt; {formatPrice(lecturePackage.priceForever)} ₩</p>
-                        </div>
-                        <div className={styles.field}>
-                            <label>해당 카테고리</label>
+                            <label>기술 분야</label>
                             <div className={styles.categories}>
                                 {lecturePackage.subCategoryName.split(',').map((category, index) => (
                                     <span key={index} className={styles.category}>{category}</span>
@@ -307,20 +318,63 @@ const LecturePackageDetail = observer(() => {
                             </div>
                         </div>
                         <div className={styles.field}>
-                            <label>기술 스택</label>
+                            <label>사용될 프로그래밍 tool</label>
                             <div className={styles.techStack}>
                                 {lecturePackage.techStackPath.split(',').map((tech, index) => (
                                     <img key={index} src={tech} alt={`tech-${index}`} />
                                 ))}
                             </div>
                         </div>
+                        <div className={styles.applyBox}>
+                            <div className={styles.fixedBox}>
+                                <div className={styles.applyTextContaner}>
+                                    <span className={styles.applyText}>지금바로 신청하세요!!</span>
+                                </div>
+                                <div className={styles.discount}>30%할인가</div>
+                                <div className={styles.price}>{formatPrice(lecturePackage.priceForever)}원</div>
+                                <button className={styles.applyButton} onClick={isInCart ? () => router.push("/cart") : handleApply}>
+                                    {isInCart ? '장바구니로 이동' : '수강 신청하기'}
+                                </button>
+                                <div className={styles.horizontalLine}></div>
+                                <button className={styles.shareButton} onClick={handleShare}>
+                                    <img
+                                        className={styles.shareIcon}
+                                        src="/images/link.png"
+                                        alt="공유 아이콘" />
+                                    <span className={styles.shareText}>공유</span>
+                                </button>
+                                <span>
+                                    ♡ ♥
+                                </span>
+                                <div className={styles.field}>
+                                    <span className={styles.levelText}>강의 수 : </span>
+                                    <span className={styles.level}>{lectureCount}</span>
+                                </div>
+                                <div className={styles.field}>
+                                    <span className={styles.levelText}> 난이도 : </span>
+                                    <span className={styles.level}>
+                                        {getLectureLevel(lecturePackage.packageLevel)}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span className={styles.levelText}>평균수강기한 : </span>
+                                    <span className={styles.level}>{lecturePackage.averageClassLength}</span>
+                                </div>
+                                <div className={styles.infoItem}>
+                                    <span className={styles.viewCountContainer}>
+                                        <img
+                                            className={styles.viewCountIcon}
+                                            src="/images/view_count_icon.png"
+                                            alt="조회수 아이콘"
+                                        />
+                                        <span className={styles.viewCountText}>{lecturePackage.viewCount}</span>
+                                    </span>
+                                </div>
+                                <div className={styles.horizontalLine}></div>
+                            </div>
+                        </div>
                     </>
                 )}
-                <div className={styles.fixedBox}>
-                    지금바로 신청하세요!! <button className={styles.applyButton} onClick={handleApply}>수강신청</button>
-                </div>
-                <div className={styles.foot}>
-                </div>
             </div>
             {isModalOpen && <ProfileModal profile={profile} onClose={closeProfileModal} />}
         </div>
