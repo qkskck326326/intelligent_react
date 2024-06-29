@@ -8,10 +8,6 @@ const BotBubble = observer(({ message }) => {
     const [isMe, setIsMe] = useState(message.userId === 'user');
     const textRef = useRef();
 
-    useEffect(() => {
-        console.log();
-    }, []);
-
     const sanitizeHTML = (input) => {
         const element = document.createElement('div');
         element.innerText = input;
@@ -50,18 +46,10 @@ const BotBubble = observer(({ message }) => {
                         }
 
                         <div className={styles.content} ref={textRef}>
-                            {isMe ? (
-                                containsHTML ? (
-                                    <div dangerouslySetInnerHTML={{ __html: messageContent }} />
-                                ) : (
-                                    messageContent
-                                )
+                            {containsHTML ? (
+                                <div dangerouslySetInnerHTML={{ __html: messageContent }} />
                             ) : (
-                                containsHTML ? (
-                                    <div dangerouslySetInnerHTML={{ __html: messageContent }} />
-                                ) : (
-                                    messageContent
-                                )
+                                messageContent
                             )}
                         </div>
                     </div>

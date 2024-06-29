@@ -10,7 +10,11 @@ const EachChat = observer(({chat, onClick, isChat}) => {
         <div className={styles.eachChatContainer} onClick={onClick}>
             <div className={styles.pictureFrame}>
                 <div className={styles.eachPicture}>
-                    <img src={chat.users[0].profileImageUrl} alt="" />
+                    <img src={
+                        chat.users[1].profileImageUrl ?
+                            chat.users[1].profileImageUrl :
+                        chat.users[0].profileImageUrl
+                    } alt="" />
                 </div>
                 {chat.chatUser.isPinned === 1 &&
                     <svg className={styles.pin} xmlns="http://www.w3.org/2000/svg"

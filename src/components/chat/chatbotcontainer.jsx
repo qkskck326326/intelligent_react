@@ -69,7 +69,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer `
+                'Authorization': `Bearer 여기에.env에 설정된값 집어넣음`
             },
             body: JSON.stringify({
                 model: 'gpt-3.5-turbo',
@@ -94,13 +94,13 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
         } catch (error) {
             console.error('OpenAI API 호출 중 오류 발생:', error);
             const errorMessage =
-                "예기치 못한 에러가 발생했습니다. <a href='http://localhost:3000'>여기</a>에서 메인 페이지로 돌아갈 수 있습니다. 문제가 지속된다면 1:1문의 바랍니다.";
+                "예기치 못한 에러가 발생했습니다. <a href='http://localhost:3000'>여기</a>에서 메인 페이지로 돌아갈 수 있습니다. 문제가 지속된다면 1:1문의 바랍니다.(현재 GPT와 연결을 해제시켜 둔 상태 연결시켜서 확인했을 때 문제없이 작동되는 것 확인)";
             simulateTyping(errorMessage);
         }
     }
 
     const simulateTyping = (text) => {
-        // 어째서인지 첫번째 글자가 잘려서 강제로 글자 하나 추가함
+        // 어째서인지 첫번째 글자가 잘려서 잘릴 아무 글자 하나 추가함
         text = ' ' + text;
         let index = 0;
         const interval = setInterval(() => {
@@ -108,23 +108,20 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
             index++;
             if (index === text.length) {
                 clearInterval(interval);
+                //isTyping이 false가 되면서 텍스트박스가 재활성화됨
                 isTypingRef.current = false;
                 const responseMessage = {
                     message: text
                 };
                 setMessages((prevMessages) => [...prevMessages, responseMessage]);
             }
-        }, 20);
-    };
-
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-        handleSubmit(event);
+        }, 10);
     };
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter' && !isTypingRef.current) {
-            handleFormSubmit(event);
+            event.preventDefault();
+            handleSubmit(event);
         }
     };
 
@@ -155,9 +152,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
 
     return (
         <div
-            className={`${styles.chatContainer} ${
-                isAnimating ? commonStyles.animateCollapse : ''
-            } ${isExpanding ? commonStyles.animateExpand : ''}`}
+            className={`${styles.chatContainer} ${isAnimating && commonStyles.animateCollapse} ${isExpanding && commonStyles.animateExpand}`}
             onKeyDown={handleKeyPress}
         >
             <div className={styles.chatTop}>
@@ -177,7 +172,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
 
             <div className={styles.chatMain}>
                 <div className={bubbleStyles.bubbleContainer} ref={chatContainerRef}>
-                    <BotBubble message={{ userId: 'gpt', message: '안녕하세요 인텔리봇이긔' }} />
+                    <BotBubble message={{ userId: 'gpt', message: '안녕하세요 인텔리봇입니다. IT관련이나 사이트 이용방법에 대해 궁금한 것이 있으시면 저에게 질문해주세요.' }} />
                     {messages.map((message, index) => (
                         <BotBubble key={index} message={message} />
                     ))}
