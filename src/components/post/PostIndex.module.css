@@ -3,6 +3,22 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  /* background-color: #fdfdfd; */
+}
+.header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1000; /* Ensure it is above other elements */
+  padding: 20px 0; /* Increase padding to make the header box larger */
+  border-bottom: 1px solid #ddd; /* Optional: Add a border for better visibility */
+  text-align: left; /* Center align the text */
+  
+}
+
+.header h1 {
+  margin: 0;
+  margin-left: 100px; /* Remove default margin */
 }
 
 .popularPosts {

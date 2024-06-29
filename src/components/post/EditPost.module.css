@@ -100,4 +100,66 @@
   .cancelButton:hover {
     background-color: #5a6268;
   }
+
+  .tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .tagItem {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    padding: 10px 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .tagRemove {
+    margin-left: 8px;
+    cursor: pointer;
+    color: #ff0000;
+  }
+  
+  .fileDropArea {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .fileInput {
+    display: none;
+  }
+  
+  .fileInputLabel {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4cc3b9;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .filePreviewContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .filePreviewItem {
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+    max-width: 100px;
+    text-align: center;
+  }
+  
+  .filePreview img {
+    max-width: 100%;
+    height: auto;
+  }
   
