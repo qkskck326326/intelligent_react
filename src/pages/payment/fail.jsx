@@ -6,20 +6,20 @@ const Fail = () => {
   const router = useRouter();
   const { orderId } = router.query;
 
-  useEffect(() => {
-    const clearPaymentData = async () => {
-      try {
-        await axios.post("/api/clearPaymentData", { orderId });
-        console.log("Payment data cleared from session");
-      } catch (error) {
-        console.error("Error clearing payment data from session:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const clearPaymentData = async () => {
+  //     try {
+  //       await axios.post("/api/clearPaymentData", { orderId });
+  //       console.log("Payment data cleared from session");
+  //     } catch (error) {
+  //       console.error("Error clearing payment data from session:", error);
+  //     }
+  //   };
 
-    if (orderId) {
-      clearPaymentData();
-    }
-  }, [orderId]);
+  //   if (orderId) {
+  //     clearPaymentData();
+  //   }
+  // }, [orderId]);
 
   return (
     <div>

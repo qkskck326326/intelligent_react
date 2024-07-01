@@ -1,109 +1,102 @@
+/* PopularPosts.module.css */
 .popularPostsContainer {
-  margin-top: 40px;
-  padding: 20px;
+  display: flex;
+  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  margin: 0 auto; /* 가운데 정렬을 위해 변경 */
-  width: 50%;
-}
-
-.popularPostsContainer h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
+  flex-direction: column;
+  margin-bottom: 20px; /* 하단 마진 추가 */
 }
 
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-.header h2 {
-  font-size: 24px;
-  color: #333;
-  margin-left: 20px;
-  margin-right: 10px;
+.header h4 {
+  flex-grow: 1;
+  font-size: 1.1em;
+  margin: 0;
 }
 
-.rankImage {
-  margin-left: 20px;
-  width: 50px;
-  height: 50px;
+.header img {
+  width: 24px;
+  height: 24px;
 }
 
 .popularPostsList {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.popularPostColumn {
-  width: 48%; /* 두 컬럼이 맞도록 설정 */
-  display: flex;
-  flex-direction: column;
 }
 
 .popularPostItem {
   display: flex;
   align-items: center;
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
-  flex: 1;
-}
-
-.popularPostItem:hover {
-  transform: translateY(-3px);
+  margin-bottom: 8px;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.8rem;
 }
 
 .rankIcon {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-  margin-right: 15px;
-  border-radius: 50%;
-  background-color: #ffffff;
-  color: rgb(52, 52, 52);
+  font-size: 1.2em;
   font-weight: bold;
+  margin-right: 8px;
 }
 
 .rankIcon1 {
-  background-color: #FFD700; /* Gold */
+  color: gold;
 }
 
 .rankIcon2 {
-  background-color: #d7d7d7; /* Silver */
+  color: silver;
 }
 
 .rankIcon3 {
-  background-color: #c97d32; /* Bronze */
+  color: rgb(173, 121, 69);
 }
 
 .popularPostLink {
+  flex-grow: 1;
   text-decoration: none;
-  color: #121212;
-  font-weight: bold;
-  flex: 1; /* 글 길이에 따라 넓이 자동 조정 */
+  color: #333;
+  word-break: break-word; /* 긴 단어를 줄바꿈하도록 설정 */
+  display: inline-block; /* 블록 요소로 변경 */
+  max-width: 170px; /* 최대 너비를 설정하여 줄바꿈을 유도 */
+  white-space: normal; /* 줄바꿈을 허용 */
+}
+.popularPostMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.popularPostComments {
+  margin-left: 23px;
+  margin-right: 5px;
+  color: #2a6fae;
+}
+
+.popularPostTime {
+  color: #aaa;
+  font-size: 0.8em;
 }
 
 .popularPostLink:hover {
   text-decoration: underline;
 }
 
-.popularPostComments {
-  margin-left: 10px;
-  color: #1c86f1;
+/* .popularPostComments {
+  margin-left: 16px;
+  color: #2a6fae;
 }
 
 .popularPostTime {
-  color: #888;
-  font-size: 12px;
-  margin-left: 12px;
-}
+  color: #aaa;
+  font-size: 0.8em;
+  margin-top: 4px;
+} */

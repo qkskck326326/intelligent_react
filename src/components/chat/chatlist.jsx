@@ -25,24 +25,18 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                 }
             })
                 .then(response => {
-                    console.log(response.data)
                     setChatData(response.data);
                 })
                 .catch(error => {
                     console.error('An error occurred!', error);
                 });
         };
-
         fetchChatList();
-
-        const handleIncomingMessage = (message) => {
-            console.log(message);
+        const handleIncomingMessage = () => {
             fetchChatList();
         };
-
         webSocketService.connect();
         webSocketService.subscribe(`/topic/update`, handleIncomingMessage);
-
         return () => {
             webSocketService.disconnect();
         };

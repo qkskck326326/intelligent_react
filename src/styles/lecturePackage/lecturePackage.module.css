@@ -353,6 +353,15 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+.line{
+  width: 67%;
+  height: 1px;
+  background-color: rgba(204, 204, 204, 0.5); /* 회색 */
+  margin-top: 20px; /* 위로 약간의 여백을 추가 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
 .banner {
   width: 100%; /* 원하는 크기로 설정 */
   height: auto; /* 높이는 자동으로 설정되어 비율 유지 */
