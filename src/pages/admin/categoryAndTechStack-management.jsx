@@ -225,18 +225,19 @@ const CategoryAndTechStackManagement = () => {
                 <h3 className={styles.subtitle}>기술스택</h3>
                     <div className={styles.form}>
                         <input
+                            type="file"
+                            onChange={(e) => setNewTechStackImage(e.target.files[0])}
+                            className={styles.inputFile}
+                        />
+                        <input
                             type="text"
                             placeholder="기술스택 명을 입력해주세요."
                             className={styles.input}
                             value={newTechStack}
                             onChange={(e) => setNewTechStack(e.target.value)}
                         />
-                        <input
-                            type="file"
-                            onChange={(e) => setNewTechStackImage(e.target.files[0])}
-                            className={styles.input}
-                        />
-                        <button className={styles.button} onClick={handleAddTechStack}>+ 추가</button>
+
+                        <button className={styles.addButton} onClick={handleAddTechStack}>+ 추가</button>
                     </div>
                     <div className={styles.tagContainer}>
                         {techStack.map((stack, index) => (

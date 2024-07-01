@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { axiosClient } from "../axiosApi/axiosClient";
 import NavBar from "../components/common/NavBar";
 import UserInterestPackageList from "../components/main/userInterestPakcageList";
-import UpperCategoryPackageList from "../components/main/UpperCategoryPackageList";
+import UpperCategoryPackageList from "../components/main/upperCategoryPackageList";
 import styles from '../styles/common/HomePage.module.css';
 
 const HomePage = () => {
@@ -77,8 +77,8 @@ const HomePage = () => {
                     </div>
                 )}
                 <NavBar />
-                {/*<UserInterestPackageList />*/}
-                {/*<UpperCategoryPackageList />*/}
+                <UserInterestPackageList />
+                <UpperCategoryPackageList />
                 <div
                     className={styles.fixedButton}
                     onClick={handleOpenTestAI}
