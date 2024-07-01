@@ -31,6 +31,7 @@ const EnrollEducationExperience = ({ nextPage, prevPage, educationExperience, ca
     const [editCareerId, setEditCareerId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [careerErrorMessage, setCareerErrorMessage] = useState(""); // New state for career form error message
     const [totalCareer, setTotalCareer] = useState("");
     const dateInputRef = useRef(null);
 
@@ -101,6 +102,15 @@ const EnrollEducationExperience = ({ nextPage, prevPage, educationExperience, ca
 
     const handleCareerSubmit = (e) => {
         e.preventDefault();
+
+        const { institutionName, department, position, startDate, endDate, responsibilities } = careerForm;
+
+        if (!institutionName || !department || !position || !startDate || !endDate || !responsibilities) {
+            setCareerErrorMessage("모든 필수 입력 값을 입력해 주세요.");
+            return;
+        }
+
+        setCareerErrorMessage("");
 
         if (isEditing) {
             const updatedCareers = careers.map(car => car.id === editCareerId ? { id: editCareerId, ...careerForm } : car);
@@ -209,6 +219,7 @@ const EnrollEducationExperience = ({ nextPage, prevPage, educationExperience, ca
         setShowCareerForm(!showCareerForm);
         setEditCareerId(null);
         setIsEditing(false);
+        setCareerErrorMessage(""); // Reset career error message
     };
 
     const handleInputChange = (e, formSetter) => {
@@ -516,6 +527,7 @@ const EnrollEducationExperience = ({ nextPage, prevPage, educationExperience, ca
                 )}
                 {showCareerForm && (
                     <div className={styles.formContainer}>
+                        {careerErrorMessage && <p className={styles.errorMessage}>{careerErrorMessage}</p>} {/* Display career error message */}
                         <form onSubmit={handleCareerSubmit}>
                             <div className={styles.careerFormRow}>
                                 <div>
