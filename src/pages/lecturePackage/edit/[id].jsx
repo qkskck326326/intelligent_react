@@ -33,9 +33,11 @@ const EditLecturePackage = () => {
 
     return (
         <div>
-            <LecturePackageRegister isEditMode={true} packageData={packageData} />
+            <LecturePackageRegister isEditMode={true} lecturePackageId={packageData.lecturePackageId} />
         </div>
     );
 };
 
 export default EditLecturePackage;
+
+
