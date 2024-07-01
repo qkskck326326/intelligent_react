@@ -79,13 +79,9 @@ const UserManagement = () => {
         try {
             const reason = prompt('삭제 이유를 입력하세요.');  // 삭제 이유를 입력받습니다.
             if (reason) {
-                await axiosClient.post('/admins/delete-users', {
-                    users: selectedUsers.map(user => ({
-                        email: user.userEmail,
-                        provider: user.provider,
-                        reason
-                    }))
-                });
+                await axiosClient.post('/admins/delete-users',
+                    selectedUsers.map(user => ({ email: user.userEmail, provider: user.provider, reason }))
+                );
                 setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user)));
                 setSelectedUsers([]);
             }
@@ -214,4 +210,4 @@ const UserManagement = () => {
     );
 };
 
-export default UserManagement;
+export default UserManagement2;

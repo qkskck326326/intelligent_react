@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import styles from "../../styles/lecturePackage/thumbnailModal.module.css";
 
-const Thumbnail = ({ isOpen, onClose }) => {
+const Thumbnail = ({ isOpen, onClose, onSave  }) => {
     const [thumbnail, setThumbnail] = useState(null);
     const [preview, setPreview] = useState(null);
 
@@ -21,6 +21,7 @@ const Thumbnail = ({ isOpen, onClose }) => {
     };
 
     const handleSave = () => {
+        onSave(preview);
         onClose();
     };
 

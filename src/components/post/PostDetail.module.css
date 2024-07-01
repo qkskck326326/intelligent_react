@@ -10,7 +10,8 @@
   padding: 15px; /* 패딩을 줄임 */
   background-color: #ffffff;
   position: relative;
-  /* border: solid 30px #52c095; */
+  border: solid 1px #e6e6e6;
+  border-radius: 10px;
 }
 
 .postHeader {
@@ -37,12 +38,15 @@
   font-size: 1em; /* 폰트 크기를 줄임 */
   font-weight: bold;
   color: #333;
+  margin-bottom: 5px;
 }
 
 .postCategory {
+
+  margin-top: 10px;
   background: #52c095;
   color: white;
-  padding: 2px 6px; /* 패딩을 줄임 */
+  padding: 4px 15px; /* 패딩을 줄임 */
   border-radius: 12px;
   font-size: 0.8em; /* 폰트 크기를 줄임 */
 }
@@ -76,6 +80,13 @@
   margin-left: 10px;
   display: flex;
   align-items: center;
+}
+
+.authorLabel {
+  background-color: #efefef;
+  border-radius: 10px;
+  padding: 5px;
+  font-size: 0.8rem;
 }
 
 .postTitle {

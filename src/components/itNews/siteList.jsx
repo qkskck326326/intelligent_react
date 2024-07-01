@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { axiosClient } from '../../axiosApi/axiosClient';
 import SiteSaveModal from "./siteSaveModal";
+import AlertModal from "../common/AlertModal";
 import { Button, Pagination } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import TextlizeYoutube from "./textlize";
-import axios from "axios";
 
 const BoardList = () => {
     const [page, setPage] = useState(0);
@@ -15,6 +15,8 @@ const BoardList = () => {
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [currentData, setCurrentData] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState(null);
 
     const fetchData = () => {
         axiosClient.get('/itNewsSite', {params: {page: page, size: size}})
@@ -74,6 +76,20 @@ const BoardList = () => {
         setShowModal(false);
     };
 
+    const handleDeleteClick = (item) => {
+        setDeleteTarget(item);
+        setShowAlert(true);
+    };
+
+    const handleConfirmDelete = () => {
+        handleDelete(deleteTarget);
+        setShowAlert(false);
+    };
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
@@ -90,14 +106,20 @@ const BoardList = () => {
             <button onClick={doCrowling}>크롤링 요청</button>
             <SiteSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave}
                            initialData={currentData}/>
+            <AlertModal
+                show={showAlert}
+                handleClose={handleCloseAlert}
+                title="삭제 확인"
+                message="정말로 삭제하시겠습니까?"
+                onConfirm={handleConfirmDelete}
+            />
             <table className="table">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Site URL</th>
-                    <th scope="col">Latest Board URL</th>
                     <th scope="col">Site Name</th>
-                    <th scope="col">Video Element</th>
+                    <th scope="col">Latest Board URL</th>
                     <th scope="col">Title Element</th>
                     <th scope="col">Context Element</th>
                     <th scope="col" style={{width: '140px'}}> 수정 / 삭제</th>
@@ -108,15 +130,14 @@ const BoardList = () => {
                     <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <td>{item.siteUrl}</td>
-                        <td>{item.latestBoardUrl}</td>
                         <td>{item.siteName}</td>
-                        <td>{item.videoElement}</td>
+                        <td>{item.latestBoardUrl}</td>
                         <td>{item.titleElement}</td>
                         <td>{item.contextElement}</td>
                         <td>
                             <button onClick={() => handleEdit(item)}>수정</button>
                             &nbsp;
-                            {/*<button onClick={() => handleDelete(item)}>삭제</button>*/}
+                            <button onClick={() => handleDeleteClick(item)}>삭제</button>
                         </td>
                     </tr>
                 ))}

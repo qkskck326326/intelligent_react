@@ -58,7 +58,7 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
       setTotalPages(responseData.totalPages);
       setTotalItems(responseData.totalElements); // 전체 아이템 수 설정
 
-      const responsePayment = await axiosClient.get("/payment/confirmation", {params});
+      const responsePayment = await axiosClient.get("/payment/confirmation");
       const responsePaymentData = responsePayment.data
       setPayments(responsePaymentData);
 
@@ -256,18 +256,18 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
                       )}
                     </div>
                     <div className={styles.info}>
-                  <span>
-                    <img
-                        className={styles.viewCount}
-                        src="/images/view_count_icon.png"
-                        alt="조회수 아이콘"
-                    />
-                  </span>{" "}
-                      {lecture.viewCount}
-                      <span className={styles.packageLevel}>
-                    {renderLevelIcon(lecture.packageLevel)}
-                        {getLectureLevel(lecture.packageLevel)}
-                  </span>
+                      <span>
+                        <img
+                            className={styles.viewCount}
+                            src="/images/view_count_icon.png"
+                            alt="조회수 아이콘"
+                        />
+                      </span>{" "}
+                          {lecture.viewCount}
+                          <span className={styles.packageLevel}>
+                        {renderLevelIcon(lecture.packageLevel)}
+                            {getLectureLevel(lecture.packageLevel)}
+                      </span>
                     </div>
                   </div>
                 </div>

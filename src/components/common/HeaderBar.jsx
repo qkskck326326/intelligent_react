@@ -45,65 +45,67 @@ const HeaderBar = observer(() => {
   }
 
   return (
-    <Navbar collapseOnSelect expand="lg" className={styles.navbar}>
-      <Navbar.Brand href="/" className={styles["navbar-brand"]}>
-        <img src="/images/logo.png" alt="Logo" />
-      </Navbar.Brand>
-      <Nav className={styles["navbar-nav"]}>
-        <Nav.Link href="/admin/dashboard" className={styles["nav-link"]}>
-          어드민
-        </Nav.Link>
-        <Nav.Link href="/lecturePackage" className={styles["nav-link"]}>
-          강의패키지
-        </Nav.Link>
-        <Nav.Link href="/lecture/list" className={styles["nav-link"]}>
-          강의
-        </Nav.Link>
-        <Nav.Link href="/itNewsBoard" className={styles["nav-link"]}>
-          itNewsBoard
-        </Nav.Link>
-        <Nav.Link href="/payment" className={styles["nav-link"]}>
-          결제
-        </Nav.Link>
-        <Nav.Link href="/chatting" className={styles["nav-link"]}>
-          채팅
-        </Nav.Link>
-        <Nav.Link href="/post" className={styles["nav-link"]}>
-          공유게시판
-        </Nav.Link>
-        <Nav.Link href="/cs" className={styles["nav-link"]}>
-          고객센터
-        </Nav.Link>
-        <Nav.Link href="/cart" className={styles["nav-link"]}>
-          장바구니
-        </Nav.Link>
-      </Nav>
-      <Nav className={styles["right-nav"]}>
-        {authStore.isLoggedIn ? (
-          <>
-          <img src="/images/notificationBell.png" alt="Notification Bell" className={styles.notificationBell} 
-              onClick={() => setShowNotifications(!showNotifications)} 
-            />
-            {showNotifications && <Notification />}
-            <Nav.Link onClick={handleLogout} className={styles["nav-link"]}>
-              로그아웃
-            </Nav.Link>
-            <Nav.Link href="/user/mypage" className={styles["nav-link"]}>
-              마이페이지
-            </Nav.Link>
-          </>
-        ) : (
-          <>
-            <Nav.Link href="/user/login" className={styles["nav-link"]}>
-              로그인
-            </Nav.Link>
-            <Nav.Link href="/user/enroll" className={styles["nav-link"]}>
-              회원가입
-            </Nav.Link>
-          </>
-        )}
-      </Nav>
-    </Navbar>
+      <Navbar collapseOnSelect expand="lg" className={styles.navbar}>
+        <Navbar.Brand href="/" className={styles["navbar-brand"]}>
+          <img src="/images/logo.png" alt="Logo" />
+        </Navbar.Brand>
+        <Nav className={styles["navbar-nav"]}>
+          {authStore.isAdmin && (
+              <Nav.Link href="/admin/dashboard" className={styles["nav-link"]}>
+                어드민
+              </Nav.Link>
+          )}
+          <Nav.Link href="/lecturePackage" className={styles["nav-link"]}>
+            강의패키지
+          </Nav.Link>
+          <Nav.Link href="/lecture/list" className={styles["nav-link"]}>
+            강의
+          </Nav.Link>
+          <Nav.Link href="/itNewsBoard" className={styles["nav-link"]}>
+            itNewsBoard
+          </Nav.Link>
+          <Nav.Link href="/payment" className={styles["nav-link"]}>
+            결제
+          </Nav.Link>
+          <Nav.Link href="/chatting" className={styles["nav-link"]}>
+            채팅
+          </Nav.Link>
+          <Nav.Link href="/post" className={styles["nav-link"]}>
+            공유게시판
+          </Nav.Link>
+          <Nav.Link href="/cs" className={styles["nav-link"]}>
+            고객센터
+          </Nav.Link>
+          <Nav.Link href="/cart" className={styles["nav-link"]}>
+            장바구니
+          </Nav.Link>
+        </Nav>
+        <Nav className={styles["right-nav"]}>
+          {authStore.isLoggedIn ? (
+              <>
+                <img src="/images/notificationBell.png" alt="Notification Bell" className={styles.notificationBell}
+                     onClick={() => setShowNotifications(!showNotifications)}
+                />
+                {showNotifications && <Notification />}
+                <Nav.Link onClick={handleLogout} className={styles["nav-link"]}>
+                  로그아웃
+                </Nav.Link>
+                <Nav.Link href="/user/mypage" className={styles["nav-link"]}>
+                  마이페이지
+                </Nav.Link>
+              </>
+          ) : (
+              <>
+                <Nav.Link href="/user/login" className={styles["nav-link"]}>
+                  로그인
+                </Nav.Link>
+                <Nav.Link href="/user/enroll" className={styles["nav-link"]}>
+                  회원가입
+                </Nav.Link>
+              </>
+          )}
+        </Nav>
+      </Navbar>
   );
 });
 
