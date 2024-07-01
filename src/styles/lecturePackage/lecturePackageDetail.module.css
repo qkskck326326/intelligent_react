@@ -1,17 +1,15 @@
-
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: #f8f8f8;
-    /*width: 1000px;*/
+    background-color: #fbfbfb;
 }
 
 .threebtn {
-    width:600px;
+    width: 600px;
     display: flex;
-    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+    justify-content: flex-end;
 }
 
 .title {
@@ -33,10 +31,10 @@
 
 .actions {
     display: flex;
-    justify-content: space-between; /* 버튼들을 양쪽 끝으로 정렬 */
+    justify-content: space-between;
     width: 100%;
     max-width: 100%;
-    gap: 10px; /* 버튼들 사이의 간격 조정 */
+    gap: 10px;
     margin-top: 20px;
     align-items: center;
 }
@@ -45,7 +43,7 @@
     font-size: 1rem;
     border: 1px solid #ccc;
     padding: 5px 10px;
-    margin-left:10px;
+    margin-left: 10px;
     background-color: #ffffff;
     cursor: pointer;
 }
@@ -66,16 +64,17 @@
     font-size: 1.2rem;
     font-weight: bold;
     width: 100px;
-    margin:0px;
-
+    margin: 0px;
 }
 
-.redBox {
 
+
+.redBox {
     display: flex;
     justify-content: center;
     width: 100%;
     overflow-y: visible;
+    /*border-radius: 8px;*/
 }
 
 .redBox .field {
@@ -89,36 +88,40 @@
     text-align: center;
 }
 
-.levelText{
+.levelText {
     font-size: 0.8em;
     color: #949494;
-
-
 }
-
-/*.priceKind {*/
-/*    background-color: #a499ff;*/
-/*    color: white;*/
-/*    padding: 10px;*/
-/*    border-radius: 4px;*/
-/*    text-align: center;*/
-/*    font-size: 1.5rem;*/
-/*    font-weight: bold;*/
-/*    margin-bottom: 20px;*/
-/*}*/
 
 .field {
     margin-top: 5px;
-
 }
+
+.presentText{
+    margin-top:40px;
+}
+
 
 .field label {
     display: block;
+    font-size: 1.3em;
     font-weight: bold;
     margin-bottom: 5px;
+    margin-top: 0;
+
 }
 
-.categories, .techStack {
+.categories {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    border:1px solid black;
+    padding: 10px;
+    width: 370px;
+
+}
+
+.techStack{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -127,7 +130,8 @@
 .category {
     margin: 5px;
 }
-.techStack img{
+
+.techStack img {
     margin: 5px;
     width: 40px;
     height: 40px;
@@ -147,8 +151,22 @@
 }
 
 .content {
-    text-align: left;
-    width: 100%;
+    text-align: center;
+    width: 750px;
+    padding: 20px;
+    border-radius: 3px;
+    /*display: flex;*/
+    /*flex-direction: row; !* 가로로 정렬 *!*/
+    gap: 20px; /* 요소 간의 간격 조절 */
+    flex-wrap: wrap; /* 요소들이 넘어가면 줄 바꿈 */
+
+}
+
+
+.content iframe {
+    flex: 1 1 300px; /* 비디오 크기 조절 */
+    max-width: 100%;
+    height: auto;
 }
 
 .content table {
@@ -165,42 +183,35 @@
     text-align: left;
 }
 
-.content {
-    padding: 20px;
-    border-radius: 0px;
-    width: 700px;
-
-}
-
 .content img {
     width: 100%;
-    max-width: 300px;
+    max-width: 400px;
     height: auto;
+}
+
+.subCategoryText{
+    margin-top: 20px;
 }
 
 .applyBox {
     position: fixed;
 }
 
-
-
 .fixedBox {
     position: fixed;
-    top: 38%;
-    /*right: 4%;*/
+    top: 35%;
     left: 74.8%;
     width: 300px;
     height: 430px;
-    border: 1px solid #e6e6e6;
+    border: 2px solid #37ddb6;
+    border-radius: 3px;
     background-color: #ffffff;
     text-align: left;
     padding: 0 30px;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.07);
     z-index: 1000;
     margin-bottom: 5px;
-
 }
-
 
 .applyButton {
     background-color: #ffffff;
@@ -214,15 +225,15 @@
     font-size: 1.2em;
     font-weight: bold;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.07);
-    margin-bottom:5px;
+    margin-bottom: 5px;
 }
 
-.applyButton:hover{
+.applyButton:hover {
     background-color: #0098f6;
     color: #ffffff;
     border: 4px solid #ffffff;
-    box-shadow:inset 0 2px 3px rgba(61, 73, 96, 0.3);
-    text-shadow:0 2px 3px rgba(61, 73, 96, 0.3);
+    box-shadow: inset 0 2px 3px rgba(61, 73, 96, 0.3);
+    text-shadow: 0 2px 3px rgba(61, 73, 96, 0.3);
 }
 
 .price {
@@ -230,35 +241,29 @@
     font-weight: bold;
     margin-bottom: 10px;
 }
-.discount{
+
+.discount {
     font-size: 0.8em;
     color: #ff5b5b;
 }
-.applyTextContaner{
+
+.applyTextContaner {
     align-items: center;
 }
 
 .applyText {
-    /*position: fixed;*/
-    /*bottom: 62%;*/
-    /*right: 4%;*/
-    /*left: 74.8%;*/
     width: 200px;
-    /*height: 5%;*/
-    margin-top:10px;
-    margin-bottom:20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     margin-left: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ff7b7b;
+    background-color: #ff6767;
     border-radius: 30px;
     padding: 10px;
     color: white;
     font-size: 0.8em;
-
-
-
 }
 
 @media (max-width: 1200px) {
@@ -267,27 +272,16 @@
         right: 4%;
         width: 30%;
     }
-
-    /*.applyText {*/
-    /*    left: auto;*/
-    /*    right: 4%;*/
-    /*    width: 35%;*/
-    /*}*/
 }
-
-
 
 .horizontalLine {
     width: 100%;
     height: 1px;
-    background-color: rgba(204, 204, 204, 0.5); /* 회색 */
-    margin-top: 10px; /* 위로 약간의 여백을 추가 */
+    background-color: rgba(204, 204, 204, 0.5);
+    margin-top: 10px;
     margin-bottom: 25px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
-
-
-
 
 .viewCountContainer {
     display: flex;
@@ -324,11 +318,88 @@
     height: 15px;
     opacity: 50%;
 }
-.shareText{
+
+.shareText {
     color: black;
 }
 
 
 
+/* 학습대상자 및 선수지식 섹션 */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
 
 
+
+.recommendContent{
+    margin-top: 20px;
+}
+
+.recommendSplit{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.recommend {
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    /* align-items: flex-start; */
+    margin-top: 60px;
+    margin-bottom: 20px;
+    /*align-self: flex-start;*/
+    width: 300px;
+    font-size: 1.5em;
+}
+
+.learningPerson, .readyKnowledge {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 370px;
+    margin-bottom: 10px;
+
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.sectionContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkIcon {
+    color: #00c853;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.infoItem {
+    font-size: 0.8em;
+}

@@ -13,12 +13,10 @@ import {
 import { FaRegListAlt } from "react-icons/fa";
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
 import PostSearch from "../../components/post/PostSearchBar";
-import LoginPopup from "../../components/post/LoginPopup";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react-lite";
 import UploadButton from "../../components/post/PostUploadBtn";
 import { getRelativeTime } from "../../components/post/timeUtils";
-import "./LoginPopup.module.css";
 import { IoHeartSharp } from "react-icons/io5";
 
 const PostList = observer(({ selectedCategory, onSelectCategory }) => {
@@ -90,6 +88,7 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
           : await axiosClient.get("/posts/list", {
               params: { page: page, size: size, sort: sortOrder },
             });
+        console.log(res.data.content);
         setPosts(res.data.content || []);
         setTotalPages(res.data.totalPages || 0);
         // 내 게시글 수 업데이트
@@ -295,7 +294,7 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                   <div className={styles.tagContainer}>
                     {post.tags.map((tag, index) => (
                       <div key={index} className={styles.tagItem}>
-                        {tag}
+                        #{tag}
                       </div>
                     ))}
                   </div>
@@ -311,11 +310,11 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                 <div className={styles.postFooter}>
                   <div className={styles.postStats}>
                     <span>
-                      <IoHeartSharp size={25} color="red" />
+                      <IoHeartSharp size={25} style={{ fill: "#bc3535" }} />
                       {post.likeCount}
                     </span>
                     <span>
-                      <AiOutlineComment size={25} color="#1c86f1" />{" "}
+                      <AiOutlineComment size={25} color="#686868" />{" "}
                       {post.commentCount}
                     </span>
                     <span>
@@ -367,7 +366,6 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
       <div className={styles.uploadButton}>
         <UploadButton onLoginRequired={handleUploadClick} />
       </div>
-      <LoginPopup show={showPopup} handleClose={() => setShowPopup(false)} />
     </div>
   );
 });

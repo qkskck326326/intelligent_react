@@ -1,0 +1,159 @@
+.attendanceContainer {
+    padding: 20px;
+    text-align: center;
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.couponBanner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #f0f8ff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 50%;
+}
+
+.couponItem {
+    font-size: 1em;
+    font-weight: bold;
+    color: #333;
+}
+
+.couponItem span {
+    color: #ff6347;
+    font-size: 1.2em;
+}
+
+.calendarHeader {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    cursor: pointer;
+    position: relative;
+    display: flex; /* 버튼과 텍스트를 한 줄로 배치 */
+    justify-content: center;
+    align-items: center;
+}
+
+.navButton {
+    background: none;
+    border: none;
+    font-size: 0.8em;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.dropdownArrow {
+    margin-left: 10px;
+    font-size: 0.8em;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    width: 50%; /* 너비 조정 */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 0px 20px 20px 20px;
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+.monthDropdown, .yearDropdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0px;
+    position: absolute;
+    top: 63%;
+    left: 60%;
+    transform: translateX(-50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 140px;
+    z-index: 1000;
+    font-size: 0.8rem;
+}
+
+.monthOption, .yearOption {
+    padding: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.monthOption:hover, .yearOption:hover {
+    background-color: #f0f0f0;
+}
+
+.week {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.day, .dayOfWeek {
+    flex: 1; /* 각 day 요소가 동일한 너비를 갖도록 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    font-size: 0.9em;
+    margin: 0.5rem;
+}
+
+.dayOfWeek {
+    font-weight: bold;
+}
+
+.present, .absent {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1em; /* 동일한 크기로 설정 */
+    line-height: 30px; /* 높이와 동일하게 설정하여 텍스트를 가운데 정렬 */
+}
+
+.present {
+    background-color: #54cb47;
+    color: white;
+}
+
+.absent {
+    background-color: #f02c33;
+    color: white;
+}
+
+/* 미디어 쿼리 추가 */
+@media (max-width: 1024px) {
+    .calendar {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .calendar {
+        width: 90%;
+    }
+
+    .calendarHeader {
+        font-size: 1.2em;
+    }
+
+    .navButton {
+        font-size: 1em;
+    }
+}

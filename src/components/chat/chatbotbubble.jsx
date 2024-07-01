@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chatbubble.module.css';
 
 const BotBubble = observer(({ message }) => {

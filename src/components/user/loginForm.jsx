@@ -53,13 +53,19 @@ const LoginForm = observer(() => {
         window.localStorage.setItem("profileImageUrl", response.data.profileImageUrl);
 
         authStore.setIsLoggedIn(true);
-		authStore.setIsStudent(response.data.isStudent);
-		authStore.setIsTeacher(response.data.isTeacher);
+        authStore.setIsStudent(response.data.isStudent);
+        authStore.setIsTeacher(response.data.isTeacher);
         authStore.setIsAdmin(response.data.isAdmin);
         authStore.setNickname(response.data.nickname);
         authStore.setUserEmail(response.data.userEmail);
         authStore.setProvider(response.data.provider);
         authStore.setProfileImageUrl(response.data.profileImageUrl);
+
+        // 로그인 성공 후 출석 체크
+        await axiosClient.post('/users/check-attendance', {
+          email: response.data.userEmail,
+          provider: response.data.provider
+        });
       }
       window.location.href = 'http://localhost:3000'; // 로그인 성공 시 이동
     } catch (error) {

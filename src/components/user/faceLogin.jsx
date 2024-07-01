@@ -88,6 +88,13 @@ const FaceLogin = () => {
             authStore.setProvider(res.data.provider);
             authStore.setProfileImageUrl(res.data.profileImageUrl);
 
+
+            // 로그인 성공 후 출석 체크
+            await axiosClient.post('/users/check-attendance', {
+              email: response.data.userEmail,
+              provider: 'intelliclass'
+            });
+
             setStatus('JWT 토큰 발급 성공');
             router.push('/'); 
           }

@@ -18,7 +18,7 @@ const ChatIcon = observer(({ isHidden, isExpanding, onNavigate, userId, userType
                     setTotalCount(response.data);
                 })
                 .catch(error => {
-                    console.error('Error fetching total unread count:', error);
+                    console.error('데이터 fetch 실패:', error);
                 });
         };
 

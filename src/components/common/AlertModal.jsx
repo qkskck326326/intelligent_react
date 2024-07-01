@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const AlertModal = ({ show, handleClose, title, message }) => {
+const AlertModal = ({ show, handleClose, title, message, onConfirm }) => {
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -10,12 +10,20 @@ const AlertModal = ({ show, handleClose, title, message }) => {
             </Modal.Header>
             <Modal.Body>{message}</Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                    Save Changes
-                </Button>
+                {onConfirm ? (
+                    <>
+                        <Button variant="primary" onClick={onConfirm}>
+                            예
+                        </Button>
+                        <Button variant="secondary" onClick={handleClose}>
+                            아니오
+                        </Button>
+                    </>
+                ) : (
+                    <Button variant="secondary" onClick={handleClose}>
+                        확인
+                    </Button>
+                )}
             </Modal.Footer>
         </Modal>
     );

@@ -37,12 +37,24 @@ const ResetPassword = () => {
   }, [isCodeSent]);
 
   useEffect(() => {
-    if (timer === 0) {
+    if (isVerified) {
+      clearInterval(intervalId);
+      setIsCodeSent(false);
+      setTimer(0);
+      const formBody = document.querySelector(`.${styles.formBody}`);
+      if (formBody) {
+        formBody.style.paddingLeft = '90px';
+      }
+    }
+  }, [isVerified]);
+
+  useEffect(() => {
+    if (timer === 0 && !isVerified) {
       clearInterval(intervalId);
       alert('이메일 인증 시간이 만료되었습니다.');
       router.push("/user/login");
     }
-  }, [timer, intervalId, router]);
+  }, [timer, intervalId, router, isVerified]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,6 +107,7 @@ const ResetPassword = () => {
     if (verificationCode === receivedCode) {
       setIsCodeValid(true);
       setIsVerified(true); // 인증 성공 여부 설정
+      clearInterval(intervalId);
       alert('인증이 성공적으로 완료되었습니다.');
       setIsCodeSent(false);
     } else {
@@ -125,6 +138,13 @@ const ResetPassword = () => {
     if (userPwd !== confirmUserPwd) {
       alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
       confirmUserPwdRef.current.focus();
+      return;
+    }
+
+    const { minLength, hasUpperCase, hasNumber } = passwordValidation;
+    
+    if (!minLength || !hasUpperCase || !hasNumber) {
+      alert("새 비밀번호가 조건을 충족하지 않습니다. 다시 시도해 주세요.");
       return;
     }
 
