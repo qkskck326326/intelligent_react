@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from "../../styles/chatting/chatlist.module.css";
@@ -6,7 +6,7 @@ import PeopleToAdd from "./peopletoadd.jsx";
 import AlertModal from "../common/Modal";
 import {axiosClient} from "../../axiosApi/axiosClient";
 
-const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNavigateToModal, onNavigateToChat, userId, userType }) => {
+const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNavigateToModal, userId, userType }) => {
 
     const [isAnimating, setIsAnimating] = useState(false);
     const [people, setPeople] = useState([])
@@ -16,13 +16,13 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
     const [noOneSelected, setNoOneSelected] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [activeModal, setActiveModal] = useState();
     const modal = new AlertModal();
     const [keyword, setKeyword] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const scrollContainerRef = useRef(null);
+    const textRef = useRef(null);
 
     useEffect(()=>{
-        console.log(roomType)
         setPeople([]);
         setSelectedIndices([]);
         setPage(1);
@@ -38,10 +38,8 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
 
     useEffect(() => {
         setCheckColor(selectedIndices.length > 0 ? 'black' : 'lightgray');
-        console.log(selectedIndices)
     }, [selectedIndices]);
 
-    //TODO
     const fetchFriends = (page) => {
         axiosClient.get('/users/getpeople', {
             params: {
@@ -57,7 +55,7 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
                     setPeople(prevPeople => [...prevPeople, ...data]);
                     setPage(prevPage => prevPage + 1);
 
-                    if (data.length < 10) {
+                    if (data.length < 50) {
                         setHasMore(false);
                     }
                 } else {
@@ -70,7 +68,6 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
     };
 
     const fetchFriendswithQuery = (page, searchQuery) => {
-        //TODO
         axiosClient.get('/users/getpeople', {
             params: {
                 userId: userId,
@@ -86,7 +83,7 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
                     setPeople(prevPeople => [...prevPeople, ...data]);
                     setPage(prevPage => prevPage + 1);
 
-                    if (data.length < 10) {
+                    if (data.length < 50) {
                         setHasMore(false);
                     }
                 } else {
@@ -97,6 +94,17 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
                 console.error('An error occurred!', error);
             });
     }
+
+    const handleScroll = () => {
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 5 && hasMore) {
+            if (searchQuery === '') {
+                fetchFriends(page);
+            } else {
+                fetchFriendswithQuery(page, searchQuery);
+            }
+        }
+    };
 
     const handleSelectionChange = (nickname) => {
 
@@ -136,7 +144,6 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
             setNoOneSelected(true)
             return false;
         } else{
-            console.log(roomType)
             onNavigateToModal(selectedIndices.join(', '), roomType)
         }
 
@@ -153,6 +160,7 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
 
     function handleReset(event){
         event.preventDefault();
+        textRef.current.value = ''
         setPeople([]);
         setSelectedIndices([]);
         setPage(1);
@@ -181,7 +189,7 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
                 </button>
             </div>
             <form className={styles.searchBar} onSubmit={handleSubmit}>
-                <input className={styles.searchBox} type="text" placeholder='검색어를 입력하세요' onChange={handleSearchChange}/>
+                <input className={styles.searchBox} type="text" placeholder='검색어를 입력하세요' onChange={handleSearchChange} ref={textRef}/>
                 <button className={styles.resetButton} type='reset' onClick={handleReset}>
                     <svg xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 384 512">
@@ -190,7 +198,9 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
                     </svg>
                 </button>
             </form>
-            <div className={commonStyles.chatServiceMain}>
+            <div className={commonStyles.chatServiceMain}
+                 ref={scrollContainerRef}
+                 onScroll={handleScroll}>
                 <PeopleToAdd
                     selectedIndices={selectedIndices}
                     onSelectionChange={handleSelectionChange}

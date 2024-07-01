@@ -78,7 +78,6 @@ const AnnouncementWrite = observer(() => {
             announcementId: announcementId,
             title: title,
             content: content,
-            createdAt: new Date(),
             creator: authStore.getNickname(),
             category: category,
             importance: importance

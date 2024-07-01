@@ -1,3 +1,5 @@
+// src/components/post/PopularPosts.js
+
 import React, { useEffect, useState } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import { getRelativeTime } from "./timeUtils";
@@ -8,7 +10,7 @@ const PopularPosts = () => {
 
   useEffect(() => {
     axiosClient
-      .get("posts/top10")
+      .get("posts/top5")
       .then((response) => {
         setPosts(response.data);
       })
@@ -33,50 +35,25 @@ const PopularPosts = () => {
   return (
     <div className={styles.popularPostsContainer}>
       <div className={styles.header}>
-        <h2>인기글 TOP10</h2>
-        <img
-          src="/images/랭킹.png"
-          className={styles.rankImage}
-          alt="랭킹 아이콘"
-        />
+        <h4>주간 인기글</h4>
       </div>
       <ul className={styles.popularPostsList}>
-        <div className={styles.popularPostColumn}>
-          {posts.slice(0, 5).map((post, index) => (
-            <li key={post.id} className={styles.popularPostItem}>
-              <div className={getRankClass(index)}>{index + 1}</div>
-              <a href={`/post/${post.id}`} className={styles.popularPostLink}>
-                {post.title}
-              </a>
+        {posts.map((post, index) => (
+          <li key={post.id} className={styles.popularPostItem}>
+            <div className={getRankClass(index)}>{index + 1}</div>
+            <a href={`/post/${post.id}`} className={styles.popularPostLink}>
+              {post.title}
+            </a>
+            <div className={styles.popularPostMeta}>
               <span className={styles.popularPostComments}>
-                댓글 {post.commentCount}
+                {post.commentCount}
               </span>
-              <div>
-                <small className={styles.popularPostTime}>
-                  {getRelativeTime(post.postTime)}
-                </small>
-              </div>
-            </li>
-          ))}
-        </div>
-        <div className={styles.popularPostColumn}>
-          {posts.slice(5, 10).map((post, index) => (
-            <li key={post.id} className={styles.popularPostItem}>
-              <div className={getRankClass(index + 5)}>{index + 6}</div>
-              <a href={`/post/${post.id}`} className={styles.popularPostLink}>
-                {post.title}
-              </a>
-              <span className={styles.popularPostComments}>
-                댓글 {post.commentCount}
-              </span>
-              <div>
-                <small className={styles.popularPostTime}>
-                  {getRelativeTime(post.postTime)}
-                </small>
-              </div>
-            </li>
-          ))}
-        </div>
+              <small className={styles.popularPostTime}>
+                {getRelativeTime(post.postTime)}
+              </small>
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   );

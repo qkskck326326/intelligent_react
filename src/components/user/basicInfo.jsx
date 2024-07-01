@@ -47,12 +47,20 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
   }, [isCodeSent]);
 
   useEffect(() => {
-    if (timer === 0) {
+    if (isEmailVerified) {
+      clearInterval(intervalId);
+      setIsCodeSent(false);
+      setTimer(0);
+    }
+  }, [isEmailVerified]);
+
+  useEffect(() => {
+    if (timer === 0 && !isEmailVerified) {
       clearInterval(intervalId);
       alert('이메일 인증 시간이 만료되었습니다.');
       router.push("/user/login");
     }
-  }, [timer, intervalId, router]);
+  }, [timer, intervalId, router, isEmailVerified]);
 
   useEffect(() => {
     setIsNicknameValid(basicInfo.nickname.length >= 2);
@@ -233,6 +241,8 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
   };
 
   const handleNextPage = () => {
+    const passwordValidation = validatePassword(basicInfo.userPwd);
+
     if (!basicInfo.userName) {
       alert('이름을 입력하지 않았습니다.');
       userNameRef.current.focus();
@@ -261,6 +271,11 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
     if (basicInfo.userPwd !== basicInfo.confirmUserPwd) {
       alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
       confirmUserPwdRef.current.focus();
+      return;
+    }
+    if (!passwordValidation.minLength || !passwordValidation.hasUpperCase || !passwordValidation.hasNumber) {
+      alert("비밀번호가 조건을 충족하지 않습니다. 다시 시도해 주세요.");
+      userPwdRef.current.focus();
       return;
     }
     if (!basicInfo.phone) {

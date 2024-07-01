@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import DOMPurify from "dompurify";
+
 import { axiosClient } from '../../axiosApi/axiosClient';
 import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css';
 import authStore from '../../stores/authStore';
@@ -36,7 +37,6 @@ const LecturePackageDetail = observer(() => {
             try {
                 const response = await axiosClient.get('/packages/detail', {params: {lecturePackageId}});
                 setLecturePackage(response.data);
-                console.log("lecturePackage : ", response.data);
                 console.log("datanickname : ", response.data.nickname);
                 const responseCount = await axiosClient.get('/packages/lecturecount', {params: {lecturePackageId}});
                 setLectureCount(responseCount.data);
@@ -75,6 +75,8 @@ const LecturePackageDetail = observer(() => {
             fetchLecturePackage();
         }
     }, [lecturePackageId]);
+
+    //조회수 처리 작성자인 경우 하루에 한번만 올릴 수 있음.
 
     useEffect(() => {
         const increaseViewCount = async (authorNickname) => {
@@ -150,7 +152,6 @@ const LecturePackageDetail = observer(() => {
 
 
 
-
     const handleDelete = async () => {
         const confirmDelete = confirm('정말로 이 패키지를 삭제하시겠습니까?');
         if (confirmDelete) {
@@ -181,6 +182,7 @@ const LecturePackageDetail = observer(() => {
         }
     };
 
+    //가격에 천단위로 , 써줌.
     const formatPrice = (priceForever) => {
         return new Intl.NumberFormat('ko-KR').format(priceForever);
     };
@@ -215,6 +217,7 @@ const LecturePackageDetail = observer(() => {
                     router.push("/cart");
                 }
             } else if (response.status === 409) {
+
                 const userConfirmed = window.confirm(
                     "이미 장바구니에 추가하셨습니다. 장바구니 페이지로 이동하시겠습니까?"
                 );
@@ -246,15 +249,6 @@ const LecturePackageDetail = observer(() => {
         });
     };
 
-    const handleShare = () => {
-        const url = window.location.href;
-        navigator.clipboard.writeText(url).then(() => {
-            alert('페이지 링크가 복사되었습니다.');
-        }).catch((err) => {
-            console.error('복사 중 오류 발생:', err);
-        });
-    };
-
     const openProfileModal = () => {
         setIsModalOpen(true);
     };
@@ -270,10 +264,10 @@ const LecturePackageDetail = observer(() => {
 
 
     return (
-        <div className={styles.bodys}>
+        <div>
             <div className={styles.actions}>
                 <div className={styles.profile} onClick={() => openProfileModal()}>
-                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture} />
+                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture}/>
                     <p className={styles.nickname}>{profile.nickname}</p>
                 </div>
                 <div className={styles.threebtn}>
@@ -326,6 +320,9 @@ const LecturePackageDetail = observer(() => {
                                     />
                                 </div>
                             </div>
+                            <div className={styles.infoItem}>
+                                <p>조회수: {lecturePackage.viewCount}</p>
+                            </div>
                         </div>
                         <div className={styles.recommendContent}>
                             <h3 className={styles.recommend}>이런 분들께 추천드려요!</h3>
@@ -367,14 +364,15 @@ const LecturePackageDetail = observer(() => {
 
                             )}
                             </div>
+                            <div className={styles.field}>
+                                <p className={styles.level}><i className="fas fa-check"></i> {getLectureLevel(lecturePackage.packageLevel)} 과정</p>
+                            </div>
                         </div>
 
 
                         <div className={styles.field}>
-
                                 <div className={styles.presentText}>앞으로 배울 </div>
                                 <label className={styles.subCategoryText}> 기술 분야</label>
-
                             <div className={styles.categories}>
                                 {lecturePackage.subCategoryName.split(',').map((category, index) => (
                                     <span key={index} className={styles.category}>{category}</span>
@@ -382,7 +380,7 @@ const LecturePackageDetail = observer(() => {
                             </div>
                         </div>
                         <div className={styles.field}>
-                            <label>사용될 프로그래밍 tool</label>
+                            <label>기술 스택</label>
                             <div className={styles.techStack}>
                                 {lecturePackage.techStackPath.split(',').map((tech, index) => (
                                     <img key={index} src={tech} alt={`tech-${index}`} />
@@ -440,6 +438,11 @@ const LecturePackageDetail = observer(() => {
                         </div>
                     </>
                 )}
+                <div className={styles.fixedBox}>
+                    지금바로 신청하세요!! <button className={styles.applyButton} onClick={handleApply}>수강신청</button>
+                </div>
+                <div className={styles.foot}>
+                </div>
             </div>
             {isModalOpen && <ProfileModal profile={profile} onClose={closeProfileModal} />}
         </div>

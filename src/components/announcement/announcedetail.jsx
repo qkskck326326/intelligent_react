@@ -1,6 +1,5 @@
 import styles from '../../styles/cs/eachannouncement.module.css'
 import {useRouter} from "next/router";
-import Axios from '../../axiosApi/Axios.js'
 import {observer} from "mobx-react";
 import React from 'react';
 import authStore from "../../stores/authStore";

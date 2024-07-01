@@ -58,6 +58,11 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
     };
 
     const handleRegister = async () => {
+        if (selected.length < 2) {
+            alert("관심분야를 최소 두개이상 골라주세요.");
+            return;
+        }
+
         const defaultWidth = 128;
         const defaultHeight = 128;
         let file;
@@ -123,7 +128,7 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
         const enrollForm = {
             ...basicInfo,
             provider: "intelliclass",
-            registerTime: "",
+            // registerTime: "",
             profileImageUrl,
             reportCount: 0,
             loginOk: "Y",
@@ -145,6 +150,14 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
             });
     };
 
+    const handleNextPage = () => {
+        if (selected.length < 2) {
+            alert("관심분야를 최소 두개이상 골라주세요.");
+            return;
+        }
+        nextPage();
+    };
+
     return (
         <div className={styles.enrollInterestBigContainer}>
             <div className={styles.enrollInterestContainer}>
@@ -162,7 +175,7 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
                 </div>
                 <div className={styles.buttonContainer}>
                     <button className={styles.prevButton} onClick={prevPage}>이전</button>
-                    <button className={styles.navigationButton} onClick={nextPage}>얼굴 등록</button>
+                    <button className={styles.navigationButton} onClick={handleNextPage}>얼굴 등록</button>
                     <button className={styles.navigationButton} onClick={handleRegister}>계정 생성</button>
                 </div>
             </div>

@@ -40,6 +40,46 @@ const CKEditorComponent = ({ data, onChange }) => {
             },
           ],
         },
+        image: {
+          toolbar: [
+            "imageTextAlternative",
+            "|",
+            "imageStyle:alignLeft",
+            "imageStyle:alignRight",
+            "imageStyle:alignCenter",
+            "|",
+            "resizeImage:original",
+            "resizeImage:50",
+            "resizeImage:75",
+            "resizeImage:100",
+          ],
+          styles: ["full", "side", "alignLeft", "alignCenter", "alignRight"],
+          resizeOptions: [
+            {
+              name: "resizeImage:original",
+              label: "Original",
+              value: null,
+            },
+            {
+              name: "resizeImage:50",
+              label: "50%",
+              value: "50",
+            },
+            {
+              name: "resizeImage:75",
+              label: "75%",
+              value: "75",
+            },
+            {
+              name: "resizeImage:100",
+              label: "100%",
+              value: "100",
+            },
+          ],
+          upload: {
+            types: ["jpg", "jpeg", "png", "gif"],
+          },
+        },
         toolbar: [
           "heading",
           "|",
