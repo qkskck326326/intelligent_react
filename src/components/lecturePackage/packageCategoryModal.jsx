@@ -14,8 +14,7 @@ const PackageCategoryModal = ({ isOpen, onClose, onConfirm, selectedCategories }
                 try {
                     const response = await axiosClient.get('/categories/sub'); // Spring Boot 엔드포인트 호출
                     setCategories(response.data);
-                    console.log(response.data);
-                    console.log("selected : ", selected);
+                    setSelected(selectedCategories); // 여기서 설정
                 } catch (error) {
                     console.error("Error fetching subcategories:", error);
                 }
@@ -24,6 +23,10 @@ const PackageCategoryModal = ({ isOpen, onClose, onConfirm, selectedCategories }
         }
     }, [isOpen, selectedCategories]);
 
+    useEffect(() => {
+        setSelected(selectedCategories);
+    }, [selectedCategories]);
+
     const handleCategoryClick = (category) => {
         if (selected.some(cat => cat.id === category.id)) {
             setSelected(selected.filter(cat => cat.id !== category.id));
@@ -31,6 +34,8 @@ const PackageCategoryModal = ({ isOpen, onClose, onConfirm, selectedCategories }
             setSelected([...selected, category]);
         }
     };
+
+
 
     const handleConfirm = () => {
         onConfirm(selected);

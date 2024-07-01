@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-// import {stompClient} from './websocketService';
 import webSocketService from "./WebSocketService";
 import {observer} from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';

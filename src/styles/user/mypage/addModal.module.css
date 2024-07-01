@@ -1,4 +1,3 @@
-/* styles/addModal.module.css */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -36,7 +35,16 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    width: calc(50% - 10px);
+    width: calc(47% - 10px);
+
+}
+
+.formInput{
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: calc(47% - 10px);
 }
 
 .inputGroup {
@@ -69,9 +77,37 @@
     border: none;
 }
 
+.fileInputContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.confirmButton{
+    font-size: 0.9em;
+    font-weight: bolder;
+    margin-right: 10px;
+    padding:5px;
+    border-radius: 20px;
+    height: 35px;
+    width: 150px;
+    /*box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);*/
+    background-color: #ffffff;
+    color: #0ac88e;
+    border: 3px solid #0ac68d;
+}
+
+.confirmButton:hover {
+    border: 3px solid #0ac88e;
+    background-color: #0aca8f;
+    color: white;
+}
 .fileInput {
-    display: block;
-    margin: 10px 0;
+    display: inline-block;
+}
+
+.verifyText {
+    margin-left: 10px;
 }
 
 .modalActions {
@@ -81,7 +117,7 @@
 }
 
 .saveButton {
-    background-color: #28a745;
+    background-color: #50daae;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -101,7 +137,7 @@
 }
 
 .saveButton:hover {
-    background-color: #218838;
+    background-color: #3ba3cf;
 }
 
 .cancelButton:hover {

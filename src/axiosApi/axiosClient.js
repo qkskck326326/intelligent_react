@@ -31,9 +31,16 @@ const refreshToken = async () => {
             }
         });
         console.log('Reissue response received:', response);
+
         const token = response.headers['authorization'] || response.headers['Authorization'];
         const newAccessToken = token.split(' ')[1];
         localStorage.setItem('token', newAccessToken);
+
+        const newRefreshToken = response.data.refresh;
+        if (newRefreshToken) {
+            localStorage.setItem('refresh', newRefreshToken);
+        }
+
         return newAccessToken;
     } catch (error) {
         if (error.response && error.response.data === 'refresh token expired') {

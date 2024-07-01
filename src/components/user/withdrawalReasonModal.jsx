@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import styles from '../../styles/user/mypage/withdrawalReasonModal.module.css';
 import { axiosClient } from "../../axiosApi/axiosClient";
 import { useRouter } from 'next/router';
+import authStore from "../../stores/authStore";
 
 const WithdrawalReasonModal = ({ isOpen, onClose }) => {
     const [reason, setReason] = useState("");
     const [customReason, setCustomReason] = useState("");
+    const router = useRouter();  
 
     const handleChange = (e) => {
         setReason(e.target.value);
@@ -35,9 +37,10 @@ const WithdrawalReasonModal = ({ isOpen, onClose }) => {
                 }
             });
             onClose();
-            alert('탈퇴가 완료되었습니다.');
+            authStore.reset();
             localStorage.clear();
-            router.push('/');
+            router.push('/');  // 메인 페이지로 이동
+            alert('탈퇴가 완료되었습니다.');
             
         } catch (error) {
             console.error("Error during user deletion:", error);
