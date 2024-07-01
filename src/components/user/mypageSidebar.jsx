@@ -16,6 +16,7 @@ const MypageSidebar = observer(({ setSelectedComponent }) => {
 
     return (
         <div className={styles.sidebar}>
+            
             <img src={authStore.profileImageUrl || "/images/defaultProfile.png"} alt="프로필 사진"
                  className={styles.profilePicture}/>
             <p className={styles.nickname}>'{authStore.nickname}' 님</p>

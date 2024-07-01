@@ -47,12 +47,20 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
   }, [isCodeSent]);
 
   useEffect(() => {
-    if (timer === 0) {
+    if (isEmailVerified) {
+      clearInterval(intervalId);
+      setIsCodeSent(false);
+      setTimer(0);
+    }
+  }, [isEmailVerified]);
+
+  useEffect(() => {
+    if (timer === 0 && !isEmailVerified) {
       clearInterval(intervalId);
       alert('이메일 인증 시간이 만료되었습니다.');
       router.push("/user/login");
     }
-  }, [timer, intervalId, router]);
+  }, [timer, intervalId, router, isEmailVerified]);
 
   useEffect(() => {
     setIsNicknameValid(basicInfo.nickname.length >= 2);

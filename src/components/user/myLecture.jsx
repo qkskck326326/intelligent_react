@@ -88,6 +88,13 @@ const MyLecture = observer(() => {
         );
     };
 
+    const handleMoveLecture = (lecturePackageId) => {
+        router.push({
+            pathname: '/lecture/list',
+            query: {lecturePackageId}
+        })
+    }
+
     return (
         <div className={styles.container}>
             <h1>내가 결제한 강좌 목록</h1>
@@ -99,18 +106,17 @@ const MyLecture = observer(() => {
                         </div>
                         <div className={styles.details}>
                             <div className={styles.title}>
-                                <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
-                                    <span className={styles.customLink}>{lecture.title}</span>
-                                </Link>
+                                <span onClick={() => {handleMoveLecture(lecture.lecturePackageId)}}>{lecture.title}</span>
+                                
                             </div>
-                            <div className={styles.rating}>
+                            {/* <div className={styles.rating}>
                                 {"별점 "}
                                 {lecture.rating ? (
                                     renderStars(lecture.rating)
                                 ) : (
                                     <span className={styles.emptyStar}>&nbsp;</span>
                                 )}
-                            </div>
+                            </div> */}
                             <div className={styles.info}>
                                 <span>
                                     <img
