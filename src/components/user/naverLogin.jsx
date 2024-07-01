@@ -6,7 +6,6 @@ const NaverLogin = () => {
 
     const NAVER_CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
     const NAVER_CALLBACK_URL = process.env.NEXT_PUBLIC_NAVER_CALLBACK_URL;
-    const STATE = "false";
 
     const loadNaverScript = () => {
         return new Promise((resolve) => {
@@ -39,6 +38,26 @@ const NaverLogin = () => {
         loadNaverScript().then(() => {
             initializeNaverLogin();
         });
+
+        // 메시지 수신 이벤트 핸들러
+        const handleMessage = (event) => {
+            console.log('Message received:', event.data);
+            if (event.origin !== window.location.origin) return;
+
+            if (event.data.type === 'LOGIN_SUCCESS') {
+                //alert("로그인이 성공적으로 완료되었습니다!");
+                window.location.href = '/'; // 메인 페이지로 이동
+            } else if (event.data.type === 'REGISTER_SUCCESS') {
+                alert("회원가입이 성공적으로 완료되었습니다!");
+                window.location.href = '/user/login'; // 로그인 페이지로 이동
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+            window.removeEventListener('message', handleMessage);
+        };
     }, []);
 
     const handleNaverLogin = () => {

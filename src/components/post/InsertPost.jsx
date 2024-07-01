@@ -157,7 +157,7 @@ const InsertPost = observer(() => {
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="tags">
-          태그 (최대 5개, 각 10자 이내로 입력해주세요.)
+          태그 작성 (최대 5개, 각 10자 이내로 입력해주세요.)
         </label>
         <input
           type="text"

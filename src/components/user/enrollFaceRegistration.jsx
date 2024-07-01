@@ -140,7 +140,7 @@ const EnrollFaceRegistration = ({ prevPage, basicInfo, educationExperience, care
     const enrollForm = {
       ...basicInfo,
       provider: "intelliclass",
-      registerTime: "",
+      // registerTime: "",
       profileImageUrl,
       reportCount: 0,
       loginOk: "Y",

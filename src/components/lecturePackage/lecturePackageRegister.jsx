@@ -11,10 +11,11 @@ import styles from '../../styles/lecturePackage/lecturePackageRegister.module.cs
 import 'bootstrap/dist/css/bootstrap.min.css';
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
+import Button from "react-bootstrap/Button";
 
-const CKEditorComponent  = dynamic(() => import('../CKEditor/CKEditorComponent'), { ssr: false });
+const CKEditorComponent = dynamic(() => import('../CKEditor/CKEditorComponent'), { ssr: false });
 
-const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListClick }) => {
+const LecturePackageRegister = observer(({ isEditMode, lecturePackageId, onBackListClick }) => {
     const router = useRouter();
     const [isCategoryModalOpen, setCategoryModalOpen] = useState(false);
     const [isThumbnailModalOpen, setThumbnailModalOpen] = useState(false);
@@ -24,30 +25,57 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
     const [techStacks, setTechStacks] = useState([]);
     const [selectedTechStacks, setSelectedTechStacks] = useState([]);
     const [backgroundColor, setBackgroundColor] = useState('#ffffff'); // 배경색 상태 추가
+    const [learningPersons, setLearningPersons] = useState(['']); // 학습대상자 목록 상태 추가
+    const [readyKnowledge, setReadyKnowledge] = useState(['']); // 선수 지식 목록 상태 추가
 
     const [form, setForm] = useState({
         title: '',
         level: '',
         priceForever: '',
-        averageClassLength: ''
+        averageClassLength: '',
     });
 
     useEffect(() => {
-        if (isEditMode && packageData) {
-            console.log('packageData:', packageData);
-            setForm({
-                title: packageData.title || '',
-                level: packageData.packageLevel || '',
-                priceForever: packageData.priceForever?.toString() || '',
-                averageClassLength: packageData.averageClassLength || ''
-            });
-            setEditorData(packageData.content || '');
-            setThumbnailPreview(packageData.thumbnail || '');
-            setSelectedCategories(packageData.packageSubCategoryId?.map(id => ({ id })) || []);
-            setSelectedTechStacks(packageData.packageTechStackId?.map(id => ({ techStackId: id })) || []);
-            setBackgroundColor(packageData.backgroundColor || '#ffffff'); // 배경색 설정
-        }
-    }, [isEditMode, packageData]);
+        const fetchPackageData = async () => {
+            if (isEditMode && lecturePackageId) {
+                try {
+                    const response = await axiosClient.get(`/packages/detail`, { params: { lecturePackageId } });
+                    const packageData = response.data;
+                    console.log("packageData : ", packageData);
+                    setForm({
+                        title: packageData.title || '',
+                        level: packageData.packageLevel?.toString() || '',
+                        priceForever: packageData.priceForever?.toString() || '',
+                        averageClassLength: packageData.averageClassLength || '',
+                    });
+                    setEditorData(packageData.content || '');
+                    setThumbnailPreview(packageData.thumbnail || '');
+
+                    const subCategoryNames = packageData.subCategoryName.split(', ');
+                    const subCategories = packageData.subCategoryId.map((id, index) => ({
+                        id,
+                        name: subCategoryNames[index]
+                    }));
+                    setSelectedCategories(subCategories);
+
+                    const techStackPaths = packageData.techStackPath.split(', ');
+                    const techStacks = packageData.techStackId.map((id, index) => ({
+                        techStackId: id,
+                        techStackPath: techStackPaths[index]
+                    }));
+                    setSelectedTechStacks(techStacks);
+                    setBackgroundColor(packageData.backgroundColor || '#ffffff'); // 배경색 설정
+                    // 학습대상자와 선수 지식을 배열로 설정
+                    setLearningPersons(packageData.learningContent || ['']);
+                    setReadyKnowledge(packageData.readyContent || ['']);
+                } catch (error) {
+                    console.error('패키지 데이터를 가져오는 중 오류 발생:', error);
+                }
+            }
+        };
+
+        fetchPackageData();
+    }, [isEditMode, lecturePackageId]);
 
     useEffect(() => {
         const fetchTechStacks = async () => {
@@ -61,6 +89,10 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
 
         fetchTechStacks();
     }, []);
+
+    useEffect(() => {
+        setSelectedCategories(selectedCategories);
+    }, [selectedCategories]);
 
     const handleCategoryClick = () => {
         setCategoryModalOpen(true);
@@ -95,6 +127,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
         }));
     };
 
+    //기술스택
     const handleDrop = (item) => {
         if (!selectedTechStacks.some(stack => stack.techStackId === item.techStackId)) {
             setSelectedTechStacks((prev) => [...prev, item]);
@@ -110,6 +143,8 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
         const data = {
             nickname: nickname,
             title: form.title,
+            learningContent: learningPersons.filter(person => person.trim() !== ''), // 배열로 전송
+            readyContent: readyKnowledge.filter(knowledge => knowledge.trim() !== ''), // 배열로 전송
             content: editorData,
             averageClassLength: form.averageClassLength,
             packageLevel: form.level,
@@ -123,7 +158,7 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
         try {
             let response;
             if (isEditMode) {
-                response = await axiosClient.put(`/packages?lecturePackageId=${packageData.lecturePackageId}`, data);
+                response = await axiosClient.put(`/packages?lecturePackageId=${lecturePackageId}`, data);
             } else {
                 response = await axiosClient.post('/packages', data);
             }
@@ -139,83 +174,47 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
         }
     };
 
+    //학습대상자
+    const handleLearningPersonChange = (index, value) => {
+        setLearningPersons(prev => {
+            const newLearningPersons = [...prev];
+            newLearningPersons[index] = value;
+            return newLearningPersons;
+
+        });
+        console.log("learningPersons : ", learningPersons);
+    };
+
+    const addLearningPerson = () => {
+        setLearningPersons(prev => [...prev, '']);
+    };
+
+    const removeLearningPerson = (index) => {
+        setLearningPersons(prev => prev.filter((_, i) => i !== index));
+    };
+
+    // 선수 지식
+    const handleReadyKnowledgeChange = (index, value) => {
+        setReadyKnowledge(prev => {
+            const newReadyKnowledge = [...prev];
+            newReadyKnowledge[index] = value;
+            return newReadyKnowledge;
+        });
+    };
+
+    const addReadyKnowledge = () => {
+        setReadyKnowledge(prev => [...prev, '']);
+    };
+
+    const removeReadyKnowledge = (index) => {
+        setReadyKnowledge(prev => prev.filter((_, i) => i !== index));
+    };
+
     return (
+        <body className={styles.body}>
         <div className={styles.lecturePackageRegister}>
             <h1 className={styles.h1Title}>{isEditMode ? '강의 패키지 수정' : '강의 패키지 등록'}</h1>
-            <div className={styles.formSection}>
-                <label htmlFor="title">제목</label>
-                <input
-                    id="title"
-                    name="title"
-                    type="text"
-                    value={form.title}
-                    onChange={handleInputChange}
-                    placeholder="강의 제목을 입력하세요"
-                />
-            </div>
-            <div className={styles.formSection}>
-                <div>
-                    <input
-                        type="radio"
-                        id="beginner"
-                        name="level"
-                        value={0}
-                        checked={form.level === '0'}
-                        onChange={handleInputChange}
-                    />
-                    <label htmlFor="beginner">입문</label>
-                    <input
-                        type="radio"
-                        id="default"
-                        name="level"
-                        value={1}
-                        checked={form.level === '1'}
-                        onChange={handleInputChange}
-                    />
-                    <label htmlFor="basic">기본</label>
-                    <input
-                        type="radio"
-                        id="advanced"
-                        name="level"
-                        value={2}
-                        checked={form.level === '2'}
-                        onChange={handleInputChange}
-                    />
-                    <label htmlFor="advanced">심화</label>
-                </div>
-            </div>
-            <div className={styles.formSection}>
-                <div>
-                    <label htmlFor="priceForever">평생소장 금액</label>
-                    <input
-                        id="priceForever"
-                        name="priceForever"
-                        type="text"
-                        value={form.priceForever}
-                        onChange={handleInputChange}
-                        placeholder="금액을 입력하세요"
-                    />
-                </div>
-            </div>
-            <div  className={styles.formSection}>
-                <div>
-                    <label htmlFor="averageClassLength">평균 수강기한</label>
-                    <input
-                        id="averageClassLength"
-                        name="averageClassLength"
-                        type="text"
-                        value={form.averageClassLength}
-                        onChange={handleInputChange}
-                        placeholder="평균 수강기한"
-                    />
-                </div>
-            </div>
-            <button className={styles.categoryButton} onClick={handleCategoryClick}>강의 카테고리 선택</button>
-            <div className={styles.selectedCategories}>
-                {selectedCategories.map(category => (
-                    <span key={category.id} className={styles.selectedCategory}>{category.name}</span>
-                ))}
-            </div>
+            <div className={styles.horizontalLine}></div>
             <div className={styles.thumbnailPreview}>
                 {thumbnailPreview ? (
                     <img src={thumbnailPreview} alt="썸네일 미리보기" className={styles.thumbnailImage}/>
@@ -224,6 +223,139 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                 )}
             </div>
             <button className={styles.thumbnailButton} onClick={handleThumbnailClick}>썸네일 등록</button>
+            {isThumbnailModalOpen && (
+                <ThumbnailModal
+                    isOpen={isThumbnailModalOpen}
+                    onClose={closeThumbnailModal}
+                    onSave={handleThumbnailSave}
+                />
+            )}
+            <div className={styles.formSection}>
+                <label htmlFor="title" className={styles.title}>⊙ 제목</label>
+                <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    value={form.title}
+                    onChange={handleInputChange}
+                    placeholder="강의 제목을 입력하세요"
+                    className={styles.titleInput}
+
+                />
+            </div>
+            <div className={styles.formSection}>
+                <label htmlFor="learningPerson" className={styles.learning}>⊙ 학습대상자</label>
+                <button type="button" className={styles.addButton} onClick={addLearningPerson}>+ 추가</button>
+                {learningPersons.map((person, index) => (
+                    <div key={index} className={styles.learningPersonRow}>
+                        <input
+                            id={`learningPerson-${index}`}
+                            name="learningPerson"
+                            type="text"
+                            value={person}
+                            onChange={(e) => handleLearningPersonChange(index, e.target.value)}
+                            placeholder="학습대상자를 입력하세요"
+                            className={styles.learningInput}
+                        />
+                        <button type="button" onClick={() => removeLearningPerson(index)}>삭제</button>
+                    </div>
+                ))}
+
+            </div>
+
+            <div className={styles.formSection}>
+                <label htmlFor="readyKnowledge" className={styles.ready}>⊙ 선수 지식</label>
+                <button type="button" className={styles.addButton} onClick={addReadyKnowledge}>+ 추가</button>
+                {readyKnowledge.map((knowledge, index) => (
+                    <div key={index} className={styles.readyKnowledgeRow}>
+                        <input
+                            id={`readyKnowledge-${index}`}
+                            name="readyKnowledge"
+                            type="text"
+                            value={knowledge}
+                            onChange={(e) => handleReadyKnowledgeChange(index, e.target.value)}
+                            placeholder="선수 지식을 입력하세요"
+                            className={styles.readyInput}
+                        />
+                        <button type="button" onClick={() => removeReadyKnowledge(index)}>삭제</button>
+                    </div>
+                ))}
+
+            </div>
+            <div className={styles.horizontalLine}></div>
+
+
+            <div className={styles.formSection}>
+                <div>
+                    <div className={styles.levelText}> ※ 패키지에 해당하는 레벨을 선택해주세요!</div>
+                    <input
+                        type="radio"
+                        id="beginner"
+                        name="level"
+                        value={0}
+                        checked={form.level === '0'}
+                        onChange={handleInputChange}
+                    />
+                    <label htmlFor="beginner" className={styles.radius}>입문</label>
+                    <input
+                        type="radio"
+                        id="default"
+                        name="level"
+                        value={1}
+                        checked={form.level === '1'}
+                        onChange={handleInputChange}
+                    />
+                    <label htmlFor="basic" className={styles.radius}>기본</label>
+                    <input
+                        type="radio"
+                        id="advanced"
+                        name="level"
+                        value={2}
+                        checked={form.level === '2'}
+                        onChange={handleInputChange}
+                    />
+                    <label htmlFor="advanced" className={styles.radius}>심화</label>
+                </div>
+            </div>
+            <div className={styles.formSection}>
+                <div>
+                    <label htmlFor="priceForever" className={styles.priceText}>⊙ 평생소장 금액</label>
+                    <input
+                        id="priceForever"
+                        name="priceForever"
+                        type="text"
+                        value={form.priceForever}
+                        onChange={handleInputChange}
+                        placeholder="금액을 입력하세요"
+                        className={styles.priceInput}
+                    />
+                </div>
+            </div>
+            <div className={styles.formSection}>
+                <div>
+                    <label htmlFor="averageClassLength" className={styles.averageText}>⊙ 평균 수강기한</label>
+                    <input
+                        id="averageClassLength"
+                        name="averageClassLength"
+                        type="text"
+                        value={form.averageClassLength}
+                        onChange={handleInputChange}
+                        placeholder="평균 수강기한"
+                        className={styles.averageInput}
+                    />
+                </div>
+            </div>
+            <div className={styles.horizontalLine}></div>
+            <div className={styles.categoryBox}>
+                <button className={styles.categoryButton} onClick={handleCategoryClick}>강의 카테고리 선택</button>
+                <span className={styles.categoryText}>※ 패키지에 해당하는 카테고리를 선택해주세요!</span>
+                <div className={styles.selectedCategories}>
+                    {selectedCategories.map(category => (
+                        <span key={category.id} className={styles.selectedCategory}>{category.name}</span>
+                    ))}
+                </div>
+            </div>
+
             {isCategoryModalOpen && (
                 <PackageCategoryModal
                     isOpen={isCategoryModalOpen}
@@ -232,13 +364,11 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                     selectedCategories={selectedCategories}
                 />
             )}
-            {isThumbnailModalOpen && (
-                <ThumbnailModal
-                    isOpen={isThumbnailModalOpen}
-                    onClose={closeThumbnailModal}
-                    onSave={handleThumbnailSave}
-                />
-            )}
+
+            <div className={styles.horizontalLine}></div>
+
+            <div className={styles.toolText}>⊙ 사용될 프로그래밍 tool</div>
+            <div className={styles.toolText2}>※ 강의에서 사용될 tool을 드래그로 선택해주세요!</div>
             <DndProvider backend={HTML5Backend}>
                 <div className={styles.techStackSection}>
                     <div className={styles.techStacks}>
@@ -261,15 +391,16 @@ const LecturePackageRegister = observer(({ isEditMode, packageData, onBackListCl
                     onChange={(e) => setBackgroundColor(e.target.value)}
                 />
             </div>
-            <CKEditorComponent data={editorData} onChange={setEditorData} />
+            <CKEditorComponent data={editorData} onChange={setEditorData}/>
             <button className={styles.saveButton} onClick={handleSubmit}>{isEditMode ? '수정하기' : '등록하기'}</button>
             {isEditMode ? (
                 <button className={styles.actionButton}
-                        onClick={() => router.push(`/lecturePackage/${packageData.lecturePackageId}`)}>상세보기</button>
+                        onClick={() => router.push(`/lecturePackage/${lecturePackageId}`)}>상세보기</button>
             ) : (
                 <button className={styles.actionButton} onClick={onBackListClick}>리스트목록으로 이동</button>
             )}
         </div>
+        </body>
     );
 });
 

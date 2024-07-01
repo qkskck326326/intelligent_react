@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "./PaymentHistoryManagement.module.css";
+import Link from "next/link";
 
 const PaymentHistoryManagement = observer(() => {
   const [paymentHistory, setPaymentHistory] = useState([]);
@@ -52,12 +53,18 @@ const PaymentHistoryManagement = observer(() => {
             {paymentHistory.map((history) => (
               <tr key={history.transactionId}>
                 <td>
-                  <img
-                    src={history.thumbnail}
-                    alt={history.title}
-                    className={styles.thumbnail}
-                  />
-                  {history.title}
+                  <Link
+                    href={`/lecturePackage/${history.lecturePackageId}`}
+                    passHref
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <img
+                      src={history.thumbnail}
+                      alt={history.title}
+                      className={styles.thumbnail}
+                    />
+                    {history.title}
+                  </Link>
                 </td>
 
                 <td>
