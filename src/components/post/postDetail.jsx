@@ -5,18 +5,14 @@ import DOMPurify from "dompurify";
 import authStore from "../../stores/authStore";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "./PostDetail.module.css";
-import {
-  AiOutlineLike,
-  AiFillLike,
-  AiOutlineMore,
-  AiOutlineWarning,
-} from "react-icons/ai";
+import { AiOutlineMore, AiOutlineWarning } from "react-icons/ai";
 import { AiOutlineComment } from "react-icons/ai";
 import { LuSend } from "react-icons/lu";
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"; // 기존 import에서 추가
 
 import { getRelativeTime } from "../../components/post/timeUtils";
 import EditPost from "./EditPost";
+import { IoHeartSharp } from "react-icons/io5";
 
 const PostDetail = observer(({ postId }) => {
   const router = useRouter();
@@ -30,6 +26,7 @@ const PostDetail = observer(({ postId }) => {
   const [isReportPopupOpen, setIsReportPopupOpen] = useState(false);
   const [reportContent, setReportContent] = useState("");
   const [bookmarkedPosts, setBookmarkedPosts] = useState(new Set()); // 북마크된 게시물 상태 추가
+  const [bookmarked, setBookmarked] = useState(false); // 단일 게시물 북마크 상태 추가
 
   useEffect(() => {
     const isLoggedIn = authStore.checkIsLoggedIn();
@@ -63,6 +60,7 @@ const PostDetail = observer(({ postId }) => {
 
         setPost(response.data);
         setLiked(response.data.userLiked);
+        setBookmarked(response.data.userBookmarked); // 북마크 상태 설정
       } catch (error) {
         console.error("Error fetching post:", error);
         setError(error);
@@ -75,7 +73,8 @@ const PostDetail = observer(({ postId }) => {
   }, [postId]);
 
   const handleLikeClick = async () => {
-    if (!post || !authStore.isLoggedIn || isOwner()) return;
+    console.log("handleLikeClick called"); // 디버깅용 로그
+    if (!post || !authStore.checkIsLoggedIn() || isOwner()) return;
     const userEmail = authStore.getUserEmail();
     const provider = authStore.getProvider();
     try {
@@ -240,7 +239,7 @@ const PostDetail = observer(({ postId }) => {
       return;
     }
     try {
-      if (bookmarkedPosts.has(postId)) {
+      if (bookmarked) {
         await axiosClient.delete("/posts/bookmark", {
           data: {
             postId,
@@ -248,20 +247,22 @@ const PostDetail = observer(({ postId }) => {
             provider: authStore.getProvider(),
           },
         });
-        setBookmarkedPosts((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(postId);
-          return newSet;
-        });
-        setBookmarkCount((prev) => prev - 1); // 북마크 수 감소
+        setBookmarked(false); // 북마크 상태 업데이트
+        setPost((prevPost) => ({
+          ...prevPost,
+          bookmarkCount: prevPost.bookmarkCount - 1, // 북마크 수 감소
+        }));
       } else {
         await axiosClient.post("/posts/bookmark", {
           postId,
           userEmail: authStore.getUserEmail(),
           provider: authStore.getProvider(),
         });
-        setBookmarkedPosts((prev) => new Set(prev).add(postId));
-        setBookmarkCount((prev) => prev + 1); // 북마크 수 증가
+        setBookmarked(true); // 북마크 상태 업데이트
+        setPost((prevPost) => ({
+          ...prevPost,
+          bookmarkCount: prevPost.bookmarkCount + 1, // 북마크 수 증가
+        }));
       }
     } catch (error) {
       console.error("북마크 처리 중 오류 발생:", error);
@@ -287,6 +288,8 @@ const PostDetail = observer(({ postId }) => {
               onDelete={handleDeleteComment}
               onReport={handleReportSubmit}
               isAdmin={authStore.checkIsAdmin()}
+              postUserEmail={post.userEmail} // 게시물 작성자의 이메일
+              postUserProvider={post.provider} // 게시물 작성자의 provider
             />
           ))}
         </ul>
@@ -315,6 +318,7 @@ const PostDetail = observer(({ postId }) => {
 
             return (
               <li key={file.id}>
+                첨부파일 :{" "}
                 {isImage ? (
                   <img
                     src={fileUrl}
@@ -344,6 +348,11 @@ const PostDetail = observer(({ postId }) => {
       sanitizedContent,
       "text/html"
     );
+    // 이미지의 최대 크기를 설정
+    parsedContent.querySelectorAll("img").forEach((element) => {
+      element.style.maxWidth = "100%";
+      element.style.height = "auto";
+    });
 
     parsedContent.querySelectorAll("oembed[url]").forEach((element) => {
       const url = element.getAttribute("url");
@@ -405,7 +414,7 @@ const PostDetail = observer(({ postId }) => {
               handleBookmarkClick(post.id);
             }}
           >
-            {bookmarkedPosts.has(post.id) ? (
+            {bookmarked ? (
               <BsFillBookmarkFill size={25} color="gold" />
             ) : (
               <BsBookmark size={25} />
@@ -440,7 +449,7 @@ const PostDetail = observer(({ postId }) => {
         </div>
         <div className={styles.postStats}>
           <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
-            {liked ? <AiFillLike size={25} /> : <AiOutlineLike size={25} />}{" "}
+            <IoHeartSharp size={25} color={liked ? "#bc3535" : "gray"} />{" "}
             {post.likeCount}
           </span>
           <span>조회수: {post.viewCount}</span>
@@ -448,7 +457,7 @@ const PostDetail = observer(({ postId }) => {
         <div className={styles.tagContainer}>
           {post.tags.map((tag, index) => (
             <div key={index} className={styles.tagItem}>
-              {tag}
+              #{tag}
             </div>
           ))}
         </div>
@@ -504,7 +513,15 @@ const PostDetail = observer(({ postId }) => {
   );
 });
 
-const CommentItem = ({ comment, onUpdate, onDelete, onReport, isAdmin }) => {
+const CommentItem = ({
+  comment,
+  onUpdate,
+  onDelete,
+  onReport,
+  isAdmin,
+  postUserEmail,
+  postUserProvider,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedContent, setUpdatedContent] = useState(comment.content);
@@ -565,12 +582,19 @@ const CommentItem = ({ comment, onUpdate, onDelete, onReport, isAdmin }) => {
     }
   };
 
+  const isPostAuthor =
+    comment.userEmail === postUserEmail &&
+    comment.provider === postUserProvider;
+
   return (
     <li className={styles.commentItem}>
       <img src={comment.profileImageUrl} alt={comment.nickname} />
       <div className={styles.commentContent}>
         <div className={styles.commentHeader}>
-          <span>{comment.nickname}</span>
+          <span>
+            {comment.nickname}{" "}
+            {isPostAuthor && <span className={styles.authorLabel}>작성자</span>}
+          </span>
           <time>{getRelativeTime(comment.commentTime)}</time>
           {(isCommentOwner() || isAdmin) && (
             <div className={styles.commentDropdown}>

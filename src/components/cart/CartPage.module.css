@@ -88,6 +88,13 @@
   margin-bottom: 20px;
 }
 
+.paymentBox button{
+  margin-top: 10px;
+  border: solid 2px #77cdb2;
+  background-color: white;
+  border-radius: 5px;
+}
+
 .userInformation p {
   margin: 0;
   font-size: 14px;
