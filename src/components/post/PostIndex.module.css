@@ -1,50 +1,39 @@
+/* PostIndex.module.css */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  /* background-color: #fdfdfd; */
-}
-.header {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 1000; /* Ensure it is above other elements */
-  padding: 20px 0; /* Increase padding to make the header box larger */
-  border-bottom: 1px solid #ddd; /* Optional: Add a border for better visibility */
-  text-align: left; /* Center align the text */
-  
-}
-
-.header h1 {
-  margin: 0;
-  margin-left: 100px; /* Remove default margin */
-}
-
-.popularPosts {
   width: 100%;
-  margin-bottom: 20px;
+}
+
+.header {
+  text-align: left;
+  margin-bottom: 10px;
+  background-color: #333b3d;
+  width: 100%;
+  color: white;
+}
+.header h1 {
+  margin-left: 50px;
+}
+.header h2 {
+  margin-left: 50px;
+}
+
+.content {
   display: flex;
-  justify-content: center; /* 가운데 정렬 추가 */
+  justify-content: center;
+  width: 100%;
+  margin-left: -200px; /* 왼쪽으로 이동시킬 값을 설정합니다 */
+}
+
+.sidebar {
+  margin-top: 100px;
+  width: 300px; /* 사이드바 너비를 설정합니다 */
+  margin-right: 20px;
 }
 
 .mainContent {
-  width: 100%;
-  display: flex;
-  justify-content: center; /* 가운데 정렬 추가 */
-}
-
-.header {
-  width: 100%;
-}
-
-.headerImageContainer {
-  width: 100%;
-  text-align: center;
-}
-
-.headerImage {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
+  flex-grow: 1;
+  max-width: 900px; /* 최대 너비를 설정하여 콘텐츠의 가독성을 높입니다 */
 }

@@ -6,7 +6,6 @@ import ChatList from "../../components/chat/chatlist";
 import AddingFriends from '../../components/chat/addingfriends';
 import ActionModal from '../../components/chat/actionmodal';
 import Chat from '../../components/chat/chat'
-import {axiosClient} from "../../axiosApi/axiosClient";
 import Bot from "../../components/chat/chatbotcontainer";
 
 const ChatContainer = observer(() => {
@@ -23,8 +22,6 @@ const ChatContainer = observer(() => {
 
     const handleNavigation = (component, option ='', roomType='', roomData={}) => {
 
-        console.log(option)
-
         if (component === 'ChatIcon') {
             setIsIconHidden(false);
             setIsExpanding(true);
@@ -37,8 +34,6 @@ const ChatContainer = observer(() => {
         setOption(option)
         setRoomType(roomType);
         setRoomData(roomData);
-
-        console.log(`roomType: ${roomType}`)
 
         setTimeout(() => setIsExpanding(false), 500);
     };

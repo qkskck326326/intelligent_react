@@ -79,13 +79,12 @@ class AuthStore {
         return this.provider;
     }
 
-
     // 프로필 이미지 URL
     setProfileImageUrl(profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
 
-    // 프로필 이미지는 로그인후에 변경이 가능하므로 부트로 요청을 보내서 다시 set
+    // 프로필 이미지는 로그인 후에 변경이 가능하므로 부트로 요청을 보내서 다시 set
     async fetchProfileImageUrl() {
         try {
             const response = await axiosClient.get(`/users`, {
@@ -102,12 +101,20 @@ class AuthStore {
     }
 
     getProfileImageUrl() {
-        
-        return this.fetchProfileImageUrl();
+        return this.profileImageUrl;
     }
 
-
-
+    // 회원 탈퇴 시 모든 변수 초기화
+    reset() {
+        this.isLoggedIn = false;
+        this.isStudent = false;
+        this.isTeacher = false;
+        this.isAdmin = false;
+        this.nickname = '';
+        this.userEmail = '';
+        this.provider = '';
+        this.profileImageUrl = '';
+    }
 }
 
 const authStore = new AuthStore();

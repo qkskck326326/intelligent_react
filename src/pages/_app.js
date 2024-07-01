@@ -4,17 +4,17 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Container, ThemeProvider } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import HeaderBar from "../components/common/HeaderBar";
-import {observer} from 'mobx-react'
+import {observer} from 'mobx-react';
 import '../styles/style.css';
 import authStore from "../stores/authStore";
 import ChatContainer from "./chatting";
-// import '/public/ckeditor5/sample/styles.css'; // CKEditor 스타일 포함
 
 const queryClient = new QueryClient();
 
 const App = observer (({ Component, pageProps }) => {
   const router = useRouter();
   console.log(authStore.getNickname());
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
@@ -31,6 +31,22 @@ const App = observer (({ Component, pageProps }) => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const checkAdminAccess = () => {
+      const path = router.pathname;
+      if (path.startsWith('/admin') && !authStore.isAdmin) {
+        router.push('/user/login');
+      }
+    };
+
+
+    checkAdminAccess();
+    router.events.on('routeChangeComplete', checkAdminAccess);
+    return () => {
+      router.events.off('routeChangeComplete', checkAdminAccess);
+    };
+  }, [router, authStore.isAdmin]);
 
   const shouldRenderHeader = router.pathname !== '/admin/testAI' &&  router.pathname !== '/user/naverLoginPopupPage' &&  router.pathname !== '/user/googleLoginPopupPage';
 
@@ -49,7 +65,7 @@ const App = observer (({ Component, pageProps }) => {
             <Component {...pageProps} />
           </Container>
           { authStore.isLoggedIn &&
-            <ChatContainer/>
+              <ChatContainer/>
           }
         </ThemeProvider>
       </QueryClientProvider>

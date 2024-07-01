@@ -24,19 +24,24 @@
 }
 
 .content {
-    margin-left: 50px;
-    margin-top: 50px;
+    flex: 1;
+    margin: 20px;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: auto; /* Ensure content scrolls if it overflows */
 }
 
 .title {
     margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .filterSection {
+    display: flex;
+    flex-wrap: wrap; /* Allow the filters to wrap to the next line */
     background-color: #f8f9fa;
     padding: 20px;
     border-radius: 10px;
@@ -48,11 +53,13 @@
     display: flex;
     align-items: center;
     margin-bottom: 15px;
+    flex: 1 1 100%; /* Allow rows to wrap and take full width */
 }
 
 .filterRow label {
     margin-right: 10px;
     white-space: nowrap;
+    font-weight: bold;
 }
 
 .filterSelect,
@@ -61,6 +68,7 @@
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    flex-grow: 1;
 }
 
 .filterButton {
@@ -81,6 +89,9 @@
     overflow-x: auto;
     border: 1px solid #000; /* Add black border around the table section */
     border-radius: 10px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .userTable {
@@ -97,6 +108,7 @@
 
 .userTable th {
     background-color: #f8f9fa;
+    font-weight: bold;
 }
 
 .userTable tr:nth-child(even) {
