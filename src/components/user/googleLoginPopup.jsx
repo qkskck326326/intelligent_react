@@ -38,20 +38,28 @@ const GoogleLoginPopup = () => {
                     authStore.setUserEmail(res.data.userEmail);
                     authStore.setProvider(res.data.provider);
                     authStore.setProfileImageUrl(res.data.profileImageUrl);
+
+                    // 로그인 성공 후 출석 체크
+                    await axiosClient.post('/users/check-attendance', {
+                        email: res.data.userEmail,
+                        provider: res.data.provider
+                    });
                 }
 
                 // 팝업 창 닫기
                 window.close();
 
-                // 부모 창에 알림 띄우기
-                setTimeout(() => {
+                // 부모 창에 메시지 전달
+                if (window.opener) {
+                    console.log('Sending message to opener');
                     if (isLogin) {
-                    window.opener.location.href = '/'; // 부모 창을 메인 페이지로 이동
+                        window.opener.postMessage({ type: 'LOGIN_SUCCESS' }, window.location.origin);
                     } else {
-                    window.opener.alert("회원가입이 성공적으로 완료되었습니다!");
-                    window.opener.location.href = '/user/login'; // 부모 창을 로그인 페이지로 유지
+                        window.opener.postMessage({ type: 'REGISTER_SUCCESS' }, window.location.origin);
                     }
-                }, 1);
+                }
+
+                
 
             } catch (error) {
                 console.error('구글 로그인 실패! ', error);

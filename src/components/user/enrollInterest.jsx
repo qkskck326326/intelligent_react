@@ -123,7 +123,7 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
         const enrollForm = {
             ...basicInfo,
             provider: "intelliclass",
-            registerTime: "",
+            // registerTime: "",
             profileImageUrl,
             reportCount: 0,
             loginOk: "Y",

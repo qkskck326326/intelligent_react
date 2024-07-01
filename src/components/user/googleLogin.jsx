@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styles from "../../styles/user/login/googleLogin.module.css";
 import { GoogleOAuthProvider, GoogleLogin as GoogleOAuthLogin } from '@react-oauth/google';
 
@@ -15,13 +15,36 @@ const GoogleLogin = () => {
     const top = (window.innerHeight - height) / 2;
     const url = 'http://localhost:3000/user/googleLoginPopupPage';
     const options = `width=${width},height=${height},left=${left},top=${top}`;
-    
+
     window.open(url, 'Google Login', options);
   };
+
+  useEffect(() => {
+    const handleMessage = (event) => {
+      console.log('Message received:', event.data);
+      if (event.origin !== window.location.origin) return;
+
+      if (event.data.type === 'LOGIN_SUCCESS') {
+        //alert("로그인이 성공적으로 완료되었습니다!");
+        window.location.href = '/'; // 메인 페이지로 이동
+      } else if (event.data.type === 'REGISTER_SUCCESS') {
+        // alert("회원가입이 성공적으로 완료되었습니다!");
+        window.location.href = '/user/login'; // 로그인 페이지로 이동
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   return (
     <div>
       <button className={styles.GoogleLoginBtn} onClick={handleGoogleLogin}>
+        <div className={styles.GoogleIcon} alt="googleicon" />
+        <span className={styles.GoogleLoginTitle}></span>
       </button>
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
         <div style={{ display: 'none' }}>

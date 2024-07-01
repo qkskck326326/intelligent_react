@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import LoginForm from "../../components/user/loginForm";
 import styles from "../../styles/user/login/loginForm.module.css";
+import { axiosClient } from "../../axiosApi/axiosClient";
 
 const Login = observer(() => {
     const router = useRouter();
@@ -46,6 +47,12 @@ const Login = observer(() => {
             authStore.setProvider(provider);
             authStore.setNickname(nickname);
             authStore.setProfileImageUrl(profileImageUrl);
+
+            // 로그인 성공 후 출석 체크
+            axiosClient.post('/users/check-attendance', {
+                email: userEmail,
+                provider: provider
+            });
 
             router.push("/"); // 로그인 후 메인 페이지로 이동
         }

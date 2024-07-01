@@ -128,6 +128,13 @@ const ResetPassword = () => {
       return;
     }
 
+    const { minLength, hasUpperCase, hasNumber } = passwordValidation;
+    
+    if (!minLength || !hasUpperCase || !hasNumber) {
+      alert("새 비밀번호가 조건을 충족하지 않습니다. 다시 시도해 주세요.");
+      return;
+    }
+
     try {
       const response = await axiosClient.put(`/users/reset-password/${encodeURIComponent(userEmail)}/${encodeURIComponent(userPwd)}`);
 
