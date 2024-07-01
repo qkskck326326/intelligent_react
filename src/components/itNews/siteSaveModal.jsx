@@ -9,7 +9,6 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
         siteUrl: '',
         latestBoardUrl: '',
         siteName: '',
-        videoElement: '',
         titleElement: '',
         contextElement: ''
     });
@@ -28,7 +27,6 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                 siteUrl: '',
                 latestBoardUrl: '',
                 siteName: '',
-                videoElement: '',
                 titleElement: '',
                 contextElement: ''
             });
@@ -40,6 +38,12 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
         setTestTitleResult(['', false]);
         setTestContextResult(['', false]);
     }, [testUrlResult[0]]);
+
+    useEffect(() => {
+        setTestTitleResult(['', false]);
+        setTestContextResult(['', false]);
+        setTestUrlResult(['', false]);
+    }, [formData[0]]);
 
     const handleShowAlert = () => setShowAlertModal(true);
     const handleCloseAlert = () => setShowAlertModal(false);
@@ -55,6 +59,14 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         handleSave(formData);
+        setFormData({
+            siteUrl: '',
+            latestBoardUrl: '',
+            siteName: '',
+            videoElement: '',
+            titleElement: '',
+            contextElement: ''
+        })
     };
 
     const handleTestUrl = (url, boardSelector) => {
@@ -133,6 +145,19 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                                 value={formData.siteUrl}
                                 onChange={handleChange}
                                 required
+                                readOnly={!!initialData} // initialData가 있으면 readOnly로 설정
+                            />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="align-items-center">
+                        <Form.Label column sm={3}>Site Name</Form.Label>
+                        <Col sm={9}>
+                            <Form.Control
+                                type="text"
+                                name="siteName"
+                                value={formData.siteName}
+                                onChange={handleChange}
+                                required
                             />
                         </Col>
                     </Form.Group>
@@ -154,32 +179,8 @@ const SiteSaveModal = ({ show, handleClose, handleSave, initialData }) => {
                         </Col>
                         <Col sm={12}>
                             크롤링 링크: <a href={testUrlResult[0]} target="_blank" rel="noopener noreferrer">
-                                {testUrlResult[0]}
-                            </a>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="align-items-center">
-                        <Form.Label column sm={3}>Site Name</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control
-                                type="text"
-                                name="siteName"
-                                value={formData.siteName}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="align-items-center">
-                        <Form.Label column sm={3}>Video Element</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control
-                                type="text"
-                                name="videoElement"
-                                value={formData.videoElement}
-                                onChange={handleChange}
-                                required
-                            />
+                            {testUrlResult[0]}
+                        </a>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="align-items-center">
