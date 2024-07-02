@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import DOMPurify from "dompurify";
-
 import { axiosClient } from '../../axiosApi/axiosClient';
 import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css';
 import authStore from '../../stores/authStore';
@@ -37,6 +36,7 @@ const LecturePackageDetail = observer(() => {
             try {
                 const response = await axiosClient.get('/packages/detail', {params: {lecturePackageId}});
                 setLecturePackage(response.data);
+                console.log("lecturePackage : ", response.data);
                 console.log("datanickname : ", response.data.nickname);
                 const responseCount = await axiosClient.get('/packages/lecturecount', {params: {lecturePackageId}});
                 setLectureCount(responseCount.data);
@@ -75,8 +75,6 @@ const LecturePackageDetail = observer(() => {
             fetchLecturePackage();
         }
     }, [lecturePackageId]);
-
-    //조회수 처리 작성자인 경우 하루에 한번만 올릴 수 있음.
 
     useEffect(() => {
         const increaseViewCount = async (authorNickname) => {
@@ -152,6 +150,7 @@ const LecturePackageDetail = observer(() => {
 
 
 
+
     const handleDelete = async () => {
         const confirmDelete = confirm('정말로 이 패키지를 삭제하시겠습니까?');
         if (confirmDelete) {
@@ -173,7 +172,7 @@ const LecturePackageDetail = observer(() => {
             router.push({
                 pathname: `/lecturePackage/edit/${lecturePackage.lecturePackageId}`,
                 // query: { data: JSON.stringify(response.data) }
-        });
+            });
         } catch (error) {
             console.error('패키지 데이터를 가져오는 중 오류 발생:', error);
             alert('데이터를 가져오는 중 오류가 발생했습니다.');
@@ -182,7 +181,6 @@ const LecturePackageDetail = observer(() => {
         }
     };
 
-    //가격에 천단위로 , 써줌.
     const formatPrice = (priceForever) => {
         return new Intl.NumberFormat('ko-KR').format(priceForever);
     };
@@ -208,7 +206,7 @@ const LecturePackageDetail = observer(() => {
         try {
             const response = await axiosClient.post(
                 `/cart/add/${userEmail}/${provider}/${lecturePackageId}`
-        );
+            );
             if (response.status === 200) {
                 const userConfirmed = window.confirm(
                     "장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?"
@@ -217,7 +215,6 @@ const LecturePackageDetail = observer(() => {
                     router.push("/cart");
                 }
             } else if (response.status === 409) {
-
                 const userConfirmed = window.confirm(
                     "이미 장바구니에 추가하셨습니다. 장바구니 페이지로 이동하시겠습니까?"
                 );
@@ -249,6 +246,15 @@ const LecturePackageDetail = observer(() => {
         });
     };
 
+    const handleShare = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            alert('페이지 링크가 복사되었습니다.');
+        }).catch((err) => {
+            console.error('복사 중 오류 발생:', err);
+        });
+    };
+
     const openProfileModal = () => {
         setIsModalOpen(true);
     };
@@ -264,10 +270,10 @@ const LecturePackageDetail = observer(() => {
 
 
     return (
-        <div>
+        <div className={styles.bodys}>
             <div className={styles.actions}>
                 <div className={styles.profile} onClick={() => openProfileModal()}>
-                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture}/>
+                    <img src={profile.pictureUrl} alt="프로필 사진" className={styles.profilePicture} />
                     <p className={styles.nickname}>{profile.nickname}</p>
                 </div>
                 <div className={styles.threebtn}>
@@ -304,89 +310,88 @@ const LecturePackageDetail = observer(() => {
                     <>
                         <h1 className={styles.title}>{lecturePackage.title}</h1>
                         <div className={styles.middleContainer}>
-                        <div>
-                            <div className={styles.topInfo}>
-                                <div className={styles.infoItem}>
-                                    <p>등록 날짜: {lecturePackage.registerDate}</p>
-                                </div>
-                            </div>
                             <div>
-                                <div className={styles.redBox}>
-                                    <div
-                                        id="content"
-                                        className={styles.content}
-                                        style={{backgroundColor: lecturePackage.backgroundColor}}
-                                        dangerouslySetInnerHTML={renderContent()}
-                                    />
+                                <div className={styles.topInfo}>
+                                    <div className={styles.infoItem}>
+                                        <p className={styles.register}>등록 날짜: {lecturePackage.registerDate}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className={styles.redBox}>
+                                        <div
+                                            id="content"
+                                            className={styles.content}
+                                            style={{backgroundColor: lecturePackage.backgroundColor}}
+                                            dangerouslySetInnerHTML={renderContent()}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                            <div className={styles.infoItem}>
-                                <p>조회수: {lecturePackage.viewCount}</p>
-                            </div>
-                        </div>
-                        <div className={styles.recommendContent}>
-                            <h3 className={styles.recommend}>이런 분들께 추천드려요!</h3>
+                            <div className={styles.recommendContent}>
+                                <h3 className={styles.recommend}>이런 분들께 추천드려요!</h3>
 
-                            <div className={styles.recommendSplit}>
-                                {/* 학습대상자 섹션 */}
-                                {lecturePackage.learningContent && (
-                                    <div className={styles.learningPerson}>
-                                        <div className={styles.sectionHeader}>
-                                        <img src="/images/learning_person.png" alt="학습대상자 아이콘" className={styles.icon} />
-                                        <span>학습 대상은 누구일까요?</span>
-                                    </div>
-                                    <div className={styles.sectionContent}>
-                                        {lecturePackage.learningContent.map((item, index) => (
-                                            <div key={index}>
-                                                <span className={styles.checkIcon}>✔</span>
-                                                <span>{item}</span>
+                                <div className={styles.recommendSplit}>
+                                    {/* 학습대상자 섹션 */}
+                                    {lecturePackage.learningContent && (
+                                        <div className={styles.learningPerson}>
+                                            <div className={styles.sectionHeader}>
+                                                <img src="/images/learning_person.png" alt="학습대상자 아이콘" className={styles.icon} />
+                                                <span className={styles.learningText}>학습 대상은 누구일까요?</span>
                                             </div>
+                                            <div className={styles.sectionContent}>
+                                                {lecturePackage.learningContent.map((item, index) => (
+                                                    <div key={index}>
+                                                        <span className={styles.checkIcon}>✔</span>
+                                                        <span>{item}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {/* 선수 지식 섹션 */}
+                                    {lecturePackage.readyContent && (
+                                        <div className={styles.readyKnowledge}>
+                                            <div className={styles.sectionHeader}>
+                                                <img src="/images/readyIcon.png" alt="선수 지식 아이콘" className={styles.icon} />
+                                                <span className={styles.readyText}>선수 지식, 필요할까요?</span>
+                                            </div>
+                                            <div className={styles.sectionContent}>
+                                                {lecturePackage.readyContent.map((item, index) => (
+                                                    <div key={index}>
+                                                        <span className={styles.checkIcon}>✔</span>
+                                                        <span>{item}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                    )}
+                                </div>
+                            </div>
+
+
+                            <div className={styles.field1}>
+                                <div class="field1-header">
+                                    <div className={styles.presentText}>앞으로 배울 </div>
+                                    <label className={styles.subCategoryText}> 기술 분야</label>
+
+                                    <div className={styles.categories}>
+                                        {lecturePackage.subCategoryName.split(',').map((category, index) => (
+                                            <span key={index} className={styles.category}>{category}</span>
                                         ))}
                                     </div>
                                 </div>
-                            )}
-                            {/* 선수 지식 섹션 */}
-                            {lecturePackage.readyContent && (
-                                <div className={styles.readyKnowledge}>
-                                    <div className={styles.sectionHeader}>
-                                        <img src="/images/readyIcon.png" alt="선수 지식 아이콘" className={styles.icon} />
-                                        <span>선수 지식, 필요할까요?</span>
-                                    </div>
-                                    <div className={styles.sectionContent}>
-                                        {lecturePackage.readyContent.map((item, index) => (
-                                            <div key={index}>
-                                                <span className={styles.checkIcon}>✔</span>
-                                                <span>{item}</span>
-                                            </div>
-                                        ))}
-                                    </div>
+                            </div>
+
+                            <div className={styles.field2}>
+                                <label>사용될 프로그래밍 tool</label>
+                                <div className={styles.techStack}>
+                                    {lecturePackage.techStackPath.split(',').map((tech, index) => (
+                                        <img key={index} src={tech} alt={`tech-${index}`} />
+                                    ))}
                                 </div>
+                            </div>
 
-                            )}
-                            </div>
-                            <div className={styles.field}>
-                                <p className={styles.level}><i className="fas fa-check"></i> {getLectureLevel(lecturePackage.packageLevel)} 과정</p>
-                            </div>
-                        </div>
-
-
-                        <div className={styles.field}>
-                                <div className={styles.presentText}>앞으로 배울 </div>
-                                <label className={styles.subCategoryText}> 기술 분야</label>
-                            <div className={styles.categories}>
-                                {lecturePackage.subCategoryName.split(',').map((category, index) => (
-                                    <span key={index} className={styles.category}>{category}</span>
-                                ))}
-                            </div>
-                        </div>
-                        <div className={styles.field}>
-                            <label>기술 스택</label>
-                            <div className={styles.techStack}>
-                                {lecturePackage.techStackPath.split(',').map((tech, index) => (
-                                    <img key={index} src={tech} alt={`tech-${index}`} />
-                                ))}
-                            </div>
-                        </div>
                         </div>
                         <div className={styles.applyBox}>
                             <div className={styles.fixedBox}>
@@ -395,12 +400,18 @@ const LecturePackageDetail = observer(() => {
                                 </div>
                                 <div className={styles.discount}>30%할인가</div>
                                 <div className={styles.price}>{formatPrice(lecturePackage.priceForever)}원</div>
-                                <button className={styles.applyButton} onClick={isInCart ? () => router.push("/cart") : handleApply}>
-                                    {isInCart ? '장바구니로 이동' : '수강 신청하기'}
-                                </button>
+                                {(authStore.getNickname() === lecturePackage.nickname && authStore.checkIsTeacher() === true)? (
+                                    <span className={styles.applyButton}>수강신청 버튼</span>
+                                ) : (
+                                    <button className={styles.applyButton}
+                                            onClick={isInCart ? () => router.push("/cart") : handleApply}>
+                                        {isInCart ? '장바구니로 이동' : '수강 신청하기'}
+                                    </button>
+                                )}
+
                                 <div className={styles.horizontalLine}></div>
                                 <button className={styles.shareButton} onClick={handleShare}>
-                                    <img
+                                <img
                                         className={styles.shareIcon}
                                         src="/images/link.png"
                                         alt="공유 아이콘" />
@@ -438,11 +449,6 @@ const LecturePackageDetail = observer(() => {
                         </div>
                     </>
                 )}
-                <div className={styles.fixedBox}>
-                    지금바로 신청하세요!! <button className={styles.applyButton} onClick={handleApply}>수강신청</button>
-                </div>
-                <div className={styles.foot}>
-                </div>
             </div>
             {isModalOpen && <ProfileModal profile={profile} onClose={closeProfileModal} />}
         </div>
