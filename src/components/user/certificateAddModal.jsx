@@ -157,117 +157,6 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
 
 
 
-  // const handleFileChange1 = async (e) => {
-  //   const file = e.target.files[0];
-  //   setForm(prevForm => ({
-  //     ...prevForm,
-  //     pdfFile: file,
-  //   }));
-  //
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-  //
-  //   try {
-  //     const response = await axios.post('http://localhost:5000/upload1', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     console.log("response.data : ", response.data);
-  //     const { data } = response.data;
-  //     if (data && data.length > 0) {
-  //       const certificateData = data[0];
-  //       setForm(prevForm => ({
-  //         ...prevForm,
-  //         kind: certificateData.kind,
-  //         passDate: certificateData.passDate,
-  //         issuePlace: certificateData.issuePlace,
-  //         certificateNumber: certificateData.certificateNumber,
-  //         name: certificateData.name
-  //       }));
-  //     }
-  //   } catch (error) {
-  //     console.error("PDF 내용 추출 중 오류 발생:", error);
-  //   }
-  // };
-  //
-  //
-  //
-  //
-  // const handleFileChange2 = async (e) => {
-  //   const file = e.target.files[0];
-  //   setForm(prevForm => ({
-  //     ...prevForm,
-  //     pdfFile: file,
-  //   }));
-  //
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-  //
-  //   try {
-  //     const response = await axios.post('http://localhost:5000/upload2', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     console.log("response.data : ", response.data);
-  //     const { data } = response.data;
-  //     if (data) {
-  //       setForm(prevForm => ({
-  //         ...prevForm,
-  //         kind: data.kind,
-  //         passDate: data.passDate,
-  //         issuePlace: data.issuePlace,
-  //         certificateNumber: data.certificateNumber,
-  //         name: data.name
-  //       }));
-  //     }
-  //   } catch (error) {
-  //     console.error("PDF 내용 추출 중 오류 발생:", error);
-  //   }
-  // };
-  //
-  //
-  //
-  // const handleFileChange3 = async (e) => {
-  //   const file = e.target.files[0];
-  //   setForm(prevForm => ({
-  //     ...prevForm,
-  //     pdfFile: file,
-  //   }));
-  //
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-  //
-  //   try {
-  //     const response = await axios.post('http://localhost:5000/upload3', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     console.log("response.data : ", response.data);
-  //     const { data } = response.data;
-  //     if (data && data.length > 0) {
-  //       const certificateData = data[0]; // 리스트의 첫 번째 항목 사용
-  //       setForm(prevForm => ({
-  //         ...prevForm,
-  //         kind: certificateData.kind,
-  //         passDate: certificateData.passDate,
-  //         issuePlace: certificateData.issuePlace,
-  //         certificateNumber: certificateData.certificateNumber,
-  //         name: certificateData.name,
-  //         BIRTHDATE: certificateData.BIRTHDATE,
-  //         VALIDITY_PERIOD: certificateData.VALIDITY_PERIOD,
-  //         ISSUE_DATE: certificateData.ISSUE_DATE
-  //       }));
-  //     }
-  //   } catch (error) {
-  //     console.error("PDF 내용 추출 중 오류 발생:", error);
-  //   }
-  // };
-
-
-
 
   const handleSave = async () => {
     if (form.pdfFile && typeof form.pdfFile === "object" && confirmMessage === "진위확인이 완료되었습니다.") {
@@ -323,6 +212,7 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
               ) : (
                   <div className={styles.pdfPlaceholder}>자격증을 PDF로 올려주세요!</div>
               )}
+
               <div className={styles.fileInputContainer}>
                 <input
                     type="file"
@@ -332,7 +222,7 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
                 />
                 <button onClick={handleVerifyClick} className={styles.confirmButton}>자격증 진위확인</button>
               </div>
-              {loading && <span>잠시만 기다려주세요</span>}
+              <span className={styles.loading}>※ 잠시만 기다려주세요!!</span>
             </div>
 
             <div className={styles.inputGroup}>

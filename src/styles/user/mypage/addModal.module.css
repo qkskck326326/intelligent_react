@@ -33,7 +33,7 @@
 .inputField {
     margin-bottom: 10px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #0ac48c;
     border-radius: 4px;
     width: calc(47% - 10px);
 
@@ -42,7 +42,7 @@
 .formInput{
     margin-bottom: 10px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #0ac48c;
     border-radius: 4px;
     width: calc(47% - 10px);
 }
@@ -52,6 +52,7 @@
     justify-content: space-between;
     width: 100%;
     margin-bottom: 10px;
+    gap:20px;
 }
 
 .pdfPreview {
@@ -62,7 +63,7 @@
 .pdfPlaceholder {
     width: 100%;
     height: 200px;
-    border: 1px dashed #ddd;
+    border: 1px dashed #0ac48c;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -102,6 +103,13 @@
     background-color: #0aca8f;
     color: white;
 }
+.loading{
+    margin-left:335px;
+    font-size: 0.8em;
+    color: red;
+}
+
+
 .fileInput {
     display: inline-block;
 }
@@ -112,18 +120,21 @@
 
 .modalActions {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap:10px;
     width: 100%;
 }
 
 .saveButton {
-    background-color: #50daae;
+    background-color: #45cdc2;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
-    width: 48%;
+    width: 37%;
+    font-weight: bolder;
+    font-size: 1.1em;
 }
 
 .cancelButton {
@@ -133,7 +144,9 @@
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
-    width: 48%;
+    width: 37%;
+    font-weight: bolder;
+    font-size: 1.1em;
 }
 
 .saveButton:hover {
