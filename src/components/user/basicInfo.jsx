@@ -109,7 +109,7 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
       }));
       setPreviewImageUrl(URL.createObjectURL(file));
     } else {
-      alert('이미지 파일만 업로드할 수 있습니다.');
+      // alert('이미지 파일만 업로드할 수 있습니다.');
     }
   };
 

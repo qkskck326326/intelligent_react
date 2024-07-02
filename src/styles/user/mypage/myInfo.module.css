@@ -69,6 +69,10 @@
     display: none;
 }
 
+.userTypeSpan {
+    font-size: 1.2rem;
+}
+
 .inputSection {
     flex: 2;
     display: flex;
