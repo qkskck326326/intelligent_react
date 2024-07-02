@@ -1,0 +1,47 @@
+/* TeacherAllow.module.css */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.title {
+    margin-bottom: 20px;
+}
+
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.userTable th,
+.userTable td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: left;
+}
+
+.userTable th {
+    background-color: #f8f9fa;
+}
+
+.userTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.approveButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.approveButton:hover {
+    background-color: #0056b3;
+}

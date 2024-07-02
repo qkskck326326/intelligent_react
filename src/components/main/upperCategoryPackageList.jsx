@@ -11,7 +11,7 @@ const UpperCategoryPackageList = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [upperCategories, setUpperCategories] = useState([]);
-    const [payments, setPayments] = useState([]);
+
     const userEmail = authStore.getUserEmail();
     const provider = authStore.getProvider();
 
@@ -24,13 +24,6 @@ const UpperCategoryPackageList = () => {
                 const upperCategoryResponse = await axiosClient.get('/categories/upper');
                 setUpperCategories(upperCategoryResponse.data);
                 console.log("lecturePackage : ", response.data);
-
-                if (userEmail && provider) {
-                    const responsePayment = await axiosClient.get("/payment/confirmation");
-                    const responsePaymentData = responsePayment.data
-                    setPayments(responsePaymentData);
-                    console.log("responsePaymentData : ", responsePaymentData);
-                }
 
             } catch (err) {
                 setError(err);
@@ -95,28 +88,6 @@ const UpperCategoryPackageList = () => {
     };
 
 
-    //결제한 패키지이면 강의 목록으로 이동.
-    const handleLectureList = (lecturePackageId) => {
-        router.push({
-            pathname: '/lecture/list',
-            query: {lecturePackageId}
-        });
-    };
-
-    //재목 클릭 시 결제한 패키지인지 확인
-    const isUserPackage = (lecturePackageId) => {
-        if (!userEmail || !provider) {
-            return false; // userEmail이나 provider가 없으면 false 반환
-        }
-
-        return payments.some(
-            (payment) =>
-                payment.userEmail === userEmail &&
-                payment.provider === provider &&
-                payment.lecturePackageId === lecturePackageId &&
-                payment.paymentConfirmation === "Y"
-        );
-    };
 
 
 
@@ -137,19 +108,12 @@ const UpperCategoryPackageList = () => {
                                     </div>
                                 </div>
                                 <div className={styles.details}>
-                                    <div className={styles.title}> {/*결제한 패키지면 강의목록으로 이동*/}
-                                        {isUserPackage(lecture.lecturePackageId) ? (
-                                            <span
-                                                className={styles.customLink}
-                                                onClick={() => handleLectureList(lecture.lecturePackageId)}
-                                            >
-                                                {lecture.title}
-                                            </span>
-                                        ) : (
+                                    <div className={styles.title}>
+
                                             <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
                                                 <span className={styles.customLink}>{lecture.title}</span>
                                             </Link>
-                                        )}
+
                                     </div>
                                     <div className={styles.rating}>
                                         {"별점 "}

@@ -106,7 +106,7 @@ const MyLecture = observer(() => {
                         </div>
                         <div className={styles.details}>
                             <div className={styles.title}>
-                                <span onClick={() => {handleMoveLecture(lecture.lecturePackageId)}}>{lecture.title}</span>
+                                <span className={styles.titleLink} onClick={() => {handleMoveLecture(lecture.lecturePackageId)}}>{lecture.title}</span>
                                 
                             </div>
                             {/* <div className={styles.rating}>

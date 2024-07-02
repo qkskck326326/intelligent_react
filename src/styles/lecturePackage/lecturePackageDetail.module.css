@@ -93,16 +93,28 @@
     color: #949494;
 }
 
-.field {
+.field1 {
+    display: flex;
+    flex-direction: column;
     margin-top: 5px;
 }
 
-.presentText{
-    margin-top:40px;
+.field1-header {
+    display: flex;
+    align-items: center;
+}
+
+.field2 {
+    margin-top:50px;
+}
+
+.presentText {
+    margin-top: 30px;
 }
 
 
-.field label {
+
+.field1 label {
     display: block;
     font-size: 1.3em;
     font-weight: bold;
@@ -111,30 +123,50 @@
 
 }
 
+.field2 label {
+    display: block;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 30px;
+
+}
+
 .categories {
     display: flex;
-    justify-content: flex-start;
     flex-wrap: wrap;
-    border:1px solid black;
+    border: 3px solid #b4b4b4;
+    border-radius: 3px;
+    background-color: #f9fff9;
     padding: 10px;
-    width: 370px;
-
+    width: auto;
+    margin-top: 10px;
 }
 
 .techStack{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    border:3px solid #b4b4b4;
+    border-radius: 3px;
+    background-color: #ffffff;
+    padding: 10px;
+    width: 370px;
+    margin-top: 10px;
 }
-
 .category {
     margin: 5px;
+    padding: 5px 10px;
+    background-color: #20c997;
+    border-radius: 4px;
+    color: white;
 }
 
 .techStack img {
-    margin: 5px;
-    width: 40px;
-    height: 40px;
+    margin: 10px;
+    width: 60px;
+    height: 60px;
+    border: 1px solid gray;
 }
 
 .category {
@@ -189,8 +221,8 @@
     height: auto;
 }
 
-.subCategoryText{
-    margin-top: 20px;
+.subCategoryText {
+    margin-left: 10px;
 }
 
 .applyBox {
@@ -402,4 +434,17 @@
 
 .infoItem {
     font-size: 0.8em;
+}
+
+.register{
+    margin-left:30px;
+}
+
+.learningText{
+    font-weight: bolder;
+}
+
+.readyText{
+    font-weight: bolder;
+
 }

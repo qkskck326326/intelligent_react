@@ -34,7 +34,7 @@ const MypageSidebar = observer(({ setSelectedComponent }) => {
                         </>
                     )}
                     <li onClick={() => handleMenuClick('certificates')}>나의 자격증</li>
-                    {/*<li onClick={() => handleMenuClick('paymentManagement')}>나의 게시물</li>*/}
+                    <li onClick={() => handleMenuClick("postManagement")}>내 게시물 관리</li>
                     <li onClick={() => handleMenuClick('paymentManagement')}>결제 관리</li>
 
 

@@ -1,0 +1,36 @@
+/* PopularTags.module.css */
+.popularTagsContainer {
+    padding: 16px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .header {
+    margin-bottom: 16px;
+  }
+  
+  .header h4 {
+    margin: 0;
+  }
+  
+  .popularTagsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .popularTagItem {
+    margin-bottom: 8px;
+  }
+  
+  .popularTagLink {
+    text-decoration: none;
+    color: #2a6fae;
+  }
+  
+  .popularTagLink:hover {
+    text-decoration: underline;
+  }
+  

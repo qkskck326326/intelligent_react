@@ -135,7 +135,7 @@
 .uploadButton {
   position: fixed;
   top: 70%; /* 화면의 세로 중간에 고정 */
-  left: calc(50% + 500px); /* 리스트 컨테이너의 오른쪽에 고정 (컨테이너가 900px일 때) */
+  left: calc(50% + 600px); /* 리스트 컨테이너의 오른쪽에 고정 (컨테이너가 900px일 때) */
   transform: translate(-50%, -50%); /* 버튼의 중앙으로 위치를 조정 */
   background-color: #77cdb2;
   color: white;
@@ -156,10 +156,11 @@
 
 .pagination {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   margin-top: 20px;
   list-style: none;
   padding: 0;
+  
 }
 
 .pagination li {
@@ -196,7 +197,7 @@
 
 .filterButtons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 20px;
 }
 

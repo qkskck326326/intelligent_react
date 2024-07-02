@@ -14,7 +14,6 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
-    const [payments, setPayments] = useState([]);
     const userEmail = authStore.getUserEmail();
     const provider = authStore.getProvider();
 
@@ -37,10 +36,7 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
                 setLecturePackages(response.data);
                 console.log("lecturePackage : ", response.data);
 
-                const responsePayment = await axiosClient.get("/payment/confirmation");
-                const responsePaymentData = responsePayment.data
-                setPayments(responsePaymentData);
-                console.log("responsePaymentData : ", responsePaymentData);
+
             } catch (err) {
                 setError(err);
             } finally {
@@ -122,21 +118,6 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
         });
     };
 
-    //재목 클릭 시 결제한 패키지인지 확인
-    const isUserPackage = (lecturePackageId) => {
-        return payments.some(
-            (payment) =>
-                payment.userEmail === userEmail &&
-                payment.provider === provider &&
-                payment.lecturePackageId === lecturePackageId &&
-                payment.paymentConfirmation === "Y"
-        );
-    };
-
-
-
-
-
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const currentItems = lecturePackages.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
@@ -166,18 +147,9 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
                             <div className={styles.details}>
 
                                 <div className={styles.title}> {/*결제한 패키지면 강의목록으로 이동*/}
-                                    {isUserPackage(lecture.lecturePackageId) ? (
-                                        <span
-                                            className={styles.customLink}
-                                            onClick={() => handleLectureList(lecture.lecturePackageId)}
-                                        >
-                                            {lecture.title}
-                                        </span>
-                                    ) : (
                                         <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
                                             <span className={styles.customLink}>{lecture.title}</span>
                                         </Link>
-                                    )}
                                 </div>
                                 <div className={styles.rating}>
                                     {"별점 "}
