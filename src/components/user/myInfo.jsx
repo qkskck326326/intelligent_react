@@ -106,7 +106,7 @@ const MyInfo = observer(() => {
             }));
             setPreviewImageUrl(URL.createObjectURL(file));
         } else {
-            alert('이미지 파일만 업로드할 수 있습니다.');
+            // alert('이미지 파일만 업로드할 수 있습니다.');
         }
     };
 
@@ -177,6 +177,11 @@ const MyInfo = observer(() => {
                     <label htmlFor="fileUpload" className={styles.fileUploadLabel}></label>
                   </div>
                   <input type="file" id="fileUpload" name="profileImageUrl" onChange={handleImageChange} className={styles.fileInput} accept="image/*"/>
+                  <span className={styles.userTypeSpan}>
+                    {authStore.checkIsStudent() && "학생"}
+                    {authStore.checkIsTeacher() && "강사"}
+                    {authStore.checkIsAdmin() && "관리자"}
+                  </span>
                 </div>
               </div>
               <div className={styles.inputSection}>
