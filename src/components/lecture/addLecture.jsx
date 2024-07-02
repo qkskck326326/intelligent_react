@@ -17,7 +17,7 @@ const AddLecture = () => {
     const [nickname, setNickname] = useState('');
     const [loadingThumbnail, setLoadingThumbnail] = useState(false);
     const [loadingVideo, setLoadingVideo] = useState(false);
-    const [hasUploaded, setHasUploaded] = useState(false); // 업로드 여부 상태 추가
+    const [hasUploaded, setHasUploaded] = useState(false);
     const imgRef = useRef();
     const router = useRouter();
 
@@ -28,27 +28,14 @@ const AddLecture = () => {
         setNickname(currentNickname);
     }, [router.query]);
 
-    useEffect(() => {
-        const handleRouteChange = (url) => {
-            if (hasUploaded && !confirm('등록을 취소하시겠습니까?')) {
-                router.events.emit('routeChangeError');
-                throw 'routeChange aborted.';
-            }
-        };
-
-        router.events.on('routeChangeStart', handleRouteChange);
-
-        return () => {
-            router.events.off('routeChangeStart', handleRouteChange);
-        };
-    }, [hasUploaded]);
-
     const REPO_OWNER = 'rudalsdl';
     const REPO_NAME = 'lectureSave';
 
     const handleLectureRegister = async (lectureInput) => {
         try {
+            console.log("Registering lecture with input:", lectureInput);
             const response = await axiosClient.post(`/lecture/register/${lecturePackageId}?nickname=${nickname}`, lectureInput);
+            console.log("Registration response:", response);
             alert('강의가 성공적으로 등록되었습니다.');
             router.push(`/lecture/list?lecturePackageId=${lecturePackageId}`);
         } catch (error) {
@@ -67,6 +54,7 @@ const AddLecture = () => {
             lecturePackageId,
             nickname
         };
+        console.log("Form submitted with input:", lectureInput);
         await handleLectureRegister(lectureInput);
     };
 

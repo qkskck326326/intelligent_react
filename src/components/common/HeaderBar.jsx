@@ -10,6 +10,7 @@ import Notification from "../notification/notification";
 const HeaderBar = observer(() => {
   const [isClient, setIsClient] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
     setIsClient(true);
@@ -24,16 +25,19 @@ const HeaderBar = observer(() => {
       const response = await axiosClient.post("/logout"); // 로그아웃 엔드포인트로 요청
       console.log("로그아웃 성공:", response.data);
       localStorage.clear();
-      authStore.setIsLoggedIn(false);
-      authStore.setIsStudent(false);
-      authStore.setIsTeacher(false);
-      authStore.setIsAdmin(false);
-      authStore.setUserEmail("");
-      authStore.setProvider("");
-      authStore.setNickname("");
-      authStore.setProfileImageUrl("");
 
+      // 페이지 이동 후에 상태 초기화
       window.location.href = "http://localhost:3000"; // 로그아웃 성공 시 이동
+      setTimeout(() => {
+        authStore.setIsLoggedIn(false);
+        authStore.setIsStudent(false);
+        authStore.setIsTeacher(false);
+        authStore.setIsAdmin(false);
+        authStore.setUserEmail("");
+        authStore.setProvider("");
+        authStore.setNickname("");
+        authStore.setProfileImageUrl("");
+      }, 1000); // 1초 지연
     } catch (error) {
       console.error("로그아웃 실패:", error);
       handleAxiosError(error);
@@ -58,18 +62,18 @@ const HeaderBar = observer(() => {
           <Nav.Link href="/lecturePackage" className={styles["nav-link"]}>
             강의패키지
           </Nav.Link>
-          <Nav.Link href="/lecture/list" className={styles["nav-link"]}>
+          {/* <Nav.Link href="/lecture/list" className={styles["nav-link"]}>
             강의
-          </Nav.Link>
+          </Nav.Link> */}
           <Nav.Link href="/itNewsBoard" className={styles["nav-link"]}>
             itNewsBoard
           </Nav.Link>
-          <Nav.Link href="/payment" className={styles["nav-link"]}>
+          {/* <Nav.Link href="/payment" className={styles["nav-link"]}>
             결제
-          </Nav.Link>
-          <Nav.Link href="/chatting" className={styles["nav-link"]}>
+          </Nav.Link> */}
+          {/* <Nav.Link href="/chatting" className={styles["nav-link"]}>
             채팅
-          </Nav.Link>
+          </Nav.Link> */}
           <Nav.Link href="/post" className={styles["nav-link"]}>
             공유게시판
           </Nav.Link>
@@ -83,10 +87,20 @@ const HeaderBar = observer(() => {
         <Nav className={styles["right-nav"]}>
           {authStore.isLoggedIn ? (
               <>
-                <img src="/images/notificationBell.png" alt="Notification Bell" className={styles.notificationBell}
-                     onClick={() => setShowNotifications(!showNotifications)}
-                />
-                {showNotifications && <Notification />}
+                <div className={styles.notificationBellWrapper}>
+                  <img 
+                    src="/images/notificationBell.png" 
+                    alt="Notification Bell" 
+                    className={styles.notificationBell}
+                    onClick={() => setShowNotifications(!showNotifications)}
+                  />
+                  {notificationCount > 0 && (
+                    <span className={styles.notificationCount}>
+                      {notificationCount}
+                    </span>
+                  )}
+                </div>
+                {showNotifications && <Notification setNotificationCount={setNotificationCount} />}
                 <Nav.Link onClick={handleLogout} className={styles["nav-link"]}>
                   로그아웃
                 </Nav.Link>
