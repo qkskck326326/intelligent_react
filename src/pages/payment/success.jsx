@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
+import styles from "./Success.module.css";
 
 const Success = () => {
   const router = useRouter();
@@ -135,11 +136,11 @@ const Success = () => {
     }
   }, [paymentKey, amount, orderId]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className={styles.loading}>Loading...</p>;
+  if (error) return <p className={styles.error}>{error}</p>;
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>결제 성공</h1>
       {orderInfo && orderInfo.paymentStatus.status === "DONE" && (
         <>
