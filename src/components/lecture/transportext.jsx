@@ -24,7 +24,7 @@ const Transportext = ({ lectureId }) => {
 
     const fetchVideoUrl = async (lectureId) => {
         try {
-            const response = await axios.get('http://localhost:5001/video-url', {
+            const response = await axios.get('http://localhost:5000/video-url', {
                 params: { lecture_id: lectureId }
             });
             setVideoUrl(response.data.video_url);
@@ -36,7 +36,7 @@ const Transportext = ({ lectureId }) => {
 
     const fetchTranscript = async (videoUrl) => {
         try {
-            const response = await axios.get('http://localhost:5001/transcribe', {
+            const response = await axios.get('http://localhost:5000/transcribe', {
                 params: { video_url: videoUrl }
             });
             setTranscript(response.data.transcript);

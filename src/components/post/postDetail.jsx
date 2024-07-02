@@ -5,11 +5,13 @@ import DOMPurify from "dompurify";
 import authStore from "../../stores/authStore";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "./PostDetail.module.css";
-import { AiOutlineMore, AiOutlineWarning } from "react-icons/ai";
-import { AiOutlineComment } from "react-icons/ai";
+import {
+  AiOutlineMore,
+  AiOutlineWarning,
+  AiOutlineComment,
+} from "react-icons/ai";
 import { LuSend } from "react-icons/lu";
-import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"; // 기존 import에서 추가
-
+import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
 import { getRelativeTime } from "../../components/post/timeUtils";
 import EditPost from "./EditPost";
 import { IoHeartSharp } from "react-icons/io5";
@@ -25,8 +27,8 @@ const PostDetail = observer(({ postId }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isReportPopupOpen, setIsReportPopupOpen] = useState(false);
   const [reportContent, setReportContent] = useState("");
-  const [bookmarkedPosts, setBookmarkedPosts] = useState(new Set()); // 북마크된 게시물 상태 추가
-  const [bookmarked, setBookmarked] = useState(false); // 단일 게시물 북마크 상태 추가
+  const [bookmarkedPosts, setBookmarkedPosts] = useState(new Set());
+  const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     const isLoggedIn = authStore.checkIsLoggedIn();
@@ -51,18 +53,15 @@ const PostDetail = observer(({ postId }) => {
         const userEmail = authStore.getUserEmail();
         const provider = authStore.getProvider();
         const nickname = authStore.getNickname();
-        console.log("Fetching post details for postId:", postId);
         const response = await axiosClient.get(`/posts/detail/${postId}`, {
           params: { userEmail, provider, nickname },
           withCredentials: true,
         });
-        console.log("Fetched post data:", response.data);
 
         setPost(response.data);
         setLiked(response.data.userLiked);
-        setBookmarked(response.data.userBookmarked); // 북마크 상태 설정
+        setBookmarked(response.data.userBookmarked);
       } catch (error) {
-        console.error("Error fetching post:", error);
         setError(error);
       } finally {
         setLoading(false);
@@ -73,7 +72,6 @@ const PostDetail = observer(({ postId }) => {
   }, [postId]);
 
   const handleLikeClick = async () => {
-    console.log("handleLikeClick called"); // 디버깅용 로그
     if (!post || !authStore.checkIsLoggedIn() || isOwner()) return;
     const userEmail = authStore.getUserEmail();
     const provider = authStore.getProvider();
@@ -107,27 +105,22 @@ const PostDetail = observer(({ postId }) => {
     if (!commentContent || !authStore.isLoggedIn) return;
     const userEmail = authStore.getUserEmail();
     const provider = authStore.getProvider();
-    const nickname = authStore.getNickname(); // 추가: 닉네임 가져오기
-    const profileImageUrl = authStore.getProfileImageUrl(); // 추가: 프로필 이미지 URL 가져오기
+    const nickname = authStore.getNickname();
+    const profileImageUrl = authStore.getProfileImageUrl();
     try {
-      const response = await axiosClient.post(`/posts/${postId}/comments`, {
+      await axiosClient.post(`/posts/${postId}/comments`, {
         content: commentContent,
         userEmail: userEmail,
         provider: provider,
       });
-      const newComment = {
-        id: response.data.commentId, // 서버에서 반환된 댓글 ID 사용
-        content: commentContent,
-        userEmail: userEmail,
-        provider: provider,
-        nickname: nickname, // 추가: 닉네임 추가
-        profileImageUrl: profileImageUrl, // 추가: 프로필 이미지 URL 추가
-        commentTime: new Date().toISOString(), // 추가: 현재 시간을 ISO 문자열로 추가
-      };
-      setPost((prevPost) => ({
-        ...prevPost,
-        comments: [...prevPost.comments, newComment],
-      }));
+
+      // 댓글 작성 후 게시물 상세 정보를 다시 가져옴
+      const response = await axiosClient.get(`/posts/detail/${postId}`, {
+        params: { userEmail, provider, nickname },
+        withCredentials: true,
+      });
+
+      setPost(response.data);
       setCommentContent("");
     } catch (error) {
       console.error("Error submitting comment:", error);
@@ -149,7 +142,7 @@ const PostDetail = observer(({ postId }) => {
         receiveNickname: post.nickname,
         doNickname: authStore.getNickname(),
         content: reportContent,
-        reportType: 0, // 게시물 신고
+        reportType: 0,
         contentId: post.id,
       };
 
@@ -214,7 +207,6 @@ const PostDetail = observer(({ postId }) => {
             : comment
         ),
       }));
-      // window.location.reload();
     } catch (error) {
       console.error("Error updating comment:", error);
     }
@@ -233,6 +225,7 @@ const PostDetail = observer(({ postId }) => {
       console.error("Error deleting comment:", error);
     }
   };
+
   const handleBookmarkClick = async (postId) => {
     if (!authStore.checkIsLoggedIn()) {
       setShowPopup(true);
@@ -247,10 +240,10 @@ const PostDetail = observer(({ postId }) => {
             provider: authStore.getProvider(),
           },
         });
-        setBookmarked(false); // 북마크 상태 업데이트
+        setBookmarked(false);
         setPost((prevPost) => ({
           ...prevPost,
-          bookmarkCount: prevPost.bookmarkCount - 1, // 북마크 수 감소
+          bookmarkCount: prevPost.bookmarkCount - 1,
         }));
       } else {
         await axiosClient.post("/posts/bookmark", {
@@ -258,10 +251,10 @@ const PostDetail = observer(({ postId }) => {
           userEmail: authStore.getUserEmail(),
           provider: authStore.getProvider(),
         });
-        setBookmarked(true); // 북마크 상태 업데이트
+        setBookmarked(true);
         setPost((prevPost) => ({
           ...prevPost,
-          bookmarkCount: prevPost.bookmarkCount + 1, // 북마크 수 증가
+          bookmarkCount: prevPost.bookmarkCount + 1,
         }));
       }
     } catch (error) {
@@ -270,29 +263,47 @@ const PostDetail = observer(({ postId }) => {
   };
 
   const renderComments = () => {
-    if (!post.comments || post.comments.length === 0) {
-      return <p>아직 달린 댓글이 없습니다.</p>;
-    }
-
     return (
-      <div className={styles.comments}>
-        <h2>
-          <AiOutlineComment size={25} /> 댓글 {post.comments.length}
-        </h2>
-        <ul>
-          {post.comments.map((comment) => (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              onUpdate={handleEditCommentSubmit}
-              onDelete={handleDeleteComment}
-              onReport={handleReportSubmit}
-              isAdmin={authStore.checkIsAdmin()}
-              postUserEmail={post.userEmail} // 게시물 작성자의 이메일
-              postUserProvider={post.provider} // 게시물 작성자의 provider
+      <div className={styles.commentsContainer}>
+        <div className={styles.comments}>
+          <h2>
+            <AiOutlineComment size={25} /> 댓글 {post.comments.length}
+          </h2>
+          {post.comments.length === 0 ? (
+            <p>아직 달린 댓글이 없습니다.</p>
+          ) : (
+            <ul>
+              {post.comments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onUpdate={handleEditCommentSubmit}
+                  onDelete={handleDeleteComment}
+                  onReport={handleReportSubmit}
+                  isAdmin={authStore.checkIsAdmin()}
+                  postUserEmail={post.userEmail}
+                  postUserProvider={post.provider}
+                />
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className={styles.commentForm}>
+          <div className={styles.inputContainer}>
+            <input
+              type="text"
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              placeholder="댓글을 작성하세요"
             />
-          ))}
-        </ul>
+            <button
+              onClick={handleCommentSubmit}
+              className={styles.submitCommentButton}
+            >
+              <LuSend />
+            </button>
+          </div>
+        </div>
       </div>
     );
   };
@@ -306,15 +317,12 @@ const PostDetail = observer(({ postId }) => {
       <div className={styles.files}>
         <ul>
           {post.files.map((file) => {
-            console.log("Processing file:", file);
             if (!file.fileUrl) {
-              console.warn("File URL is undefined for file:", file);
               return null;
             }
 
             const isImage = file.fileUrl.match(/\.(jpeg|jpg|gif|png)$/i);
             const fileUrl = `http://localhost:8080${file.fileUrl}`;
-            console.log("File URL:", fileUrl, "Is image:", isImage);
 
             return (
               <li key={file.id}>
@@ -348,7 +356,7 @@ const PostDetail = observer(({ postId }) => {
       sanitizedContent,
       "text/html"
     );
-    // 이미지의 최대 크기를 설정
+
     parsedContent.querySelectorAll("img").forEach((element) => {
       element.style.maxWidth = "100%";
       element.style.height = "auto";
@@ -358,10 +366,8 @@ const PostDetail = observer(({ postId }) => {
       const url = element.getAttribute("url");
       const iframe = document.createElement("iframe");
 
-      // YouTube URL에서 'watch?v='를 'embed/'로 대체
       let embedUrl = url.replace("watch?v=", "embed/");
 
-      // YouTube URL에 'list' 매개변수가 포함된 경우 '&'를 '?'로 변경
       if (embedUrl.includes("list=")) {
         embedUrl = embedUrl.replace("&list=", "?list=");
       }
@@ -464,8 +470,11 @@ const PostDetail = observer(({ postId }) => {
         <h1 className={styles.postTitle}>{post.title}</h1>
         {renderContent()}
         {renderFiles()}
-        {renderComments()}
+      </div>
 
+      <div className={styles.commentsContainer}>{renderComments()}</div>
+
+      {/* <div className={styles.fixedCommentForm}>
         <div className={styles.commentForm}>
           <div className={styles.inputContainer}>
             <input
@@ -482,33 +491,30 @@ const PostDetail = observer(({ postId }) => {
             </button>
           </div>
         </div>
+      </div> */}
 
-        {isReportPopupOpen && (
-          <div className={styles.reportPopup}>
-            <div className={styles.popupContent}>
-              <h2>게시물 신고</h2>
-              <input
-                type="text"
-                value={reportContent}
-                onChange={(e) => setReportContent(e.target.value)}
-                placeholder="게시물 신고 사유를 작성해주세요."
-              />
-              <button
-                onClick={handleReportSubmit}
-                className={styles.submitButton}
-              >
-                제출
-              </button>
-              <button
-                onClick={closeReportPopup}
-                className={styles.cancelButton}
-              >
-                취소
-              </button>
-            </div>
+      {isReportPopupOpen && (
+        <div className={styles.reportPopup}>
+          <div className={styles.popupContent}>
+            <h2>게시물 신고</h2>
+            <input
+              type="text"
+              value={reportContent}
+              onChange={(e) => setReportContent(e.target.value)}
+              placeholder="게시물 신고 사유를 작성해주세요."
+            />
+            <button
+              onClick={handleReportSubmit}
+              className={styles.submitButton}
+            >
+              제출
+            </button>
+            <button onClick={closeReportPopup} className={styles.cancelButton}>
+              취소
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 });
@@ -564,17 +570,11 @@ const CommentItem = ({
         receiveNickname: comment.nickname,
         doNickname: authStore.getNickname(),
         content: reportContent,
-        reportType: 1, // 댓글 신고
+        reportType: 1,
         contentId: comment.id,
       };
 
       await axiosClient.post("/reports", reportDTO);
-      console.log(
-        reportDTO.contentId +
-          reportDTO.doNickname +
-          reportDTO.receiveNickname +
-          reportDTO.content
-      );
       closeReportPopup();
       alert("신고가 접수되었습니다.");
     } catch (error) {

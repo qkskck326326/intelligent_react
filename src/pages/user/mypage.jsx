@@ -13,7 +13,7 @@ import styles from "../../styles/user/mypage/mypage.module.css";
 import MypageSidebar from "../../components/user/mypageSidebar";
 import MyLecturePackage from "../../components/user/lectureManagement";
 import MyLecturePackageLike from "../../components/user/myLecturePackageLike";
-// import PostManagement from "../../components/post/PostManagement";
+import PostManagement from "../../components/post/PostManagement";
 
 const Mypage = observer(() => {
     const router = useRouter();
@@ -44,8 +44,8 @@ const Mypage = observer(() => {
                 return <PaymentHistoryManagement />;
             case "like":
                 return <MyLecturePackageLike />;
-            // case "postManagement":
-            //     return <PostManagement />;
+            case "postManagement":
+                return <PostManagement />;
             // 다른 컴포넌트들도 여기 추가
             default:
                 return <MyInfo />;
