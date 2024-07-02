@@ -54,7 +54,7 @@ const PaymentHistoryManagement = observer(() => {
               <tr key={history.transactionId}>
                 <td>
                   <Link
-                    href={`/lecturePackage/${history.lecturePackageId}`}
+                    href={`/lecture/list?lecturePackageId=${history.lecturePackageId}`}
                     passHref
                     style={{ textDecoration: "none", color: "inherit" }}
                   >

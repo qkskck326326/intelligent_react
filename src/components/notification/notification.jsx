@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
-import styles from "../../styles/notification/notification.module.css"; // 스타일 파일을 import
+import styles from "../../styles/notification/notification.module.css";
 import NotificationSettings from "./notificationSettings";
 
-const Notification = () => {
+const Notification = ({ setNotificationCount }) => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showSettings, setShowSettings] = useState(false); // 알림 설정을 보여줄지 여부
-    const [isRotating, setIsRotating] = useState(false); // 톱니바퀴 회전 여부
+    const [showSettings, setShowSettings] = useState(false);
+    const [isRotating, setIsRotating] = useState(false);
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -18,6 +18,7 @@ const Notification = () => {
                 const response = await axiosClient.get(`/notification/${nickname}`);
                 setNotifications(response.data);
                 setLoading(false);
+                setNotificationCount(response.data.length);  // 알림 갯수를 설정
             } catch (err) {
                 setError(err);
                 setLoading(false);
@@ -25,7 +26,7 @@ const Notification = () => {
         };
 
         fetchNotifications();
-    }, []);
+    }, [setNotificationCount]);
 
     const handleDelete = async (notificationId) => {
         try {
@@ -33,6 +34,7 @@ const Notification = () => {
             setNotifications((prevNotifications) =>
                 prevNotifications.filter((notification) => notification.notificationId !== notificationId)
             );
+            setNotificationCount(notifications.length - 1);  // 알림 갯수를 감소
         } catch (err) {
             console.error("Error deleting notification:", err);
         }
@@ -46,7 +48,6 @@ const Notification = () => {
         setIsRotating(true);
         setShowSettings(!showSettings);
 
-        // 일정 시간 후에 회전을 멈추도록 설정 (예: 1초 후)
         setTimeout(() => {
             setIsRotating(false);
         }, 360);

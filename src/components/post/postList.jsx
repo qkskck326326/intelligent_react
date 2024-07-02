@@ -18,6 +18,7 @@ import { observer } from "mobx-react-lite";
 import UploadButton from "../../components/post/PostUploadBtn";
 import { getRelativeTime } from "../../components/post/timeUtils";
 import { IoHeartSharp } from "react-icons/io5";
+import UserProfileModal from "../lecture/userProfileModal";
 
 const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [posts, setPosts] = useState([]);

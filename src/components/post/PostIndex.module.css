@@ -9,12 +9,14 @@
 .header {
   text-align: left;
   margin-bottom: 10px;
-  background-color: #333b3d;
+  background-color: #333b3d;/*333b3d*/
   width: 100%;
   color: white;
+  padding: 40px 0; /* 패딩을 추가하여 높이를 키웁니다 */
 }
 .header h1 {
   margin-left: 50px;
+  
 }
 .header h2 {
   margin-left: 50px;
@@ -31,6 +33,7 @@
   margin-top: 100px;
   width: 300px; /* 사이드바 너비를 설정합니다 */
   margin-right: 20px;
+  margin-left: 200px;
 }
 
 .mainContent {

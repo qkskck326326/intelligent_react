@@ -1,7 +1,6 @@
 import React from 'react';
 import BoardList from "../../components/itNews/boardList";
 import Link from "next/link";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Index = () => {
     return (
