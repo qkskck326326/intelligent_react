@@ -12,9 +12,9 @@ const BoardDetail = ({ boardId }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const postResponse = await axiosClient.get(`/itNewsBoard/${boardId}`);
+                const response = await axiosClient.get(`/itNewsBoard/${boardId}`);
                 //const commentsResponse = await axiosClient.get(`//itNewsBoard/${boardId}/comments`);
-                setPost(postResponse.data);
+                setPost(response.data);
                 //setComments(commentsResponse.data);
             } catch (err) {
                 setError(err);
