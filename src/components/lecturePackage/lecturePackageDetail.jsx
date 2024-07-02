@@ -6,6 +6,7 @@ import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css'
 import authStore from '../../stores/authStore';
 import { observer } from "mobx-react";
 import ProfileModal from "./profileModal";
+import lecturePackageList from "./lecturePackageList";
 
 const LecturePackageDetail = observer(() => {
     const router = useRouter();
@@ -18,15 +19,13 @@ const LecturePackageDetail = observer(() => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [lectureCount, setLectureCount] = useState(null);
     const [isInCart, setIsInCart] = useState(false);
+    const [payments, setPayments] = useState([]);
     const nickname = authStore.getNickname()
+    const userEmail = authStore.getUserEmail();
+    const provider = authStore.getProvider();
 
     useEffect(() => {
         const fetchLecturePackage = async () => {
-
-            if (!nickname) {
-                alert("로그인을 해야 이용이 가능합니다.");
-                router.push('/user/login'); // 로그인 페이지로 이동
-            }
 
 
             setLoading(true);
@@ -54,6 +53,33 @@ const LecturePackageDetail = observer(() => {
 
                 console.log("responseCount : ", responseCount.data);
 
+
+
+
+                const paymentConfirmation = "Y";
+
+                const postDTO = {
+                    userEmail,
+                    provider,
+                    lecturePackageId,
+                    paymentConfirmation
+                };
+
+                console.log("userEmail : ", userEmail);
+                console.log("provider : ", provider);
+                console.log("lecturePackageId : ", lecturePackageId);
+
+                //결제한 패키지인지 확인하기위한 요청
+                const responsePayment = await axiosClient.post("/payment/confirmation", postDTO);
+                const responsePaymentData = responsePayment.data
+                setPayments(responsePaymentData);
+                console.log("payments : ", payments);
+                console.log("responsePaymentData : ", responsePaymentData);
+
+                handleIsConfirm(responsePaymentData.paymentConfirmation)
+
+
+
                 const teacherNickname = response.data.nickname;
                 console.log("teacher : ", teacherNickname);
                 const profileResponse = await axiosClient.get(`/packages/profile?nickname=${teacherNickname}`);
@@ -74,7 +100,7 @@ const LecturePackageDetail = observer(() => {
         if (lecturePackageId) {
             fetchLecturePackage();
         }
-    }, [lecturePackageId]);
+    }, []);
 
     useEffect(() => {
         const increaseViewCount = async (authorNickname) => {
@@ -238,6 +264,14 @@ const LecturePackageDetail = observer(() => {
             }
         }
     };
+
+
+    const handleIsConfirm = (paymentConfirmation) => {
+      if(paymentConfirmation === "Y"){
+          handleLectureList(lecturePackageId)
+      }
+    };
+
 
     const handleLectureList = () => {
         router.push({

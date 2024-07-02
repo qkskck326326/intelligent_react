@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import BoardSaveModal from "./BoardSaveModal";
 import { useRouter } from 'next/router';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomPagination from "../common/customPagenation";
+import {observer} from "mobx-react";
+import authStore from "../../stores/authStore";
+import styles from '/src/styles/itNewsBoard/itNewsBoardListCSS.module.css'
 
-const BoardList = () => {
+const BoardList = observer(() => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [size, setSize] = useState(10);
@@ -44,7 +46,7 @@ const BoardList = () => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return `${year}년${month}월${day}일`;
     };
 
     useEffect(() => {
@@ -94,6 +96,12 @@ const BoardList = () => {
         fetchData();
     };
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     const handleSizeChange = (event) => {
         setSize(Number(event.target.value));
         setPage(1);
@@ -105,9 +113,9 @@ const BoardList = () => {
     if (error) return <p>Error: {error.message}</p>;
 
     return (
-        <div className="container">
-            <div className="mb-3 d-flex align-items-center">
-                <select className="form-select" style={{width: '135px'}} value={size} onChange={handleSizeChange}>
+        <div className={styles.container}>
+            <div className={`${styles['mb-3']} ${styles['d-flex']} ${styles['align-items-center']}`}>
+                <select className={styles['form-select']} value={size} onChange={handleSizeChange}>
                     <option value="5">5개씩 보기</option>
                     <option value="10">10개씩 보기</option>
                     <option value="15">15개씩 보기</option>
@@ -115,63 +123,66 @@ const BoardList = () => {
                 </select>
                 <input
                     type="text"
-                    className="form-control me-sm-1"
-                    style={{width: '300px'}}
-                    placeholder="검색어를 입력하세요"
+                    className={`${styles['form-control']} ${styles['me-sm-1']}`}
+                    placeholder="제목으로 검색"
                     value={isSearch}
                     onChange={(e) => setIsSearch(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
-                <button className="btn btn-primary" onClick={handleSearch}>검색</button>
-
-
+                <button className={`${styles['btn']} ${styles['btn-primary']}`} onClick={handleSearch}>검색</button>
             </div>
             <p>총 {totalElements} 개의 결과</p>
-            <BoardSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave}
-                            initialData={currentData}/>
-            <table className="table">
+            <BoardSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave} initialData={currentData} />
+            <table className={styles.table}>
                 <thead>
                 <tr>
-                    <th scope="col" className="text-center">#</th>
-                    <th scope="col" className="text-center">제목</th>
-                    <th scope="col" className="text-center" style={{width: '120px'}}>링크</th>
-                    <th scope="col" className="text-center" style={{width: '150px'}}>수정 / 삭제</th>
-                    <th scope="col" className="text-center" style={{width: '100px'}}>등록일</th>
+                    <th scope="col" className={styles['text-center']} style={{ width: '40px' }}>#</th>
+                    <th scope="col" className={styles['text-center']}>제목</th>
+                    <th scope="col" className={styles['text-center']} style={{ width: '130px' }}>링크</th>
+                    {authStore.checkIsAdmin() === true ? (
+                        <th scope="col" className={styles['text-center']} style={{ width: '100px' }}>삭제</th>
+                    ) : null}
+                    <th scope="col" className={styles['text-center']} style={{ width: '100px' }}>등록일</th>
                 </tr>
                 </thead>
                 <tbody>
                 {isSearch !== "" && data.length === 0 ? (
                     <tr>
-                        <td colSpan="5" className="text-center">검색 결과가 없습니다.</td>
+                        <td colSpan="5" className={styles['text-center']}>검색 결과가 없습니다.</td>
                     </tr>
                 ) : (
                     data.map((item, index) => (
                         <tr key={item.boardId}>
-                            <th scope="row" className="text-center">{index + 1}</th>
-                            <td onClick={() => router.push(`/itNewsBoard/${item.boardId}`)}
-                                className="text-center" style={{transition: 'background-color 0.3s'}}
+                            <th scope="row" className={styles['text-center']}>{index + 1}</th>
+                            <td
+                                onClick={() => router.push(`/itNewsBoard/${item.boardId}`)}
+                                className={styles['text-center']}
+                                style={{ transition: 'background-color 0.3s' }}
                                 onMouseOver={e => e.currentTarget.style.backgroundColor = '#f0f0f0'}
-                                onMouseOut={e => e.currentTarget.style.backgroundColor = ''}>{item.title}</td>
-                            <td className="text-center">
-                                <a href={item.boardUrl} className="btn btn-primary" target="_blank"
-                                   rel="noopener noreferrer">
+                                onMouseOut={e => e.currentTarget.style.backgroundColor = ''}
+                            >
+                                {item.title}
+                            </td>
+                            <td className={styles['text-center']}>
+                                <a href={item.boardUrl} className={`${styles['btn']} ${styles['btn-primary']}`} target="_blank" rel="noopener noreferrer">
                                     원글이동
                                 </a>
                             </td>
-                            <td className="text-center">
-                                <button className="btn btn-secondary" onClick={() => handleEdit(item)}>수정</button>
-                                &nbsp;
-                                <button className="btn btn-danger" onClick={() => handleDelete(item)}>삭제</button>
-                            </td>
-                            <td className="text-center">{formatDate(item.registDate)}</td>
+                            {authStore.checkIsAdmin() === true ? (
+                                <td className={styles['text-center']}>
+                                    <button className={`${styles['btn']} ${styles['btn-delete']}`} onClick={() => handleDelete(item)}>삭제</button>
+                                </td>
+                            ) : null}
+                            <td className={styles['resist-date']}>{formatDate(item.registDate)}</td>
                         </tr>
                     ))
                 )}
                 </tbody>
             </table>
-            <CustomPagination align="center" currentPage={page} totalPages={totalPages}
-                              onPageChange={handlePageChange}/>
+            <br/>
+            <CustomPagination align="center" currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
     );
-}
+});
 
 export default BoardList;
