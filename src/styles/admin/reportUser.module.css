@@ -1,0 +1,68 @@
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100vh;
+}
+
+.main {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 60px;
+    width: 170%;
+    flex-direction: column;
+    margin-top:20px;
+
+
+}
+
+.loading {
+    text-align: center;
+    font-size: 18px;
+    color: #007bff;
+}
+
+.error {
+    text-align: center;
+    font-size: 18px;
+    color: #dc3545;
+}
+
+.table {
+    margin-top: 20px;
+    width: 100%; /* 테이블 너비를 100%로 설정 */
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+    text-align: left;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #ddd;
+}
+
+.restrictButton {
+    background-color: #ffc107;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {useRouter} from 'next/router';
-import { Pagination } from "react-bootstrap";
+// import { Pagination } from "react-bootstrap";
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import SortAndSearchBar from "../common/sortAndSearchBar";
 import Link from "next/link";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import CategoryToggle from "./CategoryToggle";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import UploadButton from "../lecturePackage/uploadButton";
+import Pagination from "../common/pagination"
 
 const LecturePackageList = observer(({ onRegisterClick }) => {
   const router = useRouter();
@@ -24,9 +25,7 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
   const [searchCriteria, setSearchCriteria] = useState("title");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubCategoryName, setSelectedSubCategoryName] = useState(""); // 선택된 서브카테고리명 상태 추가
-  const [payments, setPayments] = useState([]);
-  const userEmail = authStore.getUserEmail();
-  const provider = authStore.getProvider();
+
 
 
   const ITEMS_PER_PAGE = 16;
@@ -58,9 +57,6 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
       setTotalPages(responseData.totalPages);
       setTotalItems(responseData.totalElements); // 전체 아이템 수 설정
 
-      const responsePayment = await axiosClient.get("/payment/confirmation");
-      const responsePaymentData = responsePayment.data
-      setPayments(responsePaymentData);
 
     } catch (err) {
       setError(err);
@@ -234,18 +230,11 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
                   <div className={styles.details}>
 
                     <div className={styles.title}> {/*결제한 패키지면 강의목록으로 이동*/}
-                      {isUserPackage(lecture.lecturePackageId) ? (
-                          <span
-                              className={styles.customLink}
-                              onClick={() => handleLectureList(lecture.lecturePackageId)}
-                          >
-                            {lecture.title}
-                          </span>
-                      ) : (
+
                           <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
                             <span className={styles.customLink}>{lecture.title}</span>
                           </Link>
-                      )}
+
                     </div>
                     <div className={styles.rating}>
                       {"별점 "}
@@ -277,31 +266,37 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
         </div>
 
         <div className={styles.paginationContainer}>
-          <Pagination className={styles.paginationWrapper}>
-            <Pagination.First onClick={() => handlePageChange(1)}/>
-            <Pagination.Prev
-                onClick={() =>
-                    handlePageChange(currentPage > 1 ? currentPage - 1 : 1)
-                }
-            />
-            {Array.from({length: totalPages}, (_, i) => (
-                <Pagination.Item
-                    key={i + 1}
-                    active={i + 1 === currentPage}
-                    onClick={() => handlePageChange(i + 1)}
-                >
-                  {i + 1}
-                </Pagination.Item>
-            ))}
-            <Pagination.Next
-                onClick={() =>
-                    handlePageChange(
-                        currentPage < totalPages ? currentPage + 1 : totalPages
-                    )
-                }
-            />
-            <Pagination.Last onClick={() => handlePageChange(totalPages)} />
-          </Pagination>
+          {/*<Pagination className={styles.paginationWrapper}>*/}
+          {/*  <Pagination.First onClick={() => handlePageChange(1)}/>*/}
+          {/*  <Pagination.Prev*/}
+          {/*      onClick={() =>*/}
+          {/*          handlePageChange(currentPage > 1 ? currentPage - 1 : 1)*/}
+          {/*      }*/}
+          {/*  />*/}
+          {/*  {Array.from({length: totalPages}, (_, i) => (*/}
+          {/*      <Pagination.Item*/}
+          {/*          key={i + 1}*/}
+          {/*          active={i + 1 === currentPage}*/}
+          {/*          onClick={() => handlePageChange(i + 1)}*/}
+          {/*      >*/}
+          {/*        {i + 1}*/}
+          {/*      </Pagination.Item>*/}
+          {/*  ))}*/}
+          {/*  <Pagination.Next*/}
+          {/*      onClick={() =>*/}
+          {/*          handlePageChange(*/}
+          {/*              currentPage < totalPages ? currentPage + 1 : totalPages*/}
+          {/*          )*/}
+          {/*      }*/}
+          {/*  />*/}
+          {/*  <Pagination.Last onClick={() => handlePageChange(totalPages)} />*/}
+          {/*</Pagination>*/}
+
+          <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+          />
         </div>
         {(authStore.checkIsTeacher() || authStore.checkIsAdmin()) && (
             <UploadButton
