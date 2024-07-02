@@ -108,24 +108,19 @@ const PostDetail = observer(({ postId }) => {
     const nickname = authStore.getNickname();
     const profileImageUrl = authStore.getProfileImageUrl();
     try {
-      const response = await axiosClient.post(`/posts/${postId}/comments`, {
+      await axiosClient.post(`/posts/${postId}/comments`, {
         content: commentContent,
         userEmail: userEmail,
         provider: provider,
       });
-      const newComment = {
-        id: response.data.commentId,
-        content: commentContent,
-        userEmail: userEmail,
-        provider: provider,
-        nickname: nickname,
-        profileImageUrl: profileImageUrl,
-        commentTime: new Date().toISOString(),
-      };
-      setPost((prevPost) => ({
-        ...prevPost,
-        comments: [...prevPost.comments, newComment],
-      }));
+
+      // 댓글 작성 후 게시물 상세 정보를 다시 가져옴
+      const response = await axiosClient.get(`/posts/detail/${postId}`, {
+        params: { userEmail, provider, nickname },
+        withCredentials: true,
+      });
+
+      setPost(response.data);
       setCommentContent("");
     } catch (error) {
       console.error("Error submitting comment:", error);

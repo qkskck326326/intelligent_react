@@ -149,7 +149,7 @@ const Success = () => {
             <h2>주문 정보</h2>
             <p>주문 번호: {orderInfo.orderId}</p>
             <p>결제 금액: {parseFloat(orderInfo.amount).toLocaleString()} 원</p>
-            <p>결제 상태: {orderInfo.paymentStatus.status}</p>
+            <p>결제 상태: 완료 </p>
             <button
               onClick={() => router.push("/user/mypage?component=myLecture")}
             >
