@@ -36,13 +36,16 @@ const NotificationSettings = () => {
 
     return (
         <div className={styles.settingsContainer}>
-            {settings.map(setting => (
+            {settings.filter(setting => setting.notificationType !== 6).map(setting => (
                 <div key={setting.notificationType} className={styles.settingItem}>
-                    <span>{setting.notificationType === 1 ? "강의 댓글의 답글" : 
-                          setting.notificationType === 2 ? "QnA 질문에 답변" : 
-                          setting.notificationType === 3 ? "공지사항" : 
-                          setting.notificationType === 4 ? "본인 게시물 좋아요" : 
-                          "본인 게시물에 댓글"}</span>
+                    <span>
+                        {setting.notificationType === 1 ? "강의 댓글의 답글" : 
+                        setting.notificationType === 2 ? "QnA 질문에 답변" : 
+                        setting.notificationType === 3 ? "공지사항" : 
+                        setting.notificationType === 4 ? "본인 게시물 좋아요" : 
+                        setting.notificationType === 5 ? "본인 게시물 댓글" : 
+                        setting.notificationType === 7 ? "쿠폰 알림" : null}
+                    </span>
                     <label className={styles.switch}>
                         <input
                             type="checkbox"
