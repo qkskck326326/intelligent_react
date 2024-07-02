@@ -13,6 +13,9 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
     const [isDeleted, setIsDeleted] = useState(false);
     const [lectureReadStatuses, setLectureReadStatuses] = useState({});
 
+    const completedLecturesCount = Object.values(lectureReadStatuses).filter(status => status === 'Y').length;
+    const totalLecturesCount = lectures.length;
+
     useEffect(() => {
         fetchLecturePackageTitle();
     }, [lecturePackageId]);
@@ -172,6 +175,10 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
                     ))}
                 </tbody>
             </table>
+            
+            <div className={styles.summary}>
+                {`현재 시청율  ${completedLecturesCount} / ${totalLecturesCount}`}
+            </div>
 
             {isLayerOpen && (
                 <div className={styles.layerContainer}>

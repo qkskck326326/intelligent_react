@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import { axiosClient } from '../../axiosApi/axiosClient';
 import SiteSaveModal from "./siteSaveModal";
-import AlertModal from "../common/AlertModal";
 import { Button, Pagination } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
 
-const BoardList = () => {
+const SiteList = () => {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [size, setSize] = useState(10);
@@ -15,11 +13,15 @@ const BoardList = () => {
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [currentData, setCurrentData] = useState(null);
-    const [showAlert, setShowAlert] = useState(false);
-    const [deleteTarget, setDeleteTarget] = useState(null);
+    const [isSearch, setIsSearch] = useState("");
 
     const fetchData = () => {
-        axiosClient.get('/itNewsSite', {params: {page: page, size: size}})
+        let url = "/itNewsSite";
+        const params = { page: page - 1, size: size };
+        if (isSearch !== "") {
+            url += "/search/" + isSearch;
+        }
+        axiosClient.get(url, {params})
             .then(response => {
                 const responseData = response.data;
                 const dataArray = Array.isArray(responseData) ? responseData : [responseData];
@@ -76,20 +78,6 @@ const BoardList = () => {
         setShowModal(false);
     };
 
-    const handleDeleteClick = (item) => {
-        setDeleteTarget(item);
-        setShowAlert(true);
-    };
-
-    const handleConfirmDelete = () => {
-        handleDelete(deleteTarget);
-        setShowAlert(false);
-    };
-
-    const handleCloseAlert = () => {
-        setShowAlert(false);
-    };
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
@@ -97,32 +85,59 @@ const BoardList = () => {
         axios.get("http://localhost:5000/crowling")
     }
 
+    const handleSearch = () => {
+        setPage(1);
+        fetchData();
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const handleSizeChange = (event) => {
+        setSize(Number(event.target.value));
+        setPage(1);
+    };
+
     return (
         <div className="container">
             <h1>Board List</h1>
-            <Button variant="primary" onClick={handleShow} className="mb-3">
+            <Button variant="btn btn-primary" onClick={handleShow} className="mb-3">
                 작성하기
-            </Button>
-            <button onClick={doCrowling}>크롤링 요청</button>
+            </Button> &nbsp;
+            <Button variant="btn btn-secondary" className="mb-3" onClick={doCrowling}>크롤링 요청</Button>
             <SiteSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave}
                            initialData={currentData}/>
-            <AlertModal
-                show={showAlert}
-                handleClose={handleCloseAlert}
-                title="삭제 확인"
-                message="정말로 삭제하시겠습니까?"
-                onConfirm={handleConfirmDelete}
-            />
+            <div className="mb-3 d-flex align-items-center">
+                <select className="form-select" style={{width: '135px', height: '38px'}} value={size} onChange={handleSizeChange}>
+                    <option value="5">5개씩 보기</option>
+                    <option value="10">10개씩 보기</option>
+                    <option value="15">15개씩 보기</option>
+                    <option value="20">20개씩 보기</option>
+                </select>
+                <input
+                    type="text"
+                    className="form-control me-sm-1"
+                    style={{width: '300px'}}
+                    placeholder="site name으로 검색"
+                    value={isSearch}
+                    onChange={(e) => setIsSearch(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
+                <button className="btn btn-primary" onClick={handleSearch}>검색</button>
+            </div>
             <table className="table">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Site URL</th>
-                    <th scope="col">Site Name</th>
                     <th scope="col">Latest Board URL</th>
+                    <th scope="col">Site Name</th>
                     <th scope="col">Title Element</th>
                     <th scope="col">Context Element</th>
-                    <th scope="col" style={{width: '140px'}}> 수정 / 삭제</th>
+                    <th scope="col" style={{width: '200px'}}> 수정 / 삭제</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -130,14 +145,14 @@ const BoardList = () => {
                     <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <td>{item.siteUrl}</td>
-                        <td>{item.siteName}</td>
                         <td>{item.latestBoardUrl}</td>
+                        <td>{item.siteName}</td>
                         <td>{item.titleElement}</td>
                         <td>{item.contextElement}</td>
                         <td>
                             <button onClick={() => handleEdit(item)}>수정</button>
                             &nbsp;
-                            <button onClick={() => handleDeleteClick(item)}>삭제</button>
+                            {/*<button onClick={() => handleDelete(item)}>삭제</button>*/}
                         </td>
                     </tr>
                 ))}
@@ -158,4 +173,4 @@ const BoardList = () => {
     );
 }
 
-export default BoardList;
+export default SiteList;
