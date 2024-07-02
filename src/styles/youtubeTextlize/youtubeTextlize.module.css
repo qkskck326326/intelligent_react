@@ -1,0 +1,95 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f4f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.description {
+    color: #666;
+    text-align: center;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+}
+
+.inputField {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+.buttonPrimary {
+    background-color: #539ef8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buttonPrimary:hover {
+    background-color: #0032ff;
+}
+
+.spinnerBorder {
+    display: block;
+    margin: 0 auto;
+}
+
+.statusText {
+    text-align: center;
+    color: #007bff;
+    margin-top: 10px;
+}
+
+.errorText {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.resultSection {
+    margin-top: 20px;
+}
+
+.subHeader {
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.originalText {
+    white-space: pre-line;
+    color: #444;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.translatedText {
+    white-space: pre-line;
+    color: #444;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
