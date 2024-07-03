@@ -6,10 +6,15 @@
   /* border: 1px solid #ddd; */
   border-radius: 8px;
   flex-direction: column;
-  margin-bottom: 20px; /* 하단 마진 추가 */
+  margin-bottom: 40px; /* 하단 마진 추가 */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
+}
+
+.popularPostsContainer:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
 }
 
 .header {
@@ -42,6 +47,13 @@
   padding: 8px;
   border-bottom: 1px solid #eee;
   font-size: 0.8rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.popularPostItem:hover {
+  transform: translateY(-5px);
+  /* box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2); */
 }
 
 .rankIcon {
@@ -70,7 +82,12 @@
   display: inline-block; /* 블록 요소로 변경 */
   max-width: 170px; /* 최대 너비를 설정하여 줄바꿈을 유도 */
   white-space: normal; /* 줄바꿈을 허용 */
+  /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); */
+  
 }
+
+
+
 .popularPostMeta {
   display: flex;
   justify-content: space-between;

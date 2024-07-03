@@ -7,7 +7,9 @@ const Index = () => {
       <div className={styles.header}>
         <h1>IntelliClass 에서 강의를 구매해보세요!</h1>
       </div>
-      <CartPage />
+      <div className={styles.pageContainer}>
+        <CartPage />
+      </div>
     </div>
   );
 };
