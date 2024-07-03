@@ -86,8 +86,8 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
                 temperature: 0.8,
                 max_tokens: 256,
                 top_p: 1,
-                frequency_penalty: 0.5,
-                presence_penalty: 0.5
+                frequency_penalty: 0.3,
+                presence_penalty: 0.3
             })
         };
         try {
