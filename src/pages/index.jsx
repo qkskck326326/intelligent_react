@@ -4,6 +4,7 @@ import NavBar from "../components/common/NavBar";
 import UserInterestPackageList from "../components/main/userInterestPakcageList";
 import UpperCategoryPackageList from "../components/main/upperCategoryPackageList";
 import styles from '../styles/common/HomePage.module.css';
+import Footer from '../components/common/Footer';
 
 const HomePage = () => {
     const [banners, setBanners] = useState([]);
@@ -87,10 +88,11 @@ const HomePage = () => {
                     <img
                         src="/images/SCC.png"
                         alt="Simple Code Compiler test"
-                        style={{ width: '100px', height: '100px' ,marginRight:'100px'}}
+                        style={{ width: '100px', height: '100px', marginRight:'100px'}}
                     />
                 </div>
             </main>
+            <Footer />
         </div>
     );
 }
