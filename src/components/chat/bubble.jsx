@@ -124,8 +124,8 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
                 {isModalOpen && (
                     <>
                         <span className={styles.close} onClick={closeModal}>&times;</span>
-                        {images.length > 1 && <a className={styles.prev} onClick={() => plusSlides(-1)}>&#10094;</a>}
-                        {images.length > 1 && <a className={styles.next} onClick={() => plusSlides(1)}>&#10095;</a>}
+                        {images.length > 1 && <div className={styles.prev} onClick={() => plusSlides(-1)}>&#10094;</div>}
+                        {images.length > 1 && <div className={styles.next} onClick={() => plusSlides(1)}>&#10095;</div>}
                         {images.map((src, index) => (
                             <div key={index} style={{ display: index === slideIndex ? 'block' : 'none' }}>
                                 <img className="modal-content" src={src} alt='' />
@@ -147,7 +147,6 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
             </div>
             <div className={`${styles.bubbleWrapper} ${isMe && styles.reverseBubbleWrapper}`}>
                 <div className={`${styles.eachBubble} ${isMe && styles.reverseEachBubble}`}>
-                    {/* TODO 강사일 경우 강사의 페이지 이동기능도 필요할듯? */}
                     {!isMe &&
                         <div className={styles.profile}>
                             <img src={message.senderProfileImageUrl || ''} alt="Profile"/>
@@ -169,8 +168,6 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
                                     :
                                     <div className={styles.imgContainer}>
                                         {message.files.map((file, imgIndex) => (
-                                            //TODO 그냥 땜빵만 해둠
-
                                             message.messageType === 1 ?
                                                 <img
                                                     key={imgIndex}

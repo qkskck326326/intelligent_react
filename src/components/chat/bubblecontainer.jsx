@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect} from 'react';
+import React, {forwardRef} from 'react';
 import Bubble from './bubble.jsx'
 import styles from '../../styles/chatting/chatbubble.module.css'
 

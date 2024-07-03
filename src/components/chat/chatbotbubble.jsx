@@ -4,7 +4,7 @@ import styles from '../../styles/chatting/chatbubble.module.css';
 
 const BotBubble = observer(({ message }) => {
 
-    const [isMe, setIsMe] = useState(message.userId === 'user');
+    const [isMe] = useState(message.userId === 'user');
     const textRef = useRef();
 
     const sanitizeHTML = (input) => {
