@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import LecturePackageDetail from "../../components/lecturePackage/lecturePackageDetail";
 
-const lecturePackageDetailPage = () => {
+const LecturePackageDetailPage = () => {
     const router = useRouter();
     const {lecturePackageId} = router.query;
     console.log(router.query);
@@ -11,4 +11,4 @@ const lecturePackageDetailPage = () => {
     return lecturePackageId ? <LecturePackageDetail lecturePackageId={parseInt(lecturePackageId, 10)} /> : <div>Loading...</div>;
 };
 
-export default lecturePackageDetailPage;
+export default LecturePackageDetailPage;

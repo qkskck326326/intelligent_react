@@ -11,9 +11,28 @@
     margin-left: 60px;
     width: 170%;
     flex-direction: column;
-    margin-top:20px;
+    margin-top: 20px;
+}
 
+.filterContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-weight: bolder;
 
+}
+
+.filterLabel {
+    margin-right: 10px;
+    font-size: 16px;
+
+}
+
+.select {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: 3px solid #fdaf07;
+    border-radius: 4px;
 }
 
 .loading {
@@ -30,23 +49,28 @@
 
 .table {
     margin-top: 20px;
-    width: 100%; /* 테이블 너비를 100%로 설정 */
+    width: 900px; /* 테이블 너비를 100%로 설정 */
     border-collapse: collapse;
+    align-self: center;
+    margin-bottom:20px;
 }
 
 .table th, .table td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px;
+    text-align: center;
+
 }
 
 .table th {
     background-color: #343a40;
     color: white;
-    text-align: left;
+    text-align: center;
 }
 
 .table tr:nth-child(even) {
     background-color: #f2f2f2;
+    text-align: center;
 }
 
 .table tr:hover {
@@ -54,15 +78,66 @@
 }
 
 .restrictButton {
-    background-color: #ffc107;
+    background-color: #ffb007;
     border: none;
     color: white;
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 1em;
+    font-weight: bold;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 4px;
+}
+
+.pagination{
+    margin-bottom: 150px;
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.confirmButton {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cancelButton {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }

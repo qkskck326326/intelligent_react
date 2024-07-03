@@ -11,7 +11,7 @@ import styles from '../../styles/lecturePackage/lecturePackageRegister.module.cs
 import 'bootstrap/dist/css/bootstrap.min.css';
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
-import Button from "react-bootstrap/Button";
+
 
 const CKEditorComponent = dynamic(() => import('../CKEditor/CKEditorComponent'), { ssr: false });
 

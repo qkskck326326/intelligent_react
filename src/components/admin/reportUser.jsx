@@ -5,11 +5,17 @@ import Pagination from "../../components/common/pagination";
 
 const ReportUser = () => {
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [totalPages, setTotalPages] = useState(0);
     const size = 10;
+    const [filter, setFilter] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [currentNickname, setCurrentNickname] = useState('');
+    const [currentLoginOk, setCurrentLoginOk] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
 
     useEffect(() => {
         const fetchUsers = async (size, page) => {
@@ -24,6 +30,7 @@ const ReportUser = () => {
                 });
                 const responseData = response.data;
                 setUsers(responseData.content);
+                setFilteredUsers(responseData.content);
                 setTotalPages(responseData.totalPages);
             } catch (err) {
                 setError(err);
@@ -39,13 +46,69 @@ const ReportUser = () => {
         setPage(newPage);
     };
 
-    const handleLoginRestriction = (userId) => {
-        console.log(`User ${userId} login restricted`);
+    const handleLoginRestriction = async (nickname) => {
+        try {
+            const response = await axiosClient.put(`/users/restrictlogin`, nickname, {
+                headers: {
+                    'Content-Type': 'text/plain'
+                }
+            });
+            const updatedUser = response.data;
+            setUsers(prevUsers =>
+                prevUsers.map(user => user.nickname === updatedUser.nickname ? updatedUser : user)
+            );
+            setFilteredUsers(prevUsers =>
+                prevUsers.map(user => user.nickname === updatedUser.nickname ? updatedUser : user)
+            );
+        } catch (err) {
+            setError(err);
+        }
+    };
+
+    const handleFilterChange = (event) => {
+        const filterValue = event.target.value;
+        setFilter(filterValue);
+        if (filterValue === 'restricted') {
+            setFilteredUsers(users.filter(user => user.loginOk === 'N'));
+        } else if (filterValue === 'unrestricted') {
+            setFilteredUsers(users.filter(user => user.loginOk === 'Y'));
+        } else {
+            setFilteredUsers(users);
+        }
+    };
+
+    const openModal = (nickname, loginOk) => {
+        setCurrentNickname(nickname);
+        setCurrentLoginOk(loginOk);
+        setModalMessage(loginOk === 'Y' ? '해당 유저의 로그인을 제한하시겠습니까?' : '해당 유저의 로그인을 허용하시겠습니까?');
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+    const confirmRestriction = () => {
+        handleLoginRestriction(currentNickname, currentLoginOk);
+        closeModal();
     };
 
     return (
         <div className={styles.container}>
             <div className={styles.main}>
+                <div className={styles.filterContainer}>
+                    <label htmlFor="filter" className={styles.filterLabel}></label>
+                    <select
+                        id="filter"
+                        value={filter}
+                        onChange={handleFilterChange}
+                        className={styles.select}
+                    >
+                        <option value="">전체</option>
+                        <option value="restricted">로그인 제한</option>
+                        <option value="unrestricted">로그인 가능</option>
+                    </select>
+                </div>
                 {loading ? (
                     <p className={styles.loading}>Loading...</p>
                 ) : error ? (
@@ -55,39 +118,52 @@ const ReportUser = () => {
                         <table className={styles.table}>
                             <thead className={styles.tableHeader}>
                             <tr>
-                                <th>Nickname</th>
-                                <th>Report Count</th>
-                                <th>Login Status</th>
-                                <th>Actions</th>
+                                <th>사용자</th>
+                                <th>신고 수</th>
+                                <th>로그인 상태</th>
+                                <th>로그인 제한 여부</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {users.map(user => (
+                            {filteredUsers.map(user => (
                                 <tr key={user.id}>
                                     <td>{user.nickname}</td>
                                     <td>{user.reportCount}</td>
-                                    <td>{user.loginOk === 'Y' ? '로그인 허용상태' : '로그인 불가상태'}</td>
+                                    <td>{user.loginOk === 'Y' ? '로그인 가능' : '로그인 제한'}</td>
                                     <td>
                                         <button
-                                            onClick={() => handleLoginRestriction(user.id)}
+                                            onClick={() => openModal(user.nickname, user.loginOk)}
                                             className={styles.restrictButton}
                                         >
-                                            Restrict Login
+                                            {user.loginOk === 'Y' ? '제한하기' : '허용하기'}
                                         </button>
                                     </td>
                                 </tr>
                             ))}
                             </tbody>
                         </table>
-
-                        <Pagination
-                            currentPage={page}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
+                        <div className={styles.pagination}>
+                            <Pagination
+                                currentPage={page}
+                                totalPages={totalPages}
+                                onPageChange={handlePageChange}
+                            />
+                        </div>
                     </>
                 )}
             </div>
+
+            {showModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modal}>
+                        <p>{modalMessage}</p>
+                        <div className={styles.buttons}>
+                            <button className={styles.confirmButton} onClick={confirmRestriction}>확인</button>
+                            <button className={styles.cancelButton} onClick={closeModal}>취소</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

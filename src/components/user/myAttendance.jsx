@@ -37,10 +37,10 @@ const MyAttendance = () => {
         setShowYearDropdown(false);
     };
 
-    const handleYearClick = () => {
-        setShowYearDropdown(!showYearDropdown);
-        setShowMonthDropdown(false);
-    };
+    // const handleYearClick = () => {
+    //     setShowYearDropdown(!showYearDropdown);
+    //     setShowMonthDropdown(false);
+    // };
 
     const handleMonthSelect = (month) => {
         setCurrentDate(new Date(year, month - 1));

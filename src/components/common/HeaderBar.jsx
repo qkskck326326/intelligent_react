@@ -6,6 +6,7 @@ import { axiosClient } from "../../axiosApi/axiosClient";
 import { handleAxiosError } from "../../axiosApi/errorAxiosHandler";
 import styles from "../../styles/header.module.css"; // CSS 모듈을 import
 import Notification from "../notification/notification";
+import ChatContainer from "../../pages/chatting";
 
 const HeaderBar = observer(() => {
   const [isClient, setIsClient] = useState(false);
@@ -119,6 +120,10 @@ const HeaderBar = observer(() => {
               </>
           )}
         </Nav>
+        {
+          authStore.isLoggedIn &&
+          <ChatContainer />
+        }
       </Navbar>
   );
 });
