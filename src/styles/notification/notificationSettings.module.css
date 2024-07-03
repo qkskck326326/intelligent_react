@@ -7,7 +7,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px; /* 간격 조정 */
+    margin-bottom: 25px; /* 간격 조정 */
     font-size: 20px; /* 폰트 크기 조정 */
 }
 
