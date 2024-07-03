@@ -87,7 +87,7 @@ const HomePage = () => {
                     <img
                         src="/images/SCC.png"
                         alt="Simple Code Compiler test"
-                        style={{ width: '100px', height: '100px' }}
+                        style={{ width: '100px', height: '100px' ,marginRight:'100px'}}
                     />
                 </div>
             </main>
