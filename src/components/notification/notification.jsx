@@ -6,7 +6,6 @@ import NotificationSettings from "./notificationSettings";
 
 const Notification = ({ setNotificationCount }) => {
     const [notifications, setNotifications] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showSettings, setShowSettings] = useState(false);
     const [isRotating, setIsRotating] = useState(false);
@@ -17,11 +16,9 @@ const Notification = ({ setNotificationCount }) => {
                 const nickname = authStore.getNickname();
                 const response = await axiosClient.get(`/notification/${nickname}`);
                 setNotifications(response.data);
-                setLoading(false);
                 setNotificationCount(response.data.length);  // 알림 갯수를 설정
             } catch (err) {
                 setError(err);
-                setLoading(false);
             }
         };
 

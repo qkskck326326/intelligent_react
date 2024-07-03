@@ -240,6 +240,7 @@ const EnrollEducationExperience = ({ nextPage, prevPage, educationExperience, ca
 
     return (
         <div className={styles.container}>
+            <span className={styles.spanAlert}>※ 미 입력시 강사 승인이 되지 않을 수 있습니다.</span>
             <div className={styles.section}>
                 <h3 className={styles.h3Font}>
                     학력 {!showEducationForm &&

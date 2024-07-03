@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "../../styles/qna/adminQuestionDetail.module.css";
 
@@ -41,7 +41,7 @@ const AdminQuestionDetail = ({ question, onClose, onAnswerSubmitSuccess }) => {
                 </div>
                 <div className={styles.verticalLine}></div>
                 <div className={styles.section}>
-                <h2 className={styles.top}>답 변</h2>
+                    <h2 className={styles.top}>답 변</h2>
                     <form onSubmit={handleAnswerSubmit}>
                         <div className={styles.contentContainer}>
                             <textarea

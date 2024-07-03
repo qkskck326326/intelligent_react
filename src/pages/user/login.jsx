@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import LoginForm from "../../components/user/loginForm";
-import styles from "../../styles/user/login/loginForm.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 
 const Login = observer(() => {
@@ -22,7 +21,7 @@ const Login = observer(() => {
         return () => {
             document.body.style.overflow = '';
         };
-    }, []);
+    }, [router]);
 
 
     useEffect(() => {
@@ -39,14 +38,22 @@ const Login = observer(() => {
             window.localStorage.setItem("isTeacher", isTeacher === 'true');
             window.localStorage.setItem("isAdmin", isAdmin === 'true');
             
-            authStore.setIsLoggedIn(true);
-            authStore.setIsTeacher(isStudent === 'true');
-            authStore.setIsTeacher(isTeacher === 'true');
-            authStore.setIsAdmin(isAdmin === 'true');
-            authStore.setUserEmail(userEmail);
-            authStore.setProvider(provider);
-            authStore.setNickname(nickname);
-            authStore.setProfileImageUrl(profileImageUrl);
+             // 메인 페이지로 즉시 이동
+             router.push("/");
+
+             // 로그인 상태를 1초 후에 업데이트
+             setTimeout(() => {
+             authStore.setIsLoggedIn(true);
+             authStore.setIsTeacher(isStudent === 'true');
+             authStore.setIsTeacher(isTeacher === 'true');
+             authStore.setIsAdmin(isAdmin === 'true');
+             authStore.setUserEmail(userEmail);
+             authStore.setProvider(provider);
+             authStore.setNickname(nickname);
+             authStore.setProfileImageUrl(profileImageUrl);
+             }, 1000); // 1초 지연
+ 
+        
 
             // 로그인 성공 후 출석 체크
             axiosClient.post('/users/check-attendance', {
@@ -54,7 +61,7 @@ const Login = observer(() => {
                 provider: provider
             });
 
-            router.push("/"); // 로그인 후 메인 페이지로 이동
+           
         }
     }, [router.query]);
 

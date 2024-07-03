@@ -17,7 +17,7 @@ const Sidebar = () => {
                 <li><Link href="/admin/user-management">사용자 관리</Link></li>
                 <li><Link href="/itNewsSite">IT News Site</Link></li>
                 <li><Link href="/admin/qna-management">QnA관리</Link></li>
-                <li><Link href="/admin/reportList">김채림신고</Link></li>
+                <li><Link href="/admin/report">신고관리</Link></li>
                 <li><Link href="/admin/categoryAndTechStack-management">카테고리 관리</Link></li>
                 <li><Link href="/admin/BannerManagement">배너관리</Link></li>
                 {/* 새 페이지 링크 추가 */}
