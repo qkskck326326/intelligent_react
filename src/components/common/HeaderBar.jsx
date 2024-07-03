@@ -50,6 +50,7 @@ const HeaderBar = observer(() => {
   }
 
   return (
+      <>
       <Navbar collapseOnSelect expand="lg" className={styles.navbar}>
         <Navbar.Brand href="/" className={styles["navbar-brand"]}>
           <img src="/images/logo.png" alt="Logo" />
@@ -120,11 +121,12 @@ const HeaderBar = observer(() => {
               </>
           )}
         </Nav>
+      </Navbar>
         {
           authStore.isLoggedIn &&
           <ChatContainer />
         }
-      </Navbar>
+      </>
   );
 });
 

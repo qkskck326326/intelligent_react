@@ -381,6 +381,10 @@ const LecturePackageRegister = observer(({ isEditMode, lecturePackageId, onBackL
                     <DropZone onDrop={handleDrop} selectedStacks={selectedTechStacks} onRemove={handleRemove}/>
                 </div>
             </DndProvider>
+            <div style={{fontSize: '13px', fontWeight: "bold", marginLeft: 30}}>&lt; ※ 다른 기술스택이 필요할 경우에는 '채팅 → 문의하기'를
+                이용해 주세요.&gt;</div>
+            <div className={styles.horizontalLine}></div>
+
             <div className={styles.formSection}>
                 <label htmlFor="backgroundColor">배경색</label>
                 <input

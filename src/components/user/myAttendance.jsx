@@ -142,9 +142,9 @@ const MyAttendance = () => {
     return (
         <div className={styles.attendanceContainer}>
             <div className={styles.couponBanner}>
-                <div className={styles.couponItem}>1주 연속 출석시 <br></br><span>5%</span> 쿠폰 지급</div>
-                <div className={styles.couponItem}>2주 연속 출석시 <br></br><span>12%</span> 쿠폰 지급</div>
-                <div className={styles.couponItem}>3주 연속 출석시 <br></br><span>20%</span> 쿠폰 지급</div>
+                <div className={styles.couponItem}>1주 연속 출석시 <br></br><span className={styles.spanString}>5%</span> 쿠폰 지급</div>
+                <div className={styles.couponItem}>2주 연속 출석시 <br></br><span className={styles.spanString}>12%</span> 쿠폰 지급</div>
+                <div className={styles.couponItem}>3주 연속 출석시 <br></br><span className={styles.spanString}>20%</span> 쿠폰 지급</div>
             </div>
             <div className={styles.calendar}>
                 <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }}>
