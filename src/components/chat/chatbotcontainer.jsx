@@ -119,9 +119,13 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
     };
 
     const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && !isTypingRef.current) {
+        if (event.key === 'Enter') {
             event.preventDefault();
-            handleSubmit(event);
+            if(!isTypingRef.current){
+                handleSubmit(event);
+            } else{
+                window.alert('잠시만 기다려주세요.')
+            }
         }
     };
 

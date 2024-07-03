@@ -31,11 +31,8 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
     }, [isEachSettingOn]);
 
     const handleImageClick = (imgIndex) => {
-        //이미지가 클릭될 때 백엔드로 가서 이미지 가져오는 메소드 작동시켜 모든 이미지 들고 옴
         setImages(message.files.map(file => `http://localhost:8080${file.fileURL}`));
-        //눌린 이미지의 인덱스를 설정함
         setSlideIndex(imgIndex);
-        //모달 킴
         setIsModalOpen(true);
     };
 
@@ -60,14 +57,13 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
             const response = await axiosClient.get(fileURL, {
                 responseType: 'blob' //이진 데이터 전용
             });
-            //response 이렇게 생김
-            //{data: Blob, status: 200, statusText: '', headers: AxiosHeaders, config: {…}, …}
             const filename = fileURL.substring(fileURL.lastIndexOf('/') + 1);
-
             const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
+            const link =
+                document.createElement('a');
             link.href = url;
-            link.setAttribute('download', filename);
+            link.setAttribute(
+                'download', filename);
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -126,11 +122,11 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
                         <span className={styles.close} onClick={closeModal}>&times;</span>
                         {images.length > 1 && <div className={styles.prev} onClick={() => plusSlides(-1)}>&#10094;</div>}
                         {images.length > 1 && <div className={styles.next} onClick={() => plusSlides(1)}>&#10095;</div>}
-                        {images.map((src, index) => (
+                        {images.map((image, index) => (
                             <div key={index} style={{ display: index === slideIndex ? 'block' : 'none' }}>
-                                <img className="modal-content" src={src} alt='' />
+                                <img src={image} alt='' />
                                 {index === slideIndex && (
-                                    <button className={styles.downloadButton} onClick={() => downloadFile(src, `image-${index + 1}.jpg`)}>
+                                    <button className={styles.downloadButton} onClick={() => downloadFile(image)}>
                                         <svg className={styles.downloadIcon} xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 512 512">
                                             <path
@@ -169,6 +165,7 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
                                     <div className={styles.imgContainer}>
                                         {message.files.map((file, imgIndex) => (
                                             message.messageType === 1 ?
+                                                //TODO 주소 변경시 여기도 변경해야함
                                                 <img
                                                     key={imgIndex}
                                                     className={styles.img}
