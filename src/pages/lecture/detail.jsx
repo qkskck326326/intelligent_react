@@ -37,25 +37,44 @@ const LectureDetailPage = () => {
     const router = useRouter();
     const { lectureId } = router.query;
 
-    const [hasTransaction, setHasTransaction] = useState(false);
+    const [hasAccess, setHasAccess] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [authNickname, setAuthNickname] = useState('');
-    const [packageOwnerNickname, setPackageOwnerNickname] = useState('');
+    const [lecturePackageId, setLecturePackageId] = useState(null);
 
-    const checkTransactionHistory = async (email, provider) => {
+    const checkTransactionHistory = async (email, provider, lecturePackageId) => {
         try {
             const response = await axiosClient.post(`/payment/confirmation`, {
                 userEmail: email,
                 provider: provider,
-                lecturePackageId: lectureId
+                lecturePackageId: lecturePackageId
             });
-            if (response.data.paymentConfirmation === 'Y') {
-                setHasTransaction(true);
-            } else {
-                setHasTransaction(false);
-            }
+            console.log("Transaction History Response: ", response.data);
+            return response.data.paymentConfirmation === 'Y';
         } catch (err) {
             console.error("Error checking transaction history:", err);
-            setHasTransaction(false);
+            return false;
+        }
+    };
+
+    const checkPackageOwner = async (lecturePackageId) => {
+        try {
+            const response = await axiosClient.get(`/lecture/owner/${lecturePackageId}`);
+            console.log("Package Owner Response: ", response.data);
+            return response.data.nickname;
+        } catch (err) {
+            console.error('Error fetching lecture package owner:', err);
+            return null;
+        }
+    };
+
+    const getLectureDetail = async (lectureId) => {
+        try {
+            const response = await axiosClient.get(`/lecture/detail/${lectureId}`);
+            return response.data;
+        } catch (err) {
+            console.error("Error fetching lecture detail:", err);
+            return null;
         }
     };
 
@@ -67,27 +86,33 @@ const LectureDetailPage = () => {
 
             setAuthNickname(currentNickname);
 
-            const fetchLecturePackageOwner = async () => {
-                try {
-                    const response = await axiosClient.get(`/lecture/owner/${lectureId}`);
-                    const ownerNickname = response.data.nickname;
-                    setPackageOwnerNickname(ownerNickname);
-
-                    if (currentNickname === ownerNickname) {
-                        setHasTransaction(true);
+            const fetchAccessInfo = async () => {
+                const lectureDetail = await getLectureDetail(lectureId);
+                setLecturePackageId(lectureDetail.lecturePackageId);
+                if (lectureDetail) {
+                    const ownerNickname = await checkPackageOwner(lectureDetail.lecturePackageId);
+                    console.log("Owner Nickname: ", ownerNickname);
+                    const isOwner = ownerNickname === currentNickname;
+                    if (isOwner) {
+                        setHasAccess(true);
                     } else {
-                        checkTransactionHistory(currentUserEmail, currentProvider);
+                        const hasTransaction = await checkTransactionHistory(currentUserEmail, currentProvider, lectureDetail.lecturePackageId);
+                        console.log("Has Transaction: ", hasTransaction);
+                        setHasAccess(hasTransaction);
                     }
-                } catch (error) {
-                    console.error('Error fetching lecture package owner:', error);
                 }
+                setLoading(false);
             };
 
-            fetchLecturePackageOwner();
+            fetchAccessInfo();
         }
     }, [lectureId]);
 
-    if (!hasTransaction) {
+    if (loading) {
+        return <div style={{ textAlign: 'center', padding: '20px' }}>로딩 중...</div>;
+    }
+
+    if (!hasAccess) {
         return <div style={{ textAlign: 'center', padding: '20px' }}>
             <p>잘못된 접근입니다.</p>
             <p>결제 후 이용해주세요.</p>
