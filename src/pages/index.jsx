@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { observer } from "mobx-react";
 import { axiosClient } from "../axiosApi/axiosClient";
+import authStore from "../stores/authStore";
 import NavBar from "../components/common/NavBar";
 import UserInterestPackageList from "../components/main/userInterestPakcageList";
-import UpperCategoryPackageList from "../components/main/upperCategoryPackageList";
+import UpperCategoryPackageList from "../components/main/UpperCategoryPackageList";
 import styles from '../styles/common/HomePage.module.css';
+import Footer from '../components/common/Footer';
 
-const HomePage = () => {
+const HomePage = observer(() => {
     const [banners, setBanners] = useState([]);
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
@@ -67,7 +70,7 @@ const HomePage = () => {
                         <img
                             src={banners[currentBannerIndex].imageUrl}
                             alt="Banner"
-                            style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
+                            className={styles.bannerImage}
                             onClick={handleBannerClick}
                         />
                         <button onClick={handleNextBanner} className={`${styles.bannerButton} ${styles.right}`}>›</button>
@@ -79,20 +82,23 @@ const HomePage = () => {
                 <NavBar />
                 <UserInterestPackageList />
                 <UpperCategoryPackageList />
-                <div
-                    className={styles.fixedButton}
-                    onClick={handleOpenTestAI}
-                    style={{ cursor: 'pointer' }}
-                >
-                    <img
-                        src="/images/SCC.png"
-                        alt="Simple Code Compiler test"
-                        style={{ width: '100px', height: '100px' ,marginRight:'100px'}}
-                    />
-                </div>
+                {authStore.isLoggedIn && (
+                    <div
+                        className={styles.fixedButton}
+                        onClick={handleOpenTestAI}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <img
+                            src="/images/SCC.png"
+                            alt="Simple Code Compiler test"
+                            style={{ width: '100px', height: '100px', marginRight:'100px'}}
+                        />
+                    </div>
+                )}
             </main>
+            <Footer />
         </div>
     );
-}
+});
 
 export default HomePage;
