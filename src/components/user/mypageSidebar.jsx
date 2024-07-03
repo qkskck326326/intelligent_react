@@ -23,7 +23,6 @@ const MypageSidebar = observer(({ setSelectedComponent }) => {
             <div className={styles.horizontalLine}></div>
             <nav className={styles.nav}>
                 <ul>
-                    <li onClick={() => handleMenuClick('like')}>♥찜 항목</li>
                     <li onClick={() => handleMenuClick('myInfo')}>회원 정보 수정</li>
                     <li onClick={() => handleMenuClick('myAttendance')}>출석 관리</li>
                     <li onClick={() => handleMenuClick('myLecture')}>수강 관리</li>
