@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureComment.module.css';
 import authStore from '../../stores/authStore';
@@ -25,11 +25,23 @@ const LectureComment = ({ lectureId }) => {
     const [reportContent, setReportContent] = useState(""); // 신고 내용 상태 추가
     const [reportCommentId, setReportCommentId] = useState(null); // 신고할 댓글 ID 상태 추가
 
+    const fetchComments = useCallback(() => {
+        axiosClient.get(`/lecture/comments/${lectureId}`)
+            .then(response => {
+                setComments(response.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err);
+                setLoading(false);
+            });
+    }, [lectureId]);
+
     useEffect(() => {
         if (lectureId) {
             fetchComments();
         }
-    }, [lectureId]);
+    }, [lectureId, fetchComments]);
 
     useEffect(() => {
         const fetchUserProfileImage = async () => {
@@ -42,18 +54,6 @@ const LectureComment = ({ lectureId }) => {
 
         fetchUserProfileImage();
     }, []);
-
-    const fetchComments = () => {
-        axiosClient.get(`/lecture/comments/${lectureId}`)
-            .then(response => {
-                setComments(response.data);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError(err);
-                setLoading(false);
-            });
-    };
 
     const handleAddComment = () => {
         if (!newComment.trim()) return;
@@ -130,11 +130,6 @@ const LectureComment = ({ lectureId }) => {
             setEditCommentId(commentId);
             setEditContent(content);
         }
-    };
-
-    const handleEditClick = (commentId, content) => {
-        setEditCommentId(commentId);
-        setEditContent(content.lectureCommentContent || content); // 수정된 부분
     };
 
     const toggleRepliesVisibility = (commentId) => {
@@ -269,11 +264,11 @@ const LectureComment = ({ lectureId }) => {
                                 {visibleReplies[comment.lectureCommentId] ? "△ 답글 감추기" : "▽ 답글 보기"}
                             </button>
                         )}
-                         {visibleReplies[comment.lectureCommentId] && (
-                    <ul className={styles.repliesList}>
-                        {comments.filter(reply => reply.parentCommentId === comment.lectureCommentId).map(reply => renderComment(reply, true))}
-                    </ul>
-                )}
+                        {visibleReplies[comment.lectureCommentId] && (
+                            <ul className={styles.repliesList}>
+                                {comments.filter(reply => reply.parentCommentId === comment.lectureCommentId).map(reply => renderComment(reply, true))}
+                            </ul>
+                        )}
                     </div>
                 </div>
                 

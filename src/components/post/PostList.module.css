@@ -1,135 +1,227 @@
 .postListContainer {
-  padding: 20px;
-  max-width: 900px;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background: linear-gradient(to right, #ffffff, #f3f4f6);
+  /* border-radius: 0.75rem; */
+  /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); */
 }
 
-.postListContainer a {
-  color: inherit;
-  text-decoration: none;
+.filterButtons {
+  display: flex;
+  justify-content: flex-start;
+  /* width: 100%; */
+  margin-bottom: 1.5rem;
 }
 
-.postListContainer a:hover {
-  text-decoration: none;
+.filterButton {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #e0e7ff;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-right: 20px;
 }
 
-.title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  text-align: center;
+.filterButton:hover {
+  background: #c7d2fe;
+  transform: scale(1.05);
+}
+
+.filterButton.active {
+  background: #6366f1;
+  color: white;
+  transform: scale(1.1);
 }
 
 .loading {
-  text-align: center;
+  font-size: 0.9rem;
+  color: #4b5563;
 }
 
 .postList {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
-  position: relative;
-}
-
-.postItem {
-  border: 0.8px solid #e3e3e3;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  font-size: 0.8rem;
+  width: 100%;
   max-width: 800px;
 }
 
-/* .postItem:hover {
-  background-color: #f6f6f6;
-} */
+.postItem {
+  background: white;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.postItem:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+}
+
+.postLink {
+  padding: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.3s ease;
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: inherit; /* 링크 색상 제거 */
+}
+
+.postLink:hover {
+  background: #f9fafb;
+}
 
 .postHeader {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 }
 
-.postAvatar {
-  margin-right: 10px;
-}
-
-.profileImage {
-  width: 50px;
-  height: 50px;
+.postAvatar img {
   border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 3px solid #6366f1;
 }
 
 .postMeta {
+  margin-left: 1rem;
   display: flex;
-  flex-direction: column;
-  margin-left: 10px;
+  flex-direction: column; /* 닉네임과 카테고리를 세로로 배치 */
+  align-items: flex-start; /* 아이템을 왼쪽에 정렬 */
 }
 
 .postNickname {
-  font-weight: bold;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem; /* 닉네임과 카테고리 사이의 간격 */
 }
 
 .postCategory {
-  margin-top: 7px;
-  display: inline-block; /* 글자 크기에 맞게 박스 크기 조절 */
-  font-size: 14px;
-  background: #77cdb2;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 12px;
-  min-width: 40px; /* 최소 너비 설정 (필요에 따라 조정) */
-  text-align: center; /* 텍스트 가운데 정렬 */
+  font-size: 0.9rem;
+  color: #ffffff; /* 텍스트 색상 */
+  background-color: #6366f1; /* 배경색 */
+  padding: 0.25rem 0.5rem; /* 패딩 */
+  border-radius: 0.375rem; /* 테두리 반경 */
+  display: inline-block; /* 인라인 블록으로 설정 */
+  margin-bottom: 0.5rem; /* 카테고리와 시간 사이의 간격 */
+  width: auto; /* 글씨 크기만큼 상자 사이즈를 설정 */
 }
 
 .postTime {
-  font-size: 12px;
-  color: #888;
-  margin-left: auto;
+  margin-right: 10px;
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-left: 450px;
 }
+
+.bookmarkIcon {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.bookmarkIcon:hover {
+  transform: scale(1.2);
+}
+
 .tagContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .tagItem {
-  background-color: #f1f1f1;
-  border-radius: 10px;
-  padding: 10px 8px;
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
+  background: #e0e7ff;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-size: 0.9rem;
+  color: #3730a3;
+  font-weight: bold;
 }
 
-
 .postTitle {
-  font-size: 18px;
-  margin: 10px 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
 }
 
 .postSnippet {
-  /* margin-bottom: 10px; */
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.75rem;
 }
 
 .postFooter {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* 오른쪽 정렬 */
   align-items: center;
 }
 
 .postStats {
   display: flex;
-  gap: 10px;
+  gap: 1rem; /* 아이콘 간 간격 */
 }
 
 .postStats span {
   display: flex;
   align-items: center;
-  gap: 5px;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.postStats span svg {
+  margin-right: 0.5rem;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.pagination li {
+  margin: 0 0.5rem;
+}
+
+.pagination button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: #e0e7ff;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.pagination button:hover {
+  background: #c7d2fe;
+  transform: scale(1.05);
+}
+
+.pagination button:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.pagination .active button {
+  background: #6366f1;
+  color: white;
+  transform: scale(1.1);
 }
 
 .uploadButton {
@@ -137,98 +229,26 @@
   top: 70%; /* 화면의 세로 중간에 고정 */
   left: calc(50% + 600px); /* 리스트 컨테이너의 오른쪽에 고정 (컨테이너가 900px일 때) */
   transform: translate(-50%, -50%); /* 버튼의 중앙으로 위치를 조정 */
-  background-color: #77cdb2;
-  color: white;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  background-color: #7879e5; /* 버튼 배경색 */
+  color: white; /* 버튼 텍스트 색상 */
+  border: none; /* 테두리 제거 */
+  border-radius: 50%; /* 동그랗게 만들기 */
+  width: 60px; /* 버튼 너비 */
+  height: 60px; /* 버튼 높이 */
   display: flex;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 1000;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  cursor: pointer; /* 커서 포인터로 변경 */
+  transition: background-color 0.3s ease, transform 0.4s ease; /* 애니메이션 효과 */
 }
 
 .uploadButton:hover {
-  background-color: #66af98;
+  background-color: #4740ca; /* 호버 시 배경색 */
 }
 
-.pagination {
-  display: flex;
-  justify-content: left;
-  margin-top: 20px;
-  list-style: none;
-  padding: 0;
+.uploadButton svg {
+  width: 24px; /* 아이콘 너비 */
+  height: 24px; /* 아이콘 높이 */
   
-}
-
-.pagination li {
-  margin: 0 5px;
-}
-
-.pagination button {
-  padding: 8px 12px;
-  border: #52c095 solid 2px;
-  border-radius: 10px;
-  background-color: #52c095;
-  color: rgb(255, 255, 255);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.pagination button:hover {
-  background-color: #007272;
-}
-
-.pagination .active button {
-  background-color: #ffffff;
-  border: solid 2px #52c095;
-  border-radius: 10px;
-  color: black;
-  cursor: default;
-}
-
-.pagination button:disabled {
-  background-color: #52c095;
-  border: #52c095 solid 2px;
-  border-radius: 10px;
-}
-
-.filterButtons {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-}
-
-.filterButton {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  margin: 0 10px;
-  background-color: #f3f3f3;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.filterButton:hover {
-  background-color: #77cdb2;
-  color: white;
-}
-
-.active {
-  background-color: #77cdb2 !important;
-  color: white !important;
-}
-
-
-.bookmarkIcon {
-  cursor: pointer;
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
 }

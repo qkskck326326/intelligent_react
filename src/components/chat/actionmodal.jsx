@@ -21,12 +21,10 @@ const ActionModal = observer(({ isExpanding, onNavigateToList, option, onNavigat
 
     const handleMakeChat = () => {
         const names = [authStore.getNickname(), ...people];
-        console.log(names)
         axiosClient.post(`/chat/makechat/${roomType}`, {
-            names: names
+            names
         })
             .then(response => {
-                console.log(response)
                 onNavigateToChat(response.data);
             })
             .catch(error => {

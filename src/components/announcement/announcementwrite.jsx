@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../styles/cs/announcementwrite.module.css';
 import { useRouter } from "next/router";
-import Axios from "../../axiosApi/Axios";
 import { observer } from 'mobx-react';
-import authStore from "../../stores/authStore";
+import AuthStore from "../../stores/authStore";
 import {axiosClient} from "../../axiosApi/axiosClient";
 
 const AnnouncementWrite = observer(() => {
@@ -14,15 +13,14 @@ const AnnouncementWrite = observer(() => {
     const [importance, setImportance] = useState(0);
     const [announcementId, setAnnouncementId] = useState(0);
     const [createdAt, setCreatedAt] = useState(null);
-    const axios = new Axios();
     const titleFocus = useRef();
     const contentFocus = useRef();
 
 
     useEffect(() => {
         //받아온 쿼리가 있다면 그 값으로 필드 채워둠 아닐 경우 무시
-        console.log(authStore.checkIsAdmin())
-        console.log(authStore.getNickname())
+        console.log(AuthStore.checkIsAdmin())
+        console.log(AuthStore.getNickname())
         if (Object.keys(router.query).length !== 0) {
 
             const { givenCategory, givenId, givenContent, givenTitle, givenCreatedAt } = router.query;
@@ -60,7 +58,7 @@ const AnnouncementWrite = observer(() => {
             title: title,
             content: content,
             createdAt: new Date(),
-            creator: authStore.getNickname(),
+            creator: AuthStore.getNickname(),
             category: category,
             importance: importance
         })
@@ -78,7 +76,7 @@ const AnnouncementWrite = observer(() => {
             announcementId: announcementId,
             title: title,
             content: content,
-            creator: authStore.getNickname(),
+            creator: AuthStore.getNickname(),
             category: category,
             importance: importance
         })

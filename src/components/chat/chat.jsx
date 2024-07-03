@@ -12,7 +12,7 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
-    const [isThereAdmin, setIsThereAdmin] = useState(roomData.roomType === 'inquiries');
+    const [isThereAdmin] = useState(roomData.roomType === 'inquiries');
     const [currentRoomData, setCurrentRoomData] = useState(roomData);
     const [people, setPeople] = useState({});
     const [isPeopleOn, setIsPeopleOn] = useState(false);
@@ -115,9 +115,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     //랜더링은 얘가 함
     useEffect(() => {
         const handleNewMessage = async (message) => {
-            console.log('Received message from WebSocket:', message.body);
             const newMessage = JSON.parse(message.body);
-            console.log(newMessage)
 
             if (newMessage.announcement) {
                 setAnnounce(newMessage.messageContent);
@@ -168,7 +166,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     };
 
     const scrollToBottom = () => {
-        console.log('스크롤 최하단 작동')
         if (bubbleContainerRef.current) {
             bubbleContainerRef.current.scrollTop = bubbleContainerRef.current.scrollHeight;
         }
@@ -234,11 +231,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     const determineMessageType = (files) => {
         if (files.some(file => file.type.startsWith('video/'))) {
-            return 2; // Video
+            return 2;
         } else if (files.some(file => file.type.startsWith('image/'))) {
-            return 1; // Image
+            return 1;
         } else {
-            return 3; // Other
+            return 3;
         }
     };
 
@@ -253,15 +250,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 dateSent: new Date().toISOString(),
                 isAnnouncement: 0
             };
-
             const formData = new FormData();
-
             items.forEach((file) => {
                 formData.append('files', file);
             });
-
             const url = `/chat/uploadfiles/${newMessage.roomId}/${newMessage.senderId}/${newMessage.messageType}/${newMessage.dateSent}/${newMessage.isAnnouncement}`;
-
             try {
                 await axiosClient.post(url, formData, {
                     headers: {
@@ -269,16 +262,13 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     },
                 });
                 setItems([]);
-
             } catch (error) {
                 console.error('Error uploading files:', error);
             }
-
         } else {
             if (textContent.trim() === '') {
                 return window.alert('메시지를 작성해주세요.');
             }
-
             const newMessage = {
                 roomId: roomData.roomId,
                 senderId: AuthStore.getNickname(),
@@ -287,16 +277,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 dateSent: new Date(),
                 isAnnouncement: 0
             };
-
             try {
-
-                console.log(`submit에서 출발한 메시지 형태 확인`);
-                console.log(newMessage);
-
                 await axiosClient.post('/chat/sendmessage', newMessage);
                 setTextContent('');
                 setIsAtBottom(true);
-
             } catch (error) {
                 console.error('Error sending message:', error);
             }
@@ -349,7 +333,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     //핀 변경 로직
     const handlePin = () => {
         const isPinned = (userData.isPinned === 0 ? 1 : 0)
-        //TODO
         axiosClient.put('/chat/changepin', {
             userId: userData.chatUserCompositeKey.userId,
             roomId: userData.chatUserCompositeKey.roomId,
@@ -365,7 +348,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     }
 
     const handleLeave = () => {
-        window.confirm('혼또니 나가겠습니까?') &&
+        window.confirm('정말 나가겠습니까?') &&
         axiosClient.delete('/chat/leaveroom', {
             data: {
                 userId: userData.chatUserCompositeKey.userId,
@@ -378,7 +361,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             .catch(error => {
                 console.error('An error occurred!', error);
             });
-
     }
     
     const handleFileChange = (event) => {

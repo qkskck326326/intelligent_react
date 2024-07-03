@@ -107,7 +107,6 @@ const AddingFriends = observer(({option, isExpanding, onNavigateToList, onNaviga
     };
 
     const handleSelectionChange = (nickname) => {
-
         setSelectedIndices(prevSelectedIndices => {
             if (option === 'groups') {
                 if (prevSelectedIndices.includes(nickname)) {
