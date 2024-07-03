@@ -302,6 +302,12 @@
     transform: translate(-50%, -50%);
 }
 
+
+
+
+
+
+
 /* CKEditor styles */
 .ck.ck-editor__editable {
     background: #fff;
@@ -404,7 +410,15 @@ main .ck-editor[role='application'] .ck.ck-content,
 
 
 
+.images{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
 
+.techStackZone{
+    /*width: 600px;*/
+}
 
 
 
