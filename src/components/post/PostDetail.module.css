@@ -25,8 +25,8 @@
 }
 
 .postAvatar img {
-  width: 40px; /* 크기를 줄임 */
-  height: 40px; /* 크기를 줄임 */
+  width: 60px; /* 크기를 줄임 */
+  height: 60px; /* 크기를 줄임 */
   border-radius: 50%;
   background-color: #ffffff;
   margin-right: 10px; /* 마진을 줄임 */
