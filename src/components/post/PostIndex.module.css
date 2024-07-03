@@ -7,19 +7,37 @@
 }
 
 .header {
-  text-align: left;
-  margin-bottom: 10px;
-  background-color: #333b3d;/*333b3d*/
-  width: 100%;
+  background: linear-gradient(to right, #3b82f6, #9333ea); /* Tailwind blue-500 to purple-600 */
+  padding: 2rem;
+  border-radius: 0.5rem; /* Tailwind rounded-lg */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind shadow-lg */
+  text-align: center;
   color: white;
-  padding: 40px 0; /* 패딩을 추가하여 높이를 키웁니다 */
+  width: 100%;
 }
+
 .header h1 {
-  margin-left: 50px;
-  
+  font-size: 2.25rem; /* Tailwind text-4xl */
+  font-weight: 700; /* Tailwind font-bold */
+  margin-bottom: 1rem; /* Tailwind mb-4 */
+  animation: fadeIn 1s ease-out forwards;
 }
+
 .header h2 {
-  margin-left: 50px;
+  font-size: 1.5rem; /* Tailwind text-2xl */
+  font-weight: 300; /* Tailwind font-light */
+  animation: fadeIn 1s ease-out 1s forwards; /* Tailwind animation delay equivalent */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .content {
