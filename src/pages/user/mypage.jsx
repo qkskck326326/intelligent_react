@@ -11,7 +11,7 @@ import LectureManagement from "../../components/user/lectureManagement";
 import PaymentHistoryManagement from "../payment/PaymentHistoryManagement";
 import styles from "../../styles/user/mypage/mypage.module.css";
 import MypageSidebar from "../../components/user/mypageSidebar";
-import MyLecturePackage from "../../components/user/lectureManagement";
+// import MyLecturePackage from "../../components/user/lectureManagement";
 import MyLecturePackageLike from "../../components/user/myLecturePackageLike";
 import PostManagement from "../../components/post/PostManagement";
 
@@ -24,7 +24,7 @@ const Mypage = observer(() => {
         if (!authStore.checkIsLoggedIn()) {
             router.push("/user/login"); // 로그인 페이지로 리디렉션
         }
-    }, []);
+    }, [router]);
 
     const renderComponent = () => {
         switch (selectedComponent) {

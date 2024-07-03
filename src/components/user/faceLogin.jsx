@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import styles from "../../styles/user/enroll/enrollFaceRegistration.module.css";
 import { useRouter } from "next/router";

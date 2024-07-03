@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
@@ -31,18 +31,7 @@ const MyInfo = observer(() => {
     const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false);
     const [provider, setProvider] = useState("");
 
-    useEffect(() => {
-        const provider = localStorage.getItem("provider");
-        setProvider(provider);
-
-        if (!authStore.checkIsLoggedIn()) {
-            router.push("/user/login"); // 로그인 페이지로 리디렉션
-        } else {
-            fetchUserData();
-        }
-    }, []);
-
-    const fetchUserData = async () => {
+    const fetchUserData = useCallback(async () => {
         try {
             const response = await axiosClient.get(`/users`, {
                 params: {
@@ -64,7 +53,18 @@ const MyInfo = observer(() => {
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        const provider = localStorage.getItem("provider");
+        setProvider(provider);
+
+        if (!authStore.checkIsLoggedIn()) {
+            router.push("/user/login"); // 로그인 페이지로 리디렉션
+        } else {
+            fetchUserData();
+        }
+    }, [fetchUserData, router]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -178,9 +178,9 @@ const MyInfo = observer(() => {
                   </div>
                   <input type="file" id="fileUpload" name="profileImageUrl" onChange={handleImageChange} className={styles.fileInput} accept="image/*"/>
                   <span className={styles.userTypeSpan}>
-                    {authStore.checkIsStudent() && "학생"}
-                    {authStore.checkIsTeacher() && "강사"}
-                    {authStore.checkIsAdmin() && "관리자"}
+                    {authStore.checkIsStudent() && "학생♥"}
+                    {authStore.checkIsTeacher() && "강사♥"}
+                    {authStore.checkIsAdmin() && "관리자♥"}
                   </span>
                 </div>
               </div>

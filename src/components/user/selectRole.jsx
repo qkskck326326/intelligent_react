@@ -10,7 +10,7 @@ const SelectRole = ({ setBasicInfo, nextPage }) => {
         if (authStore.checkIsLoggedIn()) {
             router.push("/"); // 홈 페이지로 리디렉션
         }
-    }, []);
+    }, [router]);
 
     const handleRoleSelection = (role) => {
         setBasicInfo(prevState => ({
