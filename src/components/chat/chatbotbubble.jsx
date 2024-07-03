@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { observer } from 'mobx-react';
 import styles from '../../styles/chatting/chatbubble.module.css';
 
 const BotBubble = observer(({ message }) => {
 
-    const [isMe, setIsMe] = useState(message.userId === 'user');
+    const [isMe] = useState(message.userId === 'user');
     const textRef = useRef();
 
     const sanitizeHTML = (input) => {

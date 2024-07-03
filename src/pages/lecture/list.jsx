@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import LectureList from "../../components/lecture/lectureList";
 import LecturePreview from "../../components/lecture/lecturePreview";
 import LectureAvgRating from "../../components/lecture/lectureAvgRating";
 import InsertRating from "../../components/lecture/InsertRating";
 import { axiosClient } from "../../axiosApi/axiosClient";
-import authStore from "../../stores/authStore";
 
 const containerStyle = {
     display: 'flex',
@@ -43,7 +42,6 @@ const ratingStyle = {
 
 const previewStyle = {
     width: '100%',
-    display: 'sticky',
     marginTop: '20px',
     display: 'flex',
     justifyContent: 'flex-start',
@@ -72,12 +70,13 @@ const LecturePage = ({ lecturePackageId }) => {
     const [selectedLectureId, setSelectedLectureId] = useState(null);
     const [authNickname, setAuthNickname] = useState('');
     const [packageOwnerNickname, setPackageOwnerNickname] = useState('');
-    const [deletingMode, setDeletingMode] = useState(false);
     const [lectures, setLectures] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [hasTransaction, setHasTransaction] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);  // isAdmin 상태 추가
 
-    const fetchData = () => {
+    const fetchData = useCallback(() => {
         axiosClient.get(`/lecture/list/${lecturePackageId}`)
             .then(response => {
                 const responseData = response.data;
@@ -89,25 +88,61 @@ const LecturePage = ({ lecturePackageId }) => {
                 setError(err);
                 setLoading(false);
             });
-    };
+    }, [lecturePackageId]);
+
+    const checkTransactionHistory = useCallback(async (email, provider) => {
+        try {
+            const response = await axiosClient.post(`/payment/confirmation`, {
+                userEmail: email,
+                provider: provider,
+                lecturePackageId: lecturePackageId
+            });
+            if (response.data.paymentConfirmation === 'Y') {
+                setHasTransaction(true);
+            } else {
+                setHasTransaction(false);
+            }
+        } catch (err) {
+            console.error("Error checking transaction history:", err);
+            setHasTransaction(false);
+        }
+    }, [lecturePackageId]);
 
     useEffect(() => {
-        // 현재 사용자의 닉네임 가져오기
         const currentNickname = localStorage.getItem("nickname");
+        const currentUserEmail = localStorage.getItem("userEmail");
+        const currentProvider = localStorage.getItem("provider");
+        const currentAdmin = localStorage.getItem("isAdmin") === 'true'; // isAdmin 값 확인
+
         setAuthNickname(currentNickname);
+        setIsAdmin(currentAdmin);  // isAdmin 상태 설정
 
         const fetchLecturePackageOwner = async () => {
             try {
                 const response = await axiosClient.get(`/lecture/owner/${lecturePackageId}`);
-                setPackageOwnerNickname(response.data.nickname);
+                const ownerNickname = response.data.nickname;
+                setPackageOwnerNickname(ownerNickname);
+
+                if (currentNickname === ownerNickname || currentAdmin) {
+                    setHasTransaction(true);
+                } else {
+                    checkTransactionHistory(currentUserEmail, currentProvider);
+                }
             } catch (error) {
                 console.error('Error fetching lecture package owner:', error);
             }
         };
 
         fetchLecturePackageOwner();
-        fetchData(); // LecturePage에서 fetchData 호출 추가
-    }, [lecturePackageId]);
+        fetchData();
+    }, [lecturePackageId, checkTransactionHistory, fetchData]);
+
+    if (!hasTransaction) {
+        return <div style={{ textAlign: 'center', padding: '20px' }}>
+            <p>잘못된 접근입니다.</p>
+            <p>결제 후 이용해주세요.</p>
+        </div>;
+    }    
 
     return (
         <div style={containerStyle}>
@@ -115,9 +150,8 @@ const LecturePage = ({ lecturePackageId }) => {
                 <LectureList 
                     onSelectLecture={setSelectedLectureId} 
                     lecturePackageId={lecturePackageId} 
-                    isOwner={authNickname === packageOwnerNickname} 
-                    setDeletingMode={setDeletingMode}
-                    fetchData={fetchData} // LectureList에 fetchData 전달
+                    isOwner={authNickname === packageOwnerNickname || isAdmin} 
+                    fetchData={fetchData} 
                     lectures={lectures}
                     loading={loading}
                     error={error}
@@ -129,10 +163,10 @@ const LecturePage = ({ lecturePackageId }) => {
                     <LectureAvgRating lecturePackageId={lecturePackageId} />
                 </div>
                 <div>
-                    {authNickname === packageOwnerNickname ?
+                    {authNickname === packageOwnerNickname && !isAdmin ?
                         <>
                             <Link href={`/lecture/addLecture?lecturePackageId=${lecturePackageId}&nickname=${authNickname}`} legacyBehavior>
-                                <a style={buttonStyle}>강의 등록</a>
+                                <button style={buttonStyle}>강의 등록</button>
                             </Link>
                         </>
                         :
@@ -148,7 +182,7 @@ const LecturePage = ({ lecturePackageId }) => {
 };
 
 export const getServerSideProps = async (context) => {
-    const lecturePackageId = context.query.lecturePackageId || 1; // URL에서 lecturePackageId를 가져오거나 기본값으로 1을 사용
+    const lecturePackageId = context.query.lecturePackageId || 1;
     return {
         props: {
             lecturePackageId

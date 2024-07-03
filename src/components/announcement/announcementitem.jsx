@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from '../../styles/cs/announcement.module.css';
 import clsx from 'clsx'
-import {authStore} from "../../stores/authStore";
 import { useRouter } from 'next/router';
 import {axiosClient} from "../../axiosApi/axiosClient";
 

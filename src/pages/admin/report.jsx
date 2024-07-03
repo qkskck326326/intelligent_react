@@ -18,13 +18,13 @@ const Report = () => {
             <div>
                 <div className={styles.buttons}>
                     <span
-                        className={styles.listBtn}
+                        className={`${styles.listBtn} ${activeTab === 'reportList' ? styles.active : ''}`}
                         onClick={() => handleTabClick('reportList')}
                     >
                         신고처리
                     </span>
                     <span
-                        className={styles.listBtn}
+                        className={`${styles.listBtn} ${activeTab === 'reportUser' ? styles.active : ''}`}
                         onClick={() => handleTabClick('reportUser')}
                     >
                         유저 신고확인

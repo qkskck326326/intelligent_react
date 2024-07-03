@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import styles from "../../styles/user/login/naverLogin.module.css";
 
 const NaverLogin = () => {
@@ -21,7 +21,7 @@ const NaverLogin = () => {
         });
     };
 
-    const initializeNaverLogin = () => {
+    const initializeNaverLogin = useCallback(() => {
         if (typeof window !== "undefined" && window.naver) {
             const naverLogin = new window.naver.LoginWithNaverId({
                 clientId: NAVER_CLIENT_ID,
@@ -32,7 +32,7 @@ const NaverLogin = () => {
             });
             naverLogin.init();
         }
-    };
+    }, [NAVER_CLIENT_ID, NAVER_CALLBACK_URL]);
 
     useEffect(() => {
         loadNaverScript().then(() => {
@@ -58,7 +58,7 @@ const NaverLogin = () => {
         return () => {
             window.removeEventListener('message', handleMessage);
         };
-    }, []);
+    }, [initializeNaverLogin]);
 
     const handleNaverLogin = () => {
         naverRef.current.children[0].click();

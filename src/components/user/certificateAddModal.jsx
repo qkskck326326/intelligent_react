@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const CertificateAddModal = ({ onSave, onClose, editData }) => {
 
-  const [confirmMessage, setConfirmMessage] =useState("")
+  const [confirmComplete, setConfirmComplete] =useState("")
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -20,11 +20,11 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
   });
 
 
-  const [form2, setForm2] = useState({
-    instruction: "intelliclass",
-    manager: "김채림",
-    managerPhoneNumber: "01034312554",
-  });
+  // const [form2, setForm2] = useState({
+  //   instruction: "intelliclass",
+  //   manager: "김채림",
+  //   managerPhoneNumber: "01034312554",
+  // });
 
 
   useEffect(() => {
@@ -109,44 +109,47 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
 
         if(response.data.result === 'success' ) {
           alert("진위확인이 완료되었습니다.")
-          const message = response.data.message
-          setConfirmMessage(message);
-          console.log("message : ", message);
+          setConfirmComplete(response.data.result);
+
+          // const message = response.data.message
+          // setConfirmMessage(message);
+          // console.log("message : ", message);
 
         }else if(response.data.result === 'fail'){
           alert("성명또는 관리번호가 불일치하거나 유효기간이 지났을 경우 자격증을 다시 발급해 주세요.")
-          setConfirmMessage(message);
+          setConfirmComplete(response.data.result);
+
         }
 
-      }else if(form.issuePlace === "한국데이터산업진흥원장"){
+      // }else if(form.issuePlace === "한국데이터산업진흥원장"){
         // const instruction = "intelliclass";
         // const manager = "김채림"; //담당자
         // const managerPhoneNumber = "01034312554"
 
-        const { certificateNumber, name,  } = form;
-
-        console.log("form : ",instruction, manager, managerPhoneNumber, certificateNumber, name );
-        const response = await axios.post('http://localhost:5000/verify', {
-            name : name,
-            certificateNumber : certificateNumber,
-            instruction : instruction,
-            manager : manager,
-            managerPhoneNumber : managerPhoneNumber
-          });
-        console.log("response.data : ", response.data)
-
-
-        if(response.data.result === 'success' ) {
-          alert("진위확인이 완료되었습니다.")
-          const message = response.data.message
-          setConfirmMessage(message);
-          console.log("message : ", message);
-
-        }else if(response.data.result === 'fail'){
-          alert("성명또는 관리번호가 불일치하거나 유효기간이 지났을 경우 자격증을 다시 발급해 주세요.")
-          setConfirmMessage(message);
-        }
-      }
+      //   const { certificateNumber, name,  } = form;
+      //
+      //   // console.log("form : ",instruction, manager, managerPhoneNumber, certificateNumber, name );
+      //   const response = await axios.post('http://localhost:5000/verify', {
+      //       name : name,
+      //       certificateNumber : certificateNumber,
+      //       instruction : instruction,
+      //       manager : manager,
+      //       managerPhoneNumber : managerPhoneNumber
+      //     });
+      //   console.log("response.data : ", response.data)
+      //
+      //
+      //   if(response.data.result === 'success' ) {
+      //     alert("진위확인이 완료되었습니다.")
+      //     // const message = response.data.message
+      //     // setConfirmMessage(message);
+      //     // console.log("message : ", message);
+      //
+      //   }else if(response.data.result === 'fail'){
+      //     alert("성명또는 관리번호가 불일치하거나 유효기간이 지났을 경우 자격증을 다시 발급해 주세요.")
+      //     // setConfirmMessage(message);
+      //   }
+       }
 
     } catch (error) {
       console.error("진위확인 중 오류 발생:", error);
@@ -159,7 +162,7 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
 
 
   const handleSave = async () => {
-    if (form.pdfFile && typeof form.pdfFile === "object" && confirmMessage === "진위확인이 완료되었습니다.") {
+    if (form.pdfFile && typeof form.pdfFile === "object" && confirmComplete === "success") {
       try {
         const uploadedFileURL = await UploadCertificatePDF(form.pdfFile);
         const newCertificate = {
@@ -187,6 +190,9 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
       e.currentTarget.type = "text";
     }
   };
+
+
+
 
 
   return (
@@ -222,7 +228,8 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
                 />
                 <button onClick={handleVerifyClick} className={styles.confirmButton}>자격증 진위확인</button>
               </div>
-              <span className={styles.loading}>※ 잠시만 기다려주세요!!</span>
+              {loading === true && <span className={styles.loading}>※ 잠시만 기다려주세요!!</span>}
+
             </div>
 
             <div className={styles.inputGroup}>

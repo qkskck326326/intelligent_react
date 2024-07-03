@@ -6,7 +6,7 @@ import styles from '../../styles/lecturePackage/lecturePackageDetail.module.css'
 import authStore from '../../stores/authStore';
 import { observer } from "mobx-react";
 import ProfileModal from "./profileModal";
-import lecturePackageList from "./lecturePackageList";
+
 
 const LecturePackageDetail = observer(() => {
     const router = useRouter();
@@ -20,17 +20,13 @@ const LecturePackageDetail = observer(() => {
     const [lectureCount, setLectureCount] = useState(null);
     const [isInCart, setIsInCart] = useState(false);
     const [payments, setPayments] = useState([]);
-    const nickname = authStore.getNickname()
-    const userEmail = authStore.getUserEmail();
-    const provider = authStore.getProvider();
 
     useEffect(() => {
         const fetchLecturePackage = async () => {
 
 
             setLoading(true);
-            console.log("lecturePackageId : ", lecturePackageId);
-            console.log("nickname : ", authStore.getNickname());
+
 
             try {
                 const response = await axiosClient.get('/packages/detail', {params: {lecturePackageId}});
@@ -100,7 +96,7 @@ const LecturePackageDetail = observer(() => {
         if (lecturePackageId) {
             fetchLecturePackage();
         }
-    }, []);
+    }, [lecturePackageId]);
 
     useEffect(() => {
         const increaseViewCount = async (authorNickname) => {
@@ -135,7 +131,7 @@ const LecturePackageDetail = observer(() => {
             const authorNickname = lecturePackage.nickname;
             increaseViewCount(authorNickname);
         }
-    }, [lecturePackage]);
+    }, [lecturePackage, lecturePackageId]);
 
     const renderContent = () => {
         const sanitizedContent = DOMPurify.sanitize(lecturePackage.content, {
@@ -178,7 +174,7 @@ const LecturePackageDetail = observer(() => {
 
 
     const handleDelete = async () => {
-        const confirmDelete = confirm('정말로 이 패키지를 삭제하시겠습니까?');
+        const confirmDelete = window.confirm('정말로 이 패키지를 삭제하시겠습니까?');
         if (confirmDelete) {
             try {
                 await axiosClient.delete(`/packages/${lecturePackageId}`);
@@ -268,7 +264,10 @@ const LecturePackageDetail = observer(() => {
 
     const handleIsConfirm = (paymentConfirmation) => {
       if(paymentConfirmation === "Y"){
-          handleLectureList(lecturePackageId)
+          router.push({
+              pathname: '/lecture/list',
+              query: { lecturePackageId }
+          });
       }
     };
 
@@ -451,9 +450,6 @@ const LecturePackageDetail = observer(() => {
                                         alt="공유 아이콘" />
                                     <span className={styles.shareText}>공유</span>
                                 </button>
-                                <span>
-                                    ♡ ♥
-                                </span>
                                 <div className={styles.field}>
                                     <span className={styles.levelText}>강의 수 : </span>
                                     <span className={styles.level}>{lectureCount}</span>
