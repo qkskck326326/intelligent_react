@@ -12,6 +12,9 @@
   position: relative;
   border: solid 1px #e6e6e6;
   border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
 }
 
 .postHeader {
@@ -43,12 +46,14 @@
 
 .postCategory {
 
-  margin-top: 10px;
-  background: #52c095;
-  color: white;
-  padding: 4px 15px; /* 패딩을 줄임 */
-  border-radius: 12px;
-  font-size: 0.8em; /* 폰트 크기를 줄임 */
+  font-size: 0.9rem;
+  color: #ffffff; /* 텍스트 색상 */
+  background-color: #6366f1; /* 배경색 */
+  padding: 0.25rem 0.5rem; /* 패딩 */
+  border-radius: 0.375rem; /* 테두리 반경 */
+  display: inline-block; /* 인라인 블록으로 설정 */
+  margin-bottom: 0.5rem; /* 카테고리와 시간 사이의 간격 */
+  width: auto; /* 글씨 크기만큼 상자 사이즈를 설정 */
 }
 
 .postTime {
@@ -64,11 +69,12 @@
 }
 
 .tagItem {
-  background-color: #f1f1f1;
-  border-radius: 10px;
-  padding: 10px 8px;
-  display: flex;
-  align-items: center;
+  background: #e0e7ff;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-size: 0.9rem;
+  color: #3730a3;
+  font-weight: bold;
 }
 
 .filePreview img {
@@ -149,6 +155,9 @@
   position: relative;
   border: solid 1px #e6e6e6;
   border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
 }
 
 /* 댓글 작성 부분을 화면 하단에 고정 */

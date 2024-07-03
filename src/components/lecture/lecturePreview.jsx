@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lecturePreview.module.css';
 
@@ -7,7 +7,7 @@ const LecturePreview = ({ lectureId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const response = await axiosClient.get(`/lecture/preview/${lectureId}`);
             setLecture(response.data);
@@ -16,13 +16,13 @@ const LecturePreview = ({ lectureId }) => {
             setError(err);
             setLoading(false);
         }
-    };
+    }, [lectureId]);
 
     useEffect(() => {
         if (lectureId) {
             fetchData();
         }
-    }, [lectureId]);
+    }, [lectureId, fetchData]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;

@@ -228,7 +228,7 @@ const PostDetail = observer(({ postId }) => {
 
   const handleBookmarkClick = async (postId) => {
     if (!authStore.checkIsLoggedIn()) {
-      setShowPopup(true);
+      // setShowPopup(true);
       return;
     }
     try {
@@ -294,6 +294,7 @@ const PostDetail = observer(({ postId }) => {
               type="text"
               value={commentContent}
               onChange={(e) => setCommentContent(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleCommentSubmit(e)}
               placeholder="댓글을 작성하세요"
             />
             <button
@@ -471,7 +472,6 @@ const PostDetail = observer(({ postId }) => {
         {renderContent()}
         {renderFiles()}
       </div>
-
       <div className={styles.commentsContainer}>{renderComments()}</div>
 
       {/* <div className={styles.fixedCommentForm}>

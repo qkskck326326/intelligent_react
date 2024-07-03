@@ -151,11 +151,15 @@ const Success = () => {
             <p>결제 금액: {parseFloat(orderInfo.amount).toLocaleString()} 원</p>
             <p>결제 상태: 완료 </p>
             <button
+              className={styles.button}
               onClick={() => router.push("/user/mypage?component=myLecture")}
             >
               내 수강 목록으로 이동
             </button>
-            <button onClick={() => router.push("/lecturePackage")}>
+            <button
+              className={styles.button}
+              onClick={() => router.push("/lecturePackage")}
+            >
               패키지 목록으로 이동
             </button>
           </div>

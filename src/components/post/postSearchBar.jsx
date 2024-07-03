@@ -141,9 +141,7 @@ const PostSearch = ({ onSearch, onSelectCategory, onSortOrderChange }) => {
           onChange={handleSearchChange}
           onKeyPress={(e) => e.key === "Enter" && handleSearchSubmit(e)}
           placeholder={
-            searchType === "titleContent"
-              ? "제목+내용으로 검색해보세요"
-              : "태그로 검색해보세요"
+            searchType === "titleContent" ? "제목+내용으로 검색" : "태그로 검색"
           }
           className={styles.searchInput}
         />
