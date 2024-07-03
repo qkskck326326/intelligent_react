@@ -1,159 +1,146 @@
+/* myAttendance.module.css */
 .attendanceContainer {
+    max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
-    text-align: center;
-    margin-top: 4rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    background-color: #f7f8fc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .couponBanner {
     display: flex;
     justify-content: space-around;
-    align-items: center;
     margin-bottom: 20px;
-    background-color: #f0f8ff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 50%;
 }
 
 .couponItem {
-    font-size: 1em;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
     font-weight: bold;
-    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.couponItem span {
-    color: #ff6347;
-    font-size: 1.2em;
+/*.spanString {*/
+/*    color: #078d0e;*/
+/*}*/
+
+.calendar {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .calendarHeader {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    cursor: pointer;
-    position: relative;
-    display: flex; /* 버튼과 텍스트를 한 줄로 배치 */
-    justify-content: center;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
 }
 
 .navButton {
     background: none;
     border: none;
-    font-size: 0.8em;
+    font-size: 1.5rem;
     cursor: pointer;
-    margin: 0 10px;
+    color: #666;
+    transition: color 0.3s;
+}
+
+.navButton:hover {
+    color: #333;
 }
 
 .dropdownArrow {
-    margin-left: 10px;
-    font-size: 0.8em;
+    margin-left: 5px;
+    border: solid #333;
+    border-width: 0 1px 1px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    transition: transform 0.3s;
 }
 
-.calendar {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    align-items: center;
-    width: 50%; /* 너비 조정 */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 0px 20px 20px 20px;
-    margin: 0 auto; /* 중앙 정렬 */
-}
-
-.monthDropdown, .yearDropdown {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0px;
+.monthDropdown,
+.yearDropdown {
     position: absolute;
-    top: 63%;
-    left: 60%;
-    transform: translateX(-50%);
-    background-color: white;
+    background-color: #ffffff;
     border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.monthOption,
+.yearOption {
     padding: 10px;
-    width: 140px;
-    z-index: 1000;
-    font-size: 0.8rem;
-}
-
-.monthOption, .yearOption {
-    padding: 5px;
     cursor: pointer;
-    text-align: center;
+    transition: background-color 0.3s;
 }
 
-.monthOption:hover, .yearOption:hover {
-    background-color: #f0f0f0;
+.monthOption:hover,
+.yearOption:hover {
+    background-color: #f1f1f1;
 }
 
 .week {
     display: flex;
-    width: 100%;
     justify-content: space-between;
-}
-
-.day, .dayOfWeek {
-    flex: 1; /* 각 day 요소가 동일한 너비를 갖도록 설정 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    font-size: 0.9em;
-    margin: 0.5rem;
+    margin-bottom: 10px;
 }
 
 .dayOfWeek {
+    width: calc(100% / 7);
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+}
+
+.day {
+    width: calc(100% / 7);
+    height: 50px;
+    text-align: center;
+    position: relative;
+}
+
+.present,
+.absent {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-weight: bold;
 }
 
-.present, .absent {
-    width: 1.5rem;
-    height: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    text-align: center;
-    font-size: 1em; /* 동일한 크기로 설정 */
-    line-height: 30px; /* 높이와 동일하게 설정하여 텍스트를 가운데 정렬 */
-}
-
 .present {
-    background-color: #54cb47;
+    background-color: #76c7c0;
     color: white;
 }
 
 .absent {
-    background-color: #f02c33;
+    background-color: #ff6b6b;
     color: white;
 }
 
-/* 미디어 쿼리 추가 */
-@media (max-width: 1024px) {
-    .calendar {
-        width: 80%;
-    }
+.day {
+    position: relative;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    transition: background-color 0.3s;
 }
 
-@media (max-width: 768px) {
-    .calendar {
-        width: 90%;
-    }
-
-    .calendarHeader {
-        font-size: 1.2em;
-    }
-
-    .navButton {
-        font-size: 1em;
-    }
+.day:hover {
+    background-color: #f1f1f1;
 }

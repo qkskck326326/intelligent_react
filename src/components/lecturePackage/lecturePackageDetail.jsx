@@ -315,13 +315,13 @@ const LecturePackageDetail = observer(() => {
                     </button>
                     {isAuthor && (
                         <>
-                            <button className={styles.actionButton} onClick={handleLectureList}>
+                            <button className={styles.actionButtons} onClick={handleLectureList}>
                                 강의 목록
                             </button>
-                            <button className={styles.actionButton} onClick={handleEdit}>
+                            <button className={styles.actionButtons} onClick={handleEdit}>
                                 수정하기
                             </button>
-                            <button className={styles.actionButton} onClick={handleDelete}>
+                            <button className={styles.actionButtons} onClick={handleDelete}>
                                 삭제하기
                             </button>
                         </>
@@ -431,10 +431,9 @@ const LecturePackageDetail = observer(() => {
                                 <div className={styles.applyTextContaner}>
                                     <span className={styles.applyText}>지금바로 신청하세요!!</span>
                                 </div>
-                                <div className={styles.discount}>30%할인가</div>
                                 <div className={styles.price}>{formatPrice(lecturePackage.priceForever)}원</div>
                                 {(authStore.getNickname() === lecturePackage.nickname && authStore.checkIsTeacher() === true)? (
-                                    <span className={styles.applyButton}>수강신청 버튼</span>
+                                    <div className={styles.applyButton}>수강신청 버튼</div>
                                 ) : (
                                     <button className={styles.applyButton}
                                             onClick={isInCart ? () => router.push("/cart") : handleApply}>

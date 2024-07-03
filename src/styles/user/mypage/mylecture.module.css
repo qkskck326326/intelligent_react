@@ -302,3 +302,20 @@
 	color: white;
 	border: none;
 }
+
+
+.noLectureContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 550px; 
+	flex-direction: column;
+	color: gray;
+	opacity: 0.8;
+}
+
+.noLectureImage {
+    max-width: 100%;
+    height: auto;
+	opacity: 0.5;
+}

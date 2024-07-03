@@ -54,7 +54,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
         if (target && target.href && !target.href.includes('#')) {
             event.preventDefault();
             const confirmLeave = window.confirm(
-                '이 링크를 클릭하면 지금까지의 채팅이 사라집니다. 계속하시겠습니까?'
+                '이 링크를 클릭하면 지금까지의 채팅이 사라집니다. 그래도 계속하시겠습니까?'
             );
             if (confirmLeave) {
                 window.location.href = target.href;
@@ -72,8 +72,12 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
                 'Authorization': `Bearer ${API_KEY}`,
             },
             body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
+                model: 'ft:gpt-3.5-turbo-0125:personal:intelliclass:9gnzXpmx',
                 messages: [
+                    {
+                        role: 'system',
+                        content: 'You are a specialized chatbot called 인텔리봇 for a website called 인텔리클래스. You should answer questions related to IT topics and the website itself. YOU SHOULD ANSWER IN KOREAN. For other topics, politely deflect and ask the user to ask about IT or the website.'
+                    },
                     {
                         role: 'user',
                         content: prompt
@@ -82,8 +86,8 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
                 temperature: 0.8,
                 max_tokens: 256,
                 top_p: 1,
-                frequency_penalty: 0.5,
-                presence_penalty: 0.5
+                frequency_penalty: 0.3,
+                presence_penalty: 0.3
             })
         };
         try {
@@ -94,7 +98,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
         } catch (error) {
             console.error('OpenAI API 호출 중 오류 발생:', error);
             const errorMessage =
-                "예기치 못한 에러가 발생했습니다. <a href='http://localhost:3000'>여기</a>에서 메인 페이지로 돌아갈 수 있습니다. 문제가 지속된다면 1:1문의 바랍니다.(현재 GPT와 연결을 해제시켜 둔 상태 연결시켜서 확인했을 때 문제없이 작동되는 것 확인)";
+                "예기치 못한 에러가 발생했습니다. <a href='http://intelliclass.co.kr'>여기</a>에서 메인 페이지로 돌아갈 수 있습니다. 문제가 지속된다면 1:1문의 바랍니다.(현재 GPT와 연결을 해제시켜 둔 상태 연결시켜서 확인했을 때 문제없이 작동되는 것 확인)";
             simulateTyping(errorMessage);
         }
     }
