@@ -12,7 +12,7 @@
   display: flex;
   justify-content: flex-start;
   /* width: 100%; */
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .filterButton {
@@ -31,6 +31,10 @@
 .filterButton:hover {
   background: #c7d2fe;
   transform: scale(1.05);
+}
+
+.filterButton svg {
+  margin-right: 10px;
 }
 
 .filterButton.active {
@@ -84,6 +88,7 @@
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 1rem;
+  position: relative; /* 상대 위치를 사용하여 자식 요소의 절대 위치를 설정 */
 }
 
 .postAvatar img {
@@ -120,13 +125,17 @@
 }
 
 .postTime {
-  margin-right: 10px;
+  position: absolute;
+  top: 0;
+  right: 40px; /* 오른쪽에서 40px 떨어진 위치 */
   font-size: 0.9rem;
   color: #4b5563;
-  margin-left: 450px;
 }
 
 .bookmarkIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -198,7 +207,7 @@
 }
 
 .pagination button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1.1rem;
   border: none;
   background: #e0e7ff;
   border-radius: 0.75rem;
@@ -246,6 +255,7 @@
 .uploadButton:hover {
   background-color: #4740ca; /* 호버 시 배경색 */
 }
+
 
 .uploadButton svg {
   width: 24px; /* 아이콘 너비 */

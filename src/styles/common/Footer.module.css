@@ -1,0 +1,71 @@
+.footer {
+    background-color: #282c34;
+    color: white !important;
+    padding: 40px 0;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerColumn {
+    flex: 1;
+    margin: 10px;
+    min-width: 200px;
+    color: white !important;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerColumn h4 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: white !important;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerColumn ul {
+    list-style: none;
+    padding: 0;
+    color: white !important;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerColumn ul li {
+    margin-bottom: 10px;
+    color: white !important;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerColumn ul li a {
+    color: white !important;
+    text-decoration: none !important;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerColumn ul li a:hover {
+    text-decoration: underline !important;
+    color: white !important; /* 링크의 색상을 흰색으로 지정 */
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+.footerBottom {
+    text-align: center;
+    padding-top: 20px;
+    color: white !important;
+    padding-left: 30px; /* 왼쪽 패딩 추가 */
+}
+
+/* Global a tag styles within footer */
+.footer a {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.footer a:hover {
+    color: white !important;
+    text-decoration: underline !important;
+}

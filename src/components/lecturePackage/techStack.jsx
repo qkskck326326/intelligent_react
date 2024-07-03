@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import styles from "../../styles/lecturePackage/lecturePackageRegister.module.css"
 
 const TechStack = ({ stack }) => {
     const [{ isDragging }, drag] = useDrag({
@@ -11,8 +12,11 @@ const TechStack = ({ stack }) => {
     });
 
     return (
-        <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move', margin: '10px' }}>
-            <img src={stack.techStackPath} alt={stack.techStackName} style={{ width: '50px', height: '50px' }} />
+        <div ref={drag}>
+            <img
+                src={stack.techStackPath}
+                alt={stack.techStackName}
+                className={styles.images} />
             <span>{stack.techStackName}</span>
         </div>
     );
@@ -31,7 +35,11 @@ const DropZone = ({ onDrop, selectedStacks, onRemove }) => {
         <div ref={drop} style={{ border: '1px solid black', minHeight: '300px', padding: '10px', backgroundColor: isOver ? 'lightgrey' : 'white', display: 'flex', flexWrap: 'wrap' }}>
             {selectedStacks.map(stack => (
                 <div key={stack.techStackId} style={{ margin: '10px', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <img src={stack.techStackPath} alt={stack.techStackName} style={{ width: '50px', height: '50px' }} />
+                    <img
+                        src={stack.techStackPath}
+                        alt={stack.techStackName}
+                        className={styles.images}
+                    />
                     <span>{stack.techStackName}</span>
                     <button onClick={() => onRemove(stack.techStackId)} style={{ position: 'absolute', top: '0', right: '0', background: 'red', color: 'white', border: 'none', borderRadius: '50%' }}>x</button>
                 </div>

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {useRouter} from 'next/router';
-// import { Pagination } from "react-bootstrap";
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import SortAndSearchBar from "../common/sortAndSearchBar";
 import Link from "next/link";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import CategoryToggle from "./CategoryToggle";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
@@ -165,14 +163,6 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
         </div>
     );
   };
-
-  // //결제한 패키지이면 강의 목록으로 이동.
-  // const handleLectureList = (lecturePackageId) => {
-  //   router.push({
-  //     pathname: '/lecture/list',
-  //     query: {lecturePackageId}
-  //   });
-  // };
 
 
 

@@ -1,135 +1,139 @@
 .container {
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 800px;
-  height: 600px;
-  margin: 20px auto;
   display: flex;
   flex-direction: column;
-  position: relative;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px; /* 너비 고정 */
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  min-height: 600px; /* 세로 길이 유지 */
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   margin-bottom: 20px;
 }
 
 .title {
-  font-size: 1.5em;
+  font-size: 1.8rem;
   font-weight: bold;
-}
-
-.add-button-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  color: #2c3e50;
 }
 
 .add-button {
-  background-color: #28a745;
-  color: #fff;
+  background-color: #3498db;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 8px 16px;
   cursor: pointer;
-  font-size: 1em;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .add-button:hover {
-  background-color: #218838;
-}
-
-/*certificateCard*/
-.card {
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 15px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-title {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.card-date {
-  color: #888;
-  margin-top: 5px;
-}
-
-.card-actions {
-  display: flex;
-  align-items: center;
-}
-
-.card-actions button {
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-  font-size: 1.5em;
-}
-
-.container {
-  padding: 20px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.add-button {
-  padding: 10px 20px;
-  background-color: green;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
+  background-color: #2980b9;
 }
 
 .list {
-  margin-top: 20px;
+  width: 100%;
+  overflow-x: auto;
+  flex-grow: 1; /* 세로 공간을 모두 차지하도록 설정 */
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .table th, .table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
   text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9rem;
 }
 
 .table th {
-  background-color: #f2f2f2;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  font-weight: bold;
 }
 
-.table td button {
-  margin-right: 5px;
+.table td {
+  background-color: #ffffff;
+  color: #34495e;
+}
+
+.table tr:nth-child(even) td {
+  background-color: #f8f9fa;
+}
+
+.table tr:hover td {
+  background-color: #e9ecef;
+}
+
+.table button {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2em;
+  font-size: 1rem;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.table button:hover {
+  color: #3498db;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.pagination button:hover {
+  background-color: #2980b9;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 10px;
+  font-size: 0.9rem;
+}
+
+.noData {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 1rem;
+  color: #7f8c8d;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
