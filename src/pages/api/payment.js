@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   const { method, amount, orderId, orderName, successUrl, failUrl } = req.body;
-  const apiKey = process.env.TOSS_API_KEY; // 실제 API 키를 사용합니다.
+  const apiKey = process.env.NEXT_PUBLIC_TOSS_API_KEY; // 실제 API 키를 사용합니다.
   const encodedApiKey = Buffer.from(`${apiKey}:`).toString("base64");
   console.log("Request received:", req.body); // 요청 로깅
   try {

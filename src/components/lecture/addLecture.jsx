@@ -17,7 +17,6 @@ const AddLecture = () => {
     const [nickname, setNickname] = useState('');
     const [loadingThumbnail, setLoadingThumbnail] = useState(false);
     const [loadingVideo, setLoadingVideo] = useState(false);
-    const [hasUploaded, setHasUploaded] = useState(false);
     const imgRef = useRef();
     const router = useRouter();
 
@@ -72,7 +71,7 @@ const AddLecture = () => {
                 const fileName = `${timestamp}_${file.name}`;
 
                 try {
-                    const response = await axios.put(
+                    await axios.put(
                         `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}/${fileName}`,
                         {
                             message: `upload ${path.slice(0, -1)} ${fileName}`,
@@ -86,7 +85,6 @@ const AddLecture = () => {
                     );
 
                     const fileUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}/${fileName}`;
-                    setHasUploaded(true); // 업로드 성공 시 상태 업데이트
                     resolve(fileUrl);
                 } catch (error) {
                     reject(error);

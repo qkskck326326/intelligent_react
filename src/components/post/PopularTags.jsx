@@ -24,7 +24,10 @@ const PopularTags = () => {
       <ul className={styles.popularTagsList}>
         {tags.map((tag, index) => (
           <li key={index} className={styles.popularTagItem}>
-            <a href={`/tags/${tag}`} className={styles.popularTagLink}>
+            <a
+              href={`https://www.google.co.kr/search?q=${tag}`}
+              className={styles.popularTagLink}
+            >
               #{tag}
             </a>
           </li>
