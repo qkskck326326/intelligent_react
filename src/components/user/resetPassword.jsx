@@ -4,7 +4,7 @@ import styles from '../../styles/user/login/resetPassword.module.css';
 import { axiosClient } from "../../axiosApi/axiosClient";
 
 const ResetPassword = () => {
-  const [showTooltip, setShowTooltip] = useState(false);
+  // const [showTooltip, setShowTooltip] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [userPwd, setUserPwd] = useState('');
   const [confirmUserPwd, setConfirmUserPwd] = useState('');
@@ -34,7 +34,7 @@ const ResetPassword = () => {
       setIntervalId(id);
     }
     return () => clearInterval(intervalId);
-  }, [isCodeSent]);
+  }, [isCodeSent, intervalId]);
 
   useEffect(() => {
     if (isVerified) {
@@ -46,7 +46,7 @@ const ResetPassword = () => {
         formBody.style.paddingLeft = '90px';
       }
     }
-  }, [isVerified]);
+  }, [isVerified, intervalId]);
 
   useEffect(() => {
     if (timer === 0 && !isVerified) {

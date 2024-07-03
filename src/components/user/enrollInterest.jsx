@@ -142,8 +142,11 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
         axiosClient
             .post("/users/insertuser", enrollForm)
             .then((response) => {
+                const message = basicInfo.userType === 1 
+                    ? "회원가입이 성공적으로 완료되었습니다!\n관리자 승인 이후에 강사로 활동이 가능합니다."
+                    : "회원가입이 성공적으로 완료되었습니다!";
                 router.push("/user/login");
-                alert("회원가입이 성공적으로 완료되었습니다!");
+                alert(message);
             })
             .catch((error) => {
                 alert("회원가입에 실패했습니다.");
