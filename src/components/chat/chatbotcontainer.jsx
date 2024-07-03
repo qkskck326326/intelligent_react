@@ -54,7 +54,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
         if (target && target.href && !target.href.includes('#')) {
             event.preventDefault();
             const confirmLeave = window.confirm(
-                '이 링크를 클릭하면 지금까지의 채팅이 사라집니다. 계속하시겠습니까?'
+                '이 링크를 클릭하면 지금까지의 채팅이 사라집니다. 그래도 계속하시겠습니까?'
             );
             if (confirmLeave) {
                 window.location.href = target.href;
