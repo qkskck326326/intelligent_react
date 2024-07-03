@@ -1,45 +1,61 @@
+/* General container styles */
 .container {
   width: 84%;
   margin: 50px auto;
-  font-family: Noto Sans KR, sans-serif;
+  margin-top: 0;
+  font-family: "Noto Sans KR", sans-serif;
   font-weight: bold;
   font-size: 17px;
   position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Table styles */
 .questionTable {
-  width: 95%;
+  width: 100%;
   border-collapse: collapse;
-  margin: 0 auto 20px auto;
+  margin-bottom: 20px;
 }
 
 .questionTable th, .questionTable td {
-  border-top: 1px solid #00000081; /* 상단 테두리 */
-  border-bottom: 1px solid #00000081; /* 하단 테두리 */
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   padding: 16px;
   text-align: center;
 }
 
 .questionTable th {
-  background-color: #70ff8dc2;
+  background-color: #19CA83;
+  color: #fff;
+  font-size: 18px;
 }
 
+.questionTable tr {
+  transition: background-color 0.3s ease;
+}
+
+.questionTable tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Pagination styles */
 .pagination {
   display: flex;
   justify-content: center;
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 20px;
 }
 
 .pagination button {
-  background-color: white;
-  border: 1px solid green;
-  color: green;
+  background-color: #fff;
+  border: 1px solid #19CA83;
+  color: #19CA83;
   padding: 5px 10px;
   margin: 0 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .pagination button:disabled {
@@ -49,6 +65,7 @@
 }
 
 .pagination .activePage {
+  background-color: #19CA83;
+  color: #fff;
   font-weight: bold;
-  color: green;
 }
