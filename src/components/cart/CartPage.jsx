@@ -212,8 +212,8 @@ const CartPage = () => {
               />
               전체선택 {selectedItems.size}/{cartItems.length}
             </div>
-            <div>상품명</div>
-            <div>가격</div>
+            {/* <div>상품명</div>
+            <div>가격</div> */}
           </div>
           <div className={styles.cartBody}>
             {cartItems.length === 0 ? (

@@ -194,13 +194,13 @@
 }
 
 .inputContainer input:focus {
-  border-color: #52c095;
+  border-color: #6366f1;
 }
 
 .submitCommentButton {
   width: 40px;
   height: 40px;
-  background-color: #52c095;
+  background-color: #6366f1;
   color: white;
   border: none;
   border-radius: 50%;
@@ -213,7 +213,7 @@
 }
 
 .submitCommentButton:hover {
-  background-color: #3f8a71;
+  background-color: #393ce7;
   transform: scale(1.1);
 }
 

@@ -33,6 +33,10 @@
   transform: scale(1.05);
 }
 
+.filterButton svg {
+  margin-right: 10px;
+}
+
 .filterButton.active {
   background: #6366f1;
   color: white;

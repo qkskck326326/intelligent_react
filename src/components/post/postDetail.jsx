@@ -263,6 +263,10 @@ const PostDetail = observer(({ postId }) => {
   };
 
   const renderComments = () => {
+    const sortedComments = post.comments.sort(
+      (a, b) => new Date(a.commentTime) - new Date(b.commentTime)
+    );
+
     return (
       <div className={styles.commentsContainer}>
         <div className={styles.comments}>
@@ -273,7 +277,7 @@ const PostDetail = observer(({ postId }) => {
             <p>아직 달린 댓글이 없습니다.</p>
           ) : (
             <ul>
-              {post.comments.map((comment) => (
+              {sortedComments.map((comment) => (
                 <CommentItem
                   key={comment.id}
                   comment={comment}
