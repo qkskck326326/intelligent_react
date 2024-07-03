@@ -69,11 +69,12 @@
 }
 
 .tagItem {
-  background-color: #f1f1f1;
-  border-radius: 10px;
-  padding: 10px 8px;
-  display: flex;
-  align-items: center;
+  background: #e0e7ff;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-size: 0.9rem;
+  color: #3730a3;
+  font-weight: bold;
 }
 
 .filePreview img {
