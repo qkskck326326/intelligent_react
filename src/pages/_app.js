@@ -32,6 +32,22 @@ const App = observer (({ Component, pageProps }) => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   const checkAdminAccess = () => {
+  //     const path = router.pathname;
+  //     if (path.startsWith('/admin') && !authStore.isAdmin) {
+  //       router.push('/user/login');
+  //     }
+  //   };
+
+
+  //   checkAdminAccess();
+  //   router.events.on('routeChangeComplete', checkAdminAccess);
+  //   return () => {
+  //     router.events.off('routeChangeComplete', checkAdminAccess);
+  //   };
+  // }, [router, authStore.isAdmin]);
+
   useEffect(() => {
     const checkAdminAccess = () => {
       const path = router.pathname;
@@ -39,14 +55,13 @@ const App = observer (({ Component, pageProps }) => {
         router.push('/user/login');
       }
     };
-
-
+  
     checkAdminAccess();
     router.events.on('routeChangeComplete', checkAdminAccess);
     return () => {
       router.events.off('routeChangeComplete', checkAdminAccess);
     };
-  }, [router, authStore.isAdmin]);
+  }, [router]);
 
   const shouldRenderHeader = router.pathname !== '/admin/testAI' &&  router.pathname !== '/user/naverLoginPopupPage' &&  router.pathname !== '/user/googleLoginPopupPage';
 
@@ -64,9 +79,6 @@ const App = observer (({ Component, pageProps }) => {
           <Container>
             <Component {...pageProps} />
           </Container>
-          { authStore.isLoggedIn &&
-              <ChatContainer/>
-          }
         </ThemeProvider>
       </QueryClientProvider>
   );

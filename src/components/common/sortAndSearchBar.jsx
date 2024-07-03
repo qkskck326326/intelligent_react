@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "../../styles/common/sortAndSearchBar.module.css";
 
 const SortAndSearchBar = ({ searchTerm, setSearchTerm, sortCriteria, setSortCriteria, searchCriteria, setSearchCriteria, onSearch }) => {
 
-    const [searchBar, setSearchBar] = useState('');
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
     };

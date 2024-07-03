@@ -41,7 +41,7 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
     setLoading(true);
     try {
       const params = {
-        page: page - 1,
+        page: page-1,
         size: size,
         sortCriteria: sort || "latest", // 기본값 설정
         searchTerm: search || "",
@@ -166,24 +166,15 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
     );
   };
 
-  //결제한 패키지이면 강의 목록으로 이동.
-  const handleLectureList = (lecturePackageId) => {
-    router.push({
-      pathname: '/lecture/list',
-      query: {lecturePackageId}
-    });
-  };
+  // //결제한 패키지이면 강의 목록으로 이동.
+  // const handleLectureList = (lecturePackageId) => {
+  //   router.push({
+  //     pathname: '/lecture/list',
+  //     query: {lecturePackageId}
+  //   });
+  // };
 
-  //재목 클릭 시 결제한 패키지인지 확인
-  const isUserPackage = (lecturePackageId) => {
-    return payments.some(
-        (payment) =>
-            payment.userEmail === userEmail &&
-            payment.provider === provider &&
-            payment.lecturePackageId === lecturePackageId &&
-            payment.paymentConfirmation === "Y"
-    );
-  };
+
 
 
   return (
