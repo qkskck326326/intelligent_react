@@ -93,6 +93,7 @@
   border: solid 2px #77cdb2;
   background-color: white;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .userInformation p {

@@ -1,7 +1,5 @@
 import ResetPassword from "../../components/user/resetPassword";
 import React, { useEffect } from 'react';
-// import styles from "../../styles/user/mypage/mypage.module.css";
-import { observer } from "mobx-react";
 
 const ResetPasswordPage = () => {
   useEffect(() => {

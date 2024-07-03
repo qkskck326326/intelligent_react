@@ -1,10 +1,5 @@
 .container{
     display: flex;
-
-    /*justify-content: flex-start;*/
-    /*background-color: #f6f7f8;*/
-    /*padding-top:10px;*/
-    /*width: 100vh;*/
 }
 
 .buttons{
@@ -12,7 +7,6 @@
     margin-left:50px;
     margin-bottom: 20px;
 }
-
 
 .listBtn{
     width:300px;
@@ -24,11 +18,13 @@
     border: 3px solid #3ed8b7;
     border-radius: 3px;
     margin: 0 5px;
-
-
+    background-color: transparent; /* 기본 배경색 추가 */
+    cursor: pointer;
 }
 
-
+.listBtn.active{
+    background-color: #e6ffed; /* 하늘색 배경 */
+}
 
 .main{
     flex: 1;
@@ -38,6 +34,4 @@
     margin-top: 10px;
     padding-top: 20px;
     padding-right: 10px;
-
 }
-

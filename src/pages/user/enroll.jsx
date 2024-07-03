@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import authStore from "../../stores/authStore";
-import SignUpForm from "../../components/user/signUp";
 import SelectRole from "../../components/user/selectRole";
 import BasicInfo from '../../components/user/basicInfo';
 import EnrollInterest from '../../components/user/enrollInterest';  
 import EnrollEducationExperience from '../../components/user/enrollEducationExperience';  
 import EnrollFaceRegistration from '../../components/user/enrollFaceRegistration'; 
 import styles from '../../styles/user/enroll/enroll.module.css';
-import { axiosClient } from "../../axiosApi/axiosClient";
 
 const Enroll = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -43,7 +41,7 @@ const Enroll = () => {
     // return () => {
     //   document.body.style.overflow = '';
     // };
-  }, []);
+  }, [router]);
 
   const renderPage = () => {
     switch (currentPage) {

@@ -12,13 +12,12 @@ import {
 } from "react-icons/ai";
 import { FaRegListAlt } from "react-icons/fa";
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
-import PostSearch from "../../components/post/PostSearchBar";
+import PostSearch from "./PostSearchBar";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react-lite";
 import UploadButton from "../../components/post/PostUploadBtn";
 import { getRelativeTime } from "../../components/post/timeUtils";
 import { IoHeartSharp } from "react-icons/io5";
-import UserProfileModal from "../lecture/userProfileModal";
 
 const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [posts, setPosts] = useState([]);
@@ -291,7 +290,11 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
                     )}
                   </div>
                 </div>
-                <Link href={`/post/${post.id}`} passHref>
+                <Link
+                  href={`/post/${post.id}`}
+                  passHref
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
                   <div className={styles.tagContainer}>
                     {post.tags.map((tag, index) => (
                       <div key={index} className={styles.tagItem}>
