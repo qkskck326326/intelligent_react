@@ -20,6 +20,7 @@ const MyLecturePackage = observer(() => {
         } else {
             fetchLecturePackages(currentPage);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const fetchLecturePackages = async (page) => {
@@ -44,22 +45,23 @@ const MyLecturePackage = observer(() => {
     if (error) return <p>에러: {error.message}</p>;
 
     const renderStars = (rating) => {
-        const fullStars = Math.floor(rating);
-        const halfStar = rating % 1 >= 0.5;
+        const safeRating = rating !== null ? rating : 0.0;
+        const fullStars = Math.floor(safeRating);
+        const halfStar = safeRating % 1 >= 0.5;
     
         return (
             <>
-              {Array(fullStars)
-                  .fill(null)
-                  .map((_, index) => (
-                      <span key={`full-${index}`} className={styles.star}>
-                  ⭐
-                </span>
-                  ))}
-              {halfStar && <span className={styles.halfStar} />}
+                {Array(fullStars)
+                    .fill(null)
+                    .map((_, index) => (
+                        <span key={`full-${index}`} className={styles.star}>
+                            ⭐
+                        </span>
+                    ))}
+                {halfStar && <span className={styles.halfStar}>⭐</span>}
             </>
         );
-      };
+    };
 
     const getLectureLevel = (level) => {
         switch (level) {
@@ -77,15 +79,15 @@ const MyLecturePackage = observer(() => {
     const renderLevelIcon = (level) => {
         return (
             <div className={styles.levelIcon}>
-              {Array.from({ length: 3 }).map((_, index) => (
-                  <span
-                      key={index}
-                      className={index < level + 1 ? styles.active : styles.inactive}
-                  />
-              ))}
+                {Array.from({ length: 3 }).map((_, index) => (
+                    <span
+                        key={index}
+                        className={index < level + 1 ? styles.active : styles.inactive}
+                    />
+                ))}
             </div>
         );
-      };
+    };
 
     return (
         <div className={styles.container}>
@@ -98,9 +100,9 @@ const MyLecturePackage = observer(() => {
                         </div>
                         <div className={styles.details}>
                             <div className={styles.title}>
-                            <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
-                                <span className={styles.customLink}>{lecture.title}</span>
-                            </Link>
+                                <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
+                                    <span className={styles.customLink}>{lecture.title}</span>
+                                </Link>
                             </div>
                             <div className={styles.rating}>
                                 {"별점 "}
@@ -109,7 +111,7 @@ const MyLecturePackage = observer(() => {
                                 ) : (
                                     <span className={styles.emptyStar}>&nbsp;</span>
                                 )}
-                                </div>
+                            </div>
                             <div className={styles.info}>
                                 <span>
                                     <img
@@ -120,7 +122,7 @@ const MyLecturePackage = observer(() => {
                                 </span>{" "}
                                 {lecture.viewCount} views
                                 <span className={styles.packageLevel}>
-                                {renderLevelIcon(lecture.packageLevel)}
+                                    {renderLevelIcon(lecture.packageLevel)}
                                     {getLectureLevel(lecture.packageLevel)}
                                 </span>
                             </div>
@@ -129,52 +131,52 @@ const MyLecturePackage = observer(() => {
                 ))}
             </div>
             <div className={styles.paginationContainer}>
-        <ul className={styles.paginationWrapper}>
-          <li>
-            <button
-              className={`${styles.pageLink} ${styles.pageLinkNav}`}
-              onClick={() => handlePageChange(0)}
-            >
-              «
-            </button>
-          </li>
-          <li>
-            <button
-              className={`${styles.pageLink} ${styles.pageLinkNav}`}
-              onClick={() => handlePageChange(currentPage > 0 ? currentPage - 1 : 0)}
-            >
-              ‹
-            </button>
-          </li>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <li key={i + 1}>
-              <button
-                className={`${styles.pageLink} ${i === currentPage ? styles.activePage : ''}`}
-                onClick={() => handlePageChange(i)}
-              >
-                {i + 1}
-              </button>
-            </li>
-          ))}
-          <li>
-            <button
-              className={`${styles.pageLink} ${styles.pageLinkNav}`}
-              onClick={() => handlePageChange(currentPage < totalPages -1 ? currentPage + 1 : totalPages - 1)}
-            >
-              ›
-            </button>
-          </li>
-          <li>
-            <button
-              className={`${styles.pageLink} ${styles.pageLinkNav}`}
-              onClick={() => handlePageChange(totalPages - 1)}
-            >
-              »
-            </button>
-          </li>
-        </ul>
+                <ul className={styles.paginationWrapper}>
+                    <li>
+                        <button
+                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                            onClick={() => handlePageChange(0)}
+                        >
+                            «
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                            onClick={() => handlePageChange(currentPage > 0 ? currentPage - 1 : 0)}
+                        >
+                            ‹
+                        </button>
+                    </li>
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <li key={i + 1}>
+                            <button
+                                className={`${styles.pageLink} ${i === currentPage ? styles.activePage : ''}`}
+                                onClick={() => handlePageChange(i)}
+                            >
+                                {i + 1}
+                            </button>
+                        </li>
+                    ))}
+                    <li>
+                        <button
+                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                            onClick={() => handlePageChange(currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1)}
+                        >
+                            ›
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                            onClick={() => handlePageChange(totalPages - 1)}
+                        >
+                            »
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
     );
 });
 
