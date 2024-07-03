@@ -78,7 +78,6 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
 
     const handleEachReport = async () => {
 
-        //신고형식에 맞게 객체 생성해서 전송
         const reportItem = {
             receiveNickname: message.senderId,
             doNickname: AuthStore.getNickname(),
@@ -90,9 +89,6 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
 
         try{
             await axiosClient.post('/reports', reportItem)
-            // const response = await axiosClient.post('/reports', reportItem)
-            // console.log(response.data)
-
         } catch(error){
             console.error(error)
         }

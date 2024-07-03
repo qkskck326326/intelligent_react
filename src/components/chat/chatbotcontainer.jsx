@@ -14,7 +14,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
     const isTypingRef = useRef(false);
     const chatContainerRef = useRef(null);
     const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
-
+    const API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
     useEffect(() => {
         document.addEventListener('keypress', handleKeyPress);
         document.addEventListener('keydown', handleF5Press);
@@ -69,7 +69,7 @@ const Bot = observer(({ isExpanding, onNavigateToList }) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer 여기에.env에 설정된값 집어넣음`
+                'Authorization': `Bearer ${API_KEY}`,
             },
             body: JSON.stringify({
                 model: 'gpt-3.5-turbo',
