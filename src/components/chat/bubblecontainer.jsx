@@ -4,9 +4,6 @@ import styles from '../../styles/chatting/chatbubble.module.css'
 
 const BubbleContainer = forwardRef(({onAnnouncementChange, onReport, option, messages, onScroll, onUpdateMessage, isThereAdmin}, ref)=>{
 
-    useEffect(()=>{
-        console.log(messages)
-    },[])
     return (
         <div ref={ref} className={styles.bubbleContainer} onScroll={onScroll}>
             {

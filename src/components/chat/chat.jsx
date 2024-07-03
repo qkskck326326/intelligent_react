@@ -12,7 +12,7 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
-    const [isThereAdmin, setIsThereAdmin] = useState(roomData.roomType === 'inquiries');
+    const [isThereAdmin] = useState(roomData.roomType === 'inquiries');
     const [currentRoomData, setCurrentRoomData] = useState(roomData);
     const [people, setPeople] = useState({});
     const [isPeopleOn, setIsPeopleOn] = useState(false);
@@ -253,15 +253,11 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 dateSent: new Date().toISOString(),
                 isAnnouncement: 0
             };
-
             const formData = new FormData();
-
             items.forEach((file) => {
                 formData.append('files', file);
             });
-
             const url = `/chat/uploadfiles/${newMessage.roomId}/${newMessage.senderId}/${newMessage.messageType}/${newMessage.dateSent}/${newMessage.isAnnouncement}`;
-
             try {
                 await axiosClient.post(url, formData, {
                     headers: {
@@ -269,16 +265,13 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     },
                 });
                 setItems([]);
-
             } catch (error) {
                 console.error('Error uploading files:', error);
             }
-
         } else {
             if (textContent.trim() === '') {
                 return window.alert('메시지를 작성해주세요.');
             }
-
             const newMessage = {
                 roomId: roomData.roomId,
                 senderId: AuthStore.getNickname(),
@@ -287,16 +280,10 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 dateSent: new Date(),
                 isAnnouncement: 0
             };
-
             try {
-
-                console.log(`submit에서 출발한 메시지 형태 확인`);
-                console.log(newMessage);
-
                 await axiosClient.post('/chat/sendmessage', newMessage);
                 setTextContent('');
                 setIsAtBottom(true);
-
             } catch (error) {
                 console.error('Error sending message:', error);
             }

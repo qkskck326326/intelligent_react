@@ -7,7 +7,7 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Bubble = observer(({index, onAnnouncementChange, option, message, isThereAdmin})=>{
 
-    const [isMe, setIsMe] = useState(AuthStore.getNickname() === message.senderId)
+    const [isMe] = useState(AuthStore.getNickname() === message.senderId)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false);
     const eachSettingsRef = useRef();
     const textRef = useRef();
@@ -128,7 +128,7 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
                         {images.length > 1 && <a className={styles.next} onClick={() => plusSlides(1)}>&#10095;</a>}
                         {images.map((src, index) => (
                             <div key={index} style={{ display: index === slideIndex ? 'block' : 'none' }}>
-                                <img className="modal-content" src={src} />
+                                <img className="modal-content" src={src} alt='' />
                                 {index === slideIndex && (
                                     <button className={styles.downloadButton} onClick={() => downloadFile(src, `image-${index + 1}.jpg`)}>
                                         <svg className={styles.downloadIcon} xmlns="http://www.w3.org/2000/svg"
