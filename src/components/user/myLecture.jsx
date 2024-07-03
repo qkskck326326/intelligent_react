@@ -23,7 +23,7 @@ const MyLecture = observer(() => {
 
     const fetchPurchasedLecturePackages = async (page) => {
         try {
-            const response = await axiosClient.get(`/users/purchased-lectures`, {
+            const response = await axiosClient.get("/users/purchased-lectures", {
                 params: {
                     email: authStore.getUserEmail(),
                     provider: authStore.getProvider(),
@@ -76,87 +76,100 @@ const MyLecture = observer(() => {
     const handleMoveLecture = (lecturePackageId) => {
         router.push({
             pathname: '/lecture/list',
-            query: {lecturePackageId}
+            query: { lecturePackageId }
         });
     };
 
     return (
         <div className={styles.container}>
-            <h1>내가 결제한 강좌 목록</h1>
-            <div className={styles.grid}>
-                {lecturePackages.map((lecture) => (
-                    <div key={lecture.lecturePackageId} className={styles.cardContainer}>
-                        <div className={styles.thumbnail}>
-                            <img src={lecture.thumbnail} alt={lecture.title} />
-                        </div>
-                        <div className={styles.details}>
-                            <div className={styles.title}>
-                                <span className={styles.titleLink} onClick={() => {handleMoveLecture(lecture.lecturePackageId)}}>{lecture.title}</span>
+            <h1>결제한 강좌 목록</h1>
+            {lecturePackages.length === 0 ? (
+                <div className={styles.noLectureContainer}>
+                    <img 
+                        src="https://intelliclassbucket.s3.ap-northeast-2.amazonaws.com/ProfileImages/noLecture.png" 
+                        alt="강의 없음" 
+                        className={styles.noLectureImage} 
+                    />
+                    결제한 강좌가 없습니다...
+                </div>
+            ) : (
+                <div className={styles.grid}>
+                    {lecturePackages.map((lecture) => (
+                        <div key={lecture.lecturePackageId} className={styles.cardContainer}>
+                            <div className={styles.thumbnail}>
+                                <img src={lecture.thumbnail} alt={lecture.title} />
                             </div>
-                            <div className={styles.info}>
-                                <span>
-                                    <img
-                                        className={styles.viewCount}
-                                        src="/images/view_count_icon.png"
-                                        alt="조회수 아이콘"
-                                    />
-                                </span>{" "}
-                                {lecture.viewCount} views
-                                <span className={styles.packageLevel}>
-                                    {renderLevelIcon(lecture.packageLevel)}
-                                    {getLectureLevel(lecture.packageLevel)}
-                                </span>
+                            <div className={styles.details}>
+                                <div className={styles.title}>
+                                    <span className={styles.titleLink} onClick={() => { handleMoveLecture(lecture.lecturePackageId) }}>{lecture.title}</span>
+                                </div>
+                                <div className={styles.info}>
+                                    <span>
+                                        <img
+                                            className={styles.viewCount}
+                                            src="/images/view_count_icon.png"
+                                            alt="조회수 아이콘"
+                                        />
+                                    </span>{" "}
+                                    {lecture.viewCount} views
+                                    <span className={styles.packageLevel}>
+                                        {renderLevelIcon(lecture.packageLevel)}
+                                        {getLectureLevel(lecture.packageLevel)}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-            <div className={styles.paginationContainer}>
-                <ul className={styles.paginationWrapper}>
-                    <li>
-                        <button
-                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
-                            onClick={() => handlePageChange(0)}
-                        >
-                            «
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
-                            onClick={() => handlePageChange(currentPage > 0 ? currentPage - 1 : 0)}
-                        >
-                            ‹
-                        </button>
-                    </li>
-                    {Array.from({ length: totalPages }, (_, i) => (
-                        <li key={i + 1}>
+                    ))}
+                </div>
+            )}
+            {totalPages > 1 && (
+                <div className={styles.paginationContainer}>
+                    <ul className={styles.paginationWrapper}>
+                        <li>
                             <button
-                                className={`${styles.pageLink} ${i === currentPage ? styles.activePage : ''}`}
-                                onClick={() => handlePageChange(i)}
+                                className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                                onClick={() => handlePageChange(0)}
                             >
-                                {i + 1}
+                                «
                             </button>
                         </li>
-                    ))}
-                    <li>
-                        <button
-                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
-                            onClick={() => handlePageChange(currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1)}
-                        >
-                            ›
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            className={`${styles.pageLink} ${styles.pageLinkNav}`}
-                            onClick={() => handlePageChange(totalPages - 1)}
-                        >
-                            »
-                        </button>
-                    </li>
-                </ul>
-            </div>
+                        <li>
+                            <button
+                                className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                                onClick={() => handlePageChange(currentPage > 0 ? currentPage - 1 : 0)}
+                            >
+                                ‹
+                            </button>
+                        </li>
+                        {Array.from({ length: totalPages }, (_, i) => (
+                            <li key={i + 1}>
+                                <button
+                                    className={`${styles.pageLink} ${i === currentPage ? styles.activePage : ''}`}
+                                    onClick={() => handlePageChange(i)}
+                                >
+                                    {i + 1}
+                                </button>
+                            </li>
+                        ))}
+                        <li>
+                            <button
+                                className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                                onClick={() => handlePageChange(currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1)}
+                            >
+                                ›
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                className={`${styles.pageLink} ${styles.pageLinkNav}`}
+                                onClick={() => handlePageChange(totalPages - 1)}
+                            >
+                                »
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            )}
         </div>
     );
 });
