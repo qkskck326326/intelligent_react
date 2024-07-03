@@ -11,8 +11,6 @@ import LectureManagement from "../../components/user/lectureManagement";
 import PaymentHistoryManagement from "../payment/PaymentHistoryManagement";
 import styles from "../../styles/user/mypage/mypage.module.css";
 import MypageSidebar from "../../components/user/mypageSidebar";
-// import MyLecturePackage from "../../components/user/lectureManagement";
-import MyLecturePackageLike from "../../components/user/myLecturePackageLike";
 import PostManagement from "../../components/post/PostManagement";
 
 const Mypage = observer(() => {
@@ -42,8 +40,6 @@ const Mypage = observer(() => {
                 return <LectureManagement />;
             case "paymentManagement":
                 return <PaymentHistoryManagement />;
-            case "like":
-                return <MyLecturePackageLike />;
             case "postManagement":
                 return <PostManagement />;
             // 다른 컴포넌트들도 여기 추가

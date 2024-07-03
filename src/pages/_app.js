@@ -79,9 +79,6 @@ const App = observer (({ Component, pageProps }) => {
           <Container>
             <Component {...pageProps} />
           </Container>
-          { authStore.isLoggedIn &&
-              <ChatContainer/>
-          }
         </ThemeProvider>
       </QueryClientProvider>
   );
