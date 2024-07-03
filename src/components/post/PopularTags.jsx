@@ -27,6 +27,8 @@ const PopularTags = () => {
             <a
               href={`https://www.google.co.kr/search?q=${tag}`}
               className={styles.popularTagLink}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               #{tag}
             </a>

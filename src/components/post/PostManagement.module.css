@@ -36,11 +36,14 @@
 
 .postItem,
 .commentItem {
-  border: 0.8px solid #e3e3e3;
+  /* border: 0.8px solid #e3e3e3; */
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 15px;
   width: 70%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
 }
 
 .postItem:hover,
@@ -84,7 +87,7 @@
   margin-top: 7px;
   display: inline-block;
   font-size: 14px;
-  background: #52c095;
+  background: #6366f1;
   color: white;
   padding: 4px 8px;
   border-radius: 12px;
@@ -107,13 +110,12 @@
 }
 
 .tagItem {
-  background-color: #f1f1f1;
-  border-radius: 10px;
-  padding: 10px 8px;
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
+  background: #e0e7ff;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-size: 0.9rem;
+  color: #3730a3;
+  font-weight: bold;
 }
 
 .postTitle {
@@ -132,27 +134,29 @@
 }
 
 .filterButton {
+  border: none;
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  margin: 0 10px;
-  background-color: #f3f3f3;
+  padding: 0.75rem 1.5rem;
+  background: #e0e7ff;
+  border-radius: 1.5rem;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background 0.3s ease, transform 0.3s ease;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-right: 20px;
 }
 
 .filterButton:hover {
-  background-color: #52c095;
-  color: white;
+  background: #c7d2fe;
+  transform: scale(1.05);
 }
 
-.active {
-  background-color: #52c095 !important;
-  color: white !important;
+.filterButton.active {
+  border: none;
+  background: #6366f1;
+  color: white;
+  transform: scale(1.1);
 }
 
 .bookmarkIcon {

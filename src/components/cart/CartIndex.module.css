@@ -1,8 +1,8 @@
 .header {
-    position: sticky;
+    /* position: sticky; */
     top: 0;
     background-color: rgb(255, 255, 255);
-    z-index: 1000; /* Ensure it is above other elements */
+    z-index: 0.9; /* Ensure it is above other elements */
     padding: 20px 0; /* Increase padding to make the header box larger */
     border-bottom: 1px solid #ddd; /* Optional: Add a border for better visibility */
     text-align: left; /* Center align the text */
