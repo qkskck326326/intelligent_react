@@ -72,8 +72,9 @@
 }
 
 .table th {
-    background-color: #c8c8c8;
+    background-color: #343a3f;
     font-weight: bold;
+    color:white;
 
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from 'next/link';
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureList.module.css';
@@ -16,9 +16,19 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
     const completedLecturesCount = Object.values(lectureReadStatuses).filter(status => status === 'Y').length;
     const totalLecturesCount = lectures.length;
 
+    const fetchLecturePackageTitle = useCallback(() => {
+        axiosClient.get(`/lecture/title/${lecturePackageId}`)
+            .then(response => {
+                setLecturePackageTitle(response.data.title);
+            })
+            .catch(err => {
+                console.error("Error fetching lecture package title:", err);
+            });
+    }, [lecturePackageId]);
+
     useEffect(() => {
         fetchLecturePackageTitle();
-    }, [lecturePackageId]);
+    }, [lecturePackageId, fetchLecturePackageTitle]);
 
     useEffect(() => {
         const fetchReadStatuses = async () => {
@@ -32,16 +42,6 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
         };
         fetchReadStatuses();
     }, [lectures]);
-
-    const fetchLecturePackageTitle = () => {
-        axiosClient.get(`/lecture/title/${lecturePackageId}`)
-            .then(response => {
-                setLecturePackageTitle(response.data.title);
-            })
-            .catch(err => {
-                console.error("Error fetching lecture package title:", err);
-            });
-    };
 
     const getLectureReadStatus = async (lectureId, nickname) => {
         try {
@@ -156,7 +156,7 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
                             <th className={styles.num} scope="row">{index + 1}</th>
                             <td className={styles.title}>
                                 <Link href={`/lecture/detail?lectureId=${lecture.lectureId}`} legacyBehavior>
-                                    <a>{lecture.lectureName}</a>
+                                    <a href={`/lecture/detail?lectureId=${lecture.lectureId}`}>{lecture.lectureName}</a>
                                 </Link>
                             </td>
                             <td className={styles.read}>

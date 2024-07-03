@@ -4,7 +4,6 @@ import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from "../../styles/user/mypage/mylecture.module.css";
-import Link from "next/link";
 
 const MyLecture = observer(() => {
     const router = useRouter();
@@ -20,7 +19,7 @@ const MyLecture = observer(() => {
         } else {
             fetchPurchasedLecturePackages(currentPage);
         }
-    }, [currentPage]);
+    }, [currentPage, router]);
 
     const fetchPurchasedLecturePackages = async (page) => {
         try {
@@ -47,20 +46,6 @@ const MyLecture = observer(() => {
 
     if (loading) return <p>로딩 중...</p>;
     if (error) return <p>에러: {error.message}</p>;
-
-    const renderStars = (rating) => {
-        const fullStars = Math.floor(rating);
-        const halfStar = rating % 1 >= 0.5;
-
-        return (
-            <>
-                {Array(fullStars).fill(null).map((_, index) => (
-                    <span key={`full-${index}`} className={styles.star}>⭐</span>
-                ))}
-                {halfStar && <span className={styles.halfStar} />}
-            </>
-        );
-    };
 
     const getLectureLevel = (level) => {
         switch (level) {
@@ -92,8 +77,8 @@ const MyLecture = observer(() => {
         router.push({
             pathname: '/lecture/list',
             query: {lecturePackageId}
-        })
-    }
+        });
+    };
 
     return (
         <div className={styles.container}>
@@ -107,16 +92,7 @@ const MyLecture = observer(() => {
                         <div className={styles.details}>
                             <div className={styles.title}>
                                 <span className={styles.titleLink} onClick={() => {handleMoveLecture(lecture.lecturePackageId)}}>{lecture.title}</span>
-                                
                             </div>
-                            {/* <div className={styles.rating}>
-                                {"별점 "}
-                                {lecture.rating ? (
-                                    renderStars(lecture.rating)
-                                ) : (
-                                    <span className={styles.emptyStar}>&nbsp;</span>
-                                )}
-                            </div> */}
                             <div className={styles.info}>
                                 <span>
                                     <img
