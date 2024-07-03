@@ -20,6 +20,7 @@ const MyLecturePackage = observer(() => {
         } else {
             fetchLecturePackages(currentPage);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const fetchLecturePackages = async (page) => {

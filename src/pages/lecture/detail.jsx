@@ -39,8 +39,6 @@ const LectureDetailPage = () => {
 
     const [hasAccess, setHasAccess] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [authNickname, setAuthNickname] = useState('');
-    const [lecturePackageId, setLecturePackageId] = useState(null);
 
     const checkTransactionHistory = async (email, provider, lecturePackageId) => {
         try {
@@ -83,17 +81,15 @@ const LectureDetailPage = () => {
             const currentUserEmail = localStorage.getItem("userEmail");
             const currentProvider = localStorage.getItem("provider");
             const currentNickname = localStorage.getItem("nickname");
-
-            setAuthNickname(currentNickname);
+            const currentAdmin = localStorage.getItem("isAdmin") === 'true'; // isAdmin 값 확인
 
             const fetchAccessInfo = async () => {
                 const lectureDetail = await getLectureDetail(lectureId);
-                setLecturePackageId(lectureDetail.lecturePackageId);
                 if (lectureDetail) {
                     const ownerNickname = await checkPackageOwner(lectureDetail.lecturePackageId);
                     console.log("Owner Nickname: ", ownerNickname);
                     const isOwner = ownerNickname === currentNickname;
-                    if (isOwner) {
+                    if (isOwner || currentAdmin) {
                         setHasAccess(true);
                     } else {
                         const hasTransaction = await checkTransactionHistory(currentUserEmail, currentProvider, lectureDetail.lecturePackageId);
