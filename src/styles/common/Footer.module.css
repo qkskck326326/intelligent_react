@@ -58,3 +58,14 @@
     color: white !important;
     padding-left: 30px; /* 왼쪽 패딩 추가 */
 }
+
+/* Global a tag styles within footer */
+.footer a {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.footer a:hover {
+    color: white !important;
+    text-decoration: underline !important;
+}

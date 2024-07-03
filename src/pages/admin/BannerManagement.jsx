@@ -26,7 +26,9 @@ const BannerManagement = () => {
     const handleSaveBanner = async () => {
         const formData = new FormData();
         formData.append('title', title);
-        formData.append('imageFile', imageFile);
+        if (imageFile) {
+            formData.append('imageFile', imageFile);
+        }
         formData.append('linkUrl', linkUrl);
 
         try {
@@ -53,7 +55,7 @@ const BannerManagement = () => {
     const handleEditBanner = (banner) => {
         setSelectedBanner(banner);
         setTitle(banner.title);
-        setImageFile(null);
+        setImageFile(null); // 이미지 파일 초기화
         setLinkUrl(banner.linkUrl);
     };
 
