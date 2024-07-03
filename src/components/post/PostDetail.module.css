@@ -25,8 +25,8 @@
 }
 
 .postAvatar img {
-  width: 40px; /* 크기를 줄임 */
-  height: 40px; /* 크기를 줄임 */
+  width: 60px; /* 크기를 줄임 */
+  height: 60px; /* 크기를 줄임 */
   border-radius: 50%;
   background-color: #ffffff;
   margin-right: 10px; /* 마진을 줄임 */
@@ -86,6 +86,9 @@
   margin-left: 10px;
   display: flex;
   align-items: center;
+}
+.bookmarkIcon:hover {
+  transform: scale(1.2);
 }
 
 .authorLabel {
@@ -191,13 +194,13 @@
 }
 
 .inputContainer input:focus {
-  border-color: #52c095;
+  border-color: #6366f1;
 }
 
 .submitCommentButton {
   width: 40px;
   height: 40px;
-  background-color: #52c095;
+  background-color: #6366f1;
   color: white;
   border: none;
   border-radius: 50%;
@@ -210,7 +213,7 @@
 }
 
 .submitCommentButton:hover {
-  background-color: #3f8a71;
+  background-color: #393ce7;
   transform: scale(1.1);
 }
 

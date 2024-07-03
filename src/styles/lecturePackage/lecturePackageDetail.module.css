@@ -46,6 +46,18 @@
     margin-left: 10px;
     background-color: #ffffff;
     cursor: pointer;
+    min-width: 180px;
+}
+
+.actionButtons{
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin-left: 10px;
+    background-color: #ffffff;
+    cursor: pointer;
+    min-width: 120px;
+
 }
 
 .profile {
@@ -151,8 +163,9 @@
     border-radius: 3px;
     background-color: #ffffff;
     padding: 10px;
-    width: 370px;
+    /*width: 370px;*/
     margin-top: 10px;
+    object-fit: contain;
 }
 .category {
     margin: 5px;
@@ -166,7 +179,8 @@
     margin: 10px;
     width: 60px;
     height: 60px;
-    border: 1px solid gray;
+    border: 2px solid #d1d1d1;
+    object-fit: contain;
 }
 
 .category {
@@ -234,68 +248,111 @@
     top: 35%;
     left: 74.8%;
     width: 300px;
-    height: 430px;
-    border: 2px solid #37ddb6;
-    border-radius: 3px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     background-color: #ffffff;
     text-align: left;
-    padding: 0 30px;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.07);
+    padding: 20px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     margin-bottom: 5px;
+
 }
 
-.applyButton {
-    background-color: #ffffff;
-    color: #16c8b9;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 2px;
-    border: 4px solid #16c6b8;
-    width: 100%;
-    height: 13%;
-    font-size: 1.2em;
+.applyTextContainer {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.applyText {
+    color: #e74c3c;
     font-weight: bold;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.07);
-    margin-bottom: 5px;
+    background-color: #fdecec;
+    padding: 10px;
+    border-radius: 4px;
+    display: inline-block;
+    width: 95%;
+    text-align: center;
 }
 
-.applyButton:hover {
-    background-color: #0098f6;
-    color: #ffffff;
-    border: 4px solid #ffffff;
-    box-shadow: inset 0 2px 3px rgba(61, 73, 96, 0.3);
-    text-shadow: 0 2px 3px rgba(61, 73, 96, 0.3);
+.discount {
+    font-size: 0.8em;
+    color: #e74c3c;
+    text-align: center;
 }
 
 .price {
     font-size: 1.5em;
     font-weight: bold;
+    text-align: left;
+    margin:20px 20px;
+
+}
+
+.applyButton {
+    background-color: #1abc9c;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    width: 95%;
+    font-size: 1em;
+    cursor: pointer;
+    margin-bottom: 30px;
+    text-align: center;
+
+}
+
+.applyButton:hover {
+    background-color: #16a085;
+}
+
+.horizontalLine {
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+    margin: 10px 0;
+}
+
+.shareButton {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    color: gray;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.shareButton img {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+}
+
+.shareText {
+    color: #2c3e50;
+}
+
+.field {
     margin-bottom: 10px;
 }
 
-.discount {
-    font-size: 0.8em;
-    color: #ff5b5b;
+.levelText {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-left: 20px;
 }
 
-.applyTextContaner {
-    align-items: center;
-}
-
-.applyText {
-    width: 200px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    margin-left: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ff6767;
-    border-radius: 30px;
-    padding: 10px;
-    color: white;
-    font-size: 0.8em;
+.level {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #2c3e50;
 }
 
 @media (max-width: 1200px) {
@@ -318,6 +375,7 @@
 .viewCountContainer {
     display: flex;
     align-items: center;
+    margin-left: 20px;
 }
 
 .viewCountIcon {
