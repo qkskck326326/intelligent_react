@@ -84,6 +84,7 @@
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 1rem;
+  position: relative; /* 상대 위치를 사용하여 자식 요소의 절대 위치를 설정 */
 }
 
 .postAvatar img {
@@ -120,13 +121,17 @@
 }
 
 .postTime {
-  margin-right: 10px;
+  position: absolute;
+  top: 0;
+  right: 40px; /* 오른쪽에서 40px 떨어진 위치 */
   font-size: 0.9rem;
   color: #4b5563;
-  margin-left: 450px;
 }
 
 .bookmarkIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
