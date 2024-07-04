@@ -12,7 +12,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 
-
 const CKEditorComponent = dynamic(() => import('../CKEditor/CKEditorComponent'), { ssr: false });
 
 const LecturePackageRegister = observer(({ isEditMode, lecturePackageId, onBackListClick }) => {
@@ -139,6 +138,11 @@ const LecturePackageRegister = observer(({ isEditMode, lecturePackageId, onBackL
     };
 
     const handleSubmit = async () => {
+        if (!form.title || !form.level || !form.priceForever || !form.averageClassLength || !editorData || !thumbnailPreview || selectedCategories.length === 0 || selectedTechStacks.length === 0 || learningPersons.some(person => person.trim() === '') || readyKnowledge.some(knowledge => knowledge.trim() === '')) {
+            alert('입력 값을 모두 입력해야 합니다.');
+            return;
+        }
+
         const nickname = authStore.getNickname();
         const data = {
             nickname: nickname,

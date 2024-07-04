@@ -6,7 +6,7 @@ const LectureAvgRating = ({ lecturePackageId }) => {
     const [averageRating, setAverageRating] = useState(0);
 
     useEffect(() => {
-        const fetchAverageRating = async () => {
+        const getAverageRating = async () => {
             try {
                 const response = await axiosClient.get(`/lecture/rating/${lecturePackageId}`);
                 setAverageRating(response.data.rating);
@@ -15,7 +15,7 @@ const LectureAvgRating = ({ lecturePackageId }) => {
             }
         };
 
-        fetchAverageRating();
+        getAverageRating();
     }, [lecturePackageId]);
 
     const renderStars = (rating) => {

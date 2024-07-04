@@ -154,8 +154,8 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
     };
 
     const handleNextPage = () => {
-        if (selected.length < 2) {
-            alert("관심분야를 최소 두개이상 골라주세요.");
+        if (selected.length < 4) {
+            alert("관심분야를 최소 네개이상 골라주세요.");
             return;
         }
         nextPage();
