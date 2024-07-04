@@ -19,7 +19,7 @@ const UploadButton = observer(({ onLoginRequired }) => {
     <div className={styles.uploadButton} onClick={handleClick}>
       <Link href="/post/PostUploadPage" passHref>
         {/* <span>업로드</span> */}
-        <LuPencilLine />
+        <LuPencilLine style={{ color: 'white'}}/>
       </Link>
     </div>
   );

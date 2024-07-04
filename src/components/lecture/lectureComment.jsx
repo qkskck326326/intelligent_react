@@ -175,8 +175,8 @@ const LectureComment = ({ lectureId }) => {
                 receiveNickname: comments.find(comment => comment.lectureCommentId === reportCommentId).nickname,
                 doNickname: authStore.getNickname(),
                 content: reportContent,
-                reportType: 3,
-                contentId: reportCommentId,
+                reportType: 4,
+                contentId: lectureId,
             };
 
             await axiosClient.post("/reports", reportDTO);
