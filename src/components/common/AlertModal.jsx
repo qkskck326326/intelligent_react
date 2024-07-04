@@ -1,5 +1,5 @@
 // AlertModal.js
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 const AlertModal = ({ show, handleClose, title, message, onConfirm }) => {

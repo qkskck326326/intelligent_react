@@ -11,10 +11,12 @@ import Footer from '../components/common/Footer';
 const HomePage = observer(() => {
     const [banners, setBanners] = useState([]);
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+    const [isSnsUser, setIsSnsUser] = useState(false);
 
     useEffect(() => {
         fetchBanners();
         recordVisit();
+        checkIsSnsUser();
     }, []);
 
     const fetchBanners = async () => {
@@ -37,6 +39,11 @@ const HomePage = observer(() => {
         } catch (error) {
             console.error('Failed to record visit:', error);
         }
+    };
+
+    const checkIsSnsUser = () => {
+        const isSnsUser = localStorage.getItem("isSnsUser") === 'true';
+        setIsSnsUser(isSnsUser);
     };
 
     const handleNextBanner = () => {
@@ -80,7 +87,7 @@ const HomePage = observer(() => {
                     </div>
                 )}
                 <NavBar />
-                <UserInterestPackageList />
+                {!isSnsUser && <UserInterestPackageList />}
                 <UpperCategoryPackageList />
                 {authStore.isLoggedIn && (
                     <div
