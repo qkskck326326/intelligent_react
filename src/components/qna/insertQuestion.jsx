@@ -9,7 +9,7 @@ const InsertQuestion = ({ onClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const nickname = localStorage.getItem("nickname");  // authStore에서 가져올 수도 있습니다.
+            const nickname = localStorage.getItem("nickname");
             await axiosClient.post("/qna/qList", {
                 questionTitle: title,
                 questionContent: content,
