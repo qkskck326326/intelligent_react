@@ -29,19 +29,19 @@ const ReportList = () => {
                 setLoading(false);
             }
         };
-
         fetchReports();
     }, []);
+
 
     useEffect(() => {
         filterReports();
     }, [selectedReportType, reports]);
-
     const filterReports = () => {
         if (selectedReportType === "all") {
             setFilteredReports(reports);
         } else {
-            setFilteredReports(reports.filter(report => report.reportType === parseInt(selectedReportType)));
+            setFilteredReports(reports.filter(
+                report => report.reportType === parseInt(selectedReportType)));
         }
     };
 
@@ -52,7 +52,7 @@ const ReportList = () => {
             case 2: return '채팅';
             case 3: return '강의';
             case 4: return '강의 댓글';
-            default: return '알 수 없음';
+            default: return '신고 컨텐츠 타입이 아닙니다.';
         }
     };
 
