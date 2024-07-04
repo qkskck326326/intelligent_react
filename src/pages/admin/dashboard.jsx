@@ -20,7 +20,7 @@ const Dashboard = () => {
         try {
             const response = await axiosClient.get('/admins/registration-stats', {
                 params: {
-                    startDate: '2023-01-01',
+                    startDate: '2024-06-24',
                     endDate: new Date().toISOString().split('T')[0],
                     page,
                     size // size를 10으로 설정
@@ -40,7 +40,7 @@ const Dashboard = () => {
         try {
             const response = await axiosClient.get('/admins/visit-counts', {
                 params: {
-                    startDate: '2023-01-01',
+                    startDate: '2024-06-24',
                     endDate: new Date().toISOString().split('T')[0]
                 }
             });
@@ -68,14 +68,11 @@ const Dashboard = () => {
         <div className={styles.container}>
             <Sidebar />
             <div className={styles.main}>
-                <div className={styles.header}>
-                    <button className={styles.logout}>Logout</button>
-                </div>
                 <div className={styles.content}>
                     <h1 className={styles.title}>대시보드</h1>
                     <div className={styles.cards}>
                         <div className={styles.card}>
-                            <h2>사이트 현황</h2>
+                            <h2>가입자 수 현황</h2>
                             <ResponsiveContainer width="100%" height={300}>
                                 <LineChart
                                     data={registrationStats}
