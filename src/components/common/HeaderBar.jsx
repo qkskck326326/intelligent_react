@@ -62,13 +62,16 @@ const HeaderBar = observer(() => {
               </Nav.Link>
           )}
           <Nav.Link href="/lecturePackage" className={styles["nav-link"]}>
-            강의패키지
+            강의
           </Nav.Link>
           {/* <Nav.Link href="/lecture/list" className={styles["nav-link"]}>
             강의
           </Nav.Link> */}
           <Nav.Link href="/itNewsBoard" className={styles["nav-link"]}>
-            itNewsBoard
+            IT뉴스
+          </Nav.Link>
+          <Nav.Link href="/youtube+textlize" className={styles["nav-link"]}>
+            youTube 변환기
           </Nav.Link>
           {/* <Nav.Link href="/payment" className={styles["nav-link"]}>
             결제
@@ -82,9 +85,7 @@ const HeaderBar = observer(() => {
           <Nav.Link href="/cs" className={styles["nav-link"]}>
             고객센터
           </Nav.Link>
-          <Nav.Link href="/cart" className={styles["nav-link"]}>
-            장바구니
-          </Nav.Link>
+
         </Nav>
         <Nav className={styles["right-nav"]}>
           {authStore.isLoggedIn ? (
@@ -102,20 +103,26 @@ const HeaderBar = observer(() => {
                     </span>
                   )}
                 </div>
+
+                <Nav.Link href="/cart" className={styles["right-nav"]}>
+                  <div className={styles.cartIcon}>
+                    <img src="/images/cartIcon.png" style={{width: 30,}}/>
+                  </div>
+                </Nav.Link>
                 {showNotifications && <Notification setNotificationCount={setNotificationCount} />}
-                <Nav.Link onClick={handleLogout} className={styles["nav-link"]}>
+                <Nav.Link onClick={handleLogout} className={styles["nav-link2"]}>
                   로그아웃
                 </Nav.Link>
-                <Nav.Link href="/user/mypage" className={styles["nav-link"]}>
+                <Nav.Link href="/user/mypage" className={styles["nav-link2"]}>
                   마이페이지
                 </Nav.Link>
               </>
           ) : (
               <>
-                <Nav.Link href="/user/login" className={styles["nav-link"]}>
+                <Nav.Link href="/user/login" className={styles["nav-link2"]}>
                   로그인
                 </Nav.Link>
-                <Nav.Link href="/user/enroll" className={styles["nav-link"]}>
+                <Nav.Link href="/user/enroll" className={styles["nav-link2"]}>
                   회원가입
                 </Nav.Link>
               </>

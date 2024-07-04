@@ -575,7 +575,7 @@ const CommentItem = ({
         doNickname: authStore.getNickname(),
         content: reportContent,
         reportType: 1,
-        contentId: comment.id,
+        contentId: comment.postId,
       };
 
       await axiosClient.post("/reports", reportDTO);

@@ -12,7 +12,9 @@ const extractTextFromHTML = (htmlString) => {
   elementsToRemove.forEach((element) => element.remove());
 
   // 텍스트 콘텐츠 추출
-  return doc.body.innerText.trim();
+    let text = doc.body.innerText.trim();
+    let truncatedText = text.length > 80 ? text.slice(0, 80) + '...' : text;
+    return truncatedText;
 };
 
 const CartItem = ({ item, onSelect, isSelected }) => {
