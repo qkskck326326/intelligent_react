@@ -38,7 +38,7 @@ const AnswerDetail = ({ questionId, onClose }) => {
                         <span>{new Date(question.questionDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\.\s*/g, '-').replace(/-$/, '')}</span>
                     </div>
                     <div className={styles.contentContainer}>
-                        <textarea className={styles.content} value={question.questionContent} readOnly />
+                        <textarea className={styles.questionContent} value={question.questionContent} readOnly />
                     </div>
                 </div>
                 <div className={styles.verticalLine}></div>
@@ -50,7 +50,7 @@ const AnswerDetail = ({ questionId, onClose }) => {
                     </div>
                     
                     <div className={styles.contentContainer}>
-                        <textarea className={styles.content} value={answer.answerContent} readOnly />
+                        <textarea className={styles.answerContent} value={answer.answerContent} readOnly />
                     </div>
                 </div>
                 <div className={styles.footer}>

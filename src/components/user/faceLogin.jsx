@@ -78,6 +78,7 @@ const FaceLogin = () => {
             window.localStorage.setItem("userEmail", res.data.userEmail);
             window.localStorage.setItem("provider", res.data.provider);
             window.localStorage.setItem("profileImageUrl", res.data.profileImageUrl);
+            window.localStorage.setItem("isSnsUser", res.data.isSnsUser);
 
             authStore.setIsLoggedIn(true);
             authStore.setIsStudent(res.data.isStudent);

@@ -51,6 +51,7 @@ const LoginForm = observer(() => {
         window.localStorage.setItem("userEmail", response.data.userEmail);
         window.localStorage.setItem("provider", response.data.provider);
         window.localStorage.setItem("profileImageUrl", response.data.profileImageUrl);
+        window.localStorage.setItem("isSnsUser", response.data.isSnsUser);
 
         // 로그인 성공 후 출석 체크
         await axiosClient.post('/users/check-attendance', {

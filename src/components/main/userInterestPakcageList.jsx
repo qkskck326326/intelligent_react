@@ -131,7 +131,7 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h3>'{authStore.getNickname()}' 님의 관심사별 TOP10</h3>
+                <h3>'{authStore.getNickname()}' 님의 관심사별 TOP16</h3>
             </div>
             <div className={styles.paginationWrapper}>
                 <button onClick={handlePreviousPage} disabled={currentPage === 0}
@@ -200,7 +200,8 @@ const ConditionalUserInterestPackageList = observer(({onRegisterClick}) => {
         return null; // 사용자가 로그인하지 않은 경우 컴포넌트를 렌더링하지 않음
     }
 
-    return <UserInterestPackageList onRegisterClick={onRegisterClick} />;
+    return <UserInterestPackageList onRegisterClick={onRegisterClick}/>;
+
 });
 
 export default ConditionalUserInterestPackageList;

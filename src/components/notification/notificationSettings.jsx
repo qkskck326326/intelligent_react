@@ -25,7 +25,8 @@ const NotificationSettings = () => {
         );
         setSettings(updatedSettings);
 
-        axiosClient.put(`/notification/settings/${nickname}`, { notificationType: type, isEnabled: updatedSettings.find(setting => setting.notificationType === type).isEnabled })
+        axiosClient.put(`/notification/settings/${nickname}`,
+            { notificationType: type, isEnabled: updatedSettings.find(setting => setting.notificationType === type).isEnabled })
             .then(response => {
                 console.log("Notification setting updated:", response.data);
             })
