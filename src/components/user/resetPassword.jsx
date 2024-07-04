@@ -4,7 +4,6 @@ import styles from '../../styles/user/login/resetPassword.module.css';
 import { axiosClient } from "../../axiosApi/axiosClient";
 
 const ResetPassword = () => {
-  // const [showTooltip, setShowTooltip] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [userPwd, setUserPwd] = useState('');
   const [confirmUserPwd, setConfirmUserPwd] = useState('');
@@ -27,14 +26,15 @@ const ResetPassword = () => {
   }, [userEmail]);
 
   useEffect(() => {
+    let id;
     if (isCodeSent) {
-      const id = setInterval(() => {
+      id = setInterval(() => {
         setTimer(prevTimer => prevTimer - 1);
       }, 1000);
       setIntervalId(id);
     }
-    return () => clearInterval(intervalId);
-  }, [isCodeSent, intervalId]);
+    return () => clearInterval(id);
+  }, [isCodeSent]);
 
   useEffect(() => {
     if (isVerified) {
@@ -179,7 +179,7 @@ const ResetPassword = () => {
   return (
     <div className={styles.container}>
       <div className={styles.form}>
-      <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }} className={styles.title}>
+        <div style={{ display: 'block', fontSize: '2rem', marginBlockStart: '0.83em', marginBlockEnd: '0.83em', marginInlineStart: '0px', marginInlineEnd: '0px', fontWeight: 'bold', textAlign: 'center' }} className={styles.title}>
           비밀번호 변경
         </div>
         <div className={styles.formBody}>
@@ -240,32 +240,32 @@ const ResetPassword = () => {
             </div>
           )}
           <div className={styles.tooltip}>
-              <input
-                type="password"
-                name="userPwd"
-                placeholder="비밀번호"
-                value={userPwd}
-                onChange={handleChange}
-                className={styles.input}
-                maxLength="20"
-                ref={userPwdRef}
-              />
-              <div className={styles.tooltiptext}>
-                <p className={passwordValidation.minLength ? styles.valid : styles.invalid}>{passwordValidation.minLength ? '✔' : '✖'} 8자 이상</p>
-                <p className={passwordValidation.hasUpperCase ? styles.valid : styles.invalid}>{passwordValidation.hasUpperCase ? '✔' : '✖'} 대문자 한 개 이상</p>
-                <p className={passwordValidation.hasNumber ? styles.valid : styles.invalid}>{passwordValidation.hasNumber ? '✔' : '✖'} 숫자 한 개 이상</p>
-              </div>
-            </div>
             <input
               type="password"
-              name="confirmUserPwd"
-              placeholder="비밀번호 확인"
-              value={confirmUserPwd}
+              name="userPwd"
+              placeholder="비밀번호"
+              value={userPwd}
               onChange={handleChange}
               className={styles.input}
               maxLength="20"
-              ref={confirmUserPwdRef}
+              ref={userPwdRef}
             />
+            <div className={styles.tooltiptext}>
+              <p className={passwordValidation.minLength ? styles.valid : styles.invalid}>{passwordValidation.minLength ? '✔' : '✖'} 8자 이상</p>
+              <p className={passwordValidation.hasUpperCase ? styles.valid : styles.invalid}>{passwordValidation.hasUpperCase ? '✔' : '✖'} 대문자 한 개 이상</p>
+              <p className={passwordValidation.hasNumber ? styles.valid : styles.invalid}>{passwordValidation.hasNumber ? '✔' : '✖'} 숫자 한 개 이상</p>
+            </div>
+          </div>
+          <input
+            type="password"
+            name="confirmUserPwd"
+            placeholder="비밀번호 확인"
+            value={confirmUserPwd}
+            onChange={handleChange}
+            className={styles.input}
+            maxLength="20"
+            ref={confirmUserPwdRef}
+          />
         </div>
         <div className={styles.buttons}>
           <button onClick={() => router.push("/user/login")} className={styles.cancelButton}>취소</button>
