@@ -1,6 +1,6 @@
 import {observer} from 'mobx-react'
 import authStore from "../../stores/authStore";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ChatIcon from '../../components/chat/chaticon'
 import ChatList from "../../components/chat/chatlist";
 import AddingFriends from '../../components/chat/addingfriends';

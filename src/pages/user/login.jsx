@@ -23,9 +23,16 @@ const Login = observer(() => {
         };
     }, [router]);
 
+    useEffect(() => {
+        const showLoginAlert = localStorage.getItem('showLoginAlert');
+        if (showLoginAlert) {
+            alert('로그인해야 사용가능한 기능입니다.\n로그인을 해주세요.');
+            localStorage.removeItem('showLoginAlert');
+        }
+    }, []);
 
     useEffect(() => {
-        const { access, refresh, userEmail, provider, nickname, profileImageUrl, isStudent, isTeacher, isAdmin } = router.query;
+        const { access, refresh, userEmail, provider, nickname, profileImageUrl, isStudent, isTeacher, isAdmin, isSnsUser } = router.query;
 
         if (access) {
             window.localStorage.setItem("token", access);
@@ -37,31 +44,28 @@ const Login = observer(() => {
             window.localStorage.setItem("isStudent", isStudent === 'true');
             window.localStorage.setItem("isTeacher", isTeacher === 'true');
             window.localStorage.setItem("isAdmin", isAdmin === 'true');
+            window.localStorage.setItem("isSnsUser", isSnsUser === 'true');
             
-             // 메인 페이지로 즉시 이동
-             router.push("/");
+            // 메인 페이지로 즉시 이동
+            router.push("/");
 
-             // 로그인 상태를 1초 후에 업데이트
-             setTimeout(() => {
-             authStore.setIsLoggedIn(true);
-             authStore.setIsTeacher(isStudent === 'true');
-             authStore.setIsTeacher(isTeacher === 'true');
-             authStore.setIsAdmin(isAdmin === 'true');
-             authStore.setUserEmail(userEmail);
-             authStore.setProvider(provider);
-             authStore.setNickname(nickname);
-             authStore.setProfileImageUrl(profileImageUrl);
-             }, 1000); // 1초 지연
- 
-        
+            // 로그인 상태를 1초 후에 업데이트
+            setTimeout(() => {
+                authStore.setIsLoggedIn(true);
+                authStore.setIsTeacher(isStudent === 'true');
+                authStore.setIsTeacher(isTeacher === 'true');
+                authStore.setIsAdmin(isAdmin === 'true');
+                authStore.setUserEmail(userEmail);
+                authStore.setProvider(provider);
+                authStore.setNickname(nickname);
+                authStore.setProfileImageUrl(profileImageUrl);
+            }, 1000); // 1초 지연
 
             // 로그인 성공 후 출석 체크
             axiosClient.post('/users/check-attendance', {
                 email: userEmail,
                 provider: provider
             });
-
-           
         }
     }, [router.query]);
 
