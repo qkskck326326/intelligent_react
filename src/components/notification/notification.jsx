@@ -16,7 +16,7 @@ const Notification = ({ setNotificationCount }) => {
                 const nickname = authStore.getNickname();
                 const response = await axiosClient.get(`/notification/${nickname}`);
                 setNotifications(response.data);
-                setNotificationCount(response.data.length);  // 알림 갯수를 설정
+                setNotificationCount(response.data.length);
             } catch (err) {
                 setError(err);
             }
@@ -31,7 +31,7 @@ const Notification = ({ setNotificationCount }) => {
             setNotifications((prevNotifications) =>
                 prevNotifications.filter((notification) => notification.notificationId !== notificationId)
             );
-            setNotificationCount(notifications.length - 1);  // 알림 갯수를 감소
+            setNotificationCount(notifications.length - 1);
         } catch (err) {
             console.error("Error deleting notification:", err);
         }
