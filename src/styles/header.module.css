@@ -1,66 +1,154 @@
-/* NavBar.module.css */
+/* header.module.css */
+
 .navbar {
-    width: 100%;  /* 전체 화면 너비에 맞춤 */
-    background-color: #3eed15; /* 기본 배경색 */
-    padding: 10px 20px;
-    box-sizing: border-box;  /* 패딩과 보더를 포함한 박스 크기 조정 */
-    display: flex;  /* Flexbox 사용 */
-    align-items: center;  /* 수직 정렬 */
-    justify-content: space-between;  /* 양쪽 끝으로 정렬 */
+    background-color: #ffffff; /* 흰색 배경 */
+    border-bottom: 1px solid #e7e7e7; /* 아래쪽 경계선 */
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-brand {
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+    color: #32CD32 !important; /* 밝은 초록색 */
     display: flex;
     align-items: center;
-    margin-right: 20px;  /* 로고와 메뉴 사이 간격 */
+    flex: 1;
 }
 
 .navbar-brand img {
-    width: 10vh;  /* 로고 이미지 크기 조정 */
+    height: 40px;
+    margin-right: 0.5rem;
 }
 
 .navbar-nav {
-    display: flex;  /* Flexbox 사용 */
-    align-items: center; /* 네비게이션 링크 수직 중앙 정렬 */
-    margin-left: 20px; /* 로고와 메뉴 사이 간격 조정 */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 중앙 정렬 */
+    flex: 8;
+    margin: 0 auto; /* 중앙에 배치 */
 }
 
 .nav-link {
-    color: #000000 !important; /* 링크 텍스트 색상 */
-    margin-right: 15px; /* 링크 사이 간격 조정 */
-    text-transform: uppercase; /* 텍스트 대문자로 변환 */
-    text-decoration: none !important
+    display: block;
+    text-align: center !important;
+    color: #333333 !important; /* 진한 회색 */
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    margin-right: 4rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 0.5rem 0.5rem;
+    border-radius: 4px;
+    text-decoration: none !important; /* 언더라인 제거 */
+}
+
+.nav-link2 {
+    color: #333333 !important; /* 진한 회색 */
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    /*margin-right: 1.5rem;*/
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 0.5rem 0.5rem;
+    border-radius: 4px;
+    text-decoration: none !important; /* 언더라인 제거 */
 }
 
 .nav-link:hover {
-    color: #19b447 !important; /* 마우스 오버 시 링크 텍스트 색상 */
+    color: #68b6ab !important;
+    transform: translateY(-2px);
+}
+
+.nav-link2:hover {
+    color: #68b6ab !important;
+    transform: translateY(-2px);
 }
 
 .right-nav {
-    display: flex;  /* Flexbox 사용 */
-    align-items: center; /* 네비게이션 링크 수직 중앙 정렬 */
-    margin-left: auto; /* 오른쪽 정렬을 위한 마진 조정 */
+    display: flex;
+    align-items: flex-end;
+    margin-right: 0.8rem;
+    /* flex: 0.5; */
+    justify-content: flex-end;
 }
-
-.notificationBell {
-    cursor: pointer;
-    margin-right: 20px;
-  }
 
 .notificationBellWrapper {
     position: relative;
-    display: inline-block;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.notificationBell {
+    height: 24px;
 }
 
 .notificationCount {
     position: absolute;
-    top: -7px;
-    right: 12px;
-    background-color: red;
-    color: white;
+    top: -5px;
+    right: -5px;
+    background-color: #FF5A5F; /* 밝은 빨간색 */
+    color: #ffffff !important;
     border-radius: 50%;
-    padding: 3px;
-    padding-left: 8px;
-    padding-right: 8px;
-    font-size: 12px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem !important;
+    font-weight: bold !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.login-link, .signup-link {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 600 !important;
+    text-decoration: none !important; /* 언더라인 제거 */
+}
+
+.login-link {
+    background-color: #ffffff;
+    color: #333333 !important;
+    border: 1px solid #32CD32;
+    margin-right: 1rem;
+}
+
+.login-link:hover {
+    background-color: #32CD32;
+    color: #ffffff !important;
+    border: 1px solid #32CD32;
+}
+
+.signup-link {
+    background-color: #FF5A5F;
+    color: #ffffff !important;
+    border: 1px solid #FF5A5F;
+}
+
+.signup-link:hover {
+    background-color: #ffffff;
+    color: #FF5A5F !important;
+    border: 1px solid #FF5A5F;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+
+    .nav-link {
+        margin-right: 1rem;
+    }
+
+    .notificationBellWrapper {
+        /*margin-right: 1rem;*/
+        text-align: center;
+    }
+}
+
+.cartIcon {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-size: 0.9rem !important;
+    margin-left: 10px;
+}
+
+.cartIcon:hover {
+    transform: translateY(-5px);
+    /*box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);*/
 }

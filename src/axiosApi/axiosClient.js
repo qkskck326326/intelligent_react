@@ -54,6 +54,7 @@ const refreshToken = async () => {
 
 const logout = () => {
     localStorage.clear();
+    localStorage.setItem('showLoginAlert', 'true'); // 플래그 설정
     window.location.href = '/user/login';
 };
 
@@ -63,14 +64,22 @@ axiosClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            const newAccessToken = await refreshToken();
-            if (newAccessToken) {
-                originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-                return axiosClient(originalRequest);
+        if (error.response) {
+            if (error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                const newAccessToken = await refreshToken();
+                if (newAccessToken) {
+                    originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                    return axiosClient(originalRequest);
+                }
+            }
+
+            if (error.response.status === 403) {
+                logout();
+                return new Promise(() => {}); // 새로운 Promise 반환하여 후속 처리가 되지 않게 함
             }
         }
+
         return Promise.reject(error);
     }
 );

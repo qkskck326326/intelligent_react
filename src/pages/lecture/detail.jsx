@@ -81,7 +81,7 @@ const LectureDetailPage = () => {
             const currentUserEmail = localStorage.getItem("userEmail");
             const currentProvider = localStorage.getItem("provider");
             const currentNickname = localStorage.getItem("nickname");
-            const currentAdmin = localStorage.getItem("isAdmin") === 'true'; // isAdmin 값 확인
+            const currentAdmin = localStorage.getItem("isAdmin") === 'true';
 
             const fetchAccessInfo = async () => {
                 const lectureDetail = await getLectureDetail(lectureId);

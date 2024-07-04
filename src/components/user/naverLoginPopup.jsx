@@ -35,6 +35,7 @@ const NaverLoginPopup = () => {
             window.localStorage.setItem("userEmail", response.data.userEmail);
             window.localStorage.setItem("provider", response.data.provider);
             window.localStorage.setItem("profileImageUrl", response.data.profileImageUrl);
+            window.localStorage.setItem("isSnsUser", response.data.isSnsUser);
 
             authStore.setIsLoggedIn(true);
             authStore.setIsStudent(response.data.isStudent);
