@@ -137,7 +137,7 @@ const SiteList = () => {
                     <th scope="col">Site Name</th>
                     <th scope="col">Title Element</th>
                     <th scope="col">Context Element</th>
-                    <th scope="col" style={{width: '200px'}}> 수정 / 삭제</th>
+                    <th scope="col" style={{width: '500px'}}> 수정 / 삭제</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -149,10 +149,10 @@ const SiteList = () => {
                         <td>{item.siteName}</td>
                         <td>{item.titleElement}</td>
                         <td>{item.contextElement}</td>
-                        <td>
+                        <td style={{justifyContent: 'center'}}>
                             <button onClick={() => handleEdit(item)}>수정</button>
                             &nbsp;
-                            {/*<button onClick={() => handleDelete(item)}>삭제</button>*/}
+                            <button onClick={() => handleDelete(item)}>삭제</button>
                         </td>
                     </tr>
                 ))}
