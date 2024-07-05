@@ -59,7 +59,7 @@ const HomePage = observer(() => {
         const height = 600;
         const left = (window.screen.width / 2) - (width / 2);
         const top = (window.screen.height / 2) - (height / 2);
-        window.open('/admin/testAI', 'TestAI', `width=${width},height=${height},left=${left},top=${top}`);
+        window.open('/simpleCodeComplier/testAI', 'TestAI', `width=${width},height=${height},left=${left},top=${top}`);
     };
 
     const handleBannerClick = () => {
@@ -86,7 +86,7 @@ const HomePage = observer(() => {
                         </div>
                     </div>
                 )}
-                <NavBar />
+                {/*<NavBar />*/}
                 {!isSnsUser && <UserInterestPackageList />}
                 <UpperCategoryPackageList />
                 {authStore.isLoggedIn && (

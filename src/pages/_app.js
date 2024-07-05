@@ -63,7 +63,7 @@ const App = observer (({ Component, pageProps }) => {
     };
   }, [router]);
 
-  const shouldRenderHeader = router.pathname !== '/admin/testAI' &&  router.pathname !== '/user/naverLoginPopupPage' &&  router.pathname !== '/user/googleLoginPopupPage';
+  const shouldRenderHeader = router.pathname !== '/simpleCodeComplier/testAI' &&  router.pathname !== '/user/naverLoginPopupPage' &&  router.pathname !== '/user/googleLoginPopupPage';
 
   return (
       <QueryClientProvider client={queryClient}>
