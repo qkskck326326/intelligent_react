@@ -103,7 +103,6 @@ const SiteList = () => {
 
     return (
         <div className="container">
-            <h1>Board List</h1>
             <Button variant="btn btn-primary" onClick={handleShow} className="mb-3">
                 작성하기
             </Button> &nbsp;
