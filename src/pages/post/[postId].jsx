@@ -1,5 +1,6 @@
 import PostDetail from "../../components/post/postDetail";
 import { useRouter } from "next/router";
+import Footer from "../../components/common/Footer";
 
 const PostDetailPage = () => {
   const router = useRouter();
@@ -8,6 +9,7 @@ const PostDetailPage = () => {
   return (
     <div>
       <PostDetail postId={postId} />
+      <Footer />
     </div>
   );
 };
