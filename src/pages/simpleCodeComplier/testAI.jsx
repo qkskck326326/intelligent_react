@@ -9,6 +9,8 @@ const TestAI = () => {
     const [executionFeedback, setExecutionFeedback] = useState(null);
     const [fixedCode, setFixedCode] = useState("");
     const [fixedCodeFeedback, setFixedCodeFeedback] = useState(null);
+    const [score, setScore] = useState(null);
+    const [fixedScore, setFixedScore] = useState(null);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -22,11 +24,15 @@ const TestAI = () => {
             setExecutionFeedback(data.execution_feedback || "No Execution Feedback");
             setFixedCode(data.fixed_code || "No Fixed Code");
             setFixedCodeFeedback(data.fixed_code_feedback || "No Fixed Code Feedback");
+            setScore(data.score || "No Score");
+            setFixedScore(data.fixed_score || "No Fixed Score");
         } catch (error) {
             console.error("There was an error analyzing the code!", error);
             setExecutionFeedback("Error analyzing the code");
             setFixedCode("Error getting fixed code");
             setFixedCodeFeedback("Error getting fixed code feedback");
+            setScore("Error getting score");
+            setFixedScore("Error getting fixed score");
         }
     };
 
@@ -75,6 +81,12 @@ const TestAI = () => {
                 <div className={styles.fixedFeedbackSection}>
                     <h3>수정된 코드 컴파일 결과</h3>
                     <pre className={styles.fixedFeedbackPre}>{fixedCodeFeedback}</pre>
+                </div>
+            )}
+            {score !== null && (
+                <div className={styles.scoreSection}>
+                    <h3>점수</h3>
+                    <pre className={styles.scorePre}>원본 코드 점수: {score}</pre>
                 </div>
             )}
         </Container>
