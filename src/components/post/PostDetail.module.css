@@ -219,6 +219,10 @@
 
 .comments {
   margin-top: 15px;
+  /*box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);*/
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
 .comments h2 {
@@ -236,7 +240,10 @@
   align-items: flex-start;
   border-bottom: 1px solid #ddd;
   padding: 8px 0;
+
 }
+
+
 
 .comments li img {
   width: 35px;

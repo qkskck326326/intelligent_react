@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {useRouter} from 'next/router';
 import styles from "../../styles/lecturePackage/upperCategoryPackage.module.css";
-import Link from "next/link";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
 
@@ -88,6 +87,9 @@ const UpperCategoryPackageList = () => {
     };
 
 
+    const handleDetailMove = (lectuerId) => {
+        router.push(`/lecturePackage/${lectuerId}`);
+    };
 
 
 
@@ -109,10 +111,8 @@ const UpperCategoryPackageList = () => {
                                 </div>
                                 <div className={styles.details}>
                                     <div className={styles.title}>
-
-                                            <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
-                                                <span className={styles.customLink}>{lecture.title}</span>
-                                            </Link>
+                                        <span className={styles.customLink}
+                                              onClick={() => handleDetailMove(lecture.lecturePackageId)}>{lecture.title}</span>
 
                                     </div>
                                     <div className={styles.rating}>

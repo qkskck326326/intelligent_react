@@ -7,10 +7,10 @@ const ReportUser = () => {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [page, setPage] = useState(1);
+    const size = 10;
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [totalPages, setTotalPages] = useState(0);
-    const size = 10;
     const [filter, setFilter] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [currentNickname, setCurrentNickname] = useState('');
@@ -38,7 +38,6 @@ const ReportUser = () => {
                 setLoading(false);
             }
         };
-
         fetchUsers(size, page);
     }, [page]);
 
@@ -68,9 +67,9 @@ const ReportUser = () => {
     const handleFilterChange = (event) => {
         const filterValue = event.target.value;
         setFilter(filterValue);
-        if (filterValue === 'restricted') {
+        if (filterValue === '로그인 제한') {
             setFilteredUsers(users.filter(user => user.loginOk === 'N'));
-        } else if (filterValue === 'unrestricted') {
+        } else if (filterValue === '로그인 가능') {
             setFilteredUsers(users.filter(user => user.loginOk === 'Y'));
         } else {
             setFilteredUsers(users);
@@ -89,7 +88,7 @@ const ReportUser = () => {
     };
 
     const confirmRestriction = () => {
-        handleLoginRestriction(currentNickname, currentLoginOk);
+        handleLoginRestriction(currentNickname);
         closeModal();
     };
 
@@ -105,8 +104,8 @@ const ReportUser = () => {
                         className={styles.select}
                     >
                         <option value="">전체</option>
-                        <option value="restricted">로그인 제한</option>
-                        <option value="unrestricted">로그인 가능</option>
+                        <option value="로그인 제한">로그인 제한</option>
+                        <option value="로그인 가능">로그인 가능</option>
                     </select>
                 </div>
                 {loading ? (

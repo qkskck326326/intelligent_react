@@ -51,16 +51,19 @@ const ProfileModal = ({ profile, onClose }) => {
     }, [nickname]);
 
     // 경력 기간 계산 함수
+
     const calculateCareerDuration = (startDate, endDate) => {
-        const start = parseISO(startDate);
-        const end = parseISO(endDate);
-        const totalMonths = differenceInMonths(end, start);
-        const years = Math.floor(totalMonths / 12);
-        const months = totalMonths % 12;
-        if (months === 0) {
-            return `${years}년`;
-        } else {
-            return `${years}년 ${months}개월`;
+        if(startDate != null && endDate != null) {
+            const start = parseISO(startDate);
+            const end = parseISO(endDate);
+            const totalMonths = differenceInMonths(end, start);
+            const years = Math.floor(totalMonths / 12);
+            const months = totalMonths % 12;
+            if (months === 0) {
+                return `${years}년`;
+            } else {
+                return `${years}년 ${months}개월`;
+            }
         }
     };
 

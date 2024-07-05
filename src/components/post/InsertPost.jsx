@@ -5,7 +5,8 @@ import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
 import { observer } from "mobx-react";
 import dynamic from "next/dynamic";
-const CKEditorComponent = dynamic(() => import("./CKEditorComponent"), {
+const CKEditorComponent =
+    dynamic(() => import("./CKEditorComponent"), {
   ssr: false,
 });
 
@@ -81,8 +82,8 @@ const InsertPost = observer(() => {
         subCategoryId,
         tags, // 태그 추가
       };
-
-      const postResponse = await axiosClient.post("/posts/insert", postDTO);
+      const postResponse =
+          await axiosClient.post("/posts/insert", postDTO);
       const newPostId = postResponse.data.id;
 
       if (files.length > 0) {

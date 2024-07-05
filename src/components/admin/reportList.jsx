@@ -118,6 +118,12 @@ const ReportList = () => {
         });
     };
 
+    const handlePostList = (postId) => {
+        router.push(`/post/${postId}`);
+    };
+
+
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
@@ -157,9 +163,7 @@ const ReportList = () => {
                                 <td>{report.receiveNickname}</td>
                                 <td>
                                     {(report.reportType === 0 || report.reportType === 1) ? (
-                                        <Link href={`/post/${report.contentId}`}>
-                                            <span className={styles.customLink}>{report.content}</span>
-                                        </Link>
+                                        <span className={styles.customLink} onClick={() => handlePostList(report.contentId)}>{report.content}</span>
                                     ) : (report.reportType === 3 || report.reportType === 4) ? (
                                         <span className={styles.customLink} onClick={() => handleLectureList(report.contentId)}>{report.content}</span>
                                     ) : (

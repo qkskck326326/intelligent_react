@@ -19,6 +19,7 @@ import UploadButton from "../../components/post/PostUploadBtn";
 import { getRelativeTime } from "../../components/post/timeUtils";
 import { IoHeartSharp } from "react-icons/io5";
 
+
 const PostList = observer(({ selectedCategory, onSelectCategory }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,28 +42,19 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
         const res = searchQuery
           ? searchType === "titleContent"
             ? await axiosClient.get("/posts/searchTitleOrContent", {
-                params: {
-                  keyword: searchQuery,
-                  page: page,
-                  size: size,
-                  sort: sortOrder,
+                params: {keyword: searchQuery, page: page,
+                  size: size, sort: sortOrder,
                 },
               })
             : await axiosClient.get("/posts/searchByTag", {
-                params: {
-                  tag: searchQuery,
-                  page: page,
-                  size: size,
-                  sort: sortOrder,
+                params: {tag: searchQuery, page: page,
+                  size: size, sort: sortOrder,
                 },
               })
           : selectedCategory
           ? await axiosClient.get("/posts/searchlistByCategory", {
-              params: {
-                categoryId: selectedCategory.id,
-                page: page,
-                size: size,
-                sort: sortOrder,
+              params: {categoryId: selectedCategory.id, page: page,
+                size: size, sort: sortOrder,
               },
             })
           : filter === "myPosts"
@@ -371,6 +363,7 @@ const PostList = observer(({ selectedCategory, onSelectCategory }) => {
         <UploadButton onLoginRequired={handleUploadClick} />
       </div>
     </div>
+
   );
 });
 
