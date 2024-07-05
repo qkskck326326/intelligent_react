@@ -123,7 +123,9 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
 
 
 
-
+    const handleDetailMove = (lectuerId) => {
+        router.push(`/lecturePackage/${lectuerId}`);
+    };
 
 
 
@@ -139,7 +141,7 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
                 <div className={styles.grid}>
                     {currentItems.map((lecture) => (
                         <div key={lecture.lecturePackageId} className={styles.cardContainer}>
-                            <div className={styles.card}>
+                            <div className={styles.cards}>
                                 <div className={styles.thumbnail}>
                                     <img src={lecture.thumbnail} alt={lecture.thumbnail}/>
                                 </div>
@@ -147,9 +149,8 @@ const UserInterestPackageList = observer(({ onRegisterClick }) => {
                             <div className={styles.details}>
 
                                 <div className={styles.title}> {/*결제한 패키지면 강의목록으로 이동*/}
-                                        <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
-                                            <span className={styles.customLink}>{lecture.title}</span>
-                                        </Link>
+                                    <span className={styles.customLink}
+                                          onClick={() => handleDetailMove(lecture.lecturePackageId)}>{lecture.title}</span>
                                 </div>
                                 <div className={styles.rating}>
                                     {"별점 "}
