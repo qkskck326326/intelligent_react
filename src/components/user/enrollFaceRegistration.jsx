@@ -23,17 +23,23 @@ const EnrollFaceRegistration = ({ prevPage, basicInfo, educationExperience, care
     if (!webcamActive) {
       navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
         videoRef.current.srcObject = stream;
-        videoRef.current.play();
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current.play().catch((error) => {
+            console.error("Error playing video:", error);
+          });
+        };
         setWebcamActive(true);
+      }).catch((error) => {
+        console.error("Error accessing webcam:", error);
       });
     } else {
       const stream = videoRef.current.srcObject;
       const tracks = stream.getTracks();
-
+  
       tracks.forEach((track) => {
         track.stop();
       });
-
+  
       videoRef.current.srcObject = null;
       setWebcamActive(false);
     }

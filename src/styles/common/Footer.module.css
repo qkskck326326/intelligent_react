@@ -3,6 +3,7 @@
     color: white !important;
     padding: 40px 0;
     padding-left: 30px; /* 왼쪽 패딩 추가 */
+    text-align: center;
 }
 
 .footerContainer {
@@ -57,7 +58,7 @@
     padding-top: 20px;
     color: white !important;
     padding-left: 30px; /* 왼쪽 패딩 추가 */
-}
+   }
 
 /* Global a tag styles within footer */
 .footer a {
