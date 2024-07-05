@@ -53,7 +53,8 @@ const PostDetail = observer(({ postId }) => {
         const userEmail = authStore.getUserEmail();
         const provider = authStore.getProvider();
         const nickname = authStore.getNickname();
-        const response = await axiosClient.get(`/posts/detail/${postId}`, {
+        const response =
+            await axiosClient.get(`/posts/detail/${postId}`, {
           params: { userEmail, provider, nickname },
           withCredentials: true,
         });

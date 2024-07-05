@@ -75,21 +75,6 @@ const CartPage = () => {
     });
   };
 
-  // const handleDeleteSelected = async () => {
-  //   try {
-  //     const response = await axiosClient.post("/cart/delete", {
-  //       ids: Array.from(selectedItems)
-  //     });
-  //     console.log("Delete response:", response); // 디버깅 로그
-  //     setCartItems((prev) =>
-  //       prev.filter((item) => !selectedItems.has(item.lecturePackageId))
-  //     );
-  //     setSelectedItems(new Set());
-  //   } catch (error) {
-  //     console.error("Error deleting items:", error); // 디버깅 로그
-  //     setError(error.message);
-  //   }
-  // };
   const handleDeleteSelected = async () => {
     try {
       const idsArray = Array.from(selectedItems);
