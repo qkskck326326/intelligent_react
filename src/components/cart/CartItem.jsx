@@ -44,6 +44,7 @@ const CartItem = ({ item, onSelect, isSelected }) => {
         <p>{item.nickname}</p>
       </div>
       <div className={styles.price}>{item.price.toLocaleString()}원</div>
+
     </div>
   );
 };

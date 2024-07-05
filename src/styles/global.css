@@ -14,8 +14,13 @@
     font-style: normal;
 }
 
+/* 기본 폰트 설정 */
+* {
+    font-family: 'ELAND_Choice_M', sans-serif !important;
+}
+
 body {
-    font-family: 'ELAND_Choice_M', sans-serif;
+    font-family: 'ELAND_Choice_M', sans-serif !important;
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
@@ -64,7 +69,7 @@ h1 {
     justify-content: space-around;
     width: 50vh;
     list-style: none;
-    cursor: pointer
+    cursor: pointer;
 }
 
 .navigation_bar li {
@@ -74,21 +79,21 @@ h1 {
 .navigation_bar p {
     color: white;
     min-width: 3em;
-    cursor: pointer
+    cursor: pointer;
 }
 
-.map_div{
+.map_div {
     position: relative;
     width: 29vh;
 }
 
-.map_div::after{
+.map_div::after {
     display: block;
     content: "";
     padding-bottom: 100%;
 }
 
-.map_content{
+.map_content {
     position: absolute;
     width: 100%;
 }
@@ -126,8 +131,6 @@ h1 {
 .square.special-yellow {
     background-color: yellow;
 }
-
-
 
 /* 모바일 뷰 (기본 스타일) */
 .background-container {
@@ -204,4 +207,3 @@ h1 {
 .button-container button {
     margin-top: 10px;
 }
-
