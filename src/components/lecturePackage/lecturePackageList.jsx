@@ -3,7 +3,6 @@ import {useRouter} from 'next/router';
 import styles from "../../styles/lecturePackage/lecturePackage.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import SortAndSearchBar from "../common/sortAndSearchBar";
-import Link from "next/link";
 import CategoryToggle from "./CategoryToggle";
 import { observer } from "mobx-react";
 import authStore from "../../stores/authStore";
@@ -23,7 +22,6 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
   const [searchCriteria, setSearchCriteria] = useState("title");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubCategoryName, setSelectedSubCategoryName] = useState(""); // 선택된 서브카테고리명 상태 추가
-
 
 
   const ITEMS_PER_PAGE = 16;
@@ -164,6 +162,10 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
     );
   };
 
+  const handleDetailMove = (lectuerId) => {
+    router.push(`/lecturePackage/${lectuerId}`);
+  };
+
 
 
 
@@ -205,16 +207,14 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
                 <div className={styles.cardContainer}>
                   <div className={styles.card}>
                     <div className={styles.thumbnail}>
-                      <img src={lecture.thumbnail} alt={lecture.title} />
+                      <img src={lecture.thumbnail} alt={lecture.title}/>
                     </div>
-                  </div>
+
                   <div className={styles.details}>
 
-                    <div className={styles.title}> {/*결제한 패키지면 강의목록으로 이동*/}
-
-                          <Link href={`/lecturePackage/${lecture.lecturePackageId}`}>
-                            <span className={styles.customLink}>{lecture.title}</span>
-                          </Link>
+                    <div className={styles.title}>
+                      <span className={styles.customLink}
+                            onClick={() => handleDetailMove(lecture.lecturePackageId)}>{lecture.title}</span>
 
                     </div>
                     <div className={styles.rating}>
@@ -233,18 +233,22 @@ const LecturePackageList = observer(({ onRegisterClick }) => {
                             alt="조회수 아이콘"
                         />
                       </span>{" "}
-                          {lecture.viewCount}
-                          <span className={styles.packageLevel}>
+                      {lecture.viewCount}
+                      <span className={styles.packageLevel}>
                         {renderLevelIcon(lecture.packageLevel)}
-                            {getLectureLevel(lecture.packageLevel)}
+                        {getLectureLevel(lecture.packageLevel)}
                       </span>
                     </div>
                   </div>
+                  </div>
                 </div>
-                <div className={styles.horizontalLines}></div>
+
               </div>
           ))}
+
         </div>
+        <div className={styles.horizontalLines}></div>
+
 
         <div className={styles.paginationContainer}>
           {/*<Pagination className={styles.paginationWrapper}>*/}
