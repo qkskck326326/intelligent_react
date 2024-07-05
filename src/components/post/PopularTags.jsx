@@ -25,7 +25,7 @@ const PopularTags = () => {
         {tags.map((tag, index) => (
           <li key={index} className={styles.popularTagItem}>
             <a
-              href={`https://www.google.co.kr/search?q=${tag}`}
+              href={`https://www.google.co.kr/search?q=${tag}가 뭔가요?`}
               className={styles.popularTagLink}
               target="_blank"
               rel="noopener noreferrer"
