@@ -5,8 +5,8 @@ import Link from "next/link";
 const Index = () => {
     return (
         <div>
-            <h1>세계 IT 뉴스</h1>
-            <Link href={'/itNewsSite'}>사이트 리스트</Link>
+            <br/>
+            <h1>해외 IT 뉴스</h1>
             <BoardList/>
         </div>
     );
