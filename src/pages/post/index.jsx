@@ -3,6 +3,7 @@ import PostList from "../../components/post/postList"; // Corrected import
 import styles from "../../components/post/PostIndex.module.css"; // Import the CSS file
 import PopularPosts from "../../components/post/PopularPosts";
 import PopularTags from "../../components/post/PopularTags";
+import Footer from "../../components/common/Footer";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -58,6 +59,7 @@ const Index = () => {
           </div> */}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
