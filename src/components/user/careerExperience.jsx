@@ -48,21 +48,13 @@ const CareerExperience = observer(() => {
 
     const handleCareerSubmit = async (e) => {
         e.preventDefault();
-
         const { institutionName, department, position, startDate, endDate, responsibilities } = careerForm;
 
         if (!institutionName || !department || !position || !startDate || !endDate || !responsibilities) {
             setErrorMessage("모든 필수 입력 값을 입력해 주세요.");
             return;
         }
-
         setErrorMessage("");
-
-
-
-        console.log("nickname : ", nickname);
-        console.log("editCareerId : ", editCareerId);
-
         try {
             if (isEditing) {
                 const data = { nickname, ...careerForm, careerId: editCareerId };
