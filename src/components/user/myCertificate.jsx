@@ -73,11 +73,18 @@ const MyCertificate = observer(() => {
 
   const handleDelete = async (certificateNumber) => {
     const nickname = authStore.getNickname();
-    try {
-      await axiosClient.delete('/certificates', {params: {certificateNumber: certificateNumber}});
-      fetchCertificates(nickname);
-    } catch (error) {
-      setError("Error deleting certificate", error);
+
+    const isConfirmed = window.confirm("삭제하시겠습니까?");
+    if(isConfirmed){
+      try {
+        await axiosClient.delete('/certificates', {params: {certificateNumber: certificateNumber}});
+        fetchCertificates(nickname);
+      } catch (error) {
+        setError("Error deleting certificate", error);
+      }
+    } else {
+      // 취소 클릭 시 동작
+      console.log("삭제가 취소되었습니다.");
     }
   };
 
