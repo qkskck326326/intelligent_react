@@ -108,10 +108,18 @@ const Success = () => {
             paymentConfirmation: "Y",
             paymentKey,
           };
-          console.log(paymentInfo);
-          await axiosClient.post("/payment/savePayment", paymentInfo);
+          // 기존 항목이 존재하는지 확인
+          const existingTransactionResponse = await axiosClient.get(`/payment/transaction/${userEmail}/${provider}/${item.lecturePackageId}`);
+          if (existingTransactionResponse.data) {
+            // 기존 항목이 있는 경우 업데이트
+            await axiosClient.put(`/payment/transaction/${userEmail}/${provider}/${item.lecturePackageId}`, paymentInfo);
+            console.log("Existing payment information updated successfully");
+          } else {
+            // 기존 항목이 없는 경우 새 항목 삽입
+            await axiosClient.post("/payment/savePayment", paymentInfo);
+            console.log("Payment information saved successfully");
+          }
         }
-        console.log("Payment information saved successfully");
       } catch (error) {
         console.error("Error saving payment information:", error);
       }
