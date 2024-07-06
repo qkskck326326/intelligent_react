@@ -60,7 +60,7 @@ const NaverLoginPopup = () => {
           if (window.opener) {
             console.log('Sending message to opener');
             if (isLogin) {
-              window.opener.postMessage({ type: 'LOGIN_SUCCESS' }, window.location.origin);
+              //window.opener.postMessage({ type: 'LOGIN_SUCCESS' }, window.location.origin);
             } else {
               window.opener.postMessage({ type: 'REGISTER_SUCCESS' }, window.location.origin);
             }
