@@ -93,7 +93,6 @@ const Success = () => {
       provider,
       orderId,
       paymentType,
-      couponId,// 쿠폰 ID 매개변수 추가
     ) => {
       console.log(paymentKey);
       try {
@@ -103,7 +102,7 @@ const Success = () => {
             provider,
             lecturePackageId: item.lecturePackageId,
             paymentType,
-            couponId, // 쿠폰 ID 추가
+            couponId: item.couponId || null, // 각 아이템의 쿠폰 ID를 할당
             finalPrice: item.price,
             orderId,
             paymentConfirmation: "Y",

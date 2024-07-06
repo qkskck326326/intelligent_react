@@ -32,7 +32,7 @@ const PaymentHistoryManagement = observer(() => {
   }, []);
 
   const handleRefund = async (paymentKey, refundAmount, transactionId) => {
-    const userConfirmed = window.confirm("정말로 이 항목을 환불하시겠습니까?");
+    const userConfirmed = window.confirm("결제 후 7일이 지나거나 시청 이력이 있다면 환불이 불가능합니다. 환불하시겠습니까?");
 
     if (!userConfirmed) {
       return; // 사용자가 취소를 선택한 경우 함수 종료
@@ -98,23 +98,32 @@ const PaymentHistoryManagement = observer(() => {
                 return (
                     <tr key={history.transactionId}>
                       <td>
-                        <Link
-                            href={`/lecture/list?lecturePackageId=${history.lecturePackageId}`}
-                            passHref
-                            style={{ textDecoration: "none", color: "inherit" }}
-                        >
-                          <img
-                              src={history.thumbnail}
-                              alt={history.title}
-                              className={styles.thumbnail}
-                          />
-                          {history.title}
-                        </Link>
+                        {history.paymentConfirmation === "Y" ? (
+                            <Link
+                                href={`/lecture/list?lecturePackageId=${history.lecturePackageId}`}
+                                passHref
+                                style={{ textDecoration: "none", color: "inherit" }}
+                            >
+                              <img
+                                  src={history.thumbnail}
+                                  alt={history.title}
+                                  className={styles.thumbnail}
+                              />
+                              {history.title}
+                            </Link>
+                        ) : (
+                            <>
+                              <img
+                                  src={history.thumbnail}
+                                  alt={history.title}
+                                  className={styles.thumbnail}
+                              />
+                              {history.title}
+                            </>
+                        )}
                       </td>
                       <td>
-                        {history.paymentConfirmation === "Y"
-                            ? "결제완료"
-                            : "환불완료"}
+                        {history.paymentConfirmation === "Y" ? "결제완료" : "환불완료"}
                       </td>
                       <td>{history.paymentType}</td>
                       <td>{transactionDate.toLocaleString()}</td>

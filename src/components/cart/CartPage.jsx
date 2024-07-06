@@ -4,24 +4,24 @@ import styles from "./CartPage.module.css";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import axios from "axios";
 import authStore from "../../stores/authStore";
-import { useRouter } from "next/router"; // Import useRouter
+import { useRouter } from "next/router";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [coupons, setCoupons] = useState([]);
-  const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [selectedCoupons, setSelectedCoupons] = useState({});
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [agreement, setAgreement] = useState(false);
-  const router = useRouter(); // Define router
+  const router = useRouter();
 
   useEffect(() => {
     const isLoggedIn = authStore.checkIsLoggedIn();
 
     if (!isLoggedIn) {
       const userConfirmed = window.confirm(
-        "로그인이 필요한 콘텐츠입니다. 로그인하시겠습니까?"
+          "로그인이 필요한 콘텐츠입니다. 로그인하시겠습니까?"
       );
 
       if (userConfirmed) {
@@ -32,15 +32,11 @@ const CartPage = () => {
     }
     const userEmail = localStorage.getItem("userEmail");
     const provider = localStorage.getItem("provider");
-    console.log(
-      `Fetching cart items for user: ${userEmail}, provider: ${provider}`
-    );
+    console.log(`Fetching cart items for user: ${userEmail}, provider: ${provider}`);
 
     const fetchCartItems = async () => {
       try {
-        const response = await axiosClient.get(
-          `/cart/${userEmail}/${provider}`
-        );
+        const response = await axiosClient.get(`/cart/${userEmail}/${provider}`);
         setCartItems(response.data);
         setLoading(false);
         console.log(response.data);
@@ -88,7 +84,7 @@ const CartPage = () => {
       });
       console.log("Delete response:", response); // 디버깅 로그
       setCartItems((prev) =>
-        prev.filter((item) => !selectedItems.has(item.lecturePackageId))
+          prev.filter((item) => !selectedItems.has(item.lecturePackageId))
       );
       setSelectedItems(new Set());
     } catch (error) {
@@ -106,25 +102,47 @@ const CartPage = () => {
     }
   };
 
+  const handleCouponSelect = (lecturePackageId, couponId) => {
+    setSelectedCoupons((prev) => {
+      const newSelectedCoupons = { ...prev };
+      if (couponId === "") {
+        delete newSelectedCoupons[lecturePackageId];
+      } else {
+        newSelectedCoupons[lecturePackageId] = couponId;
+      }
+      return newSelectedCoupons;
+    });
+  };
+
   const getDiscountAmount = () => {
-    const totalPrice = cartItems
-      .filter((item) => selectedItems.has(item.lecturePackageId))
-      .reduce((total, item) => total + item.price, 0);
-
-    if (selectedCoupon) {
-      return (totalPrice * selectedCoupon.discountAmount) / 100;
-    }
-
-    return 0;
+    return cartItems
+        .filter((item) => selectedItems.has(item.lecturePackageId))
+        .reduce((total, item) => {
+          const couponId = selectedCoupons[item.lecturePackageId];
+          const coupon = coupons.find((coupon) => coupon.id.toString() === couponId);
+          if (coupon) {
+            return total + (item.price * coupon.discountAmount) / 100;
+          }
+          return total;
+        }, 0);
   };
 
   const getTotalPrice = () => {
     const totalPrice = cartItems
-      .filter((item) => selectedItems.has(item.lecturePackageId))
-      .reduce((total, item) => total + item.price, 0);
+        .filter((item) => selectedItems.has(item.lecturePackageId))
+        .reduce((total, item) => total + item.price, 0);
 
     const discount = getDiscountAmount();
     return totalPrice - discount;
+  };
+
+  const getFinalPrice = (item) => {
+    const couponId = selectedCoupons[item.lecturePackageId];
+    const coupon = coupons.find((coupon) => coupon.id.toString() === couponId);
+    if (coupon) {
+      return item.price - (item.price * coupon.discountAmount) / 100;
+    }
+    return item.price;
   };
 
   const handlePayment = async () => {
@@ -137,7 +155,7 @@ const CartPage = () => {
     try {
       const orderId = `order_${Date.now()}`;
       const selectedCartItems = cartItems.filter((item) =>
-        selectedItems.has(item.lecturePackageId)
+          selectedItems.has(item.lecturePackageId)
       );
       const totalAmount = getTotalPrice();
 
@@ -148,10 +166,12 @@ const CartPage = () => {
         provider: provider,
         items: selectedCartItems.map((item) => ({
           lecturePackageId: item.lecturePackageId,
-          price: item.price,
+          price: getFinalPrice(item), // 쿠폰이 적용된 최종 가격
+          couponId: selectedCoupons[item.lecturePackageId] || null,
         })),
-        couponId: selectedCoupon ? selectedCoupon.id : null,
       };
+
+      console.log('Selected Coupons:', selectedCoupons); // 디버깅용 로그
 
       await axiosClient.post("/payment/request", paymentRequest, {
         withCredentials: true,
@@ -182,101 +202,85 @@ const CartPage = () => {
 
   const allSelected = selectedItems.size === cartItems.length;
 
+  const usedCoupons = Object.values(selectedCoupons);
+
   return (
-    <div className={styles.cartPage}>
-      <div className={styles.cartContainer}>
-        <div className={styles.cartItems}>
-          <h2>{authStore.getNickname()}님의 장바구니 목록</h2>
-          <div className={styles.cartHeader}>
-            <br />
-            <div>
-              <input
-                type="checkbox"
-                checked={allSelected}
-                onChange={() => handleSelectAll(!allSelected)}
-              />
-              전체선택 {selectedItems.size}/{cartItems.length}
-            </div>
-            {/* <div>상품명</div>
-            <div>가격</div> */}
-          </div>
-          <div className={styles.cartBody}>
-            {cartItems.length === 0 ? (
-              <div className={styles.emptyCart}>
-                아직 장바구니에 추가한 패키지가 없습니다.
-                <div className={styles.movePackageBtn}>
-                  <button onClick={() => router.push("/lecturePackage")}>
-                    패키지 둘러보기
-                  </button>
-                </div>
-              </div>
-            ) : (
-              cartItems.map((item) => (
-                <CartItem
-                  key={item.lecturePackageId}
-                  item={item}
-                  onSelect={handleSelect}
-                  isSelected={selectedItems.has(item.lecturePackageId)}
-                />
-              ))
-            )}
-          </div>
-          <button
-            className={styles.deleteButton}
-            onClick={handleDeleteSelected}
-            disabled={selectedItems.size === 0}
-          >
-            선택삭제
-          </button>
-        </div>
-        <div className={styles.paymentBox}>
-          <h3>결제 정보</h3>
-          <div className={styles.userInformation}>
-            <p>
-              닉네임 : {authStore.getNickname()}
+      <div className={styles.cartPage}>
+        <div className={styles.cartContainer}>
+          <div className={styles.cartItems}>
+            <h2>{authStore.getNickname()}님의 장바구니 목록</h2>
+            <div className={styles.cartHeader}>
               <br />
-              이메일 : {authStore.getUserEmail()}
-            </p>
+              <div>
+                <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={() => handleSelectAll(!allSelected)}
+                />
+                전체선택 {selectedItems.size}/{cartItems.length}
+              </div>
+            </div>
+            <div className={styles.cartBody}>
+              {cartItems.length === 0 ? (
+                  <div className={styles.emptyCart}>
+                    아직 장바구니에 추가한 패키지가 없습니다.
+                    <div className={styles.movePackageBtn}>
+                      <button onClick={() => router.push("/lecturePackage")}>
+                        패키지 둘러보기
+                      </button>
+                    </div>
+                  </div>
+              ) : (
+                  cartItems.map((item) => (
+                      <CartItem
+                          key={item.lecturePackageId}
+                          item={item}
+                          onSelect={handleSelect}
+                          isSelected={selectedItems.has(item.lecturePackageId)}
+                          coupons={coupons}
+                          onCouponSelect={handleCouponSelect}
+                          selectedCouponId={selectedCoupons[item.lecturePackageId] || ""}
+                          usedCoupons={usedCoupons}
+                          finalPrice={getFinalPrice(item)} // 최종 가격을 CartItem에 전달
+                      />
+                  ))
+              )}
+            </div>
+            <button
+                className={styles.deleteButton}
+                onClick={handleDeleteSelected}
+                disabled={selectedItems.size === 0}
+            >
+              선택삭제
+            </button>
           </div>
-          <div className={styles.couponSelection}>
-            <label>
-              <span>쿠폰</span>
-              <select
-                onChange={(e) => {
-                  const couponId = e.target.value;
-                  const coupon = coupons.find(
-                    (coupon) => coupon.id.toString() === couponId
-                  );
-                  setSelectedCoupon(coupon);
-                }}
-              >
-                <option value="">쿠폰 선택</option>
-                {coupons.map((coupon) => (
-                  <option key={coupon.id} value={coupon.id}>
-                    {coupon.description} - {coupon.discountAmount}% 할인
-                  </option>
-                ))}
-              </select>
-            </label>
+          <div className={styles.paymentBox}>
+            <h3>결제 정보</h3>
+            <div className={styles.userInformation}>
+              <p>
+                닉네임 : {authStore.getNickname()}
+                <br />
+                이메일 : {authStore.getUserEmail()}
+              </p>
+            </div>
+            <p>할인 금액: {getDiscountAmount().toLocaleString()}원</p>
+            <p>총 결제 금액: {getTotalPrice().toLocaleString()}원</p>
+            <div className={styles.agreement}>
+              <label>
+                <input
+                    type="checkbox"
+                    checked={agreement}
+                    onChange={() => setAgreement(!agreement)}
+                />
+                결제사 정보 제공 동의
+              </label>
+            </div>
+            <button onClick={handlePayment} disabled={selectedItems.size === 0}>
+              결제하기
+            </button>
           </div>
-          <p>할인 금액: {getDiscountAmount().toLocaleString()}원</p>
-          <p>총 결제 금액: {getTotalPrice().toLocaleString()}원</p>
-          <div className={styles.agreement}>
-            <label>
-              <input
-                type="checkbox"
-                checked={agreement}
-                onChange={() => setAgreement(!agreement)}
-              />
-              결제사 정보 제공 동의
-            </label>
-          </div>
-          <button onClick={handlePayment} disabled={selectedItems.size === 0}>
-            결제하기
-          </button>
         </div>
       </div>
-    </div>
   );
 };
 
