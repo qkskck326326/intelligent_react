@@ -152,6 +152,13 @@ const CartPage = () => {
       alert("결제사 정보 제공에 동의해야 합니다.");
       return;
     }
+    const userConfirmed = window.confirm(
+        "결제일로부터 7일이 지나거나 구매한 강의를 시청할 경우 환불할 수 없습니다." +
+        " 결제하시겠습니까?"
+    );
+    if (!userConfirmed) {
+      return;
+    }
     try {
       const orderId = `order_${Date.now()}`;
       const selectedCartItems = cartItems.filter((item) =>
@@ -275,7 +282,7 @@ const CartPage = () => {
                 결제사 정보 제공 동의
               </label>
             </div>
-            <button onClick={handlePayment} disabled={selectedItems.size === 0}>
+            <button className={styles.paymentBtn} onClick={handlePayment} disabled={selectedItems.size === 0}>
               결제하기
             </button>
           </div>
