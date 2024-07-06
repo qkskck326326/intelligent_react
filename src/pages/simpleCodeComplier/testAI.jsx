@@ -15,7 +15,7 @@ const TestAI = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5002/analyze', {
+            const response = await axios.post('http://localhost:5000/analyze', {
                 code: code,
                 language: language
             });
