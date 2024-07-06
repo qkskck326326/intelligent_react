@@ -11,7 +11,7 @@ const EachChat = observer(({chat, onClick, isChat}) => {
             <div className={styles.pictureFrame}>
                 <div className={styles.eachPicture}>
                     <img src={
-                        chat.users[1].profileImageUrl ?
+                        chat.users[1]?.profileImageUrl ?
                             chat.users[1].profileImageUrl :
                         chat.users[0].profileImageUrl
                     } alt="" />
