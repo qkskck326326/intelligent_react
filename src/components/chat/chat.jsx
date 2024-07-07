@@ -13,6 +13,7 @@ import {axiosClient} from "../../axiosApi/axiosClient";
 const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     const [isThereAdmin] = useState(roomData.roomType === 'inquiries');
+    const [areYouHere, setAreYouHere] = useState(true);
     const [currentRoomData, setCurrentRoomData] = useState(roomData);
     const [people, setPeople] = useState({});
     const [isPeopleOn, setIsPeopleOn] = useState(false);
@@ -37,7 +38,6 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     const menuRef = useRef();
 
     const fetchData = async () => {
-        console.log(roomData.roomType)
         try {
             const response = await axiosClient.get('/chat/chatdata', {
                 params: {
@@ -117,6 +117,9 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         const handleNewMessage = async (message) => {
             const newMessage = JSON.parse(message.body);
 
+            console.log(newMessage.messageId)
+            console.log(newMessage.roomId)
+            console.log(AuthStore.getNickname())
             if (newMessage.announcement) {
                 setAnnounce(newMessage.messageContent);
                 return;
@@ -135,7 +138,19 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                         );
                     });
                 } else {
-                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                    setMessages((prevMessages) => [...prevMessages, newMessage])
+                }
+                if(areYouHere){
+                    console.log(areYouHere)
+                    try{
+                        const response = await axiosClient.post('/chat/markasread', {
+                            userId : AuthStore.getNickname(),
+                            roomId : newMessage.roomId,
+                            messageId: newMessage.messageId
+                        })
+                    }catch(error){
+                        console.error(error)
+                    }
                 }
             }
         };
@@ -147,7 +162,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         return () => {
             webSocketService.disconnect();
         };
-    }, [roomData.roomId]);
+    }, [roomData.roomId, areYouHere]);
 
     const handleScroll = () => {
         const scrollTop = bubbleContainerRef.current.scrollTop;
@@ -185,13 +200,16 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
     const handleClickBack = () => {
         setIsAnimating(true);
+        setAreYouHere(false);
         setTimeout(() => {
             onNavigateToList();
             setIsAnimating(false);
             setAnnounceExpand(false);
             setIsMenuClicked(false);
             setIsAttachButtonClicked(false);
-            setModalOn(false)
+            setModalOn(false);
+            setAreYouHere(false);
+            setAreYouHere(false);
 
         }, 500);
     };
