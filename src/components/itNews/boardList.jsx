@@ -155,22 +155,29 @@ const BoardList = observer(() => {
                         <tr key={item.boardId}>
                             <th scope="row" className={styles['text-center']}>{index + 1}</th>
                             <td
-                                onClick={() => router.push(`/itNewsBoard/${item.boardId}`)}
+                                onClick={() =>
+                                    router.push(`/itNewsBoard/${item.boardId}`)}
                                 className={styles['text-center']}
                                 style={{ transition: 'background-color 0.3s' }}
-                                onMouseOver={e => e.currentTarget.style.backgroundColor = '#f0f0f0'}
-                                onMouseOut={e => e.currentTarget.style.backgroundColor = ''}
+                                onMouseOver={e =>
+                                    e.currentTarget.style.backgroundColor = '#f0f0f0'}
+                                onMouseOut={e =>
+                                    e.currentTarget.style.backgroundColor = ''}
                             >
                                 {item.title}
                             </td>
                             <td className={styles['text-center']}>
-                                <a href={item.boardUrl} className={`${styles['btn']} ${styles['btn-primary']}`} target="_blank" rel="noopener noreferrer">
+                                <a href={item.boardUrl} className={`${styles['btn']} 
+                                ${styles['btn-primary']}`} target="_blank" rel="noopener noreferrer">
                                     원글이동
                                 </a>
                             </td>
                             {authStore.checkIsAdmin() === true ? (
                                 <td className={styles['text-center']}>
-                                    <button className={`${styles['btn']} ${styles['btn-delete']}`} onClick={() => handleDelete(item)}>삭제</button>
+                                    <button className={`${styles['btn']} ${styles['btn-delete']}`}
+                                            onClick={() => handleDelete(item)}>
+                                        삭제
+                                    </button>
                                 </td>
                             ) : null}
                             <td className={styles['resist-date']}>{formatDate(item.registDate)}</td>

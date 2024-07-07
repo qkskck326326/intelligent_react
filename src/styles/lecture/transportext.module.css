@@ -3,6 +3,7 @@
     border: 1px solid #19CA83;
     border-radius: 10px;
     background-color: #fff;
+    margin-bottom: 20px;
 }
 
 .tabMenu {
@@ -38,6 +39,7 @@
     overflow-y: auto; 
     margin-left: 10px;
     top: 20px;
+    margin-bottom: 20px;
 }
 
 .contentPre {
@@ -45,4 +47,27 @@
     font-size: 17px;
     white-space: pre-wrap; /* 텍스트 줄바꿈을 위해 추가 */
     word-wrap: break-word; /* 텍스트 줄바꿈을 위해 추가 */
+}
+
+.heading {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 10px;
+    margin-top: 0px;
+    border-bottom: 1px solid #ddd;
+    z-index: 1;
+}
+
+.heading::before {
+    content: '';
+    display: block;
+    height: 20px;
+    background-color: #fff;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    z-index: -1;
 }
