@@ -45,11 +45,9 @@ const NaverLogin = () => {
             if (event.origin !== window.location.origin) return;
 
             if (event.data.type === 'LOGIN_SUCCESS') {
-                //alert("로그인이 성공적으로 완료되었습니다!");
                 window.location.href = '/'; // 메인 페이지로 이동
             } else if (event.data.type === 'REGISTER_SUCCESS') {
                 alert("회원가입이 성공적으로 완료되었습니다!");
-                window.location.href = '/user/login'; // 로그인 페이지로 이동
             }
         };
 
