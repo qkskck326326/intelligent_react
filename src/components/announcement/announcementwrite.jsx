@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../styles/cs/announcementwrite.module.css';
 import { useRouter } from "next/router";
 import { observer } from 'mobx-react';
-import AuthStore from "../../stores/authStore";
+import authStore from "../../stores/authStore";
 import {axiosClient} from "../../axiosApi/axiosClient";
 
 const AnnouncementWrite = observer(() => {
@@ -19,8 +19,8 @@ const AnnouncementWrite = observer(() => {
 
     useEffect(() => {
         //받아온 쿼리가 있다면 그 값으로 필드 채워둠 아닐 경우 무시
-        console.log(AuthStore.checkIsAdmin())
-        console.log(AuthStore.getNickname())
+        console.log(authStore.checkIsAdmin())
+        console.log(authStore.getNickname())
         if (Object.keys(router.query).length !== 0) {
 
             const { givenCategory, givenId, givenContent, givenTitle, givenCreatedAt } = router.query;
@@ -58,7 +58,7 @@ const AnnouncementWrite = observer(() => {
             title: title,
             content: content,
             createdAt: new Date(),
-            creator: AuthStore.getNickname(),
+            creator: authStore.getNickname(),
             category: category,
             importance: importance
         })
@@ -76,7 +76,7 @@ const AnnouncementWrite = observer(() => {
             announcementId: announcementId,
             title: title,
             content: content,
-            creator: AuthStore.getNickname(),
+            creator: authStore.getNickname(),
             category: category,
             importance: importance
         })

@@ -1,13 +1,13 @@
 import React, {useState, useRef, useEffect} from 'react';
 import { observer } from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
-import AuthStore from "../../stores/authStore";
+import authStore from "../../stores/authStore";
 import styles from '../../styles/chatting/chatbubble.module.css'
 import {axiosClient} from "../../axiosApi/axiosClient";
 
 const Bubble = observer(({index, onAnnouncementChange, option, message, isThereAdmin})=>{
 
-    const [isMe] = useState(AuthStore.getNickname() === message.senderId)
+    const [isMe] = useState(authStore.getNickname() === message.senderId)
     const [isEachSettingOn, setIsEachSettingOn] = useState(false);
     const eachSettingsRef = useRef();
     const textRef = useRef();
@@ -80,7 +80,7 @@ const Bubble = observer(({index, onAnnouncementChange, option, message, isThereA
 
         const reportItem = {
             receiveNickname: message.senderId,
-            doNickname: AuthStore.getNickname(),
+            doNickname: authStore.getNickname(),
             content: message.messageContent ? message.messageContent : message.files,
             reportDate: new Date(),
             reportType: 2,

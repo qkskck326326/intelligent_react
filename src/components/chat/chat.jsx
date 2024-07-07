@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chat.module.css'
 import BubbleContainer from "./bubblecontainer.jsx";
-import AuthStore from "../../stores/authStore";
+import authStore from "../../stores/authStore";
 import MediaFile from "./mediafiles.jsx";
 import AlertModal from "../common/Modal";
 import {axiosClient} from "../../axiosApi/axiosClient";
@@ -43,7 +43,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                 params: {
                     roomId: roomData.roomId,
                     page: page,
-                    userId: AuthStore.getNickname()
+                    userId: authStore.getNickname()
                 }
             });
 
@@ -97,7 +97,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
     useEffect(() => {
         axiosClient.get('/chat/chatuserdetail', {
             params: {
-                userId: AuthStore.getNickname(),
+                userId: authStore.getNickname(),
                 roomId: roomData.roomId
             }
         })
@@ -119,7 +119,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
 
             console.log(newMessage.messageId)
             console.log(newMessage.roomId)
-            console.log(AuthStore.getNickname())
+            console.log(authStore.getNickname())
             if (newMessage.announcement) {
                 setAnnounce(newMessage.messageContent);
                 return;
@@ -144,7 +144,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
                     console.log(areYouHere)
                     try{
                         const response = await axiosClient.post('/chat/markasread', {
-                            userId : AuthStore.getNickname(),
+                            userId : authStore.getNickname(),
                             roomId : newMessage.roomId,
                             messageId: newMessage.messageId
                         })
@@ -263,7 +263,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
         if (items.length > 0) {
             const newMessage = {
                 roomId: roomData.roomId,
-                senderId: AuthStore.getNickname(),
+                senderId: authStore.getNickname(),
                 messageType: determineMessageType(items),
                 dateSent: new Date().toISOString(),
                 isAnnouncement: 0
@@ -289,7 +289,7 @@ const Chat = observer(({option, isExpanding, onNavigateToList, roomData}) => {
             }
             const newMessage = {
                 roomId: roomData.roomId,
-                senderId: AuthStore.getNickname(),
+                senderId: authStore.getNickname(),
                 messageContent: textContent,
                 messageType: 0,
                 dateSent: new Date(),

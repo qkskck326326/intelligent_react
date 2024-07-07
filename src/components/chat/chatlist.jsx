@@ -4,7 +4,7 @@ import commonStyles from '../../styles/chatting/chatcommon.module.css';
 import styles from '../../styles/chatting/chatlist.module.css'
 import EachChat from '../../components/chat/eachchat.jsx';
 import {axiosClient} from "../../axiosApi/axiosClient";
-import AuthStore from "../../stores/authStore";
+import authStore from "../../stores/authStore";
 import webSocketService from "./WebSocketService";
 
 /*
@@ -72,7 +72,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
         try{
             const response = await axiosClient.get('/chat/admins')
             //관리자 닉네임 가져옴
-            return [AuthStore.getNickname(), ...response.data]
+            return [authStore.getNickname(), ...response.data]
         }
         catch(error){
             console.error(error);
@@ -186,7 +186,7 @@ const ChatList = observer(({isExpanding, onNavigateToFriends, onNavigateToIcon, 
                 </div>
 
             }
-            { !AuthStore.checkIsAdmin() &&
+            { !authStore.checkIsAdmin() &&
                 <div className={commonStyles.category}>
                     <div className={`${commonStyles.subCategory} ${chatOrInq && commonStyles.active}`}
                          onClick={() => {
