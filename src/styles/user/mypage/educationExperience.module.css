@@ -69,7 +69,7 @@
     color: #40ad9a;
     font-size: 13px;
     font-weight: bold;
-    border: 2px solid #55bfb0;
+    border: 3px solid #55bfb0;
     padding: 5px 10px;
     border-radius: 30px;
     cursor: pointer;
@@ -81,14 +81,17 @@
     color: #40ad9a;
     font-size: 13px;
     font-weight: bold;
-    border: 2px solid #55bfb0;
+    border: 3px solid #55bfb0;
     padding: 5px 10px;
     border-radius: 30px;
     cursor: pointer;
     margin-left:15px;
 }
 
-.addButton1 .addButton2:hover {
+.addButton1:hover  {
+    background: #daffba;
+}
+.addButton2:hover{
     background: #daffba;
 }
 

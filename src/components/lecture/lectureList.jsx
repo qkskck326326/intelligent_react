@@ -13,7 +13,7 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
     const [isDeleted, setIsDeleted] = useState(false);
     const [lectureReadStatuses, setLectureReadStatuses] = useState({});
 
-    const completedLecturesCount = Object.values(lectureReadStatuses).filter(status => status === 'Y').length;
+    const completedLecturesCount = Object.values(lectureReadStatuses).filter(status => status === '100%').length;
     const totalLecturesCount = lectures.length;
 
     const fetchLecturePackageTitle = useCallback(() => {
@@ -46,12 +46,19 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
     const getLectureReadStatus = async (lectureId, nickname) => {
         try {
             const response = await axiosClient.get(`/lecture/read-status/${lectureId}?nickname=${nickname}`);
-            return response.data.lectureRead || 'N';
+            const { lectureRead, longVideo } = response.data;
+    
+            // 퍼센트 계산
+            let percentage = Math.floor((lectureRead / longVideo) * 100);
+            if (percentage > 100) {
+                percentage = 100;
+            }
+            return `${percentage}%`;
         } catch (err) {
             console.error("Error fetching lecture read status:", err);
-            return 'N';
+            return '0%';
         }
-    };
+    };    
 
     const handleDeleteLectures = async () => {
         try {
@@ -142,7 +149,7 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
                     <tr className={styles.subtitle}>
                         <th className={styles.num} scope="col">번호</th>
                         <th className={styles.title} scope="col">제목</th>
-                        <th className={styles.read} scope="col">시청 여부</th>
+                        <th className={styles.read} scope="col">나의 진행도</th>
                         {deletingMode && <th className={styles.select} scope="col">선택</th>}
                     </tr>
                 </thead>
@@ -160,7 +167,7 @@ const LectureList = ({ lecturePackageId, onSelectLecture, isOwner, fetchData, le
                                 </Link>
                             </td>
                             <td className={styles.read}>
-                                {lectureReadStatuses[lecture.lectureId] === 'Y' ? '시청 완료' : '미시청'}
+                                {lectureReadStatuses[lecture.lectureId] || '0%'}
                             </td>
                             {deletingMode && (
                                 <td className={styles.select}>

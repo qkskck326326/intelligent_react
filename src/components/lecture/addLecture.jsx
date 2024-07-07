@@ -17,6 +17,7 @@ const AddLecture = () => {
     const [nickname, setNickname] = useState('');
     const [loadingThumbnail, setLoadingThumbnail] = useState(false);
     const [loadingVideo, setLoadingVideo] = useState(false);
+    const [videoDuration, setVideoDuration] = useState(0);
     const imgRef = useRef();
     const router = useRouter();
 
@@ -51,7 +52,8 @@ const AddLecture = () => {
             lectureThumbnail,
             streamUrl,
             lecturePackageId,
-            nickname
+            nickname,
+            longVideo: videoDuration // 추가된 부분
         };
         console.log("Form submitted with input:", lectureInput);
         await handleLectureRegister(lectureInput);
@@ -121,6 +123,18 @@ const AddLecture = () => {
     const handleVideoFileChange = (file) => {
         setVideoFile(file);
         setVideoPath(file.name);
+    
+        const videoElement = document.createElement('video');
+        videoElement.preload = 'metadata';
+    
+        videoElement.onloadedmetadata = function() {
+            window.URL.revokeObjectURL(videoElement.src);
+            const duration = videoElement.duration;
+            console.log("Video duration: ", duration);
+            setVideoDuration(Math.floor(duration)); // 소수점을 제거하고 저장
+        }
+    
+        videoElement.src = URL.createObjectURL(file);
     };
 
     const handleThumbnailFileChange = (file) => {
