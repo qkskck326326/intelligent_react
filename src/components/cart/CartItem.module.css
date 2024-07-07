@@ -51,4 +51,10 @@
   font-size: 1.25rem;
   font-weight: bold;
   color: #6366f1;
+  margin-left: 10px;
+}
+
+.originalPrice {
+  color: #e88484;
+  text-decoration: line-through;
 }
