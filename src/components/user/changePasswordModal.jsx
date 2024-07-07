@@ -52,7 +52,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         }
     
         try {
-            const userEmail = localStorage.getItem("userEmail"); // userEmail 가져오기
+            const userEmail = localStorage.getItem("userEmail"); 
             await axiosClient.put('/users/change-password', {
                 userEmail,
                 currentPassword,
