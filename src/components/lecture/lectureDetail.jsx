@@ -21,12 +21,12 @@ const LectureDetail = ({ lectureId }) => {
             nickname: authStore.getNickname(),
             lectureRead: currentLectureRead
         })
-        .then(() => {
-            console.log("Watched time sent successfully");
-        })
-        .catch(error => {
-            console.error("Error sending watched time:", error);
-        });
+            .then(() => {
+                console.log("Watched time sent successfully");
+            })
+            .catch(error => {
+                console.error("Error sending watched time:", error);
+            });
     }, [lectureId]);
 
     useEffect(() => {
