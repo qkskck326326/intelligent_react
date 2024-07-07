@@ -77,6 +77,21 @@
     background-color: #ddd;
 }
 
+.permitButton {
+    background-color: #59a2ff;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    font-weight: bold;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
 .restrictButton {
     background-color: #ffb007;
     border: none;

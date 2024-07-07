@@ -34,13 +34,8 @@ const Enroll = () => {
 
   useEffect(() => {
     if (authStore.checkIsLoggedIn()) {
-      router.push("/"); // 홈 페이지로 리디렉션
+      router.push("/"); 
     }
-    // document.body.style.overflow = 'hidden';
-
-    // return () => {
-    //   document.body.style.overflow = '';
-    // };
   }, [router]);
 
   const renderPage = () => {
