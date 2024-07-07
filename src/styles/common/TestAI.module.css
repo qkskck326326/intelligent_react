@@ -92,3 +92,13 @@
     height: 200px; /* 고정 높이 */
     overflow: auto;
 }
+
+.feedbackSection, .fixedCodeSection, .fixedFeedbackSection, .scoreSection {
+    margin-top: 20px;
+}
+
+.feedbackPre, .fixedCodePre, .fixedFeedbackPre, .scorePre {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+}
