@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import styles from '../../styles/lecture/lectureDetail.module.css';
 import authStore from '../../stores/authStore';
@@ -10,10 +10,24 @@ const LectureDetail = ({ lectureId }) => {
     const [error, setError] = useState(null);
     const [isReportPopupOpen, setIsReportPopupOpen] = useState(false);
     const [reportContent, setReportContent] = useState("");
-    const [lectureRead, setLectureRead] = useState(0);
     const videoRef = useRef(null);
     const intervalRef = useRef(null);
     const lectureReadRef = useRef(0); // 최신 lectureRead 값을 유지
+
+    const sendWatchedTime = useCallback(() => {
+        const currentLectureRead = lectureReadRef.current; // 최신 값 참조
+        console.log("Sending watched time:", currentLectureRead);
+        axiosClient.post(`/lecture/update-read-status/${lectureId}`, {
+            nickname: authStore.getNickname(),
+            lectureRead: currentLectureRead
+        })
+        .then(() => {
+            console.log("Watched time sent successfully");
+        })
+        .catch(error => {
+            console.error("Error sending watched time:", error);
+        });
+    }, [lectureId]);
 
     useEffect(() => {
         const fetchLecture = async () => {
@@ -52,7 +66,7 @@ const LectureDetail = ({ lectureId }) => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
             sendWatchedTime();
         };
-    }, [lectureId]);
+    }, [lectureId, sendWatchedTime]);
 
     useEffect(() => {
         const videoElement = videoRef.current;
@@ -62,13 +76,8 @@ const LectureDetail = ({ lectureId }) => {
             if (!intervalRef.current) {
                 intervalRef.current = setInterval(() => {
                     if (videoElement && !videoElement.paused) {
-                        setLectureRead(prev => {
-                            const newReadTime = prev + 1;
-                            lectureReadRef.current = newReadTime; // 최신 값 유지
-                            console.log("Lecture read time increased:", newReadTime);
-                            console.log("Current lectureRead value:", newReadTime);
-                            return newReadTime;
-                        });
+                        lectureReadRef.current += 1;
+                        console.log("Lecture read time increased:", lectureReadRef.current);
                     }
                 }, 1000); // 1초마다 증가
                 console.log("Video play started, tracking started");
@@ -110,21 +119,6 @@ const LectureDetail = ({ lectureId }) => {
             stopTracking();
         };
     }, [lecture]);
-
-    const sendWatchedTime = () => {
-        const currentLectureRead = lectureReadRef.current; // 최신 값 참조
-        console.log("Sending watched time:", currentLectureRead);
-        axiosClient.post(`/lecture/update-read-status/${lectureId}`, {
-            nickname: authStore.getNickname(),
-            lectureRead: currentLectureRead
-        })
-        .then(() => {
-            console.log("Watched time sent successfully");
-        })
-        .catch(error => {
-            console.error("Error sending watched time:", error);
-        });
-    };
 
     const handleReportSubmit = async () => {
         try {
