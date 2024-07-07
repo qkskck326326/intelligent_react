@@ -207,7 +207,7 @@ const BasicInfo = ({ basicInfo, setBasicInfo, nextPage, prevPage, isEmailVerifie
       // 인증 코드 입력란, 버튼, 타이머, 인증번호 전송 버튼 숨기기
       setIsCodeSent(false);
     } else {
-      alert('로그인 인증에 실패했습니다.');
+      alert('이메일 인증에 실패했습니다.');
     }
   };
 
