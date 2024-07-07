@@ -3,6 +3,7 @@ import { axiosClient } from '../../axiosApi/axiosClient';
 import SiteSaveModal from "./siteSaveModal";
 import { Button, Pagination } from 'react-bootstrap';
 import axios from "axios";
+import AlertModal from "../common/AlertModal";
 
 const SiteList = () => {
     const [page, setPage] = useState(0);
@@ -14,6 +15,9 @@ const SiteList = () => {
     const [showModal, setShowModal] = useState(false);
     const [currentData, setCurrentData] = useState(null);
     const [isSearch, setIsSearch] = useState("");
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [deleteData, setDeleteData] = useState([])
 
     const fetchData = () => {
         let url = "/itNewsSite";
@@ -37,16 +41,6 @@ const SiteList = () => {
     useEffect(() => {
         fetchData();
     }, []);
-
-    const handleDelete = (itNewsSiteDto) => {
-        axiosClient.delete('/itNewsSite', {data:itNewsSiteDto})
-            .then(() => {
-                fetchData(); // 데이터 삭제 후 목록을 다시 불러옴
-            })
-            .catch(err => {
-                setError(err);
-            });
-    };
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -101,6 +95,28 @@ const SiteList = () => {
         setPage(1);
     };
 
+    const handelAlertShow = (item) => {
+        setShowAlert(true)
+        setDeleteData(item)
+    }
+
+    const handleAlertClose = () => {
+        setShowAlert(false)
+    }
+
+
+    const handleDelete = () => {
+        const itNewsSiteDto = deleteData
+        axiosClient.delete('/itNewsSite', {data:itNewsSiteDto})
+            .then(() => {
+                fetchData(); // 데이터 삭제 후 목록을 다시 불러옴
+            })
+            .catch(err => {
+                setError(err);
+            });
+        setShowAlert(false)
+    };
+
     return (
         <div className="container">
             <Button variant="btn btn-primary" onClick={handleShow} className="mb-3">
@@ -109,6 +125,8 @@ const SiteList = () => {
             <Button variant="btn btn-secondary" className="mb-3" onClick={doCrowling}>크롤링 요청</Button>
             <SiteSaveModal show={showModal} handleClose={handleClose} handleSave={handleSave}
                            initialData={currentData}/>
+            <AlertModal show={showAlert} handleClose={handleAlertClose} title={'BoardSite삭제'}
+                        message={'정말로 삭제하시겠습니까?'} onConfirm={handleDelete}/>
             <div className="mb-3 d-flex align-items-center">
                 <select className="form-select" style={{width: '135px', height: '38px'}} value={size} onChange={handleSizeChange}>
                     <option value="5">5개씩 보기</option>
@@ -151,7 +169,7 @@ const SiteList = () => {
                         <td style={{justifyContent: 'center'}}>
                             <button onClick={() => handleEdit(item)}>수정</button>
                             &nbsp;
-                            <button onClick={() => handleDelete(item)}>삭제</button>
+                            <button onClick={() => handelAlertShow(item)}>삭제</button>
                         </td>
                     </tr>
                 ))}

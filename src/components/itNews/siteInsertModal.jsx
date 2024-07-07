@@ -38,6 +38,14 @@ const SiteInsertModal = ({ show, handleClose, handleSave, initialData }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         handleSave(formData);
+        setFormData({
+            siteUrl: '',
+            latestBoardUrl: '',
+            siteName: '',
+            videoElement: '',
+            titleElement: '',
+            contextElement: ''
+        });
     };
 
     return (
