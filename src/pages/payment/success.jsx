@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { axiosClient } from "../../axiosApi/axiosClient";
 import authStore from "../../stores/authStore";
 import styles from "./Success.module.css";
+import axios  from "axios";
 
 const Success = () => {
   const router = useRouter();
@@ -13,6 +13,7 @@ const Success = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log(paymentKey);
     const approvePayment = async () => {
       try {
         // 세션에서 임시 결제 정보 가져오기
@@ -24,6 +25,7 @@ const Success = () => {
         console.log("세션에서 가져온 amount" + sessionInfo.amount);
         console.log("토스에서 받아온 orderId:" + orderId);
         console.log("토스에서 받아온 amount:" + amount);
+        console.log("페이먼트키 : " + paymentKey);
 
         // 세션 정보와 리다이렉트 URL 정보 비교
         if (
@@ -91,8 +93,8 @@ const Success = () => {
       provider,
       orderId,
       paymentType,
-      couponId // 쿠폰 ID 매개변수 추가
     ) => {
+      console.log(paymentKey);
       try {
         for (const item of items) {
           const paymentInfo = {
@@ -100,15 +102,24 @@ const Success = () => {
             provider,
             lecturePackageId: item.lecturePackageId,
             paymentType,
-            couponId, // 쿠폰 ID 추가
+            couponId: item.couponId || null, // 각 아이템의 쿠폰 ID를 할당
             finalPrice: item.price,
             orderId,
             paymentConfirmation: "Y",
+            paymentKey,
           };
-          console.log(paymentInfo);
-          await axiosClient.post("/payment/savePayment", paymentInfo);
+          // 기존 항목이 존재하는지 확인
+          const existingTransactionResponse = await axiosClient.get(`/payment/transaction/${userEmail}/${provider}/${item.lecturePackageId}`);
+          if (existingTransactionResponse.data) {
+            // 기존 항목이 있는 경우 업데이트
+            await axiosClient.put(`/payment/transaction/${userEmail}/${provider}/${item.lecturePackageId}`, paymentInfo);
+            console.log("Existing payment information updated successfully");
+          } else {
+            // 기존 항목이 없는 경우 새 항목 삽입
+            await axiosClient.post("/payment/savePayment", paymentInfo);
+            console.log("Payment information saved successfully");
+          }
         }
-        console.log("Payment information saved successfully");
       } catch (error) {
         console.error("Error saving payment information:", error);
       }

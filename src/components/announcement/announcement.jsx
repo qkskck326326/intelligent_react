@@ -178,8 +178,9 @@ const Announcement = observer (() => {
                         :
                         page > 2 && <div>더 표시할 페이지가 없어요.</div>
                     }
-                    {authStore.checkIsAdmin() &&
-                    <Link className={styles.writeAnnounce} href='cs/write'>글작성</Link>}
+                    {authStore.checkIsAdmin() ?
+                    <Link className={styles.writeAnnounce} href='cs/write'>글작성</Link>
+                        : <div></div>}
                 </div>
             </div>
         </div>

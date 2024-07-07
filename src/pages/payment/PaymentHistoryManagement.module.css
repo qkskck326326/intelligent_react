@@ -1,51 +1,66 @@
 .container {
     font-size: 0.9rem;
     /* margin: 20px auto; */
-    margin-top: 40px;
+    /*margin-top: 40px;*/
     padding: 20px;
     max-width: 1200px;
     background-color: #fdfdfd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
   }
-  
+
   /* h1 {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
   } */
-  
+
   .table {
     width: 100%;
     border-collapse: collapse;
     border-radius: 10px;
   }
-  
+  .refundButton {
+      border-radius: 10px;
+      padding: 7px;
+      border: none ;
+      background-color: #5cd2b6;
+      color: white;
+      margin-left: 5px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+  }
+
+.refundButton:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+    /*box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);*/
+}
+
   .table th,
   .table td {
     padding: 12px;
     border: 1px solid #dddddd;
     text-align: left;
   }
-  
+
   .table th {
     background-color: #5cd2b6;
     font-weight: bold;
     color: white;
   }
-  
+
   .table tbody tr:hover {
     background-color: #f1f1f1;
   }
-  
+
   .thumbnail {
     width: 50px;
     height: 50px;
     margin-right: 10px;
     vertical-align: middle;
   }
-  
+
   /* td img {
     display: inline-block;
   } */
-  
