@@ -121,11 +121,24 @@
 
 .agreement {
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .agreement label {
   font-size: 0.9rem;
   color: #4b5563;
+}
+.paymentBtn {
+  border-radius: 10px;
+  border: 2px solid #6366f1;
+  background-color: #ffffff;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.paymentBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2);
 }
 
 /* button {
