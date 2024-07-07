@@ -9,12 +9,13 @@ import { observer } from "mobx-react";
 const MyCertificate = observer(() => {
   const [certificates, setCertificates] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10; // 페이지당 보이는 데이터 개수
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editData, setEditData] = useState(null);
 
-  const ITEMS_PER_PAGE = 10; // 페이지당 보이는 데이터 개수
+
 
   const fetchCertificates = async (nickname) => {
     setLoading(true);
@@ -34,6 +35,8 @@ const MyCertificate = observer(() => {
     const nickname = authStore.getNickname();
     fetchCertificates(nickname);
   }, [authStore.getNickname()]);
+
+
 
   // 전체 페이지 수 계산
   const totalPages = Math.ceil(certificates.length / ITEMS_PER_PAGE);

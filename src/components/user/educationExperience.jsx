@@ -42,32 +42,29 @@ const EducationExperience = observer(() => {
 
     const handleEducationSubmit = async (e) => {
         e.preventDefault();
-
-        const { educationLevel, universityLevel, homeAndTransfer, schoolName, major, educationStatus, entryDate, graduationDate, passDate } = educationForm;
+        const { educationLevel, universityLevel, homeAndTransfer, schoolName,
+            major, educationStatus, entryDate, graduationDate, passDate } = educationForm;
 
         if (!educationLevel) {
             setErrorMessage("학력 구분을 선택해 주세요.");
             return;
         }
-
-        if ((educationLevel === "highSchool" || educationLevel === "middleSchool") && !homeAndTransfer && (!schoolName || !major || !educationStatus || !entryDate || !graduationDate)) {
+        if ((educationLevel === "highSchool" || educationLevel === "middleSchool")
+            && !homeAndTransfer && (!schoolName || !major || !educationStatus || !entryDate || !graduationDate)) {
             setErrorMessage("모든 필수 입력 값을 입력해 주세요.");
             return;
         }
-
-        if ((educationLevel === "highSchool" || educationLevel === "middleSchool") && homeAndTransfer === "homeSchool" && !passDate) {
+        if ((educationLevel === "highSchool" || educationLevel === "middleSchool")
+            && homeAndTransfer === "homeSchool" && !passDate) {
             setErrorMessage("합격년월을 입력해 주세요.");
             return;
         }
-
-        if (educationLevel === "university" && (!universityLevel || !schoolName || !major || !educationStatus || !entryDate || !graduationDate)) {
+        if (educationLevel === "university" && (!universityLevel || !schoolName || !major
+            || !educationStatus || !entryDate || !graduationDate)) {
             setErrorMessage("모든 필수 입력 값을 입력해 주세요.");
             return;
         }
-
         setErrorMessage("");
-
-        console.log("editEducationId : ", editEducationId);
         try {
             if (isEditing) {
                 const data = { nickname, ...educationForm, educationId: editEducationId };
