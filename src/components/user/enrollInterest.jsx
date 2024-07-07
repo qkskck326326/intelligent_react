@@ -20,7 +20,7 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axiosClient.get('/categories/sub'); // Spring Boot 엔드포인트 호출
+                const response = await axiosClient.get('/categories/sub'); 
                 setCategories(response.data);
             } catch (error) {
                 console.error("Error fetching subcategories:", error);
@@ -58,8 +58,8 @@ const EnrollInterest = ({ nextPage, prevPage, basicInfo, setBasicInfo, education
     };
 
     const handleRegister = async () => {
-        if (selected.length < 2) {
-            alert("관심분야를 최소 두개이상 골라주세요.");
+        if (selected.length < 4) {
+            alert("관심분야를 최소 네개이상 골라주세요.");
             return;
         }
 
