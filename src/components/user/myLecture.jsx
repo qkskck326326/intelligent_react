@@ -82,7 +82,7 @@ const MyLecture = observer(() => {
 
     return (
         <div className={styles.container}>
-            <h1>결제한 강좌 목록</h1>
+            <h1>수강 관리</h1>
             {lecturePackages.length === 0 ? (
                 <div className={styles.noLectureContainer}>
                     <img 

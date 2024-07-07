@@ -36,8 +36,8 @@ const refreshToken = async () => {
         const newAccessToken = token.split(' ')[1];
         localStorage.setItem('token', newAccessToken);
 
-        const newRefreshToken = response.data.refresh;
-        if (newRefreshToken) {
+        if (response.data && response.data.refresh) {
+            const newRefreshToken = response.data.refresh;
             localStorage.setItem('refresh', newRefreshToken);
         }
 
