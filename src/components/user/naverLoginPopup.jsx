@@ -12,7 +12,7 @@ const NaverLoginPopup = () => {
 
     });
 
-    const accessToken = params.access_token;
+    const accessToken = params.access_token; // 네이버 액세스 토큰 추출
     console.log("Access Token:", accessToken);
 
     if (accessToken) {
@@ -21,7 +21,7 @@ const NaverLoginPopup = () => {
         .then(response => {
           console.log('네이버 로그인 성공:', response.data);
           const token = response.headers['authorization'] || response.headers['Authorization'];
-          const isLogin = response.data.isLogin; // 로그인 여부를 나타내는 필드를 추가했다고 가정
+          const isLogin = response.data.isLogin; 
 
           if (token) {
             // 로컬 스토리지에 토큰 및 유저 정보를 저장
@@ -52,7 +52,6 @@ const NaverLoginPopup = () => {
               provider: response.data.provider
             });
           }
-
           // 팝업 창 닫기
           window.close();
           
@@ -65,9 +64,6 @@ const NaverLoginPopup = () => {
               window.opener.postMessage({ type: 'REGISTER_SUCCESS' }, window.location.origin);
             }
           }
-
-          
-
         })
         .catch(error => {
           console.error('네이버 로그인 실패! ', error);
