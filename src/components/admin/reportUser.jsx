@@ -130,12 +130,21 @@ const ReportUser = () => {
                                     <td>{user.reportCount}</td>
                                     <td>{user.loginOk === 'Y' ? '로그인 가능' : '로그인 제한'}</td>
                                     <td>
-                                        <button
-                                            onClick={() => openModal(user.nickname, user.loginOk)}
-                                            className={styles.restrictButton}
-                                        >
-                                            {user.loginOk === 'Y' ? '제한하기' : '허용하기'}
-                                        </button>
+                                        {user.loginOk === 'Y' ? (
+                                            <button
+                                                onClick={() => openModal(user.nickname, user.loginOk)}
+                                                className={styles.restrictButton}
+                                            >
+                                                제한하기
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => openModal(user.nickname, user.loginOk)}
+                                                className={styles.permitButton}
+                                            >
+                                                허용하기
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

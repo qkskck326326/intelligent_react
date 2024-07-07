@@ -20,11 +20,7 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
   });
 
 
-  // const [form2, setForm2] = useState({
-  //   instruction: "intelliclass",
-  //   manager: "김채림",
-  //   managerPhoneNumber: "01034312554",
-  // });
+
 
 
   useEffect(() => {
@@ -68,7 +64,8 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:5000/upload', formData, {
+      const response
+          = await axios.post('http://localhost:5000/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -103,53 +100,21 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
 
     try {
       if(form.issuePlace === "한국산업인력공단") {
-        const { name, managementNumber } = form;
+        const {name, managementNumber} = form;
         const response = await axios.post('http://localhost:5000/verify', {name, managementNumber});
         console.log(response.data);
 
-        if(response.data.result === 'success' ) {
+        if (response.data.result === 'success') {
           alert("진위확인이 완료되었습니다.")
           setConfirmComplete(response.data.result);
 
-          // const message = response.data.message
-          // setConfirmMessage(message);
-          // console.log("message : ", message);
-
-        }else if(response.data.result === 'fail'){
+        } else if (response.data.result === 'fail') {
           alert("성명또는 관리번호가 불일치하거나 유효기간이 지났을 경우 자격증을 다시 발급해 주세요.")
           setConfirmComplete(response.data.result);
 
         }
 
-      // }else if(form.issuePlace === "한국데이터산업진흥원장"){
-        // const instruction = "intelliclass";
-        // const manager = "김채림"; //담당자
-        // const managerPhoneNumber = "01034312554"
-
-      //   const { certificateNumber, name,  } = form;
-      //
-      //   // console.log("form : ",instruction, manager, managerPhoneNumber, certificateNumber, name );
-      //   const response = await axios.post('http://localhost:5000/verify', {
-      //       name : name,
-      //       certificateNumber : certificateNumber,
-      //       instruction : instruction,
-      //       manager : manager,
-      //       managerPhoneNumber : managerPhoneNumber
-      //     });
-      //   console.log("response.data : ", response.data)
-      //
-      //
-      //   if(response.data.result === 'success' ) {
-      //     alert("진위확인이 완료되었습니다.")
-      //     // const message = response.data.message
-      //     // setConfirmMessage(message);
-      //     // console.log("message : ", message);
-      //
-      //   }else if(response.data.result === 'fail'){
-      //     alert("성명또는 관리번호가 불일치하거나 유효기간이 지났을 경우 자격증을 다시 발급해 주세요.")
-      //     // setConfirmMessage(message);
-      //   }
-       }
+      }
 
     } catch (error) {
       console.error("진위확인 중 오류 발생:", error);
@@ -175,7 +140,9 @@ const CertificateAddModal = ({ onSave, onClose, editData }) => {
         alert("파일 업로드 실패");
       }
     } else {
-      onSave(form);
+
+      alert("PDF를 업로드하고 진위확인을 완료해 주세요!")
+
     }
   };
 

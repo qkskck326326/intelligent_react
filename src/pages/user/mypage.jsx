@@ -12,6 +12,7 @@ import PaymentHistoryManagement from "../payment/PaymentHistoryManagement";
 import styles from "../../styles/user/mypage/mypage.module.css";
 import MypageSidebar from "../../components/user/mypageSidebar";
 import PostManagement from "../../components/post/PostManagement";
+import Completion from "../../components/user/completion";
 
 const Mypage = observer(() => {
     const router = useRouter();
@@ -42,7 +43,9 @@ const Mypage = observer(() => {
                 return <PaymentHistoryManagement />;
             case "postManagement":
                 return <PostManagement />;
-            // 다른 컴포넌트들도 여기 추가
+            case "completion":
+                return <Completion />;
+
             default:
                 return <MyInfo />;
         }
