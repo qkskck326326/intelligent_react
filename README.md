@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# Intelligent React 프로젝트
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 프로젝트 개요
+IntelliClass React는 python(Django), aws(S3), SpringBoot와 api로 통신하는 어플리케이션으로,
+유저에게 알맞는 UI와 그에 따른 기능( ai 서비스 등)을 제공합니다.
 
-## Available Scripts
+## 주요 기능
+- **회원 관리**: Spring Boot와 통신하여 회원의 정보의 입력(회원가입), 수정, 삭제, 색인(관리자일 경우) 기능을 제공합니다.
+- **AI 기능**: Django와 api로 통신하여 유용한 ai 기능을 제공합니다.
+- **강의 관리**: Spring Boot와 aws(S3)와 api로 통신하여 강의 내용 및 영상을 저장, 수정, 삭제, 색인 기능을 제공합니다.
+- **채팅**: 웹소켓을 이용하여 사용자들간의 채팅 기능을 제공합니다.
+- **동적 데이터 렌더링**: 입력에 따라 동적으로 변하는 UI 구성을 제공합니다.
 
-In the project directory, you can run:
+## 설치 및 실행 방법
+1. 이 저장소를 클론합니다:
+   ```bash
+   git clone https://github.com/qkskck326326/intelligent_react.git
+   ```
+2. 프로젝트 폴더로 이동합니다:
+   ```bash
+   cd intelligent_react
+   ```
+3. 필요한 패키지를 설치합니다:
+   ```bash
+   npm install
+   ```
+4. 로컬 서버를 실행합니다:
+   ```bash
+   npm run dev
+   ```
+5. 브라우저에서 `http://localhost:3000`을 열어 애플리케이션을 확인합니다.
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 빌드 방법
+프로덕션 환경용 빌드를 생성하려면 다음 명령어를 사용하세요:
+```bash
+npm run build
+```
+빌드된 파일은 `/build` 디렉토리에 생성됩니다.
